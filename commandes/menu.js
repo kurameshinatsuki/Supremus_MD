@@ -32,7 +32,7 @@ const temps = moment().format('HH:mm:ss');
 const date = moment().format('DD/MM/YYYY');
 
   let infoMsg =  `
-╭────✧${s.BOT}✧────◆
+*╭────✧${s.BOT}✧────◆*
 │   *Préfix* : ${s.PREFIXE}
 │   *Owner* : ${s.OWNER_NAME}
 │   *Mode* : ${mode}
@@ -41,12 +41,10 @@ const date = moment().format('DD/MM/YYYY');
 │   *Hour* : ${temps}
 │   *Mémoire* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 │   *Plateforme* : ${os.platform()}
-│   *Développer* : Djalega++ 
-│  & M๏𝓷keℽ D Lบffy
-╰─────✧WA-BOT✧─────◆ \n\n`;
+│   *Développer* : Supremus Prod
+*╰─────✧ *SP-ZK-MD* ✧─────◆* \n\n`;
     
-let menuMsg = `
-👋 Hello ${nomAuteurMessage} 👋
+let menuMsg =  `
 
 *List of commands :*
 ◇                             ◇
@@ -64,12 +62,7 @@ let menuMsg = `
 
     menuMsg += `
 ◇            ◇
-*»»————— ★ —————««*
-"To use a command, insert ${prefixe} followed by the command_name."
- 
-    Powered by Zokou-MD
-                                                
-*»»————— ★ —————««*
+     *[🪀 SUPREMUS PROD 🪀]*
 `;
 
    var lien = mybotpic();
