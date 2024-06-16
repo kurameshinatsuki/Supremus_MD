@@ -2,7 +2,7 @@ const { zokou } = require('../framework/zokou');
 
 zokou(
     {
-        nomCom: 'rip',
+        nomCom: 'ripatlas',
         categorie: 'crps-player'
     },
     async (dest, zk, commandeOptions) => {
