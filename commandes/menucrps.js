@@ -488,8 +488,8 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/ea97540207b4921b71a7b.jpg';
-            const msg = `.   *[🎮 CRPS SYSTEM RP🎮]*`;
+            const lien = 'https://telegra.ph/file/ecdf5c700e8c15a3dfbd3.jpg';
+            const msg = `.  *[🎮 CRPS SYSTEM RP 🎮]*`;
             zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    
         }
@@ -505,8 +505,8 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/178ed2357cde9b0bac882.jpg';
-            const msg = `.   *[🎮 CRPS SYSTEM RP🎮]*`;
+            const lien = 'https://telegra.ph/file/2a0c4b2101a38deb9d6a6.jpg';
+            const msg = `.  *[🎮 CRPS SYSTEM RP 🎮]*`;
             zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    
         }
@@ -522,8 +522,8 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/309c4709f54978c87bb43.jpg';
-            const msg = `.   *[🎮 CRPS SYSTEM RP 🎮]*`;
+            const lien = 'https://telegra.ph/file/d9f9852ede777e5fc5c64.jpg';
+            const msg = `.  *[🎮 CRPS SYSTEM RP 🎮]*`;
             zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    
         }
