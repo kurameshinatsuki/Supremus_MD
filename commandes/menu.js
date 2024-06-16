@@ -42,20 +42,20 @@ const date = moment().format('DD/MM/YYYY');
 │   *Mémoire* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 │   *Plateforme* : ${os.platform()}
 │   *Développer* : Supremus Prod
-*╰─────✧SP-ZK-MD✧─────◆* \n\n`;    
+*╰─────✧ SP BOT ✧─────◆* \n\n`;    
 let menuMsg =  `
 *List of commands :*
 ◇                             ◇
 `;
 
     for (const cat in coms) {
-        menuMsg += `*╭────❏ ${cat} ❏`;
+        menuMsg += `*╭────❏ ${cat} ❏*`;
         for (const cmd of coms[cat]) {
             menuMsg += `
 │ ${cmd}`;
         }
         menuMsg += `
-╰═════════════⊷* \n`
+*╰═════════════⊷* \n`
     }
 
     menuMsg += `
