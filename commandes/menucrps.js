@@ -254,7 +254,7 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/d21bd96bb0dbb69058480.jpg';
+            const lien = 'https://telegra.ph/file/6aeaa2d9c623e8772d89f.jpg';
             const msg = `. 🏆🏅 𝗡𝗘𝗫𝗨𝗦 𝗟𝗜𝗚𝗨𝗘 🎊🔝
             🎮 𝐁𝐲 𝐂𝐑𝐏𝐒 🎮
 ░░░░░░░░░░░░░░░░░░░
