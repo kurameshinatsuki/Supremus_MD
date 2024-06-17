@@ -23,6 +23,7 @@ Bienvenue dans le menu principal tout voir et savoir sur les activités CRPS.
 ◩ Reward
 ◩ Jobs
 ◩ Générale
+◩ Nexus Ligue
 ◩ Id rôliste
 
 ░░░░░░░░░░░░░░░░░░
@@ -246,7 +247,7 @@ zokou(
 
 zokou(
     {
-        nomCom: 'classement',
+        nomCom: 'nexusligue',
         categorie: 'crps'
     },
     async (dest, zk, commandeOptions) => {
@@ -260,47 +261,55 @@ zokou(
 ═══════════════════
      🏆 𝗗𝗶𝘃𝗶𝘀𝗶𝗼𝗻 𝗕𝗿𝗼𝗻𝘇𝗲 🥉
 ═══════════════════
-> *
-> *
-> *
-> *
-> *
+> *RIP Atlas               : 100pts*
+> *Lone R. Tempest : 100pts*
+> *Draken And Start : 090pts*
+> *Wei Wuxian          : 070pts*
+> *Manjiro                  : 040pts*
+> *Lust Gilgamesh   : 020pts*
+> *Rayan ARGENT    : 000pts*
+> *Yû C. N. A. Th.      : 000pts*
+> *Yuta Supremus    : 000pts*
+> *Tomura Shigaraki: 000pts*
+> *Lone T. Atlas        : 000pts*
+> *Noname (~)         : 000pts*
+> *Night                      : 000pts*
 
 ═══════════════════
      🏆 𝗗𝗶𝘃𝗶𝘀𝗶𝗼𝗻 𝗔𝗿𝗴𝗲𝗻𝘁 🥈
 ═══════════════════
-> *
-> *
-> *
-> *
-> *
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
 
 ═══════════════════
 🏆 𝗗𝗶𝘃𝗶𝘀𝗶𝗼𝗻 𝗢𝗿 🥇
 ═══════════════════
-> *
-> *
-> *
-> *
-> *
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
 
 ═══════════════════
 🏆 𝗗𝗶𝘃𝗶𝘀𝗶𝗼𝗻 𝗘𝗺𝗲𝗿𝗮𝘂𝗱𝗲 ❇️
 ═══════════════════
-> *
-> *
-> *
-> *
-> *
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
 
 ═══════════════════
 🏆 𝗗𝗶𝘃𝗶𝘀𝗶𝗼𝗻 𝗗𝗶𝗮𝗺𝗮𝗻𝘁 💎
 ═══════════════════
-> *
-> *
-> *
-> *
-> *
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
+> *Id Player : 000pts*
 
 ░░░░░░░░░░░░░░░░░░░
           『 🪀🎮 𝗖𝗥𝗣𝗦 2𝗞24 🏆🔝 』`;
@@ -546,20 +555,3 @@ zokou(
         }
     }
 );
-
-/*zokou(
-    {
-        nomCom: '...',
-        categorie: 'crps'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = '...';
-            const msg = `...`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-   
-        }
-    }
-);/*
