@@ -21,6 +21,7 @@ Bienvenue dans le menu principal tout voir et savoir sur les activités CRPS.
 ◩ Succes
 ◩ Devise
 ◩ Reward
+◩ Jobs
 ◩ Générale
 ◩ Id rôliste
 
@@ -208,6 +209,22 @@ zokou(
     }
 );
 
+zokou(
+    {
+        nomCom: 'jobs',
+        categorie: 'crps'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            const lien = 'https://telegra.ph/file/976a4f6802ec915a53ef9.jpg';
+            const msg = `.   『 🎮 𝗣𝗟𝗔𝗬 𝗡𝗢 𝗟𝗜𝗠𝗜𝗧 🔝 』`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   
+        }
+    }
+);
 
 zokou(
     {
@@ -529,3 +546,20 @@ zokou(
         }
     }
 );
+
+/*zokou(
+    {
+        nomCom: '...',
+        categorie: 'crps'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            const lien = '...';
+            const msg = `...`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   
+        }
+    }
+);/*
