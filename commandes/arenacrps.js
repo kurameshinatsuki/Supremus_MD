@@ -38,7 +38,7 @@ zokou(
 zokou(
     {
         nomCom: 'temple',
-        categorie: 'NEOverse'
+        categorie: 'Arena'
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, arg, ms } = commandeOptions;
