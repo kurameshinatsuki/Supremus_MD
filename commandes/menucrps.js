@@ -483,7 +483,7 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            // const lien = '';
+            // const lien = 'https://telegra.ph/file/1aea5a846d5bcb1670914.jpg';
             const msg = `░░░░░░░░░░░░░░░░░░░
 ═══════════════════
       *🗞️ CRPS ANNONCE 🗞️*
