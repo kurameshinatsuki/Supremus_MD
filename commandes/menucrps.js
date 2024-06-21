@@ -265,10 +265,10 @@ zokou(
 > *Lone R. Tempest : 100pts*
 > *Draken And Start : 090pts*
 > *Wei Wuxian          : 070pts*
+> *Yû C. N. A. Th      : 050pts*
 > *Manjiro                  : 040pts*
 > *Lust Gilgamesh   : 020pts*
 > *Rayan ARGENT    : 000pts*
-> *Yû C. N. A. Th.      : 000pts*
 > *Yuta Supremus    : 000pts*
 > *Tomura Shigaraki: 000pts*
 > *Lone T. Atlas        : 000pts*
