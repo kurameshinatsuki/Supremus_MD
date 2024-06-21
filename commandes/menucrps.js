@@ -451,25 +451,72 @@ zokou(
 *🌍 Environnement :*
 
 ░░░░░░░░░░░░░░░░░░░
-        *⚠️ ATTENTION ⚠️*
-
+═══════════════════
 > *✅Média immersive :* +1🧠
 > *✅Pavé immersive :* +1🧠
 > *✅Pavé spectaculaire :* +2🧠
 > *✅Gestion de stats :* +1🧠
-
-> *🥇Easy Win: 4-0 :* domination
-> *🥈Medium Win: 4-1 :* def -25%🫀
-> *🥉Hard Win:* 3-2 :* def -50%🫀 & -80%❤️
-> *🏅Perfect Win:* 5-0 :* Stats no variation.
-> *⚠️ Si vous achevé l'adversaire d'un seul coup c'est un "𝗞𝗶𝗹𝗹𝗶𝗻𝗴 𝗦𝗽𝗿𝗲𝗲𝗱" +1 score & +2🧠, si vous l'achevé en full power c'est "𝗥𝗮𝗺𝗽𝗮𝗴𝗲" +2 score & +2🧠 et si vous gagné un perso de niveau supérieur c'est "𝗠𝗢𝗡𝗦𝗧𝗘𝗥 𝗞𝗜𝗟𝗟𝗘𝗥" +5🧠.*
-
+═══════════════════
+> *🥇Easy Win:* Domination.
+> *🥈Medium Win:* def +25%🫀
+> *🥉Hard Win:* def +50%🫀 & -85%❤️
+> *🏅Perfect Win:* Stats no variation.
+═══════════════════
+> *⚠️ Si vous achevé l'adversaire d'un seul coup c'est un "𝗞𝗶𝗹𝗹𝗶𝗻𝗴 𝗦𝗽𝗿𝗲𝗲𝗱" +2🧠, si vous l'achevé en full power c'est "𝗥𝗮𝗺𝗽𝗮𝗴𝗲" +2🧠 et si vous gagné contre un perso de niveau supérieur c'est "𝗠𝗢𝗡𝗦𝗧𝗘𝗥 𝗞𝗜𝗟𝗟𝗘𝗥" +5🧠.*
+═══════════════════
 > *Vous avez 6️⃣ tours max pour achever votre adversaire ou décision de victoire par domination.*
 ═══════════════════
 ░░░░░░░░░░░░░░░░░░░
        『 🎮 𝗣𝗟𝗔𝗬 𝗡𝗢 𝗟𝗜𝗠𝗜𝗧 🔝 』`;
            // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    repondre(msg);
+        }
+    }
+);
+
+zokou(
+    {
+        nomCom: 'annonce',
+        categorie: 'crps'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            // const lien = '';
+            const msg = `░░░░░░░░░░░░░░░░░░░
+═══════════════════
+      *🗞️ CRPS ANNONCE 🗞️*
+═══════════════════
+*🎤{Journaliste} :* 
+
+
+═══════════════════
+   *🧮 STATS OF MATCH 🧮* 
+═══════════════════
+*👤{PlayerOrTeam} :* 
+*> 🧠 Maîtrise:* 
+*> 💯 Score:* 
+*> 💢 Difficult:* 
+*> 🎤 Comment:* 
+
+*👤{PlayerOrTeam} :* 
+*> 🧠 Maîtrise:* 
+*> 💯 Score:* 
+*> 💢 Difficult:* 
+*> 🎤 Comment:* 
+═══════════════════
+*🌐 ARÈNE :* 
+*🛂 ARBITRE :* 
+
+✒️ *𝙎𝙞𝙜𝙣𝙖𝙩𝙪𝙧𝙚 :* [ ✓ ]
+═══════════════════
+*⚠️ Notice : Veuillez supprimer les contenus ne correspondent pas à l'annonce ainsi que cette notice.*
+═══════════════════
+░░░░░░░░░░░░░░░░░░░
+          『 ‼️𝗔𝗡𝗡𝗢𝗨𝗡𝗖𝗘𝗠𝗘𝗡𝗧‼️ 』`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   
         }
     }
 );
