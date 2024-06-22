@@ -32,11 +32,11 @@ zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📣" }, async (dest, z
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   var tag = ""; 
   tag += `========================\n  
-        🌟 *Zokou-Md* 🌟
+        🪀 *SP-ZK-MD* 🪀
 ========================\n
-👥 Group : ${nomGroupe} 🚀 
-👤 Autor : *${nomAuteurMessage}* 👋 
-📜 Message : *${mess}* 📝
+👥 Group : ${nomGroupe}  
+👤 Autor : *${nomAuteurMessage}*  
+📜 Message : *${mess}* 
 ========================\n
 \n
 
