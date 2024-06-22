@@ -7,7 +7,7 @@ const { Pool } = require("pg");
 const s = require("../set");
 
 // Remplacez l'URL de la base de données par la nouvelle URL fournie
-var dbUrl = s.SPDB,
+var dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
   ssl: {
