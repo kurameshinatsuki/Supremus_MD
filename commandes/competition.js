@@ -63,7 +63,7 @@ else {
 
 
     
-await addOrUpdateDataInMenucrps(texte , tlien)
+await addOrUpdateDataInCompetition(texte , tlien)
 
 repondre('✨ données actualisé avec succès')
 
