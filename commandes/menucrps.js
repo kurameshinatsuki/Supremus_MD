@@ -1,5 +1,4 @@
 const { zokou } = require('../framework/zokou');
-const {addOrUpdateDataInMenucrps , getDataFromMenucrps} = require('../bdd/menucrps')
 
 zokou(
     {
