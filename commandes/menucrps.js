@@ -1,39 +1,75 @@
 const { zokou } = require('../framework/zokou');
+const {addOrUpdateDataInMenucrps , getDataFromMenucrps} = require('../bdd/menucrps')
+
+
 
 zokou(
     {
-        nomCom: 'menucrps',
-        categorie: 'crps'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
+        nomCom : 'menucrps',
+        categorie : 'General'
+        
+    },async (dest,zk,commandeOptions) => {
 
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/9df3bb1999c29a8b8885e.jpg';
-            const msg = `░░░░░░░░░░░░░░░░░░
-══════════════════
-.         *| CRPS • MENU |*
-══════════════════
-Bienvenue dans le menu principal tout voir et savoir sur les activités CRPS.
+ const {ms , arg, repondre,superUser} = commandeOptions;
 
-◩ Guide
-◩ Competition
-◩ Succes
-◩ Devise
-◩ Reward
-◩ Jobs
-◩ Générale
-◩ Nexus Ligue
-◩ Id rôliste
+ const data = await getDataFromMenucrps();
 
-░░░░░░░░░░░░░░░░░░
-══════════════════
-          『 🪀 𝗖𝗥𝗣𝗦 𝗧𝗘𝗔𝗠 🪀 』`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-  
-        }
+ if (!arg || !arg[0] || arg.join('') === '') {
+
+    if(data) {
+       
+        const {message , lien} = data;
+
+
+const alivemsg = `${message}`
+
+ if (lien.match(/\.(mp4|gif)$/i)) {
+    try {
+        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
     }
-);
+    catch (e) {
+        console.log("🥵🥵 Menu erreur " + e);
+        repondre("🥵🥵 Menu erreur " + e);
+    }
+} 
+// Checking for .jpeg or .png
+else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+    try {
+        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+    }
+    catch (e) {
+        console.log("🥵🥵 Menu erreur " + e);
+        repondre("🥵🥵 Menu erreur " + e);
+    }
+} 
+else {
+    
+    repondre(alivemsg);
+    
+}
+
+    } else {
+        if(!superUser) { repondre("there is no crpsmenu for this bot") ; return};
+
+      await   repondre("You have not yet saved your crpsmenu, to do this;  enter after alive your message and your image or video link in this context: -crpsmenu message;lien");
+         repondre("don't do fake thinks :)")
+     }
+ } else {
+
+    if(!superUser) { repondre ("Only the owner can  modify the crpsmenu") ; return};
+
+  
+    const texte = arg.join(' ').split(';')[0];
+    const tlien = arg.join(' ').split(';')[1]; 
+
+
+    
+await addOrUpdateDataInMenucrps(texte , tlien)
+
+repondre('message crpsmemu refresh successfully')
+
+}
+    });
 
 
 zokou(
