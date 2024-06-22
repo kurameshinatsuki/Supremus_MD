@@ -261,17 +261,18 @@ zokou(
 ═══════════════════
      🏆 𝗗𝗶𝘃𝗶𝘀𝗶𝗼𝗻 𝗕𝗿𝗼𝗻𝘇𝗲 🥉
 ═══════════════════
-> *RIP Atlas               : 100pts*
-> *Lone R. Tempest : 100pts*
+> *Lone R. Tempest : 150pts*
+> *RIP Atlas               : 120pts*
+> *Yû C. N. A. Th      : 090pts*
 > *Draken And Start : 090pts*
 > *Wei Wuxian          : 070pts*
-> *Yû C. N. A. Th      : 050pts*
+> *Rayan ARGENT    : 050pts*
+> *Lone T. Atlas        : 050pts*
+> *Kunday               :* 050pts*
+> *Lust Gilgamesh   : 040pts*
 > *Manjiro                  : 040pts*
-> *Lust Gilgamesh   : 020pts*
-> *Rayan ARGENT    : 000pts*
 > *Yuta Supremus    : 000pts*
 > *Tomura Shigaraki: 000pts*
-> *Lone T. Atlas        : 000pts*
 > *Noname (~)         : 000pts*
 > *Night                      : 000pts*
 
