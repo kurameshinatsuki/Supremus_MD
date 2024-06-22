@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const {addOrUpdateDataInMenucrps , getDataFromMenucrps} = require('../bdd/competition')
+const {addOrUpdateDataInCompetition , getDataFromCompetition} = require('../bdd/competition')
 
 
 zokou(
