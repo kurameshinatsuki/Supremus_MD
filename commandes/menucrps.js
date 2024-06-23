@@ -254,7 +254,7 @@ zokou(
 
         if (!arg || arg.length === 0)  {
             const lien = 'https://telegra.ph/file/1aea5a846d5bcb1670914.jpg';
-            const msg = `*╭────❏ Crps-Player ❏*
+            const msg = `*╭────❏ CRPS-PLAYER ❏*
 │ ripatlas
 │ yuta
 │ noname
@@ -265,7 +265,7 @@ zokou(
 │ yû
 │ rayan
 │ tempest
-│ lugh
+│ lust
 │ manjiro
 │ draken
 *╰═════════════⊷* 
