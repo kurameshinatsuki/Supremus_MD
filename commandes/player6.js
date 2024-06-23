@@ -3,7 +3,7 @@ const { addOrUpdateDataInPlayer6, getDataFromPlayer6 } = require('../bdd/player6
 
 zokou(
     {
-        nomCom: '...',
+        nomCom: 'tomura',
         categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
