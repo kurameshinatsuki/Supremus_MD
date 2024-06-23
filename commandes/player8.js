@@ -9,7 +9,7 @@ zokou(
 
         const { ms, arg, repondre, superUser } = commandeOptions;
 
-        const data = await getDataFromPlayer6();
+        const data = await getDataFromPlayer8();
 
         if (!arg || !arg[0] || arg.join('') === '') {
 
