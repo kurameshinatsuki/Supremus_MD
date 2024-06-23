@@ -24,6 +24,7 @@ Bienvenue dans le menu principal tout voir et savoir sur les activités CRPS.
 ◩ Jobs
 ◩ Générale
 ◩ Nexus Ligue
+◩ Menu Player
 ◩ Id rôliste
 
 ░░░░░░░░░░░░░░░░░░
@@ -239,6 +240,39 @@ zokou(
             const msg = `.  『 🪀 𝗖𝗥𝗣𝗦 𝗡𝗘𝗪 𝗛𝗢𝗥𝗜𝗭𝗢𝗡 📇 』`;
             zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
   
+        }
+    }
+);
+
+zokou(
+    {
+        nomCom: 'menuplayer',
+        categorie: 'crps'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            const lien = 'https://telegra.ph/file/1aea5a846d5bcb1670914.jpg';
+            const msg = `*╭────❏ Crps-Player ❏*
+│ ripatlas
+│ yuta
+│ noname
+│ tomura
+│ night
+│ lonetatlas
+│ wei
+│ yû
+│ rayan
+│ tempest
+│ lugh
+│ manjiro
+│ draken
+*╰═════════════⊷* 
+◇            ◇
+     *[🪀 SUPREMUS PROD 🪀]*`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   
         }
     }
 );
