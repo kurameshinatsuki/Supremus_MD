@@ -1,10 +1,10 @@
-/*const { zokou } = require('../framework/zokou');
+const { zokou } = require('../framework/zokou');
 const {addOrUpdateDataInPlayer15 , getDataFromPlayer15} = require('../bdd/player15')
 
 
 zokou(
     {
-        nomCom : '',
+        nomCom : 'viviane',
         categorie : 'Crps-Player'
         
     },async (dest,zk,commandeOptions) => {
