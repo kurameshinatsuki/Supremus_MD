@@ -64,7 +64,7 @@ async function getDataFromPlayer4() {
     const client = await pool.connect();
     try {
       // Exécutez la requête SELECT pour récupérer les données
-      const query = "SELECT message, lien FROM player WHERE id = 1";
+      const query = "SELECT message, lien FROM player4 WHERE id = 1";
       const result = await client.query(query);
   
       if (result.rows.length > 0) {
