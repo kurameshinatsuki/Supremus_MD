@@ -43,7 +43,7 @@ async function addOrUpdateDataInPlayer4(message, lien) {
     try {
       // Insérez ou mettez à jour les données dans la table "john"
       const query = `
-        INSERT INTO player (id, message, lien)
+        INSERT INTO player4 (id, message, lien)
         VALUES (1, $1, $2)
         ON CONFLICT (id)
         DO UPDATE SET message = excluded.message, lien = excluded.lien;
