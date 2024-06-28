@@ -1,13 +1,24 @@
 const fs = require('fs-extra');
-const { Sequelize } = require('sequelize');
-if (fs.existsSync('set.env'))
-    require('dotenv').config({ path: __dirname + '/set.env' });
 const path = require("path");
+if (fs.existsSync('set.env')) {
+    require('dotenv').config({ path: __dirname + '/set.env' });
+}
+
 const databasePath = path.join(__dirname, './database.db');
 const DATABASE_URL = process.env.DATABASE_URL === undefined
     ? databasePath
     : process.env.DATABASE_URL;
-module.exports = { session: process.env.SESSION_ID || 'zokk',
+
+// Vérifiez si SPDB est défini dans les variables d'environnement
+const SPDB = process.env.SPDB || 'postgres://defaultConnectionString';
+
+if (!SPDB) {
+    console.error('Erreur : SPDB n\'est pas défini dans les variables d\'environnement.');
+    process.exit(1);
+}
+
+module.exports = {
+    session: process.env.SESSION_ID || 'zokk',
     PREFIXE: process.env.PREFIX || "~",
     OWNER_NAME: process.env.OWNER_NAME || "Zokou-Md",
     NUMERO_OWNER : process.env.NUMERO_OWNER || "Djalega",              
@@ -18,14 +29,14 @@ module.exports = { session: process.env.SESSION_ID || 'zokk',
     MODE: process.env.PUBLIC_MODE || "yes",
     PM_PERMIT: process.env.PM_PERMIT || 'no',
     HEROKU_APP_NAME : process.env.HEROKU_APP_NAME || null,
-    HEROKU_APY_KEY : process.env.HEROKU_APY_KEY || null,
+    HEROKU_API_KEY : process.env.HEROKU_API_KEY || null,
     WARN_COUNT : process.env.WARN_COUNT || '3' ,
     ETAT : process.env.PRESENCE || '',
     //GPT : process.env.OPENAI_API_KEY || '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',
     DP : process.env.STARTING_BOT_MESSAGE || "yes",
     ADM : process.env.ANTI_DELETE_MESSAGE || 'no',
     CHATBOT : process.env.PM_CHATBOT || 'no',  
-    SPDB : process.env.SPDB || 'postgres://supremusprod:KMhs3rOCSqqcsV5FjXYywuibPPQXnJuE@dpg-cpoppueehbks73eog9u0-a/supremusprod',         
+    SPDB,         
     DATABASE_URL,
     DATABASE: DATABASE_URL === databasePath
         ? "postgres://db_7xp9_user:6hwmTN7rGPNsjlBEHyX49CXwrG7cDeYi@dpg-cj7ldu5jeehc73b2p7g0-a.oregon-postgres.render.com/db_7xp9" : "postgres://db_7xp9_user:6hwmTN7rGPNsjlBEHyX49CXwrG7cDeYi@dpg-cj7ldu5jeehc73b2p7g0-a.oregon-postgres.render.com/db_7xp9",
@@ -33,8 +44,8 @@ module.exports = { session: process.env.SESSION_ID || 'zokk',
      dialect: 'sqlite',
      storage: DATABASE_URL,
      logging: false,
-})
-: new Sequelize(DATABASE_URL, {
+    })
+    : new Sequelize(DATABASE_URL, {
      dialect: 'postgres',
      ssl: true,
      protocol: 'postgres',
@@ -43,8 +54,9 @@ module.exports = { session: process.env.SESSION_ID || 'zokk',
          ssl: { require: true, rejectUnauthorized: false },
      },
      logging: false,
-}),*/
+    }),*/
 };
+
 let fichier = require.resolve(__filename);
 fs.watchFile(fichier, () => {
     fs.unwatchFile(fichier);
