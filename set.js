@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require("path");
+
 if (fs.existsSync('set.env')) {
     require('dotenv').config({ path: __dirname + '/set.env' });
 }
@@ -9,7 +10,6 @@ const DATABASE_URL = process.env.DATABASE_URL === undefined
     ? databasePath
     : process.env.DATABASE_URL;
 
-// Vérifiez si SPDB est défini dans les variables d'environnement
 const SPDB = process.env.SPDB || 'postgres://defaultConnectionString';
 
 if (!SPDB) {
@@ -32,7 +32,6 @@ module.exports = {
     HEROKU_API_KEY : process.env.HEROKU_API_KEY || null,
     WARN_COUNT : process.env.WARN_COUNT || '3' ,
     ETAT : process.env.PRESENCE || '',
-    //GPT : process.env.OPENAI_API_KEY || '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',
     DP : process.env.STARTING_BOT_MESSAGE || "yes",
     ADM : process.env.ANTI_DELETE_MESSAGE || 'no',
     CHATBOT : process.env.PM_CHATBOT || 'no',  
@@ -40,21 +39,34 @@ module.exports = {
     DATABASE_URL,
     DATABASE: DATABASE_URL === databasePath
         ? "postgres://db_7xp9_user:6hwmTN7rGPNsjlBEHyX49CXwrG7cDeYi@dpg-cj7ldu5jeehc73b2p7g0-a.oregon-postgres.render.com/db_7xp9" : "postgres://db_7xp9_user:6hwmTN7rGPNsjlBEHyX49CXwrG7cDeYi@dpg-cj7ldu5jeehc73b2p7g0-a.oregon-postgres.render.com/db_7xp9",
-    /* new Sequelize({
-     dialect: 'sqlite',
-     storage: DATABASE_URL,
-     logging: false,
-    })
-    : new Sequelize(DATABASE_URL, {
-     dialect: 'postgres',
-     ssl: true,
-     protocol: 'postgres',
-     dialectOptions: {
-         native: true,
-         ssl: { require: true, rejectUnauthorized: false },
-     },
-     logging: false,
-    }),*/
+    e1: process.env.aucun,
+    e2: process.env.aucun,
+    e3: process.env.aucun,
+    e4: process.env.0,
+    e5: process.env.0,
+    e6: process.env.aucun,
+    e7: process.env.0,
+    e8: process.env.0,
+    e9: process.env.aucun,
+    e10: process.env.0,
+    e11: process.env.0,
+    e12: process.env.0,
+    e13: process.env.aucun,
+    e14: process.env.0,
+    e15: process.env.0,
+    e16: process.env.0,
+    e17: process.env.0,
+    e18: process.env.0,
+    e19: process.env.aucun,
+    e20: process.env.aucun,
+    e21: process.env.0,
+    e22: process.env.0,
+    e23: process.env.aucun,
+    e24: process.env.0,
+    e25: process.env.0,
+    e26: process.env.0,
+    e27: process.env.0,
+    // Ajoutez plus de variables pour les autres colonnes
 };
 
 let fichier = require.resolve(__filename);
