@@ -511,51 +511,22 @@ zokou(
 
 zokou(
     {
-        nomCom: 'fightrule1',
+        nomCom: 'fightrule',
         categorie: 'crps'
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, arg, ms } = commandeOptions;
 
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/ecdf5c700e8c15a3dfbd3.jpg';
-            const msg = `.  *[🎮 CRPS SYSTEM RP 🎮]*`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-   
-        }
-    }
-);
+        if (!arg || arg.length === 0) {
+            const liens = [
+                'https://telegra.ph/file/ecdf5c700e8c15a3dfbd3.jpg',
+                'https://telegra.ph/file/2a0c4b2101a38deb9d6a6.jpg',
+                'https://telegra.ph/file/d9f9852ede777e5fc5c64.jpg'
+            ];
 
-zokou(
-    {
-        nomCom: 'fightrule2',
-        categorie: 'crps'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/2a0c4b2101a38deb9d6a6.jpg';
-            const msg = `.  *[🎮 CRPS SYSTEM RP 🎮]*`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-   
-        }
-    }
-);
-
-zokou(
-    {
-        nomCom: 'fightrule3',
-        categorie: 'crps'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/d9f9852ede777e5fc5c64.jpg';
-            const msg = `.  *[🎮 CRPS SYSTEM RP 🎮]*`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-   
+            for (const lien of liens) {
+                await zk.sendMessage(dest, { image: { url: lien } }, { quoted: ms });
+            }
         }
     }
 );
