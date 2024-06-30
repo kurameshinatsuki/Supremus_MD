@@ -767,7 +767,7 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            // const lien = '';
+            const lien = 'https://telegra.ph/file/7b23e4f6316af5b5575cb.jpg';
             const msg = `.  🎮 𝗣𝗔𝗩𝗘 𝗗𝗘 𝗖𝗢𝗠𝗕𝗔𝗧 🎮
 ░░░░░░░░░░░░░░░░░░░
 ═══════════════════
@@ -810,7 +810,7 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            // const lien = '';
+            const lien = 'https://telegra.ph/file/7b23e4f6316af5b5575cb.jpg';
             const msg = `*🎭ORIGAMY WORLD STORY🌎*
 ░░░░░░░░░░░░░░░░░░░
 ═══════════════════
