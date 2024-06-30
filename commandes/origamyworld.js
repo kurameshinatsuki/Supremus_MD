@@ -757,3 +757,74 @@ zokou(
         }
     }
 );
+
+zokou(
+    {
+        nomCom: 'story',
+        categorie: 'Origamy-World'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            // const lien = '';
+            const msg = `.  🎮 𝗣𝗔𝗩𝗘 𝗗𝗘 𝗖𝗢𝗠𝗕𝗔𝗧 🎮
+░░░░░░░░░░░░░░░░░░░
+═══════════════════
+>> *[Player Name]*
+
+💬:
+
+>
+
+💬:
+
+>
+
+*💠 𝐏𝐨𝐮𝐯𝐨𝐢𝐫 :* Aucun
+*📌 𝐃𝐢𝐬𝐭𝐚𝐧𝐜𝐞 :* [Destination]
+░░░░░░░░░░░░░░░░░░░
+❤️ : 100  🌀 : 050  🫀 : 000
+💪 : 000  🏃 : 000  👊 : 000
+🍽️ : 100  🍶 : 100
+💰 : 000.000
+
+📦Inventaires: 0/2
+- 
+- 
+░░░░░░░░░░░░░░░░░░░
+═══════════════════
+        『 🎮 𝗣𝗟𝗔𝗬 𝗡𝗢 𝗟𝗜𝗠𝗜𝗧 🔝 』`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   
+        }
+    }
+);
+
+zokou(
+    {
+        nomCom: 'scenariste',
+        categorie: 'Origamy-World'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            // const lien = '';
+            const msg = `*🎭ORIGAMY WORLD STORY🌎*
+░░░░░░░░░░░░░░░░░░░
+═══════════════════
+*⌚ Heure:* [montre requise]
+
+
+
+
+
+░░░░░░░░░░░░░░░░░░░
+═══════════════════
+        『 🎮 𝗣𝗟𝗔𝗬 𝗡𝗢 𝗟𝗜𝗠𝗜𝗧 🔝 』`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   
+        }
+    }
+);
