@@ -25,10 +25,30 @@ const creerTableevents = async () => {
       CREATE TABLE IF NOT EXISTS events (
         Id serial PRIMARY KEY,
         jid text UNIQUE,
-        welcome text DEFAULT 'non',
-        goodbye text DEFAULT 'non',
-        antipromote text DEFAULT 'non',
-        antidemote text DEFAULT 'non'
+        welcome text DEFAULT '░░░░░░░░░░░░░░░░░░░░░░
+══════════════════════
+ 𝐁𝐈𝐄𝐍𝐕𝐄𝐍𝐔𝐄 𝐀 𝐋𝐀 "𝐂𝐑𝐏𝐒 𝐍𝐄𝐖 𝐄𝐑𝐀"
+══════════════════════
+La *CRPS* signifiant "Community Rôle Play Supremus" vous accueille en son sein.
+░░░░░░░░░░░░░░░░░░░░░░
+══════════════════════
+Veuillez consulter la liste des commandes ci-dessous pour accéder aux contenus :
+
+*-menucrps*
+░░░░░░░░░░░░░░░░░░░░░░
+══════════════════════
+*📇 Officialis :* 0️⃣3️⃣
+*👤 Rôlistes :* 1️⃣4️⃣
+*🪀 Événements :* Aucune
+░░░░░░░░░░░░░░░░░░░░░░
+══════════════════════
+*🌟 𝐎𝐛𝐣𝐞𝐜𝐭𝐢𝐟 :* ~Créer l'ultime RP Textuelle Multivers réaliste et immersive au monde, nous ne voulons que des personnes intéressées par le Rôle Play. Soyez créatif, déterminer et réaliste ainsi nous créeront ce monde.~
+░░░░░░░░░░░░░░░░░░░░░░
+══════════════════════
+❤️‍🔥 𝐋𝐚 𝐒𝐔𝐏𝐑𝐄𝐌𝐀𝐓𝐈𝐄 𝐫𝐞𝐬𝐢𝐝𝐞 𝐞𝐧 𝐧𝐨𝐮𝐬 ❤️‍🔥',
+        goodbye text DEFAULT '*✨🧘‍♂️ Latum...*',
+        antipromote text DEFAULT '*✨👏 Un KAGE de plus pour le village.*',
+        antidemote text DEFAULT '*✨😶 Une minute de silence pour notre défunt KAGE.*'
       );
     `);
     console.log("La table 'events' a été créée avec succès.");
