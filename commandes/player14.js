@@ -4,7 +4,7 @@ const {addOrUpdateDataInPlayer14 , getDataFromPlayer14} = require('../bdd/player
 
 zokou(
     {
-        nomCom : 'kunday',
+        nomCom : 'queen',
         categorie : 'Crps-Player'
         
     },async (dest,zk,commandeOptions) => {
