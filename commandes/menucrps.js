@@ -253,24 +253,35 @@ zokou(
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
-            const lien = 'https://telegra.ph/file/1aea5a846d5bcb1670914.jpg';
-            const msg = `*╭────❏ CRPS-PLAYER ❏*
-│ ripatlas
-│ yuta
-│ noname
-│ tomura
-│ night
-│ lonetatlas
-│ wei
-│ yû
-│ rayan
-│ tempest
-│ lust
-│ manjiro
-│ draken
-*╰═════════════⊷* 
-◇            ◇
-     *[🪀 SUPREMUS PROD 🪀]*`;
+            const lien = 'https://telegra.ph/file/56b1d88e0e35b86047cce.jpg';
+            const msg = `░░░░░░░░░░░░░░░░░░░
+═══════════════════
+          *[ MENU PLAYER ]*
+═══════════════════
+
+01. Ripatlas [+225 54126927]
+02. Manjiro [+224 6 2245 6205]
+03. Draken [+224 6 2060 4101]
+04. Samuel [+225 89633611]
+05. Tenno [+225 45697604]
+06. Queen [+243 976 594 355]
+07. Viviane [+243 976 594 355]
+08. Tempest [+243 810 602 780]
+09. Yû [+229 54583352]
+10. Rayan [+241 07 32 19 67]
+11. Yuta [+242 06 911 7728]
+12. Tomura [+224 611 61 25 22]
+13. Lust [+237 6 93 23 72 46]
+14. Wei [+243 970 490 637]
+15. Lonetatlas [+225 47835403]
+16. Ruy3 [+237 6 55 27 37 82]
+17. Sept [+224 626 67 50 38]
+18. Dazai [+229 47876426]
+19. Angel [+33 7 45 56 15 48]
+20. Eoza [+226 63 68 54 68]
+
+═══════════════════
+░░░░░░░░░░░░░░░░░░░`;
             zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    
         }
