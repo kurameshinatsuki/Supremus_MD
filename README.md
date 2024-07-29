@@ -1,57 +1,56 @@
-# Zokou-2.0
+# Supremus-MD
 
+Supremus-MD est un bot multi-appareil conçu pour enrichir vos conversations WhatsApp avec des fonctionnalités utiles et amusantes. Basé sur Zokou-MD, il offre les mêmes capacités tout en ajoutant des fonctions RP spécifiques pour gérer des fiches et des contenus. 
 
+## Fonctionnalités Clés
 
-Zokou is a multi-device bot designed to enhance your WhatsApp conversations with useful and fun features. Whether managing files, interacting with stickers, or facilitating group management, Zokou is here to assist you.
+- **Téléchargement de Fichiers :** Supremus-MD peut télécharger des fichiers audio et vidéo à partir des liens que vous envoyez, facilitant ainsi leur partage avec vos contacts.
 
-## Key Features
+- **Exportation de Stickers :** Vous pouvez exporter des stickers de Telegram et les utiliser dans vos conversations WhatsApp en les envoyant simplement à Supremus-MD.
 
-- **File Download:** Zokou can download audio and video files from links you send, making it easy to share them with your contacts.
+- **Gestion de Groupes :** Supremus-MD propose des fonctionnalités de gestion de groupe, telles que l'ajout ou la suppression de membres, la configuration de règles et d'autres paramètres.
 
-- **Sticker Export:** You can export stickers from Telegram and use them in your WhatsApp conversations by simply sending them to Zokou.
+- **Texte en Image :** Les meilleurs logos ont été sélectionnés pour votre convenance.
 
-- **Group Management:** Zokou offers group management features, such as adding or removing members, configuring rules, and other settings.
+## Fonctionnalités RP
 
-- **Text to Img:** The best logos have been selected for your convenience.
+- **Gestion de Fiches :** Créez, gérez et mettez à jour des fiches de personnage pour vos jeux de rôle directement via WhatsApp.
 
-## Fun Features
+- **Contenus RP :** Partagez et organisez des contenus spécifiques aux jeux de rôle, tels que des scénarios, des cartes et des règles.
 
-- **Jokes and Riddles:** Zokou comes with a collection of jokes and riddles to liven up your conversations.
+## Fonctionnalités Amusantes
 
-- **Inspiring Quotes:** Receive inspiring quotes to motivate you daily.
+- **Blagues et Devinettes :** Supremus-MD est équipé d'une collection de blagues et de devinettes pour animer vos conversations.
 
-## Get Zokou
+- **Citations Inspirantes :** Recevez des citations inspirantes pour vous motiver quotidiennement.
 
-1. Click on **[Fork](https://github.com/Luffy2ndAccount/Zokou-english-v/fork)** to copy the repo to your GitHub account. Make sure to add a star 🌟 to encourage the developers.
+## Obtenir Supremus-MD
 
-2. Obtain a bot session: 
+1. Cliquez sur **[Fork](https://github.com/johnsupremus1/Supremus-Prod)** pour copier le dépôt sur votre compte GitHub. N'oubliez pas d'ajouter une étoile 🌟 pour encourager les développeurs.
 
-   [Session-1](https://zokouscan-production.up.railway.app) ; <br>
+2. Obtenez une session bot :
+   - [Session-1](https://zokouscan-production.up.railway.app) ;
 
-
-3. Deploy
-   - **Heroku Deployment:**
-     1. If you don't have a **Heroku** account, click [**here**](https://id.heroku.com/login) to create one.
-     2. Click [**here**](https://dashboard.heroku.com/new?template=https://github.com/Luffy2ndAccount/Zokou-english-v) to deploy the bot on **Heroku**.
+3. Déploiement
+   - **Déploiement sur Heroku :**
+     1. Si vous n'avez pas de compte **Heroku**, cliquez [**ici**](https://id.heroku.com/login) pour en créer un.
+     2. Cliquez [**ici**](https://dashboard.heroku.com/new?template=https://github.com/johnsupremus1/Supremus-Prod) pour déployer le bot sur **Heroku**.
 
 ## Contributions
 
-Contributions to Zokou are welcome! If you have ideas for new features, improvements, or bug fixes, feel free to open an issue or submit a pull request. <br>
+Les contributions à Supremus-MD sont les bienvenues ! Si vous avez des idées pour de nouvelles fonctionnalités, des améliorations ou des corrections de bugs, n'hésitez pas à ouvrir une issue ou à soumettre une pull request.
 
-   thinks to these persons ;
+   Remerciements à ces personnes :
+   - **Fatao** qui participe par moment à la résolution des erreurs  (bdd, cmd player) ;
+   - **Monkey D Luffy** qui a créer ce bot et les principaux codes favorisant son bon fonctionnement.
 
-   **Fatao** who added commands (Fancy, gpt, dalle, apk); <br>
+## Licence
 
-   **CrazyPrice** who hosted a second website for the session_id;
+Le bot WhatsApp Supremus-MD est distribué sous la [Licence MIT](https://opensource.org/licenses/MIT).
 
-## License
+Profitez des diverses fonctionnalités de Supremus-MD pour enrichir vos conversations et rendre votre expérience WhatsApp plus intéressante !
 
-The WhatsApp Bot Zokou is released under the [MIT License](https://opensource.org/licenses/MIT).
+## Développeurs
 
-Enjoy the diverse features of the WhatsApp Bot Zokou to enhance your conversations and make your WhatsApp experience more interesting!
-
-## Developers:
-
-- [**Djalega++**](https://github.com/djalega8000/Zokou-MD/)
-- [**᚛M๏𝓷keℽ D Lบffy᚜**](https://github.com/Faouz995)
-
+- [**John Supremus**](https://github.com/johnsupremus1/Supremus-Prod)
+- [**M๏nkeℽ D Lบffy**](https://github.com/Faouz995)
