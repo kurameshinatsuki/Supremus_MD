@@ -25,7 +25,7 @@ module.exports = {
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "oui",
     AUTO_DOWNLOAD_STATUS: process.env.AUTO_DOWNLOAD_STATUS || 'non',
     BOT : process.env.BOT_NAME || 'Supremus-MD',
-    URL : process.env.BOT_MENU_LINKS || 'https://static.animecorner.me/2023/08/op2.jpg',
+    URL : process.env.BOT_MENU_LINKS || 'https://telegra.ph/file/0476650d3fe5d5770ab1c.jpg',
     MODE: process.env.PUBLIC_MODE || "yes",
     PM_PERMIT: process.env.PM_PERMIT || 'no',
     HEROKU_APP_NAME : process.env.HEROKU_APP_NAME || null,
