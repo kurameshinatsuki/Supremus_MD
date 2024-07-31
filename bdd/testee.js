@@ -1,12 +1,12 @@
-// Importez dotenv et chargez les variables d'environnement depuis le fichier .env
-require("dotenv").config();
+// Importer dotenv et chargez les variables d'environnement depuis le fichier .env
+require('dotenv').config();
 
-const { Pool } = require("pg");
+const { Pool } = require('pg');
 
-// Utilisez le module 'set' pour obtenir la valeur de DATABASE_URL depuis vos configurations
-const s = require("../set");
+// Utiliser le module 'set' pour obtenir la valeur de DATABASE_URL depuis les configurations
+const s = require('../set');
 
-// Remplacez l'URL de la base de données par la nouvelle URL fournie
+// Remplacer l'URL de la base de données par la nouvelle URL fournie
 var dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
@@ -15,7 +15,7 @@ const proConfig = {
   },
 };
 
-// Créez une pool de connexions PostgreSQL
+// Créer une pool de connexions PostgreSQL
 const pool = new Pool(proConfig);
 
 // Fonction générique pour créer une table pour un joueur
@@ -38,7 +38,7 @@ const creerTablePlayer = async (playerTable) => {
 async function addOrUpdateDataInTestee(playerTable, message, lien) {
   const client = await pool.connect();
   try {
-    // Insérez ou mettez à jour les données dans la table du joueur
+    // Insérer ou mettre à jour les données dans la table du joueur
     const query = `
       INSERT INTO ${playerTable} (id, message, lien)
       VALUES (1, $1, $2)
@@ -56,12 +56,12 @@ async function addOrUpdateDataInTestee(playerTable, message, lien) {
   }
 }
 
-// Fonction générique pour récupérer les données d'une table de joueur
+// fonction générique pour récupérer les données d'une table de joueur
 async function getDataFromTestee(playerTable) {
   const client = await pool.connect();
   try {
-    // Exécutez la requête SELECT pour récupérer les données
-    const query = `SELECT message, lien FROM ${playerTable} WHERE id = 1`;
+    // exécuter la requête SELECT pour récupérer les données
+    const query = `SELECT message, lien FROM ${playerTable} WHERE id = 1;`;
     const result = await client.query(query);
 
     if (result.rows.length > 0) {
@@ -79,7 +79,7 @@ async function getDataFromTestee(playerTable) {
   }
 }
 
-// Exportez les fonctions pour les utiliser dans d'autres fichiers
+// Exporter les fonctions pour les utiliser dans d'autres fichiers
 module.exports = {
   creerTablePlayer,
   addOrUpdateDataInTestee,
