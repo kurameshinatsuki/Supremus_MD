@@ -24,7 +24,7 @@ module.exports = {
     NUMERO_OWNER : process.env.NUMERO_OWNER || "John Supremus",              
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "oui",
     AUTO_DOWNLOAD_STATUS: process.env.AUTO_DOWNLOAD_STATUS || 'non',
-    BOT : process.env.BOT_NAME || 'Supremus-MD',
+    BOT : process.env.BOT_NAME || 'SP-ZK-MD',
     URL : process.env.BOT_MENU_LINKS || 'https://telegra.ph/file/0476650d3fe5d5770ab1c.jpg',
     MODE: process.env.PUBLIC_MODE || "yes",
     PM_PERMIT: process.env.PM_PERMIT || 'no',
