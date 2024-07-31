@@ -1,176 +1,154 @@
 const { zokou } = require('../framework/zokou');
-const { getData } = require('../bdd/northdiv');
-const s = require("../set");
-
-const dbUrl = s.SPDB;
+const { creerTablePlayer, addOrUpdateDataInTestee, getDataFromTestee } = require('../bdd/testee'); // Remplace par le chemin correct
 
 zokou(
-  {
-    nomCom: 'northainz👤',
-    categorie: 'NEOverse'
-  },
-  async (dest, zk, commandeOptions) => {
-    const { ms, repondre, arg, superUser } = commandeOptions;
-    let client;
-    try {
-        const data = await getData('8');
-        if (!arg || arg.length === 0) {
-            // Affichage des données de l'utilisateur
-            const mesg = `◇ *Pseudo👤*: ${data.e1}
-◇ *Division🛡️*: ${data.e2}
-◇ *Classe🏆*: ${data.e3}
-◇ *Rang XP🔰*: ${data.e4}
-◇ *Golds🧭*: ${data.e5}🧭
-◇ *NΞOcoins🔹*: ${data.e6}🔷
-◇ *Gift Box🎁*: ${data.e7}🎁
-◇ *Coupons🎟*: ${data.e8}🎟
-◇ *NΞO PASS🔸*: ${data.e9}🔸 
-*❯❯▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
- **🧠Talent Qi: ${data.e10}⭐* 
-*✅Clean games*:  ${data.e18}  *❌Mauvais PA:* ${data.e19}                             
-*👊🏻Close combat*: ${data.e20}     *🌀Attaques*: ${data.e21}
-░░░░░░░░░░░░░░░░░░░
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*✭Records*: ${data.e12} Victoires✅/ ${data.e13} Défaites❌
-*🏆Trophées*: ${data.e14}  *🌟 TOS*: ${data.e15}  
-*💫Neo Awards*: ${data.e16}   *🎖️Globes*: ${data.e22}
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*🎴Cards*: ${data.e17} 
-░░░░░░░░░░░░░░░░░░░
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    *🔷𝗡Ξ𝗢 SUPERLEAGUE🏆🔝*`;
-            zk.sendMessage(dest, { image: { url: 'https://telegra.ph/file/c9a177ecb800fe17c8e88.jpg' }, caption: mesg }, { quoted: ms });
-        } else {
-          //  const dbUrl = "postgres://fatao:Kuz6KQRpz3S1swoTQTv1WOG8SPfSCppB@dpg-cmnlnkol5elc738lrj2g-a.oregon-postgres.render.com/cy";
-            const proConfig = {
-                connectionString: dbUrl,
-                ssl: {
-                    rejectUnauthorized: false,
-                },
-            };
+    {
+        nomCom: 'john',  // Remplace 'playercard' par un nom générique de commande
+        categorie: 'Update'
+    }, async (dest, zk, commandeOptions) => {
 
-            const { Pool } = require('pg');
-            const pool = new Pool(proConfig);
-            client = await pool.connect();
+        const { ms, arg, repondre, superUser } = commandeOptions;
 
-            if (superUser) { 
-                let colonnesJoueur = {
-                        pseudo: "e1",
-        division: "e2",
-        classe: "e3",
-        rang_exp: "e4",
-        golds: "e5",
-        neocoins: "e6",
-        gift_box: "e7",
-        coupons: "e8",
-        neopass: "e9",
-        talent: "e10",
-        victoires: "e12",
-        defaites: "e13",
-        trophees: "e14",
-        tos: "e15",
-        awards: "e16",
-        cards: "e17",
-        Clean_games: "e18",
-        Mauvais_pa: "e19",
-        Close_combat: "e20",
-        Attaques: "e21",
-        globes: "e22"
-                    };
+        // Vérifie si un nom de joueur est passé en argument
+        if (!arg || !arg[0]) {
+            repondre("✨ Veuillez spécifier un joueur.");
+            return;
+        }
 
-                let updates = []; // Tableau pour stocker les mises à jour à effectuer
+        const playerName = arg[0].toLowerCase();  // Nom du joueur (par exemple, 'john')
+        const playerTable = `player_${playerName}`;  // Nom de la table dynamique
 
-                for (let i = 0; i < arg.length; i += 3) {
-                    let object = arg[i];
-                    let signe = arg[i + 1];
-                    let valeur = arg[i + 2];
-                    let texte = arg.slice(i + 2).join(' '); // Récupérer tout le texte restant
+        // Crée la table pour le joueur si elle n'existe pas déjà
+        await creerTablePlayer(playerTable);
 
-                    let colonneObjet = colonnesJoueur[object];
-                    let newValue;
-                  let oldValue;
+        const data = await getDataFromTestee(playerTable);
 
-                    if (signe === '+' || signe === '-') {
-                        // Mise à jour de la valeur en ajoutant ou soustrayant
-                      const querySelect = SELECT ;$;{colonneObjet} <From></From> ,northdiv ,WHERE ,id = 8;
-                            const result = await client.query(querySelect);
-                            oldValue = result.rows[0][colonneObjet];
-                            
-                        newValue = $,{oldValue} ;{signe} {valeur};
-                    } else if (signe === '=' || signe === 'add' || signe === 'supp') {
-                        // Mise à jour de la valeur en remplaçant ou supprimant
-                        if (signe === 'add') {
-                            // Ajout de texte
-                            const querySelect = SELECT ;$;{colonneObjet} FROM, northdiv, WHERE, id = 8;
-                            const result = await client.query(querySelect);
-                            const oldValue = result.rows[0][colonneObjet];
-                            newValue = $,{oldValue} ;{texte};
-                        } else if (signe === 'supp') {
-                // Suppression de texte
-                const querySelect = SELECT ,$,{colonneObjet} ,FROM ,northdiv ,WHERE ,id = 8;
-                const result = await client.query(querySelect);
-                const oldValue = result.rows[0][colonneObjet];
-                // Créer une expression régulière pour correspondre au texte avec des espaces autour
-                const regex = new RegExp(b$,{texte},b, 'g');
-                newValue = oldValue.replace(regex, '').trim(); 
-                        } else if (signe === '=') {
-                            // Remplacement de texte
-                            newValue = texte;
-                        }
-                    } else {
-                        console.log("Signe invalide.");
-                        repondre(Une ,erreur ,est ,survenue. Veuillez ,entrer ,correctement ,les ,données);
-                        return;
+        if (arg.length === 1) {  // Aucune donnée supplémentaire, donc on affiche la fiche du joueur
+            if (data) {
+                const { message, lien } = data;
+
+                const alivemsg = `${message}`;
+
+                if (lien.match(/\.(mp4|gif)$/i)) {
+                    try {
+                        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
                     }
-
-                    // Ajouter la mise à jour au tableau
-                    updates.push({ colonneObjet, newValue, oldValue });
+                    catch (e) {
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
+                    }
+                } 
+                // Vérifie pour .jpeg ou .png
+                else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+                    try {
+                        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    }
+                    catch (e) {
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
+                    }
+                } 
+                else {
+                    repondre(alivemsg);
                 }
 
-                try {
-                    await client.query('BEGIN'); // Début de la transaction
-
-                    for (const update of updates) {
-                      if (signe === ('add' || 'supp')) {
-                        const queryUpdate = UPDATE ,northdiv ,SET ,{updatecolonneObjet} = $1 ,WHERE ,id = 8;
-                        await client.query(queryUpdate, [update.newValue]);
-                      }  else if (signe === ('+' || '-')) {
-                         const query = UPDATE ,northdiv ,SET ,{updatecolonneObjet} = {updateoldValue} ,{signe} ,{valeur} ,WHERE ,id = 8;
-            await client.query(query);
-                    } else ( signe === '=') ;{
-                        const query = `
-            UPDATE northdiv
-            SET ${update.colonneObjet} = $1
-            WHERE id = 8
-            `;
-
-            await client.query(query, [texte]);
-                      }
-                    }                   
-
-                    await client.query('COMMIT'); // Fin de la transaction
-
-                    console.log(Données ,du ,joueur ,mises ,à ,jour);
-                    const messages = updates.map(update => ⚙ OBJECT, {updatecolonneObjet}\n💵 VALEUR, {updatenewValue}).join('\n');
-                    await repondre(Données ,du ,joueur ,mises ,à ,jour ,pour,n$,{messages});
-                } catch (error) {
-                    await client.query('ROLLBACK'); // Annulation de la transaction en cas d'erreur
-                    console.error("Erreur lors de la mise à jour des données de l'utilisateur:", error);
-                    repondre(Une ,erreur ,est ,survenue ,lors ,de ,la ,mise ,à ,jour ,des ,données. Veuillez ,réessayer);
-                } finally {
-                    client.release(); // Libération des ressources
-                }
             } else {
-                repondre('Seul les Membres de la NS ont le droit de modifier cette fiche');
+                if (!superUser) {
+                    repondre("✨🥲 Aucune fiche trouvée pour ce joueur.");
+                    return;
+                }
+
+                await repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format: -Cmd Message;Lien");
+                repondre("✨ Attention aux infos que vous tapez.");
             }
+        } else {  // Si des arguments supplémentaires sont fournis, on met à jour les données
+            if (!superUser) {
+                repondre("✨🛂 Réservé aux membres de la *DRPS*");
+                return;
+            }
+
+            const texte = arg.slice(1).join(' ').split(';')[0];
+            const tlien = arg.slice(1).join(' ').split(';')[1];
+
+            await addOrUpdateDataInTestee(playerTable, texte, tlien);
+
+            repondre('✨ Données mises à jour avec succès');
         }
-    } catch (error) {
-        console.error("Erreur lors de la mise à jour des données de l'utilisateur:", error);
-        repondre(Une ,erreur ,est ,survenue. Veuillez ,réessayer);
-    } finally {
-        if (client) {
-            client.release(); // Libération des ressources en cas d'erreur
+    });
+
+zokou(
+    {
+        nomCom: 'tenno',  // Remplace 'playercard' par un nom générique de commande
+        categorie: 'Update'
+    }, async (dest, zk, commandeOptions) => {
+
+        const { ms, arg, repondre, superUser } = commandeOptions;
+
+        // Vérifie si un nom de joueur est passé en argument
+        if (!arg || !arg[0]) {
+            repondre("✨ Veuillez spécifier un joueur.");
+            return;
         }
-    }
-  }
-);
+
+        const playerName = arg[0].toLowerCase();  // Nom du joueur (par exemple, 'john')
+        const playerTable = `player_${playerName}`;  // Nom de la table dynamique
+
+        // Crée la table pour le joueur si elle n'existe pas déjà
+        await creerTablePlayer(playerTable);
+
+        const data = await getDataFromTestee(playerTable);
+
+        if (arg.length === 1) {  // Aucune donnée supplémentaire, donc on affiche la fiche du joueur
+            if (data) {
+                const { message, lien } = data;
+
+                const alivemsg = `${message}`;
+
+                if (lien.match(/\.(mp4|gif)$/i)) {
+                    try {
+                        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    }
+                    catch (e) {
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
+                    }
+                } 
+                // Vérifie pour .jpeg ou .png
+                else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+                    try {
+                        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    }
+                    catch (e) {
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
+                    }
+                } 
+                else {
+                    repondre(alivemsg);
+                }
+
+            } else {
+                if (!superUser) {
+                    repondre("✨🥲 Aucune fiche trouvée pour ce joueur.");
+                    return;
+                }
+
+                await repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format: -Cmd Message;Lien");
+                repondre("✨ Attention aux infos que vous tapez.");
+            }
+        } else {  // Si des arguments supplémentaires sont fournis, on met à jour les données
+            if (!superUser) {
+                repondre("✨🛂 Réservé aux membres de la *DRPS*");
+                return;
+            }
+
+            const texte = arg.slice(1).join(' ').split(';')[0];
+            const tlien = arg.slice(1).join(' ').split(';')[1];
+
+            await addOrUpdateDataInTestee(playerTable, texte, tlien);
+
+            repondre('✨ Données mises à jour avec succès');
+        }
+    });
+
+  
