@@ -2,7 +2,7 @@ const { zokou } = require('../framework/zokou');
 const { getData } = require('../bdd/northdiv');
 const s = require("../set");
 
-const dbUrl = s.DB;
+const dbUrl = s.SPDB;
 
 zokou(
   {
