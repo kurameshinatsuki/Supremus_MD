@@ -2,8 +2,6 @@
 require("dotenv").config();
 
 const { Pool } = require("pg");
-
-// Utilisez le module 'set' pour obtenir la valeur de DATABASE_URL depuis vos configurations
 const s = require("../set");
 
 // Remplacez l'URL de la base de données par la nouvelle URL fournie
@@ -22,7 +20,7 @@ const pool = new Pool(proConfig);
 const creerTableTestee = async () => {
     try {
       await pool.query(`
-        CREATE TABLE IF NOT EXISTS ${testeeTable} (
+        CREATE TABLE IF NOT EXISTS testee (
           id serial PRIMARY KEY,
           message text,
           lien text
@@ -32,39 +30,39 @@ const creerTableTestee = async () => {
     } catch (e) {
       console.error("Une erreur est survenue lors de la création de la table 'testee':", e);
     }
-  };
+};
   
 // Appelez la méthode pour créer la table "testee"
 creerTableTestee();
 
-// Fonction pour ajouter ou mettre à jour un enregistrement dans la table "testee"
-async function addOrUpdateDataInTestee(message, lien) {
+// Fonction pour ajouter plusieurs enregistrements dans la table "testee"
+async function insertMultipleRecords(message, lien) {
     const client = await pool.connect();
     try {
-      // Insérez ou mettez à jour les données dans la table "testee"
-      const query = `
-        INSERT INTO ${testeeTable} (id, message, lien)
-        VALUES (1, $1, $2)
-        ON CONFLICT (id)
-        DO UPDATE SET message = excluded.message, lien = excluded.lien;
-      `;
-      const values = [message, lien];
-  
-      await client.query(query, values);
-      console.log("Données ajoutées ou mises à jour dans la table 'testee' avec succès.");
+        for (let i = 1; i <= 20; i++) {
+            const query = `
+                INSERT INTO testee (id, message, lien)
+                VALUES ($1, $2, $3)
+                ON CONFLICT (id)
+                DO UPDATE SET message = excluded.message, lien = excluded.lien;
+            `;
+            const values = [i, `${message} ${i}`, `${lien} ${i}`];
+
+            await client.query(query, values);
+            console.log(`Données ajoutées ou mises à jour pour l'ID ${i} dans la table 'testee' avec succès.`);
+        }
     } catch (error) {
-      console.error("Erreur lors de l'ajout ou de la mise à jour des données dans la table 'testee':", error);
+        console.error("Erreur lors de l'ajout ou de la mise à jour des données dans la table 'testee':", error);
     } finally {
-      client.release();
+        client.release();
     }
-  };
+}
 
 // Fonction pour récupérer les données de la table "testee"
 async function getDataFromTestee() {
     const client = await pool.connect();
     try {
-      // Exécutez la requête SELECT pour récupérer les données
-      const query = "SELECT message, lien FROM ${testeeTable} WHERE id = 1";
+      const query = "SELECT message, lien FROM testee WHERE id = 1";
       const result = await client.query(query);
   
       if (result.rows.length > 0) {
@@ -84,6 +82,6 @@ async function getDataFromTestee() {
 
 // Exportez les fonctions pour les utiliser dans d'autres fichiers
 module.exports = {
-    addOrUpdateDataInTestee,
+    insertMultipleRecords,
     getDataFromTestee,
 };
