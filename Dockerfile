@@ -19,6 +19,6 @@ RUN npm install --legacy-peer-deps
 
 COPY . .
 
-EXPOSE 10000
+EXPOSE 5432
 
 CMD ["node", "index.js"]
