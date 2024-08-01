@@ -1,12 +1,12 @@
-// Importer dotenv et chargez les variables d'environnement depuis le fichier .env
-require('dotenv').config();
+// Importez dotenv et chargez les variables d'environnement depuis le fichier .env
+require("dotenv").config();
 
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 
-// Utiliser le module 'set' pour obtenir la valeur de DATABASE_URL depuis les configurations
-const s = require('../set');
+// Utilisez le module 'set' pour obtenir la valeur de DATABASE_URL depuis vos configurations
+const s = require("../set");
 
-// Remplacer l'URL de la base de données par la nouvelle URL fournie
+// Remplacez l'URL de la base de données par la nouvelle URL fournie
 var dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
@@ -15,73 +15,75 @@ const proConfig = {
   },
 };
 
-// Créer une pool de connexions PostgreSQL
+// Créez une pool de connexions PostgreSQL
 const pool = new Pool(proConfig);
 
-// Fonction générique pour créer une table pour un joueur
-const creerTablePlayer = async (playerTable) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS ${playerTable} (
-        id serial PRIMARY KEY,
-        message text,
-        lien text
-      );
-    `);
-    console.log(`La table '${playerTable}' a été créée avec succès.`);
-  } catch (e) {
-    console.error(`Une erreur est survenue lors de la création de la table '${playerTable}':`, e);
-  }
+// Fonction pour créer la table "testee" avec une colonne "id"
+const creerTableTestee = async () => {
+    try {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ${testeeTable} (
+          id serial PRIMARY KEY,
+          message text,
+          lien text
+        );
+      `);
+      console.log("La table 'testee' a été créée avec succès.");
+    } catch (e) {
+      console.error("Une erreur est survenue lors de la création de la table 'testee':", e);
+    }
+  };
+  
+// Appelez la méthode pour créer la table "testee"
+creerTableTestee();
+
+// Fonction pour ajouter ou mettre à jour un enregistrement dans la table "testee"
+async function addOrUpdateDataInTestee(message, lien) {
+    const client = await pool.connect();
+    try {
+      // Insérez ou mettez à jour les données dans la table "testee"
+      const query = `
+        INSERT INTO ${testeeTable} (id, message, lien)
+        VALUES (1, $1, $2)
+        ON CONFLICT (id)
+        DO UPDATE SET message = excluded.message, lien = excluded.lien;
+      `;
+      const values = [message, lien];
+  
+      await client.query(query, values);
+      console.log("Données ajoutées ou mises à jour dans la table 'testee' avec succès.");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout ou de la mise à jour des données dans la table 'testee':", error);
+    } finally {
+      client.release();
+    }
+  };
+
+// Fonction pour récupérer les données de la table "testee"
+async function getDataFromTestee() {
+    const client = await pool.connect();
+    try {
+      // Exécutez la requête SELECT pour récupérer les données
+      const query = "SELECT message, lien FROM ${testeeTable} WHERE id = 1";
+      const result = await client.query(query);
+  
+      if (result.rows.length > 0) {
+        const { message, lien } = result.rows[0];
+        return { message, lien };
+      } else {
+        console.log("Aucune donnée trouvée dans la table 'testee'.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données depuis la table 'testee':", error);
+      return null;
+    } finally {
+      client.release();
+    }
 };
 
-// Fonction générique pour ajouter ou mettre à jour un enregistrement dans une table de joueur
-async function addOrUpdateDataInTestee(playerTable, message, lien) {
-  const client = await pool.connect();
-  try {
-    // Insérer ou mettre à jour les données dans la table du joueur
-    const query = `
-      INSERT INTO ${playerTable} (id, message, lien)
-      VALUES (1, $1, $2)
-      ON CONFLICT (id)
-      DO UPDATE SET message = excluded.message, lien = excluded.lien;
-    `;
-    const values = [message, lien];
-
-    await client.query(query, values);
-    console.log(`Données ajoutées ou mises à jour dans la table '${playerTable}' avec succès.`);
-  } catch (error) {
-    console.error(`Erreur lors de l'ajout ou de la mise à jour des données dans la table '${playerTable}':`, error);
-  } finally {
-    client.release();
-  }
-}
-
-// fonction générique pour récupérer les données d'une table de joueur
-async function getDataFromTestee(playerTable) {
-  const client = await pool.connect();
-  try {
-    // exécuter la requête SELECT pour récupérer les données
-    const query = `SELECT message, lien FROM ${playerTable} WHERE id = 1;`;
-    const result = await client.query(query);
-
-    if (result.rows.length > 0) {
-      const { message, lien } = result.rows[0];
-      return { message, lien };
-    } else {
-      console.log(`Aucune donnée trouvée dans la table '${playerTable}'.`);
-      return null;
-    }
-  } catch (error) {
-    console.error(`Erreur lors de la récupération des données depuis la table '${playerTable}':`, error);
-    return null;
-  } finally {
-    client.release();
-  }
-}
-
-// Exporter les fonctions pour les utiliser dans d'autres fichiers
+// Exportez les fonctions pour les utiliser dans d'autres fichiers
 module.exports = {
-  creerTablePlayer,
-  addOrUpdateDataInTestee,
-  getDataFromTestee,
+    addOrUpdateDataInTestee,
+    getDataFromTestee,
 };
