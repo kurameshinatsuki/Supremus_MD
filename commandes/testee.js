@@ -1,124 +1,95 @@
-const { zokou } = require('../framework/zokou');
-const { insertData, getData } = require('../bdd/testee');
+const util = require('util');
+const fs = require('fs-extra');
+const { zokou } = require(__dirname + "/../framework/zokou");
+const { format } = require(__dirname + "/../framework/mesfonctions");
+const os = require("os");
+const moment = require("moment-timezone");
+const s = require(__dirname + "/../set");
 
-zokou(
-    {
-        nomCom: 'player1',
-        categorie: 'Update'
-    }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "menuplayer", categorie: "General" }, async (dest, zk, commandeOptions) => {
+    let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
+    let { cm } = require(__dirname + "/../framework//zokou");
+    var coms = {};
+    var mode = "public";
 
-        const { ms, arg, repondre, superUser } = commandeOptions;
-
-        // Supposons que l'ID est passé en tant que premier argument, sinon utiliser un ID par défaut
-        const id = arg[0] ? parseInt(arg[0]) : 1;
-
-        const data = await getData(id);
-
-        if (!arg || !arg[0] || arg.join('') === '') {
-
-            if (data) {
-                const { message, lien } = data;
-                const alivemsg = `${message}`;
-
-                try {
-                    if (lien.match(/\.(mp4|gif)$/i)) {
-                        await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-                        await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else {
-                        repondre(alivemsg);
-                    }
-                } catch (e) {
-                    console.log("🥵🥵 Menu erreur " + e);
-                    repondre("🥵🥵 Menu erreur " + e);
-                }
-            } else {
-                if (!superUser) { 
-                    repondre("✨🥲 Aucune fiche trouvée pour ce joueur."); 
-                    return; 
-                }
-
-                repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format : -Cmd Message;Lien");
-                repondre("✨ Attention aux informations que vous tapez.");
-            }
-        } else {
-
-            if (!superUser) { 
-                repondre("✨🛂 Réservé aux membres de la *DRPS*"); 
-                return; 
-            }
-
-            const texte = arg.join(' ').split(';')[0];
-            const tlien = arg.join(' ').split(';')[1];
-
-            if (!texte || !tlien) {
-                repondre("✨🤔 Format incorrect. Utilisez -Cmd Message;Lien");
-                return;
-            }
-
-            await insertData(texte, tlien);
-            repondre('✨ Données actualisées avec succès');
-        }
+    if ((s.MODE).toLocaleLowerCase() != "yes") {
+        mode = "private";
     }
-);
 
-// Commande similaire pour 'player2'
-zokou(
-    {
-        nomCom: 'player2',
-        categorie: 'Update'
-    }, async (dest, zk, commandeOptions) => {
+    cm.map(async (com, index) => {
+        if (!coms[com.categorie])
+            coms[com.categorie] = [];
+        coms[com.categorie].push(com.nomCom);
+    });
 
-        const { ms, arg, repondre, superUser } = commandeOptions;
+    moment.tz.setDefault('Etc/GMT');
 
-        const id = arg[0] ? parseInt(arg[0]) : 2;
+    // Créer une date et une heure en GMT
+    const temps = moment().format('HH:mm:ss');
+    const date = moment().format('DD/MM/YYYY');
 
-        const data = await getData(id);
+    let infoMsg = `
+*╭────✧${s.BOT}✧────◆*
+│   *Préfix* : ${s.PREFIXE}
+│   *Owner* : ${s.OWNER_NAME}
+│   *Mode* : ${mode}
+│   *Commands* : ${cm.length}
+│   *Date* : ${date}
+│   *Hour* : ${temps}
+│   *Mémoire* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
+│   *Plateforme* : ${os.platform()}
+│   *Développer* : Supremus Prod
+*╰─────✧ SP BOT ✧─────◆* \n\n`;    
 
-        if (!arg || !arg[0] || arg.join('') === '') {
+    // Spécifier la catégorie souhaitée
+    const selectedCategory = 'Crps-Player'; // Remplace 'General' par la catégorie que tu veux afficher
 
-            if (data) {
-                const { message, lien } = data;
-                const alivemsg = `${message}`;
+    let menuMsg = `
+*List of commands in ${selectedCategory}:*
+◇                             ◇
+`;
 
-                try {
-                    if (lien.match(/\.(mp4|gif)$/i)) {
-                        await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-                        await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else {
-                        repondre(alivemsg);
-                    }
-                } catch (e) {
-                    console.log("🥵🥵 Menu erreur " + e);
-                    repondre("🥵🥵 Menu erreur " + e);
-                }
-            } else {
-                if (!superUser) { 
-                    repondre("✨🥲 Aucune fiche trouvée pour ce joueur."); 
-                    return; 
-                }
-
-                repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format : -Cmd Message;Lien");
-                repondre("✨ Attention aux informations que vous tapez.");
-            }
-        } else {
-
-            if (!superUser) { 
-                repondre("✨🛂 Réservé aux membres de la *DRPS*"); 
-                return; 
-            }
-
-            const texte = arg.join(' ').split(';')[0];
-            const tlien = arg.join(' ').split(';')[1];
-
-            if (!texte || !tlien) {
-                repondre("✨🤔 Format incorrect. Utilisez -Cmd Message;Lien");
-                return;
-            }
-
-            await insertData(texte, tlien);
-            repondre('✨ Données actualisées avec succès');
+    if (coms[selectedCategory]) {
+        menuMsg += `*╭────❏ ${selectedCategory} ❏*`;
+        for (const cmd of coms[selectedCategory]) {
+            menuMsg += `
+│ ${cmd}`;
         }
+        menuMsg += `
+*╰═════════════⊷* \n`;
+    } else {
+        menuMsg += `
+Aucune commande trouvée pour cette catégorie.`;
     }
-);
+
+    menuMsg += `
+◇            ◇
+     *[🪀 SUPREMUS PROD 🪀]*
+`;
+
+    var lien = mybotpic();
+
+    if (lien.match(/\.(mp4|gif)$/i)) {
+        try {
+            zk.sendMessage(dest, { video: { url: lien }, caption: infoMsg + menuMsg, footer: "Je suis *Zokou-MD*, développé par Djalega++", gifPlayback: true }, { quoted: ms });
+        }
+        catch (e) {
+            console.log("🥵🥵 Menu erreur " + e);
+            repondre("🥵🥵 Menu erreur " + e);
+        }
+    } 
+    // Vérification pour .jpeg ou .png
+    else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+        try {
+            zk.sendMessage(dest, { image: { url: lien }, caption: infoMsg + menuMsg, footer: "Je suis *Zokou-MD*, développé par Djalega++" }, { quoted: ms });
+        }
+        catch (e) {
+            console.log("🥵🥵 Menu erreur " + e);
+            repondre("🥵🥵 Menu erreur " + e);
+        }
+    } 
+    else {
+        repondre(infoMsg + menuMsg);
+    }
+
+});
