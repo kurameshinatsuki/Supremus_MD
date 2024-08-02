@@ -3,8 +3,8 @@ const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player');
 
 zokou(
     {
-        nomCom: 'j1',
-        categorie: 'Update'
+        nomCom: 'ripatlas',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -63,8 +63,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j2',
-        categorie: 'Update'
+        nomCom: 'tempest',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -123,8 +123,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j3',
-        categorie: 'Update'
+        nomCom: 'yû',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -183,8 +183,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j4',
-        categorie: 'Update'
+        nomCom: 'rayan',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -243,8 +243,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j5',
-        categorie: 'Update'
+        nomCom: 'yuta',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -303,8 +303,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j6',
-        categorie: 'Update'
+        nomCom: 'tomura',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -361,10 +361,10 @@ zokou(
         }
     });
 
-zokou(
+/*zokou(
     {
-        nomCom: 'j7',
-        categorie: 'Update'
+        nomCom: 'lust',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -419,12 +419,12 @@ zokou(
             repondre('✨ données actualisées avec succès');
 
         }
-    });
+    });*/
 
 zokou(
     {
-        nomCom: 'j8',
-        categorie: 'Update'
+        nomCom: 'kunday',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -483,8 +483,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j9',
-        categorie: 'Update'
+        nomCom: 'loneatlas',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -543,8 +543,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j10',
-        categorie: 'Update'
+        nomCom: 'manjiro',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
