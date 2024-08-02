@@ -3,8 +3,8 @@ const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player');
 
 zokou(
     {
-        nomCom: 'j11',
-        categorie: 'Update'
+        nomCom: 'draken',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -63,8 +63,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j12',
-        categorie: 'Update'
+        nomCom: 'samuel',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -123,8 +123,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j13',
-        categorie: 'Update'
+        nomCom: 'tenno',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -183,8 +183,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j14',
-        categorie: 'Update'
+        nomCom: 'queen',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -243,8 +243,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j15',
-        categorie: 'Update'
+        nomCom: 'viviane',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -303,8 +303,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j16',
-        categorie: 'Update'
+        nomCom: 'angel',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -363,8 +363,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j17',
-        categorie: 'Update'
+        nomCom: 'eoza',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -423,8 +423,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'j18',
-        categorie: 'Update'
+        nomCom: 'dazai',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -481,10 +481,10 @@ zokou(
         }
     });
 
-zokou(
+/*zokou(
     {
         nomCom: 'j19',
-        categorie: 'Update'
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -539,12 +539,12 @@ zokou(
             repondre('✨ données actualisées avec succès');
 
         }
-    });
+    });*/
 
 zokou(
     {
-        nomCom: 'j20',
-        categorie: 'Update'
+        nomCom: 'sept',
+        categorie: 'Crps-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
