@@ -1,4 +1,12 @@
 const { zokou } = require('../framework/zokou');
+const util = require('util');
+const fs = require('fs-extra');
+const { zokou } = require(__dirname + "/../framework/zokou");
+const { format } = require(__dirname + "/../framework/mesfonctions");
+const os = require("os");
+const moment = require("moment-timezone");
+const s = require(__dirname + "/../set");
+const { default: axios } = require('axios');
 
 zokou(
     {
