@@ -4,7 +4,7 @@ const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player');
 zokou(
     {
         nomCom: 'draken',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -64,7 +64,7 @@ zokou(
 zokou(
     {
         nomCom: 'samuel',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -124,7 +124,7 @@ zokou(
 zokou(
     {
         nomCom: 'tenno',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -184,7 +184,7 @@ zokou(
 zokou(
     {
         nomCom: 'queen',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -244,7 +244,7 @@ zokou(
 zokou(
     {
         nomCom: 'viviane',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -304,7 +304,7 @@ zokou(
 zokou(
     {
         nomCom: 'angel',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -364,7 +364,7 @@ zokou(
 zokou(
     {
         nomCom: 'eoza',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -424,7 +424,7 @@ zokou(
 zokou(
     {
         nomCom: 'dazai',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -484,7 +484,7 @@ zokou(
 /*zokou(
     {
         nomCom: 'j19',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -544,7 +544,7 @@ zokou(
 zokou(
     {
         nomCom: 'sept',
-        categorie: 'Crps-Player'
+        categorie: 'Id-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
