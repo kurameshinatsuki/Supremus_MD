@@ -42,7 +42,7 @@ zokou({ nomCom: "playermenu", categorie: "General" }, async (dest, zk, commandeO
 *╰─────✧ SP BOT ✧─────◆* \n\n`;    
 
     // Spécifier la catégorie souhaitée
-    const selectedCategory = 'Crps-Player'; // Remplace 'General' par la catégorie que tu veux afficher
+    const selectedCategory = 'Id-Player'; // Remplace 'General' par la catégorie que tu veux afficher
 
     let menuMsg = `
 *List of commands in ${selectedCategory}:*
