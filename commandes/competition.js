@@ -1,6 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const {addOrUpdateDataInCompetition , getDataFromCompetition} = require('../bdd/competition')
-
+const { addOrUpdateDataInCompetition, getDataFromCompetition } = require('../bdd/competition'); // Adapté pour n'importe quel joueur
 
 zokou(
     {
@@ -10,8 +9,8 @@ zokou(
 
         const { ms, arg, repondre, superUser } = commandeOptions;
 
-        // Déterminez la compétition actuelle, par exemple Competition1, Competition2, etc.
-        const competitionName = 'competition1'; // Peut être dynamique
+        // Déterminez le joueur actuel, par exemple Player1, Player2, etc.
+        const competitionName = 'competition1'; // Peut être dynamique en fonction de la commande
 
         const data = await getDataFromCompetition(competitionName);
 
@@ -19,33 +18,33 @@ zokou(
 
             if (data) {
 
-                const { details, lien } = data;
+                const { message, lien } = data;
 
-                const compmsg = `${details}`;
+                const alivemsg = `${message}`;
 
                 if (lien.match(/\.(mp4|gif)$/i)) {
                     try {
-                        zk.sendMessage(dest, { video: { url: lien }, caption: compmsg }, { quoted: ms });
+                        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
                     } catch (e) {
-                        console.log("🥵🥵 Compétition erreur " + e);
-                        repondre("🥵🥵 Compétition erreur " + e);
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
                     }
                 }
                 else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
                     try {
-                        zk.sendMessage(dest, { image: { url: lien }, caption: compmsg }, { quoted: ms });
+                        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
                     } catch (e) {
-                        console.log("🥵🥵 Compétition erreur " + e);
-                        repondre("🥵🥵 Compétition erreur " + e);
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
                     }
                 } else {
-                    repondre(compmsg);
+                    repondre(alivemsg);
                 }
 
             } else {
-                if (!superUser) { repondre("✨🥲 Aucune fiche trouvée pour cette compétition."); return };
+                if (!superUser) { repondre("✨🥲 Aucun enregistrement trouvée pour cette compétition."); return };
 
-                await repondre("✨🤷‍♂️ Aucune fiche trouvée pour cette compétition, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Détails;Lien");
+                await repondre("✨🤷‍♂️ Aucun enregistrement trouvée pour cette compétition, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Message;Lien");
                 repondre("✨ Attention aux infos que vous tapez.");
             }
         } else {
@@ -55,9 +54,9 @@ zokou(
             const texte = arg.join(' ').split(';')[0];
             const tlien = arg.join(' ').split(';')[1];
 
-            await addOrUpdateDataInCompetition(competitionName, texte, tlien);
+            await addOrUpdateDataInCompetition (competitionName, texte, tlien);
 
-            repondre('✨ données actualisées avec succès');
+            repondre('✨ Compétition enregistré avec succès');
 
         }
     });
@@ -70,8 +69,8 @@ zokou(
 
         const { ms, arg, repondre, superUser } = commandeOptions;
 
-        // Déterminez la compétition actuelle, par exemple Competition1, Competition2, etc.
-        const competitionName = 'competition2'; // Peut être dynamique
+        // Déterminez le joueur actuel, par exemple Player1, Player2, etc.
+        const competitionName = 'competition2'; // Peut être dynamique en fonction de la commande
 
         const data = await getDataFromCompetition(competitionName);
 
@@ -79,33 +78,33 @@ zokou(
 
             if (data) {
 
-                const { details, lien } = data;
+                const { message, lien } = data;
 
-                const compmsg = `${details}`;
+                const alivemsg = `${message}`;
 
                 if (lien.match(/\.(mp4|gif)$/i)) {
                     try {
-                        zk.sendMessage(dest, { video: { url: lien }, caption: compmsg }, { quoted: ms });
+                        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
                     } catch (e) {
-                        console.log("🥵🥵 Compétition erreur " + e);
-                        repondre("🥵🥵 Compétition erreur " + e);
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
                     }
                 }
                 else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
                     try {
-                        zk.sendMessage(dest, { image: { url: lien }, caption: compmsg }, { quoted: ms });
+                        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
                     } catch (e) {
-                        console.log("🥵🥵 Compétition erreur " + e);
-                        repondre("🥵🥵 Compétition erreur " + e);
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
                     }
                 } else {
-                    repondre(compmsg);
+                    repondre(alivemsg);
                 }
 
             } else {
-                if (!superUser) { repondre("✨🥲 Aucune fiche trouvée pour cette compétition."); return };
+                if (!superUser) { repondre("✨🥲 Aucun enregistrement trouvée pour cette compétition."); return };
 
-                await repondre("✨🤷‍♂️ Aucune fiche trouvée pour cette compétition, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Détails;Lien");
+                await repondre("✨🤷‍♂️ Aucun enregistrement trouvée pour cette compétition, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Message;Lien");
                 repondre("✨ Attention aux infos que vous tapez.");
             }
         } else {
@@ -115,9 +114,9 @@ zokou(
             const texte = arg.join(' ').split(';')[0];
             const tlien = arg.join(' ').split(';')[1];
 
-            await addOrUpdateDataInCompetition(competitionName, texte, tlien);
+            await addOrUpdateDataInCompetition (competitionName, texte, tlien);
 
-            repondre('✨ données actualisées avec succès');
+            repondre('✨ Compétition enregistré avec succès');
 
         }
     });
@@ -130,8 +129,8 @@ zokou(
 
         const { ms, arg, repondre, superUser } = commandeOptions;
 
-        // Déterminez la compétition actuelle, par exemple Competition1, Competition2, etc.
-        const competitionName = 'competition3'; // Peut être dynamique
+        // Déterminez le joueur actuel, par exemple Player1, Player2, etc.
+        const competitionName = 'competition3'; // Peut être dynamique en fonction de la commande
 
         const data = await getDataFromCompetition(competitionName);
 
@@ -139,33 +138,33 @@ zokou(
 
             if (data) {
 
-                const { details, lien } = data;
+                const { message, lien } = data;
 
-                const compmsg = `${details}`;
+                const alivemsg = `${message}`;
 
                 if (lien.match(/\.(mp4|gif)$/i)) {
                     try {
-                        zk.sendMessage(dest, { video: { url: lien }, caption: compmsg }, { quoted: ms });
+                        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
                     } catch (e) {
-                        console.log("🥵🥵 Compétition erreur " + e);
-                        repondre("🥵🥵 Compétition erreur " + e);
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
                     }
                 }
                 else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
                     try {
-                        zk.sendMessage(dest, { image: { url: lien }, caption: compmsg }, { quoted: ms });
+                        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
                     } catch (e) {
-                        console.log("🥵🥵 Compétition erreur " + e);
-                        repondre("🥵🥵 Compétition erreur " + e);
+                        console.log("🥵🥵 Menu erreur " + e);
+                        repondre("🥵🥵 Menu erreur " + e);
                     }
                 } else {
-                    repondre(compmsg);
+                    repondre(alivemsg);
                 }
 
             } else {
-                if (!superUser) { repondre("✨🥲 Aucune fiche trouvée pour cette compétition."); return };
+                if (!superUser) { repondre("✨🥲 Aucun enregistrement trouvée pour cette compétition."); return };
 
-                await repondre("✨🤷‍♂️ Aucune fiche trouvée pour cette compétition, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Détails;Lien");
+                await repondre("✨🤷‍♂️ Aucun enregistrement trouvée pour cette compétition, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Message;Lien");
                 repondre("✨ Attention aux infos que vous tapez.");
             }
         } else {
@@ -175,9 +174,9 @@ zokou(
             const texte = arg.join(' ').split(';')[0];
             const tlien = arg.join(' ').split(';')[1];
 
-            await addOrUpdateDataInCompetition(competitionName, texte, tlien);
+            await addOrUpdateDataInCompetition (competitionName, texte, tlien);
 
-            repondre('✨ données actualisées avec succès');
+            repondre('✨ Compétition enregistré avec succès');
 
         }
     });
