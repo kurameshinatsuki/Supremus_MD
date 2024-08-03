@@ -539,10 +539,4 @@ zokou(
             repondre('✨ données actualisées avec succès');
 
         }
-    });
-
-zokou(
-    {
-        nomCom: 'manjiro',
-        categorie: 'Id-Player'
-    }, async (dest, zk, com
+    });*/
