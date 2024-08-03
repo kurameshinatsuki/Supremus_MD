@@ -9,7 +9,7 @@ RUN apt-get update && \
   npm i pm2 -g && \
   rm -rf /var/lib/apt/lists/*
   
-RUN git clone https://github.com/johnsupremus1/Supremus-Prod /root/Supremus_MD
+RUN git clone https://github.com/johnsupremus1/Supremus-MD /root/Supremus_MD
 WORKDIR /root/Supremus_MD/
 
 
