@@ -1,6 +1,5 @@
 const { zokou } = require('../framework/zokou');
 
-
 zokou(
     {
         nomCom: 'article',
@@ -23,7 +22,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/c7dc4492631033f375259.jpg',
                     legende: '*🛍️ Article 3:* Crystal d Amplification.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/ed00b10ae16a00f91c63c.jpg',
                     legende: '*🛍️ Article 4:* Épée Ordinaire.'
@@ -35,7 +34,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/e1f2aefeeee3ff8cdfb91.jpg',
                     legende: '*🛍️ Article 6:* Dague.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/49afb31ee5d5211c82e5b.jpg',
                     legende: '*🛍️ Article 7:* Épée Terraliens.'
@@ -47,7 +46,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/9ac81c71047b7f5c10f65.jpg',
                     legende: '*🛍️ Article 9:* Crystal de Communication.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/7929c49687b484a60145f.jpg',
                     legende: '*🛍️ Article 10:* Potion de Soins.'
@@ -59,7 +58,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/39dfbbc6215220cb7665d.jpg',
                     legende: '*🛍️ Article 12:* Anneau du Lien Éternel.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/669f181d0b76c2889fd24.jpg',
                     legende: '*🛍️ Article 13:* Fiole Empoisonné.'
@@ -71,7 +70,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/34ed2758cc6ef60cb3f8d.jpg',
                     legende: '*🛍️ Article 15:* Pommade Médicinal.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/6fe610b5987c6fcd826dd.jpg',
                     legende: '*🛍️ Article 16:* Hache.'
@@ -83,7 +82,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/0996b4d4435161f804c5c.jpg',
                     legende: '*🛍️ Article 18:* Paire d Épée.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/3db859baa39b33466125c.jpg',
                     legende: '*🛍️ Article 19:* Épée Noire.'
@@ -95,7 +94,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/3e435b8da97f5991553e4.jpg',
                     legende: '*🛍️ Article 21:* Nunchaku Trio.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/badb0bb097134299d77da.jpg',
                     legende: '*🛍️ Article 22:* Sac à Dos.'
@@ -107,7 +106,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/f74756044bab205f1b334.jpg',
                     legende: '*🛍️ Article 24:* Fouet Épineux.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/c72c0f9c375c1aacb17e1.jpg',
                     legende: '*🛍️ Article 25:* Couteau A.'
@@ -119,7 +118,7 @@ zokou(
                 {
                     url: 'https://telegra.ph/file/6fa3ba579b0d7bb39ab19.jpg',
                     legende: '*🛍️ Article 27:* Lance Dorée.'
-                }
+                },
                 {
                     url: 'https://telegra.ph/file/ef301501877697ab4b416.jpg',
                     legende: '*🛍️ Article 28:* Couteau Croissant.'
@@ -340,4 +339,38 @@ async function getUserDecisionWithTimeout(timeoutSeconds) {
             }
         }, timeoutSeconds * 1000);
     });
-                          }
+
+zokou(
+    {
+        nomCom: 'echange',
+        categorie: 'Transact-Zone'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0) {
+            repondre("✨ Saisis le montant que tu souhaites échanger, par exemple: -echange 1000💎 contre 🧭.");
+            return;
+        }
+
+        // Extraction du montant et de la monnaie
+        const match = arg.match(/(\d+)(💎|🧭)/);
+        if (!match) {
+            repondre("✨ Forme incorrecte. Utilise le format: -echange [montant][monnaie] contre [autre monnaie].");
+            return;
+        }
+
+        const montant = parseInt(match[1], 10);
+        const monnaie = match[2];
+
+        if (monnaie === '💎') {
+            const convertedAmount = (montant / 1000) * 10000; // Conversion de 💎 vers 🧭
+            repondre(`✨ Tu as échangé ${montant}💎 contre ${convertedAmount}🧭.`);
+        } else if (monnaie === '🧭') {
+            const convertedAmount = (montant / 10000) * 1000; // Conversion de 🧭 vers 💎
+            repondre(`✨ Tu as échangé ${montant}🧭 contre ${convertedAmount}💎.`);
+        } else {
+            repondre("✨ Monnaie non reconnue. Utilise '💎' ou '🧭'.");
+        }
+    }
+);
