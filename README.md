@@ -26,15 +26,15 @@ Supremus-MD est un bot multi-appareil conçu pour enrichir vos conversations Wha
 
 ## Obtenir Supremus-MD
 
-1. Cliquez sur **[Fork](https://github.com/johnsupremus1/Supremus-Prod)** pour copier le dépôt sur votre compte GitHub. N'oubliez pas d'ajouter une étoile 🌟 pour encourager les développeurs.
+1. Cliquez sur **[Fork](https://github.com/johnsupremus1/Supremus-MD)** pour copier le dépôt sur votre compte GitHub. N'oubliez pas d'ajouter une étoile 🌟 pour encourager les développeurs.
 
 2. Obtenez une session bot :
-   - [Session-1](https://zokouscan-production.up.railway.app) ;
+   - [Session-1](https://zkscan.onrender.com) ;
 
 3. Déploiement
    - **Déploiement sur Heroku :**
      1. Si vous n'avez pas de compte **Heroku**, cliquez [**ici**](https://id.heroku.com/login) pour en créer un.
-     2. Cliquez [**ici**](https://dashboard.heroku.com/new?template=https://github.com/johnsupremus1/Supremus-Prod) pour déployer le bot sur **Heroku**.
+     2. Cliquez [**ici**](https://dashboard.heroku.com/new?template=https://github.com/johnsupremus1/Supremus-MD) pour déployer le bot sur **Heroku**.
 
 ## Contributions
 
@@ -52,5 +52,5 @@ Profitez des diverses fonctionnalités de Supremus-MD pour enrichir vos conversa
 
 ## Développeurs
 
-- [**John Supremus**](https://github.com/johnsupremus1/Supremus-Prod)
+- [**John Supremus**](https://github.com/johnsupremus1)
 - [**M๏nkeℽ D Lบffy**](https://github.com/Faouz995)
