@@ -18,13 +18,13 @@ const proConfig = {
 // Créez une pool de connexions PostgreSQL
 const pool = new Pool(proConfig);
 
-// Fonction pour créer une table pour une compétition spécifique
-const creerTableCompetition = async (competitionName) => {
+// Fonction pour créer une table pour un joueur spécifique
+const creerTableCompetition = async (competionName) => {
     try {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS ${competitionName} (
                 id serial PRIMARY KEY,
-                details text,
+                message text,
                 lien text
             );
         `);
@@ -34,17 +34,17 @@ const creerTableCompetition = async (competitionName) => {
     }
 };
 
-// Fonction pour ajouter ou mettre à jour un enregistrement dans la table d'une compétition spécifique
-async function addOrUpdateDataInCompetition(competitionName, details, lien) {
+// Fonction pour ajouter ou mettre à jour un enregistrement dans la table d'un joueur spécifique
+async function addOrUpdateDataInCompetition(competitionName, message, lien) {
     const client = await pool.connect();
     try {
         const query = `
-            INSERT INTO ${competitionName} (id, details, lien)
+            INSERT INTO ${competitionName} (id, message, lien)
             VALUES (1, $1, $2)
             ON CONFLICT (id)
-            DO UPDATE SET details = excluded.details, lien = excluded.lien;
+            DO UPDATE SET message = excluded.message, lien = excluded.lien;
         `;
-        const values = [details, lien];
+        const values = [message, lien];
 
         await client.query(query, values);
         console.log(`Données ajoutées ou mises à jour dans la table '${competitionName}' avec succès.`);
@@ -55,16 +55,16 @@ async function addOrUpdateDataInCompetition(competitionName, details, lien) {
     }
 }
 
-// Fonction pour récupérer les données de la table d'une compétition spécifique
+// Fonction pour récupérer les données de la table d'un joueur spécifique
 async function getDataFromCompetition(competitionName) {
     const client = await pool.connect();
     try {
-        const query = `SELECT details, lien FROM ${competitionName} WHERE id = 1`;
+        const query = `SELECT message, lien FROM ${competitionName} WHERE id = 1`;
         const result = await client.query(query);
 
         if (result.rows.length > 0) {
-            const { details, lien } = result.rows[0];
-            return { details, lien };
+            const { message, lien } = result.rows[0];
+            return { message, lien };
         } else {
             console.log(`Aucune donnée trouvée dans la table '${competitionName}'.`);
             return null;
@@ -75,7 +75,7 @@ async function getDataFromCompetition(competitionName) {
     } finally {
         client.release();
     }
-              }
+}
 
 // Exportez les fonctions pour les utiliser dans d'autres fichiers
 module.exports = {
