@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { addOrUpdateDataInPlayer8, getDataFromPlayer8 } = require('../bdd/player8');
 
 zokou(
