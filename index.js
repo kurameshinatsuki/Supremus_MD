@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Thanks for using Zokou</title>
+        <title>Thanks for using Supremus-MD</title>
         <style>
             /* Styles pour centrer le texte */
             body {
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
     </head>
     <body>
         <div class="content">
-            <h1>Merci d'avoir choisi Zokou</h1>
+            <h1>Merci d'avoir choisi Supremus-MD</h1>
         </div>
     </body>
     </html>
