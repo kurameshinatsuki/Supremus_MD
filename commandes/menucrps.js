@@ -523,17 +523,17 @@ zokou(
 
 zokou(
     {
-        nomCom: 'fightrule',
-        categorie: 'Arena'
+        nomCom: 'system',
+        categorie: 'Mainmenu'
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0) {
             const liens = [
-                'https://telegra.ph/file/ecdf5c700e8c15a3dfbd3.jpg',
-                'https://telegra.ph/file/2a0c4b2101a38deb9d6a6.jpg',
-                'https://telegra.ph/file/d9f9852ede777e5fc5c64.jpg'
+                'https://telegra.ph/file/a9f034ef06093c9545045.jpg',
+                'https://telegra.ph/file/fb7243fef8625f4fcde14.jpg',
+                'https://telegra.ph/file/973421ff9a15842ededf5.jpg'
             ];
 
             for (const lien of liens) {
