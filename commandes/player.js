@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player'); // Adapté pour n'importe quel joueur
+const { creerTablePlayer, addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player'); // Adapté pour n'importe quel joueur
 
 zokou(
     {
