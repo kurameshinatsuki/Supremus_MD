@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { getData } = require('../bdd/crpsfiche');
+const { getPlayerData } = require('../bdd/crpsfiche');
 const s = require("../set");
 
 const dbUrl = s.SPDB;
