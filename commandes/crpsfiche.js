@@ -13,7 +13,7 @@ zokou(
     const { ms, repondre, arg, superUser } = commandeOptions;
 
     try {
-      const data = await getData('1');
+      const data = await getPlayerData('1');
       let joueur = arg[1];
       let object = arg[3];
       let signe = arg[4];
@@ -33,7 +33,7 @@ zokou(
 ⬕ *💠 Stats:* 🍽️: ${data.stats_food} 🍶: ${data.stats_drink} ❤️: ${data.stats_health}
 ░░░░░░░░░░░░░░░░░░░
         *『 🎮 𝗣𝗟𝗔𝗬 𝗡𝗢 𝗟𝗜𝗠𝗜𝗧 🔝 』*`;
-        zk.sendMessage(dest, { image: { url: 'https://exemple.com/image.jpg' }, caption: mesg }, { quoted: ms });
+        zk.sendMessage(dest, { image: { url: 'https://telegra.ph/file/a647c48fe814c79e49149.jpg' }, caption: mesg }, { quoted: ms });
       } else {
         if (superUser) {
           const proConfig = {
