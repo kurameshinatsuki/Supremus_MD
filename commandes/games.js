@@ -11,7 +11,74 @@ zokou(
         let score = 0;
 
         const questions = [
-            // (Vos questions ici)
+            // Niveau Facile
+            {
+                niveau: 1,
+                question: "✨ Quel est le nom du colisée à Astoria dans Origamy World ?",
+                options: ["A) Lorn", "B) Aurelus", "C) Aurelius"],
+                reponse: "B"
+            },
+            {
+                niveau: 1,
+                question: "✨ La CRPS est dirigée par ?",
+                options: ["A) Supremus-Prod", "B) John Supremus", "C) Team Supremus"],
+                reponse: "A"
+            },
+            {
+                niveau: 1,
+                question: "✨ Quel est le but principal du jeu CRPS ?",
+                options: ["A) Créer le meilleur RP jamais connu.", "B) Recruter et former des rôlistes.", "C) Création d'un RP Multivers réaliste."],
+                reponse: "C"
+            },
+            // Niveau Normal
+            {
+                niveau: 2,
+                question: "✨ Quelle est le nom du Dieu ou Déesse de Asura dans Origamy World ?",
+                options: ["A) Zeleph", "B) Selenia", "C) Iris"],
+                reponse: "C"
+            },
+            {
+                niveau: 2,
+                question: "✨ Lequel de ces actions est une action simultanée à une autre ?",
+                options: ["A) Je lui donne un crochet du droit à la tête en lui donnant un coup de pied gauche à son genou droit.",
+                         "B) J'effectue un saut avant de 2m de haut tête en bas en lui saisissant la tête avec les deux mains.",
+                         "C) Il n'y en a pas."],
+                reponse: "B"
+            },
+            {
+                niveau: 2,
+                question: "✨ Quel est la version du système de confrontation actuel de CRPS ?",
+                options: ["A) CRPS FIGHT RULE 3.0.0", "B) CRPS NEW ERA", "C) CRPS FIGHT RULE UPDATE"],
+                reponse: "A"
+            },
+            // Niveau Difficile
+            {
+                niveau: 3,
+                question: "✨ À quelle température la santé est-elle affectée en raison du froid dans Origamy World ?",
+                options: ["A) -30°C", "B) -40°C", "C) -20°C"],
+                reponse: "A"
+            },
+            {
+                niveau: 3,
+                question: "✨ Dans un combat opposant J1 à J2, Section1: une offensive de J1 effectuant une course de 5m/s vers J2 à 5m qui lui libère son énergie. Section2: J1 donne un crochet droit à la tête de J2 qui lui active sa technique... Quel sera le verdict ?",
+                options: ["A) J1 touchera J2 avant l'activation de la technique.",
+                         "B) J2 activera sa technique avant le coup de J1.",
+                         "C) Consulter les stats vitesse de J1 et J2 avant de donner un verdict."],
+                reponse: "C"
+            },
+            {
+                niveau: 3,
+                question: "✨ Quelle est la date de création de CRPS NEW ERA ?",
+                options: ["A) 01/07/2023", "B) 11/11/2023", "C) 17/06/2024"],
+                reponse: "B"
+            },
+            // Question Bonus
+            {
+                niveau: "bonus",
+                question: "✨ Quel est le surnom de John Supremus ?",
+                options: ["A) Le renard", "B) Natsuki", "C) Supremus"],
+                reponse: "A"
+            }
         ];
 
         let currentLevelQuestions = questions.filter(q => q.niveau === niveau);
@@ -21,7 +88,7 @@ zokou(
             for (let q of currentLevelQuestions) {
                 await zk.sendMessage(dest, { text: `${q.question}\n${q.options.join("\n")}` }, { quoted: ms });
 
-                const userAnswer = await getUserAnswerWithTimeout(zk, 30); // 30 secondes pour répondre
+                const userAnswer = await getUserAnswerWithTimeout(30); // 30 secondes pour répondre
 
                 if (userAnswer && userAnswer.toUpperCase() === q.reponse) {
                     correctAnswers++;
@@ -46,7 +113,7 @@ zokou(
                     break;
                 } else {
                     repondre(`✨🙋 Veux-tu continuer ou réclamer tes gains ? Réponds par "Continuer" ou "Réclamer".`);
-                    const continuer = await getUserDecisionWithTimeout(zk, 30); // 30 secondes pour décider
+                    const continuer = await getUserDecisionWithTimeout(30); // 30 secondes pour décider
                     if (!continuer) {
                         repondre(`✨😂 Tu as décidé d'encaisser tes gains. Ton score final est de ${score}💎.`);
                         return;
@@ -62,7 +129,7 @@ zokou(
             const bonusQuestion = questions.find(q => q.niveau === "bonus");
             await zk.sendMessage(dest, { text: `${bonusQuestion.question}\n${bonusQuestion.options.join("\n")}` }, { quoted: ms });
 
-            const userAnswer = await getUserAnswerWithTimeout(zk, 30);
+            const userAnswer = await getUserAnswerWithTimeout(30);
             if (userAnswer && userAnswer.toUpperCase() === bonusQuestion.reponse) {
                 score += 10000;
                 repondre(`✨🎊 Incroyable ! Tu as gagné la question bonus et empoches un total de ${score}💎 !`);
@@ -76,46 +143,32 @@ zokou(
     }
 );
 
-async function getUserAnswerWithTimeout(zk, timeoutSeconds) {
+// Fonction pour obtenir la réponse du joueur avec un délai
+async function getUserAnswerWithTimeout(timeoutSeconds, zk) {
     return new Promise((resolve) => {
-        let answered = false;
+        let timeout = setTimeout(() => resolve(null), timeoutSeconds * 1000);
 
-        zk.onMessage(async (message) => {
-            if (!answered) {
-                answered = true;
-                resolve(message.body.trim().toUpperCase());
-            }
+        zk.once("message", (message) => {
+            clearTimeout(timeout);
+            resolve(message.body.trim().toUpperCase());
         });
-
-        setTimeout(() => {
-            if (!answered) {
-                resolve(null);
-            }
-        }, timeoutSeconds * 1000);
     });
 }
 
-async function getUserDecisionWithTimeout(zk, timeoutSeconds) {
+async function getUserDecisionWithTimeout(timeoutSeconds, zk) {
     return new Promise((resolve) => {
-        let decided = false;
+        let timeout = setTimeout(() => resolve(false), timeoutSeconds * 1000);
 
-        zk.onMessage(async (message) => {
-            if (!decided) {
-                const decision = message.body.trim().toUpperCase();
-                if (decision === 'CONTINUER') {
-                    decided = true;
-                    resolve(true);
-                } else if (decision === 'RÉCLAMER') {
-                    decided = true;
-                    resolve(false);
-                }
+        zk.once("message", (message) => {
+            const decision = message.body.trim().toUpperCase();
+            clearTimeout(timeout);
+            if (decision === 'CONTINUER') {
+                resolve(true);
+            } else if (decision === 'RÉCLAMER') {
+                resolve(false);
+            } else {
+                resolve(false); // Par défaut, réclamer si la réponse n'est pas reconnue
             }
         });
-
-        setTimeout(() => {
-            if (!decided) {
-                resolve(false);
-            }
-        }, timeoutSeconds * 1000);
     });
-  }
+                }
