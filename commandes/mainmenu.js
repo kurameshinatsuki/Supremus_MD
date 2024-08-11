@@ -94,7 +94,7 @@ Aucune commande trouvée pour cette catégorie.`;
 
 });
 
-zokou({ nomCom: "Arenamenu", categorie: "Mainmenu" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "arenamenu", categorie: "Mainmenu" }, async (dest, zk, commandeOptions) => {
     let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
     let { cm } = require(__dirname + "/../framework//zokou");
     var coms = {};
