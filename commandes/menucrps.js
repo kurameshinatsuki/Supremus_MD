@@ -1,6 +1,6 @@
 const { zokou } = require('../framework/zokou');
 
-zokou(
+/*zokou(
     {
         nomCom: 'menucrps',
         categorie: 'Mainmenu'
@@ -34,7 +34,7 @@ Bienvenue dans le menu principal tout voir et savoir sur les activités CRPS.
   
         }
     }
-);
+);*/
 
 zokou(
     {
@@ -72,7 +72,7 @@ zokou(
 );
 
 
-zokou(
+/*zokou(
     {
         nomCom: 'succes',
         categorie: 'Mainmenu'
@@ -172,7 +172,7 @@ zokou(
   
         }
     }
-);
+);*/
 
 
 zokou(
@@ -288,7 +288,7 @@ zokou(
     }
 );
 
-zokou(
+/*zokou(
     {
         nomCom: 'roliste',
         categorie: 'DRPS'
@@ -341,7 +341,7 @@ zokou(
   
         }
     }
-);
+);*/
 
 zokou(
     {
