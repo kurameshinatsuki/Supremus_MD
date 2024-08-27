@@ -3,60 +3,112 @@ const { creerTablePlayer, addOrUpdateDataInPlayer, getDataFromPlayer } = require
 
 zokou(
     {
-        nomCom: 'john',
+        nomCom: 'john1',
         categorie: 'Test-Player'
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
 
-        // Déterminez le joueur actuel, par exemple Player1, Player2, etc.
-        const playerName = 'player1'; // Peut être dynamique en fonction de la commande
+        // Déterminez le joueur actuel de manière dynamique si possible
+        const playerName = 'john1'; // Peut être dynamique en fonction de la commande
 
-        const data = await getDataFromPlayer(playerName);
+        try {
+            const data = await getDataFromPlayer(playerName);
 
-        if (!arg || !arg[0] || arg.join('') === '') {
+            if (!arg || !arg[0] || arg.join('') === '') {
 
-            if (data) {
+                if (data) {
+                    const { message, lien } = data;
+                    const alivemsg = `${message}`;
 
-                const { message, lien } = data;
-
-                const alivemsg = `${message}`;
-
-                if (lien.match(/\.(mp4|gif)$/i)) {
-                    try {
-                        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } catch (e) {
-                        console.log("🥵🥵 Menu erreur " + e);
-                        repondre("🥵🥵 Menu erreur " + e);
+                    if (/\.(mp4|gif)$/i.test(lien)) {
+                        await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    } else if (/\.(jpeg|png|jpg)$/i.test(lien)) {
+                        await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    } else {
+                        repondre(alivemsg);
                     }
-                }
-                else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-                    try {
-                        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } catch (e) {
-                        console.log("🥵🥵 Menu erreur " + e);
-                        repondre("🥵🥵 Menu erreur " + e);
-                    }
+
                 } else {
-                    repondre(alivemsg);
+                    if (!superUser) { 
+                        repondre("✨🥲 Aucune fiche trouvée pour ce joueur.");
+                    } else {
+                        repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format : -Cmd Message;Lien");
+                        repondre("✨ Attention aux infos que vous tapez.");
+                    }
                 }
-
             } else {
-                if (!superUser) { repondre("✨🥲 Aucune fiche trouvée pour ce joueur."); return };
+                if (!superUser) { 
+                    repondre("✨🛂 Réservé aux membres de la *DRPS*");
+                } else {
+                    const [texte, tlien] = arg.join(' ').split(';');
 
-                await repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur, pour l'enregistrer; Entrez après la commande votre message et votre lien d'image ou vidéo dans ce contexte: -Cmd Message;Lien");
-                repondre("✨ Attention aux infos que vous tapez.");
+                    if (texte && tlien) {
+                        await addOrUpdateDataInPlayer(playerName, texte, tlien);
+                        repondre('✨ Données actualisées avec succès');
+                    } else {
+                        repondre("✨ Format incorrect. Veuillez utiliser: -Cmd Message;Lien");
+                    }
+                }
             }
-        } else {
+        } catch (error) {
+            console.log("Erreur lors du traitement de la commande : " + error);
+            repondre("🥵 Une erreur est survenue lors du traitement de votre commande. Veuillez réessayer plus tard.");
+        }
+    });
 
-            if (!superUser) { repondre("✨🛂 Réservé aux membres de la *DRPS*"); return };
+zokou(
+    {
+        nomCom: 'john2',
+        categorie: 'Test-Player'
+    }, async (dest, zk, commandeOptions) => {
 
-            const texte = arg.join(' ').split(';')[0];
-            const tlien = arg.join(' ').split(';')[1];
+        const { ms, arg, repondre, superUser } = commandeOptions;
 
-            await addOrUpdateDataInPlayer(playerName, texte, tlien);
+        // Déterminez le joueur actuel de manière dynamique si possible
+        const playerName = 'john2'; // Peut être dynamique en fonction de la commande
 
-            repondre('✨ données actualisées avec succès');
+        try {
+            const data = await getDataFromPlayer(playerName);
 
+            if (!arg || !arg[0] || arg.join('') === '') {
+
+                if (data) {
+                    const { message, lien } = data;
+                    const alivemsg = `${message}`;
+
+                    if (/\.(mp4|gif)$/i.test(lien)) {
+                        await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    } else if (/\.(jpeg|png|jpg)$/i.test(lien)) {
+                        await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+                    } else {
+                        repondre(alivemsg);
+                    }
+
+                } else {
+                    if (!superUser) { 
+                        repondre("✨🥲 Aucune fiche trouvée pour ce joueur.");
+                    } else {
+                        repondre("✨🤷‍♂️ Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format : -Cmd Message;Lien");
+                        repondre("✨ Attention aux infos que vous tapez.");
+                    }
+                }
+            } else {
+                if (!superUser) { 
+                    repondre("✨🛂 Réservé aux membres de la *DRPS*");
+                } else {
+                    const [texte, tlien] = arg.join(' ').split(';');
+
+                    if (texte && tlien) {
+                        await addOrUpdateDataInPlayer(playerName, texte, tlien);
+                        repondre('✨ Données actualisées avec succès');
+                    } else {
+                        repondre("✨ Format incorrect. Veuillez utiliser: -Cmd Message;Lien");
+                    }
+                }
+            }
+        } catch (error) {
+            console.log("Erreur lors du traitement de la commande : " + error);
+            repondre("🥵 Une erreur est survenue lors du traitement de votre commande. Veuillez réessayer plus tard.");
         }
     });
