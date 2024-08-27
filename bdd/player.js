@@ -7,12 +7,12 @@ const { Pool } = require("pg");
 const s = require("../set");
 
 // Remplacez l'URL de la base de données par la nouvelle URL fournie
-var dbUrl = s.SPDB;
+const dbUrl = s.SPDB;
 const proConfig = {
-  connectionString: dbUrl,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+    connectionString: dbUrl,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 };
 
 // Créez une pool de connexions PostgreSQL
@@ -21,13 +21,14 @@ const pool = new Pool(proConfig);
 // Fonction pour créer une table pour un joueur spécifique
 const creerTablePlayer = async (playerName) => {
     try {
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS ${playerName} (
+        const query = `
+            CREATE TABLE IF NOT EXISTS ${sanitizeTableName(playerName)} (
                 id serial PRIMARY KEY,
                 message text,
                 lien text
             );
-        `);
+        `;
+        await pool.query(query);
         console.log(`La table '${playerName}' a été créée avec succès.`);
     } catch (e) {
         console.error(`Une erreur est survenue lors de la création de la table '${playerName}':`, e);
@@ -39,7 +40,7 @@ async function addOrUpdateDataInPlayer(playerName, message, lien) {
     const client = await pool.connect();
     try {
         const query = `
-            INSERT INTO ${playerName} (id, message, lien)
+            INSERT INTO ${sanitizeTableName(playerName)} (id, message, lien)
             VALUES (1, $1, $2)
             ON CONFLICT (id)
             DO UPDATE SET message = excluded.message, lien = excluded.lien;
@@ -59,7 +60,7 @@ async function addOrUpdateDataInPlayer(playerName, message, lien) {
 async function getDataFromPlayer(playerName) {
     const client = await pool.connect();
     try {
-        const query = `SELECT message, lien FROM ${playerName} WHERE id = 1`;
+        const query = `SELECT message, lien FROM ${sanitizeTableName(playerName)} WHERE id = 1`;
         const result = await client.query(query);
 
         if (result.rows.length > 0) {
@@ -75,6 +76,11 @@ async function getDataFromPlayer(playerName) {
     } finally {
         client.release();
     }
+}
+
+// Fonction pour nettoyer le nom de la table (pour éviter les injections SQL ou les caractères invalides)
+function sanitizeTableName(tableName) {
+    return tableName.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
 }
 
 // Exportez les fonctions pour les utiliser dans d'autres fichiers
