@@ -10,7 +10,7 @@ async function maine({ zk, texte, origineMessage, repondre, ms }) {
     const serveuseImage = 'https://telegra.ph/file/serveuse-image.jpg';
 
     // Vérifie si le message vient d'un joueur spécifique et s'il a les bons mots-clés
-    if (origineMessage == '22605463559@s.whatsapp.net') {
+    if (origineMessage == '2250554191184@s.whatsapp.net') {
         if (isInTavern && isAtCounter) {
             // Envoie l'image de la serveuse avec une légende appropriée
             const caption = "Vous entrez dans la taverne et vous approchez du comptoir. Une serveuse vous accueille.";
