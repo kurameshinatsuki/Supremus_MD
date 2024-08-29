@@ -41,11 +41,11 @@ zokou(
             const location = playerPositions[auteurMessage];
             const currentLocation = world[location];
 
-            if (texte.trim().toLowerCase() === 'explore') {
+            if (texte && typeof texte === 'string' && texte.trim().toLowerCase() === 'explore') {
                 let response = `Vous êtes actuellement à la *${location}*.\n${currentLocation.description}\n\nVous voyez: ${currentLocation.objects.join(", ")}.\n\nVous pouvez aller vers: ${currentLocation.connections.join(", ")}.`;
                 await repondre(response);
 
-            } else if (currentLocation.connections.includes(texte.trim().toLowerCase())) {
+            } else if (texte && typeof texte === 'string' && currentLocation.connections.includes(texte.trim().toLowerCase())) {
                 playerPositions[auteurMessage] = texte.trim().toLowerCase();
                 const newLocation = world[playerPositions[auteurMessage]];
                 let response = `Vous êtes maintenant à la *${playerPositions[auteurMessage]}*.\n${newLocation.description}\n\nVous voyez: ${newLocation.objects.join(", ")}.`;
