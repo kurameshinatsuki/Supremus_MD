@@ -1,61 +1,9 @@
 const { zokou } = require('../framework/zokou');
 
-// Nouvelle commande pour le jeu "Mystic Pairs"
-zokou(
-    {
-        nomCom: 'mysticpairs',
-        reaction: '🃏',
-        categorie: 'SRPN-GAMES'
-    },
-    async (dest, zk, commandeOptions) => {
-        const generateRandomCard = () => {
-            const cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-            return cards[Math.floor(Math.random() * cards.length)];
-        };
-
-        const { repondre, auteurMessage } = commandeOptions;
-
-        let card1 = generateRandomCard();
-        let card2 = generateRandomCard();
-
-        let message = `*🃏 Mystic Pairs* \nVous avez reçu les cartes : ${card1} et ${card2}.\n\nVoulez-vous changer une carte ? Répondez par \`1\` pour changer la première carte, \`2\` pour changer la deuxième, ou \`non\` pour garder les deux.`;
-        await zk.sendMessage(dest, { text: message });
-
-        const rep = await zk.awaitForMessage({
-            sender: auteurMessage,
-            chatJid: dest,
-            timeout: 30000 // 30 secondes
-        });
-
-        let response;
-        try {
-            response = rep.message.extendedTextMessage.text;
-        } catch {
-            response = rep.message.conversation;
-        }
-
-        if (response === '1') {
-            card1 = generateRandomCard();
-        } else if (response === '2') {
-            card2 = generateRandomCard();
-        }
-
-        let resultMessage = `Vos cartes finales sont : ${card1} et ${card2}.\n`;
-
-        if (card1 === card2) {
-            resultMessage += "🎉 Vous avez une paire identique ! Vous avez gagné !";
-        } else {
-            resultMessage += "😞 Pas de paire identique. Mieux vaut la prochaine fois.";
-        }
-
-        await repondre(resultMessage);
-    }
-);
-
 // Nouvelle commande pour le jeu "Jackpot Whirl"
 zokou(
     {
-        nomCom: 'jackpotwhirl',
+        nomCom: 'whirl',
         reaction: '🎰',
         categorie: 'SRPN-GAMES'
     },
@@ -82,59 +30,10 @@ zokou(
     }
 );
 
-// Nouvelle commande pour le jeu "Mind Mastery"
-zokou(
-    {
-        nomCom: 'mindmastery',
-        reaction: '🧠',
-        categorie: 'SRPN-GAMES'
-    },
-    async (dest, zk, commandeOptions) => {
-        const quizQuestions = [
-            {
-                question: "Quelle est la capitale de la France ?",
-                choices: ["1. Paris", "2. Londres", "3. Berlin"],
-                correct: 1
-            },
-            // Ajoutez plus de questions ici
-        ];
-
-        const getRandomQuestion = () => {
-            return quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
-        };
-
-        const { repondre, auteurMessage } = commandeOptions;
-
-        const question = getRandomQuestion();
-        let message = `*🧠 Mind Mastery*\n${question.question}\n${question.choices.join('\n')}\nRépondez en choisissant le numéro de la bonne réponse.`;
-        await zk.sendMessage(dest, { text: message });
-
-        const rep = await zk.awaitForMessage({
-            sender: auteurMessage,
-            chatJid: dest,
-            timeout: 30000 // 30 secondes
-        });
-
-        let response;
-        try {
-            response = rep.message.extendedTextMessage.text;
-        } catch {
-            response = rep.message.conversation;
-        }
-
-        const chosenAnswer = parseInt(response);
-        if (chosenAnswer === question.correct) {
-            await repondre("🎉 Correct ! Vous avez gagné !");
-        } else {
-            await repondre("😞 Mauvaise réponse. Mieux vaut la prochaine fois.");
-        }
-    }
-);
-
 // Nouvelle commande pour le jeu "Fortune Spin"
 zokou(
     {
-        nomCom: 'fortunespin',
+        nomCom: 'spin',
         reaction: '🎡',
         categorie: 'SRPN-GAMES'
     },
@@ -156,5 +55,73 @@ zokou(
         } else {
             await repondre(`${message}\n😞 Pas de chance cette fois. Essayez encore !`);
         }
+    }
+);
+
+// Jeu des Dices
+zokou(
+    {
+        nomCom: 'dice',
+        categorie: 'SRPN-GAMES'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, auteurMessage, ms } = commandeOptions;
+        const rollDice = () => Math.floor(Math.random() * 6) + 1;
+        
+        const dice1 = rollDice();
+        const dice2 = rollDice();
+        const sum = dice1 + dice2;
+
+        let resultMessage;
+        if (sum === 7 || sum === 11) {
+            resultMessage = `🎲 Vous avez lancé ${dice1} et ${dice2}. Somme: ${sum}.\n🎉 Félicitations! Vous avez gagné!`;
+        } else if (sum === 2, 3, 12) {
+            resultMessage = `🎲 Vous avez lancé ${dice1} et ${dice2}. Somme: ${sum}.\n😢 Désolé, vous avez perdu.`;
+        } else {
+            resultMessage = `🎲 Vous avez lancé ${dice1} et ${dice2}. Somme: ${sum}.\n🤔 Vous pouvez rejouer!`;
+        }
+
+        zk.sendMessage(dest, { text: resultMessage }, { quoted: ms });
+    }
+);
+
+// Jeu du Multiplicateur
+zokou(
+    {
+        nomCom: 'madness',
+        categorie: 'SRPN-GAMES'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, auteurMessage, ms } = commandeOptions;
+        const multiplier = Math.floor(Math.random() * 5) + 1;
+        
+        let message = `🎰 Choisissez un chiffre entre 1 et 5.`;
+        zk.sendMessage(dest, { text: message }, { quoted: ms });
+
+        const rep = await zk.awaitForMessage({
+          sender: auteurMessage,
+          chatJid: dest,
+          timeout: 30000 // 30 secondes
+        });
+
+        let chosenNumber;
+        try {
+            chosenNumber = parseInt(rep.message.extendedTextMessage.text);
+        } catch {
+            chosenNumber = parseInt(rep.message.conversation);
+        }
+
+        if (isNaN(chosenNumber) || chosenNumber < 1 || chosenNumber > 5) {
+            return repondre('Veuillez choisir un chiffre valide entre 1 et 5.');
+        }
+
+        let resultMessage;
+        if (chosenNumber === multiplier) {
+            resultMessage = `🎰 Le multiplicateur est ${multiplier}. Vous avez choisi ${chosenNumber}.\n🎉 Félicitations! Vous avez gagné ${multiplier} fois votre mise!`;
+        } else {
+            resultMessage = `🎰 Le multiplicateur est ${multiplier}. Vous avez choisi ${chosenNumber}.\n😢 Désolé, vous avez perdu.`;
+        }
+
+        zk.sendMessage(dest, { text: resultMessage }, { quoted: ms });
     }
 );
