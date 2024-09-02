@@ -125,3 +125,146 @@ zokou(
         zk.sendMessage(dest, { text: resultMessage }, { quoted: ms });
     }
 );
+
+// Nouvelle commande pour le jeu "Mind Mastery"
+zokou(
+    {
+        nomCom: 'mastery',
+        reaction: '🧠',
+        categorie: 'SRPN-GAMES'
+    },
+    async (dest, zk, commandeOptions) => {
+        const quizQuestions = [
+            {
+                question: "Quelle est la capitale de la France ?",
+                choices: ["1. Paris", "2. Londres", "3. Berlin"],
+                correct: 1
+            },
+            // Ajoutez plus de questions ici
+        ];
+
+        const getRandomQuestion = () => {
+            return quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
+        };
+
+        const { repondre, auteurMessage } = commandeOptions;
+
+        const question = getRandomQuestion();
+        const message = `*🧠 Mind Mastery*\n${question.question}\n${question.choices.join('\n')}\nRépondez en choisissant le numéro de la bonne réponse.`;
+
+        await zk.sendMessage(dest, { text: message });
+
+        // Fonction pour créer un délai (pause)
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Attente de la réponse pendant 30 secondes
+        const rep = await zk.awaitForMessage({
+            sender: auteurMessage,
+            chatJid: dest,
+            timeout: 30000 // 30 secondes
+        });
+
+        let response;
+        try {
+            response = rep.message?.extendedTextMessage?.text || rep.message?.conversation;
+        } catch (error) {
+            response = "";
+        }
+
+        // Création d'un délai de 30 secondes avant de vérifier la réponse
+        await delay(30000);
+
+        const chosenAnswer = parseInt(response);
+        if (isNaN(chosenAnswer) || chosenAnswer < 1 || chosenAnswer > question.choices.length) {
+            await repondre("⚠️ Réponse invalide ou pas de réponse. Veuillez répondre avec un numéro correspondant à une des options proposées.");
+        } else if (chosenAnswer === question.correct) {
+            await repondre("🎉 Correct ! Vous avez gagné !");
+        } else {
+            await repondre("😞 Mauvaise réponse. Mieux vaut la prochaine fois.");
+        }
+    }
+);
+
+// Nouvelle commande pour le jeu "Mystic Pairs"
+zokou(
+    {
+        nomCom: 'mysticpairs',
+        reaction: '🃏',
+        categorie: 'SRPN-GAMES'
+    },
+    async (dest, zk, commandeOptions) => {
+        const generateRandomCard = () => {
+            const cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            return cards[Math.floor(Math.random() * cards.length)];
+        };
+
+        const { repondre, auteurMessage } = commandeOptions;
+
+        let card1 = generateRandomCard();
+        let card2 = generateRandomCard();
+
+        // Envoyer les cartes au joueur sans révéler les valeurs
+        let message = `*🃏 Mystic Pairs*\nVous avez reçu deux cartes.\n\nVoulez-vous changer une carte avant de poser les cartes sur la table ? Répondez par \`1\` pour changer la première carte, \`2\` pour changer la deuxième, ou \`non\` pour garder les deux.`;
+        await zk.sendMessage(dest, { text: message });
+
+        // Fonction pour créer un délai (pause)
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Attente de la réponse du joueur pour changer les cartes
+        const rep = await zk.awaitForMessage({
+            sender: auteurMessage,
+            chatJid: dest,
+            timeout: 30000 // 30 secondes
+        });
+
+        let response;
+        try {
+            response = rep.message.extendedTextMessage.text;
+        } catch {
+            response = rep.message.conversation;
+        }
+
+        if (response === '1') {
+            card1 = generateRandomCard();
+        } else if (response === '2') {
+            card2 = generateRandomCard();
+        }
+
+        // Demander au joueur de poser les cartes sur la table
+        let revealMessage = `Tapez \`table\` pour poser vos cartes sur la table et révéler leurs valeurs.`;
+        await zk.sendMessage(dest, { text: revealMessage });
+
+        // Attente du mot-clé "table" pour révéler les cartes
+        const revealRep = await zk.awaitForMessage({
+            sender: auteurMessage,
+            chatJid: dest,
+            timeout: 30000 // 30 secondes
+        });
+
+        let revealResponse;
+        try {
+            revealResponse = revealRep.message.extendedTextMessage.text;
+        } catch {
+            revealResponse = revealRep.message.conversation;
+        }
+
+        if (revealResponse.toLowerCase() === 'table') {
+            // Révéler les cartes et déterminer le résultat
+            let resultMessage = `Vos cartes finales sont : ${card1} et ${card2}.\n`;
+
+            if (card1 === card2) {
+                resultMessage += "🎉 Vous avez une paire identique ! Vous avez gagné !";
+            } else {
+                resultMessage += "😞 Pas de paire identique. Mieux vaut la prochaine fois.";
+            }
+
+            await repondre(resultMessage);
+        } else {
+            await repondre("⏳ Temps écoulé ou commande invalide. Les cartes n'ont pas été révélées.");
+        }
+    }
+);
