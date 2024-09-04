@@ -1,7 +1,7 @@
 const { zokou } = require('../framework/zokou');
 
 // Nouvelle commande pour le jeu "Jackpot Whirl"
-zokou(
+/*zokou(
     {
         nomCom: 'whirl',
         reaction: '🎰',
@@ -78,7 +78,7 @@ zokou(
             await repondre(`${message}\n\n😢 *Pas de chance cette fois.* Réessayez !`);
         }
     }
-);
+);*/
 
 // Nouvelle commande pour le jeu "Fortune Spin"
 zokou(
