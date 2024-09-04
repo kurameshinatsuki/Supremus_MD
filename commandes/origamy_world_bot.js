@@ -1,16 +1,34 @@
-async function maine({ zk, texte, origineMessage, repondre, ms }) {
-    // Détection d'emojis spécifiques dans le texte du message
-    const emoji_1 = texte.includes('🏛️');
-    const emoji_2 = texte.includes('👨‍🍳');
+const { zokou } = require('../framework/zokou');
 
-    // URL de l'image à envoyer en réponse
-    const urlimage = 'https://telegra.ph/file/b9ed1612f868e83bbe6b4.jpg';
+zokou(
+  {
+    nomCom: 'control',
+    categorie: 'MONBOT'
+  },
+  async (dest, zk, commandeOptions) => {
+    const { ms, repondre, arg } = commandeOptions;
+    const message = arg.join(' ').toLowerCase(); // Collecte et met tout en minuscule pour faciliter la recherche
+    
+    // Liste de mots-clés et leurs réponses
+    const motsCles = {
+      'bonjour': 'Salut ! Comment puis-je t’aider aujourd’hui ?',
+      'aide': 'Voici la liste des commandes disponibles...',
+      'info': 'Pour en savoir plus sur le bot, tapez /info',
+    };
 
-    // Vérifier si les deux emojis sont présents
-    if (emoji_1 && emoji_2) {
-        // Envoyer une image en réponse
-        zk.sendMessage(origineMessage, { image: { url: urlimage }, caption: "" }, { quoted: ms });
+    let reponse = null;
+    
+    // Vérifier si un mot-clé est présent dans le message
+    for (let motCle in motsCles) {
+      if (message.includes(motCle)) {
+        reponse = motsCles[motCle];
+        break;
+      }
     }
-}
-
-module.exports = maine;
+    
+    // Si un mot-clé est trouvé, le bot répond avec le message associé
+    if (reponse) {
+      await repondre(reponse);
+    }
+  }
+);
