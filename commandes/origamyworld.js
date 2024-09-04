@@ -2,7 +2,7 @@ const { zokou } = require('../framework/zokou');
 
 zokou(
     {
-        nomCom: 'origamystory',
+        nomCom: 'origamy_story',
         categorie: 'Origamy-World'
     },
     async (dest, zk, commandeOptions) => {
