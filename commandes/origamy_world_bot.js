@@ -16,7 +16,7 @@ zokou(
         image: 'https://telegra.ph/file/2df6f7324d3733153f4d8.jpg'
       },
       '⛲': {
-        text: 'Vous êtes à la fontaine d'astoria...',
+        text: 'Vous êtes à la fontaine d astoria...',
         image: 'https://telegra.ph/file/2df6f7324d3733153f4d8.jpg'
       }
     };
