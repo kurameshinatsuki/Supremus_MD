@@ -7,16 +7,19 @@ const moment = require("moment-timezone");
 const s = require(__dirname + "/../set");
 
 zokou({ nomCom: "menu", categorie: "General" }, async (dest, zk, commandeOptions) => {
-    let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
-    let { cm } = require(__dirname + "/../framework/zokou");
+    let { ms, repondre ,prefixe,nomAuteurMessage,mybotpic} = commandeOptions;
+    let { cm } = require(__dirname + "/../framework//zokou");
     var coms = {};
     var mode = "public";
 
-    if ((s.MODE).toLocaleLowerCase() !== "yes") {
+    if ((s.MODE).toLocaleLowerCase() != "yes") {
         mode = "private";
     }
 
-    cm.map(async (com) => {
+
+
+
+    cm.map(async (com, index) => {
         if (!coms[com.categorie])
             coms[com.categorie] = [];
         coms[com.categorie].push(com.nomCom);
@@ -24,54 +27,67 @@ zokou({ nomCom: "menu", categorie: "General" }, async (dest, zk, commandeOptions
 
     moment.tz.setDefault('Etc/GMT');
 
-    const temps = moment().format('HH:mm:ss');
-    const date = moment().format('DD/MM/YYYY');
+// Créer une date et une heure en GMT
+const temps = moment().format('HH:mm:ss');
+const date = moment().format('DD/MM/YYYY');
 
-    let infoMsg = `
-╭─── *${s.BOT}* ───╮
-• *Préfixe* : ${s.PREFIXE}
-• *Propriétaire* : ${s.OWNER_NAME}
-• *Mode* : ${mode}
-• *Commandes* : ${cm.length}
-• *Date* : ${date}
-• *Heure* : ${temps}
-• *Mémoire* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
-• *Plateforme* : ${os.platform()}
-• *Développé par* : Supremus Prod
-╰──────────────╯\n\n`;
-
-    let menuMsg = `
-╭─── 📋 *Commandes* 📋 ───╮`;
+  let infoMsg =  `
+*╭───✧${s.BOT}✧───◆*
+│   *Prefixe* : ${s.PREFIXE}
+│   *Proprio* : ${s.OWNER_NAME}
+│   *Mode* : ${mode}
+│   *Commandes* : ${cm.length}
+│   *Date* : ${date}
+│   *Heure* : ${temps}
+│   *Mémoire* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
+│   *Plateforme* : ${os.platform()}
+│   *Développeur* : Supremus Prod
+*╰───✧ SP BOT ✧───◆* \n\n`;    
+let menuMsg =  `
+*List of commands :*
+◇                             ◇
+`;
 
     for (const cat in coms) {
-        menuMsg += `
-├─── *${cat}* ───`;
+        menuMsg += `*╭────❏ ${cat} ❏*`;
         for (const cmd of coms[cat]) {
             menuMsg += `
-• ${cmd}`;
+│ ${cmd}`;
         }
+        menuMsg += `
+*╰═════════════⊷* \n`
     }
 
     menuMsg += `
-╰─── *Supremus Prod* ───╯`;
+◇            ◇
+     *[🪀 SUPREMUS PROD 🪀]*
+`;
 
-    var lien = mybotpic();
-    var imageSpecific = 'lien/vers/image/specific.png'; // Remplacez par le lien de l'image spécifique
+   var lien = mybotpic();
 
-    if (!imageSpecific) {
-        imageSpecific = lien;
-    }
-
+   if (lien.match(/\.(mp4|gif)$/i)) {
     try {
-        if (imageSpecific.match(/\.(mp4|gif)$/i)) {
-            zk.sendMessage(dest, { video: { url: imageSpecific }, caption: infoMsg + menuMsg, footer: "Je suis *Zokou-MD*, développé par Djalega++", gifPlayback: true }, { quoted: ms });
-        } else if (imageSpecific.match(/\.(jpeg|png|jpg)$/i)) {
-            zk.sendMessage(dest, { image: { url: imageSpecific }, caption: infoMsg + menuMsg, footer: "Je suis *Zokou-MD*, développé par Djalega++" }, { quoted: ms });
-        } else {
-            repondre(infoMsg + menuMsg);
-        }
-    } catch (e) {
+        zk.sendMessage(dest, { video: { url: lien }, caption:infoMsg + menuMsg, footer: "Je suis *Zokou-MD*, développé par Djalega++" , gifPlayback : true }, { quoted: ms });
+    }
+    catch (e) {
         console.log("🥵🥵 Menu erreur " + e);
         repondre("🥵🥵 Menu erreur " + e);
     }
+} 
+// Vérification pour .jpeg ou .png
+else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+    try {
+        zk.sendMessage(dest, { image: { url: lien }, caption:infoMsg + menuMsg, footer: "Je suis *Zokou-MD*, développé par Djalega++" }, { quoted: ms });
+    }
+    catch (e) {
+        console.log("🥵🥵 Menu erreur " + e);
+        repondre("🥵🥵 Menu erreur " + e);
+    }
+} 
+else {
+
+    repondre(infoMsg + menuMsg);
+
+}
+
 });
