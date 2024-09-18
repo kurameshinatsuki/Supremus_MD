@@ -2,7 +2,7 @@ const { zokou } = require("../framework/zokou");
 const {getAllSudoNumbers,isSudoTableNotEmpty} = require("../bdd/sudo")
 const conf = require("../set");
 
-zokou({ nomCom: "mods", categorie: "General", reaction: "😇" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "mods", categorie: "MON-BOT", reaction: "😇" }, async (dest, zk, commandeOptions) => {
     const { ms , mybotpic } = commandeOptions;
     
   const thsudo = await isSudoTableNotEmpty()
@@ -51,7 +51,7 @@ zokou({ nomCom: "mods", categorie: "General", reaction: "😇" }, async (dest, z
   }
 });
 
-zokou({ nomCom: "dev", categorie: "General", reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "dev", categorie: "MON-BOT", reaction: "👥" }, async (dest, zk, commandeOptions) => {
     const { ms, mybotpic } = commandeOptions;
 
     const devs = [
@@ -60,7 +60,7 @@ zokou({ nomCom: "dev", categorie: "General", reaction: "👥" }, async (dest, zk
       // Ajoute d'autres développeurs ici avec leur nom et numéro
     ];
 
-    let message = "✨ Salut, je suis *SP-ZK-MD* tu peux m'appeler *mini-kurama* ! voici mes développeurs :\n\n";
+    let message = "Salut, je suis *SP-ZK-MD* tu peux m'appeler *mini-kurama* ! je te présente mes développeurs :\n\n";
     for (const dev of devs) {
       message += `----------------\n• ${dev.nom} : https://wa.me/${dev.numero}\n`;
     }
@@ -91,10 +91,10 @@ else {
 }
 });
 
-zokou({ nomCom: "support", categorie: "General" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "support", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, auteurMessage, } = commandeOptions; 
  
-  repondre("✨ Veuillez regardé en pm/ib.")
-  await zk.sendMessage(auteurMessage,{text : `https://whatsapp.com/channel/0029VafonsZHFxP0iY6zn30f`},{quoted :ms})
+  repondre("Veuillez regardé en pm/ib.")
+  await zk.sendMessage(auteurMessage,{text : `https://whatsapp.com/channel/0029Vaiyt653WHTR2jHEHe2e`},{quoted :ms})
 
 })
