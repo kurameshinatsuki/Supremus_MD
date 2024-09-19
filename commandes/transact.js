@@ -75,7 +75,9 @@ zokou(
       transactions.forEach((t, i) => {
         bienvenueMsg += `${i + 1}. ${t.option}\n`;
       });
-      bienvenueMsg += `\nTapez le numéro de l'option ou le nom de la commande (ex: "achat, vente, echange, etc...").`;
+      bienvenueMsg += `\nTapez le numéro de l'option ou le nom de la commande (ex: "achat, vente, echange, etc...").
+═══════════════════
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
 
       await sendDefaultImage(zk, origineMessage);
       await zk.sendMessage(origineMessage, { text: bienvenueMsg });
