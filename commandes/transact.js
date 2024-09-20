@@ -52,7 +52,7 @@ const getPlayerResponse = async (zk, auteurMessage, origineMessage, timeout = 60
 
 zokou(
   {
-    nomCom: 'transact',
+    nomCom: 'control_transact',
     reaction: '💰',
     categorie: 'TRANSACT'
   },
