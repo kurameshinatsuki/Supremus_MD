@@ -27,7 +27,7 @@ Supremus-MD est un bot multi-appareil conçu pour enrichir vos conversations Wha
 
 1. Cliquez sur **[Fork](https://github.com/johnsupremus1/Supremus-MD)** pour copier le dépôt sur votre compte GitHub. N'oubliez pas d'ajouter une étoile 🌟 pour encourager les développeurs.
 2. Obtenez une session bot :
-   - [Session](https://zokouscan.onrender.com) ;
+   - [Session](https://zokoupairingcode-ykvl.onrender.com/) ;
 3. Déploiement :
    - **Déploiement sur Heroku :**
      1. Si vous n'avez pas de compte **Heroku**, cliquez [**ici**](https://id.heroku.com/login) pour en créer un.
