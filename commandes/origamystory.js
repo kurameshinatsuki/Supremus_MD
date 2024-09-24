@@ -1,42 +1,79 @@
 const { zokou } = require('../framework/zokou');
+const { getVerdictByKeyword, updateVerdict } = require('../bdd/origamystory');
 
 zokou(
-  {
-    nomCom: 'control_astoria',
-    categorie: 'MONBOT'
-  },
-  async (dest, zk, commandeOptions) => {
-    const { ms, repondre, arg } = commandeOptions;
-    const message = arg.join(' ').toLowerCase(); // Collecte et met tout en minuscule pour faciliter la recherche
+    {
+        nomCom: 'control',
+        categorie: 'ORIGAMY'
+    }, async (dest, zk, commandeOptions) => {
+        const { ms, arg, repondre, superUser } = commandeOptions;
 
-    // Liste de mots-clés et leurs réponses
-    const motsCles = {
-      '🍽️': {
-        text: 'Bienvenue dans notre taverne !',
-        image: 'https://telegra.ph/file/2df6f7324d3733153f4d8.jpg'
-      },
-      '⛲': {
-        text: 'Vous êtes à la fontaine d astoria...',
-        image: 'https://telegra.ph/file/2df6f7324d3733153f4d8.jpg'
-      }
-    };
+        const emojimap = {
+            '🍻': 'taverne',
+            '🏛️': 'bureau',
+            '1km': 'defi1',
+            '2km': 'defi2',
+            // Ajouter d'autres émojis et mots-clés ici
+        };
 
-    let reponse = null;
-    
-    // Vérifier si un mot-clé est présent dans le message
-    for (let motCle in motsCles) {
-      if (message.includes(motCle)) {
-        reponse = motsCles[motCle];
-        break;
-      }
+        try {
+            const message = arg.join(' ');
+
+            // Cherche si le message contient un mot-clé
+            let found = false;
+            for (const [emoji, motCle] of Object.entries(emojimap)) {
+                if (message.includes(emoji)) {
+                    found = true;
+
+                    // Récupérer le verdict pour ce mot-clé
+                    const verdictData = await getVerdictByKeyword(motCle);
+                    if (verdictData) {
+                        const { verdict, image_url } = verdictData;
+                        if (image_url) {
+                            await zk.sendMessage(dest, { image: { url: image_url }, caption: verdict }, { quoted: ms });
+                        } else {
+                            repondre(verdict);
+                        }
+                    } else {
+                        repondre(`Aucun verdict défini pour '${motCle}'.`);
+                    }
+                    break;
+                }
+            }
+
+            if (!found) {
+                repondre("Aucun mot-clé trouvé dans le message.");
+            }
+        } catch (error) {
+            console.log("Erreur lors du traitement de la commande verdict : " + error);
+            repondre("Une erreur est survenue. Veuillez réessayer.");
+        }
     }
-    
-    // Si un mot-clé est trouvé, le bot envoie un message avec texte et image dans le groupe spécifique
-    if (reponse) {
-      const jidGroupe = '22554191184@s.whatsapp.net'; // Le JID du groupe
+);
 
-      // Envoyer un message avec image dans le groupe
-      zk.sendMessage(jidGroupe, { image: { url: reponse.image }, caption: reponse.text }, { quoted: ms });
+zokou(
+    {
+        nomCom: 'updata_verdict',
+        categorie: 'DRPS',
+    }, async (dest, zk, commandeOptions) => {
+        const { arg, repondre, superUser } = commandeOptions;
+
+        if (!superUser) {
+            return repondre("Commande réservée aux admins.");
+        }
+
+        try {
+            const [motCle, verdict, imageUrl, etat] = arg.join(' ').split(';');
+
+            if (motCle && verdict && etat) {
+                await updateVerdict(motCle, verdict, imageUrl, etat);
+                repondre(`Verdict pour '${motCle}' mis à jour avec succès.`);
+            } else {
+                repondre("Format incorrect. Utilisez: -updateVerdict motCle;verdict;imageUrl;etat");
+            }
+        } catch (error) {
+            console.log("Erreur lors de la mise à jour du verdict : " + error);
+            repondre("Une erreur est survenue. Veuillez réessayer.");
+        }
     }
-  }
 );
