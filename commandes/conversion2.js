@@ -31,7 +31,7 @@ async function uploadToImgBB(Path) {
 }
 
 // Utilisation de la fonction dans ta commande
-zokou({ nomCom: "url", categorie: "Conversion", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
+zokou({ nomCom: "url", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
     const { msgRepondu, repondre } = commandeOptions;
 
     if (!msgRepondu) {
