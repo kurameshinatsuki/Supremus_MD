@@ -13,7 +13,7 @@ const sleep = (ms) => {
 };
 
 
-zokou({ nomCom: "tgs", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "tgs", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, arg, nomAuteurMessage, superUser } = commandeOptions;
 
   if (!superUser) {
@@ -94,7 +94,7 @@ zokou({ nomCom: "tgs", categorie: "Mods" }, async (dest, zk, commandeOptions) =>
   }
 });
 
-zokou({ nomCom: "crew", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "crew", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, arg, auteurMessage, superUser, auteurMsgRepondu, msgRepondu } = commandeOptions;
 
   if (!superUser) { repondre("only modds can use this command"); return };
@@ -110,7 +110,7 @@ zokou({ nomCom: "crew", categorie: "Mods" }, async (dest, zk, commandeOptions) =
 
 });
 
-zokou({ nomCom: "left", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "left", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage } = commandeOptions;
   if (!verifGroupe) { repondre("group only"); return };
@@ -122,7 +122,7 @@ zokou({ nomCom: "left", categorie: "Mods" }, async (dest, zk, commandeOptions) =
   await zk.groupLeave(dest)
 });
 
-zokou({ nomCom: "join", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "join", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage } = commandeOptions;
 
@@ -140,7 +140,7 @@ zokou({ nomCom: "join", categorie: "Mods" }, async (dest, zk, commandeOptions) =
 })
 
 
-zokou({ nomCom: "jid", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "jid", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage, auteurMsgRepondu } = commandeOptions;
 
@@ -159,7 +159,7 @@ zokou({ nomCom: "jid", categorie: "Mods" }, async (dest, zk, commandeOptions) =>
 
 
 
-zokou({ nomCom: "block", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "block", categorie: "MON-BOT }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage, auteurMsgRepondu } = commandeOptions;
 
@@ -184,7 +184,7 @@ zokou({ nomCom: "block", categorie: "Mods" }, async (dest, zk, commandeOptions) 
 
 });
 
-zokou({ nomCom: "unblock", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "unblock", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage, auteurMsgRepondu } = commandeOptions;
 
@@ -208,7 +208,7 @@ zokou({ nomCom: "unblock", categorie: "Mods" }, async (dest, zk, commandeOptions
 
 });
 
-zokou({ nomCom: "kickall", categorie: 'Group', reaction: "📣" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "kickall", categorie: 'MON-BOT', reaction: "😵‍💫" }, async (dest, zk, commandeOptions) => {
 
   const { auteurMessage, ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser, prefixe } = commandeOptions
 
@@ -246,7 +246,7 @@ zokou({ nomCom: "kickall", categorie: 'Group', reaction: "📣" }, async (dest, 
 
 zokou({
   nomCom: 'ban',
-  categorie: 'Mods',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, arg, auteurMsgRepondu, msgRepondu, repondre, prefixe, superUser } = commandeOptions;
@@ -295,7 +295,7 @@ zokou({
 
 zokou({
   nomCom: 'bangroup',
-  categorie: 'Mods',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, arg, auteurMsgRepondu, msgRepondu, repondre, prefixe, superUser, verifGroupe } = commandeOptions;
@@ -343,7 +343,7 @@ zokou({
 
 zokou({
   nomCom: 'onlyadmin',
-  categorie: 'Group',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, arg, auteurMsgRepondu, msgRepondu, repondre, prefixe, superUser, verifGroupe, verifAdmin } = commandeOptions;
@@ -390,7 +390,7 @@ zokou({
 
 zokou({
   nomCom: 'sudo',
-  categorie: 'Mods',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, arg, auteurMsgRepondu, msgRepondu, repondre, prefixe, superUser } = commandeOptions;
@@ -437,7 +437,7 @@ zokou({
 });
 
 
-zokou({ nomCom: "save", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "save", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { repondre, msgRepondu, superUser, auteurMessage } = commandeOptions;
 
@@ -523,7 +523,7 @@ zokou({ nomCom: "save", categorie: "Mods" }, async (dest, zk, commandeOptions) =
 
 zokou({
   nomCom: 'mention',
-  categorie: 'Mods',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, superUser, arg } = commandeOptions;
@@ -608,7 +608,7 @@ To stop the mention, use mention stop`;
 
 zokou({
   nomCom: 'vide',
-  categorie: 'Mods',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, superUser, arg } = commandeOptions;
@@ -632,7 +632,7 @@ zokou({
 
 zokou({
   nomCom: 'archive',
-  categorie: 'Mods',
+  categorie: 'MON-BOT',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, superUser, arg } = commandeOptions;
