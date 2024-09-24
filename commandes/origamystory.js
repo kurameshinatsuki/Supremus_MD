@@ -53,7 +53,7 @@ zokou(
 
 zokou(
     {
-        nomCom: 'updata_verdict',
+        nomCom: 'verdict',
         categorie: 'DRPS',
     }, async (dest, zk, commandeOptions) => {
         const { arg, repondre, superUser } = commandeOptions;
