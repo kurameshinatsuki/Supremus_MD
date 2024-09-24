@@ -87,7 +87,7 @@ zokou(
 
 // Commande system_abm (envoie plusieurs images)
 zokou(
-    { nomCom: 'system_abm', categorie: 'CENTRAL' },
+    { nomCom: 'system_abm', categorie: 'ABM' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -103,7 +103,7 @@ zokou(
 
 // Commande speed_rush (envoie plusieurs images)
 zokou(
-    { nomCom: 'speed_rush', categorie: 'CENTRAL' },
+    { nomCom: 'speed_rush', categorie: 'SPEED-RUSH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -118,7 +118,7 @@ zokou(
 
 // Commande origamy_system (envoie plusieurs images)
 zokou(
-    { nomCom: 'origamy_system', categorie: 'CENTRAL' },
+    { nomCom: 'origamy_system', categorie: 'ORIGAMY' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -133,11 +133,11 @@ zokou(
 
 // Commande system_yugioh
 zokou(
-    { nomCom: 'system_yugioh', categorie: 'Arena' },
+    { nomCom: 'system_yugioh', categorie: 'YU-GI-OH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const lien = 'https://i.ibb.co/Y3wTs4X/Picsart-24-09-15-08-45-38-072.jpg';
-        const msg = 'Voici le système Yu-Gi-Oh :';
+        const msg = '*🎴 C'est l'heure du duel !';
         await envoyerImage(dest, zk, ms, lien, msg);
     }
 );
