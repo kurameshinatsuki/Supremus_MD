@@ -277,6 +277,48 @@ zokou(
     }
 );
 
+// Jeu de pile ou face simple
+zokou(
+    {
+        nomCom: 'coinflip',
+        categorie: 'YU-GI-OH'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, auteurMessage, ms } = commandeOptions;
+
+        // Fonction pour simuler un pile ou face
+        const flipCoin = () => (Math.random() < 0.5) ? 'Pile' : 'Face';
+        
+        const coin = flipCoin();
+        
+        // Message affichant le résultat du pile ou face
+        const resultMessage = `🪙 Vous avez lancé une pièce et obtenu : ${coin}.`;
+        
+        zk.sendMessage(dest, { text: resultMessage }, { quoted: ms });
+    }
+);
+
+// Jeu de dés simple
+zokou(
+    {
+        nomCom: 'dice',
+        categorie: 'YU-GI-OH'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, auteurMessage, ms } = commandeOptions;
+        
+        // Fonction pour lancer un dé à 6 faces
+        const rollDice = () => Math.floor(Math.random() * 6) + 1;
+        
+        const dice = rollDice();
+        
+        // Message affichant le résultat du dé
+        const resultMessage = `🎲 Vous avez lancé un dé et obtenu un ${dice}.`;
+        
+        zk.sendMessage(dest, { text: resultMessage }, { quoted: ms });
+    }
+);
+
 zokou(
     {
         nomCom: 'speed_fight',
