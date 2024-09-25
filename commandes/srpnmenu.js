@@ -137,7 +137,7 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const lien = 'https://i.ibb.co/Y3wTs4X/Picsart-24-09-15-08-45-38-072.jpg';
-        const msg = '*🎴 C'est l'heure du duel !';
+        const msg = '*🎴 C\'est l\'heure du duel !';
         await envoyerImage(dest, zk, ms, lien, msg);
     }
 );
