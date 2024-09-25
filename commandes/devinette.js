@@ -1,129 +1,130 @@
 const { zokou } = require('../framework/zokou');
 
-// Set a riddle list with questions and answers
+// Liste des devinettes avec questions et réponses
 const devinettes = [
   {
-    question: "I can fly without wings, who am I?",
-    reponse: "The weather",
+    question: "Je peux voler sans ailes, qui suis-je ?",
+    reponse: "Le vent",
   },
   {
-    question: "I'm always hungry, the more I eat, the fatter I become. Who am I ?",
-    reponse: "A black hole",
+    question: "Je suis toujours affamé, plus je mange, plus je grossis. Qui suis-je ?",
+    reponse: "Un trou noir",
   },
   {
-    question: "I'm strong when I'm down, but I'm weak when I'm up. Who am I ?",
-    reponse: "The number 6",
+    question: "Je suis fort quand je suis à terre, mais faible quand je suis debout. Qui suis-je ?",
+    reponse: "Le chiffre 6",
   },
   {
-    question: "I can be short or long, hard or soft, I can be used by anyone, from young children to experienced musicians. Who am I ?",
-    reponse: "A pencil",
+    question: "Je peux être court ou long, dur ou doux, je peux être utilisé par n'importe qui, des enfants aux musiciens expérimentés. Qui suis-je ?",
+    reponse: "Un crayon",
   },
   {
-    question: "I am the beginning of the end, the end of every place. I am the beginning of eternity, the end of time and space. Who am I ?",
-    reponse: "The letter 'e'",
+    question: "Je suis le début de la fin, la fin de chaque lieu. Je suis le début de l'éternité, la fin du temps et de l'espace. Qui suis-je ?",
+    reponse: "La lettre 'e'",
   },
   {
-    question: "I am white when I am dirty and black when I am clean. Who am I ?",
-    reponse: "A slate",
+    question: "Je suis blanc quand je suis sale et noir quand je suis propre. Qui suis-je ?",
+    reponse: "Une ardoise",
   },
   {
-    question: "I'm liquid, but if you take water away from me, I become solid. Who am I ?",
-    reponse: "Tea",
+    question: "Je suis liquide, mais si tu enlèves l'eau de moi, je deviens solide. Qui suis-je ?",
+    reponse: "Le thé",
   },
   {
-    question: "I fly without wings, I cry without eyes. Wherever I am, death always accompanies me. Who am I ?",
-    reponse: "The wind",
+    question: "Je vole sans ailes, je pleure sans yeux. Où que je sois, la mort m'accompagne toujours. Qui suis-je ?",
+    reponse: "Le vent",
   },
   {
-    question: "I have towns, but no houses. I have mountains, but no trees. I have water, but no fish. Who am I ?",
-    reponse: "A map",
+    question: "J'ai des villes, mais pas de maisons. J'ai des montagnes, mais pas d'arbres. J'ai de l'eau, mais pas de poissons. Qui suis-je ?",
+    reponse: "Une carte",
   },
   {
-    question: "I can be read, but you can't write about me. You always give to me, but rarely keep me. Who am I ?",
-    reponse: "A borrowed book",
+    question: "Je peux être lu, mais tu ne peux pas écrire sur moi. Tu me donnes toujours, mais tu me gardes rarement. Qui suis-je ?",
+    reponse: "Un livre emprunté",
   },
   {
-    question: "I come twice in a week, once in a year, but never in a day. Who am I ?",
-    reponse: "The letter 'E'",
+    question: "Je viens deux fois par semaine, une fois par an, mais jamais en un jour. Qui suis-je ?",
+    reponse: "La lettre 'E'",
   },
   {
-    question: "I'm hard to grasp, but you will hold me in your hand when you find me. Who am I ?",
-    reponse: "Your breath",
+    question: "Je suis difficile à saisir, mais tu me tiendras dans ta main quand tu me trouveras. Qui suis-je ?",
+    reponse: "Ton souffle",
   },
   {
-    question: "The hotter I am, the colder I become. Who am I ?",
-    reponse: "coffe",
+    question: "Plus je suis chaud, plus je deviens froid. Qui suis-je ?",
+    reponse: "Le café",
   },
   {
-    question: "I am the stuff of dreams. I cover broken ideas. I change souls into wings. Who am I ?",
-    reponse: "A book",
+    question: "Je suis fait de rêves. Je recouvre les idées brisées. Je transforme les âmes en ailes. Qui suis-je ?",
+    reponse: "Un livre",
   },
   {
-    question: "I am white when I am dirty and black when I am clean. Who am I?",
-    reponse: "A slate",
+    question: "Je suis blanc quand je suis sale et noir quand je suis propre. Qui suis-je ?",
+    reponse: "Une ardoise",
   },
   {
-    question: "I can fly without having wings. I can cry without having eyes. Who am I ?",
-    reponse: "A cloud",
+    question: "Je peux voler sans avoir des ailes. Je peux pleurer sans avoir des yeux. Qui suis-je ?",
+    reponse: "Un nuage",
   },
   {
-    question: "I start at night and finish in the morning. Who am I ?",
-    reponse: "The letter 'N'",
+    question: "Je commence la nuit et je termine le matin. Qui suis-je ?",
+    reponse: "La lettre 'N'",
   },
   {
-    question: "I can be read, but you can't write about me. You always give to me, but rarely keep me. Who am I ?",
-    reponse: "A borrowed book",
+    question: "Je peux être lu, mais tu ne peux pas écrire sur moi. Tu me donnes toujours, mais tu me gardes rarement. Qui suis-je ?",
+    reponse: "Un livre emprunté",
   },
   {
-    question: "I feed on everything around me, the air, the earth and even the trees. Who am I ?",
-    reponse: "a fire",
+    question: "Je me nourris de tout ce qui m'entoure, l'air, la terre et même les arbres. Qui suis-je ?",
+    reponse: "Un feu",
   },
   {
-    question: "I am white when I am dirty and black when I am clean. Who am I ?",
-    reponse: "A slate",
+    question: "Je suis blanc quand je suis sale et noir quand je suis propre. Qui suis-je ?",
+    reponse: "Une ardoise",
   },
   {
-    question: "I'm liquid, but if you take water away from me, I become solid. Who am I ?",
-    reponse: "tea",
+    question: "Je suis liquide, mais si tu enlèves l'eau de moi, je deviens solide. Qui suis-je ?",
+    reponse: "Le thé",
   },
   {
-    question: "I am the beginning of the end and the end of every place. I am the beginning of eternity, the end of time and space. Who am I ?",
-    reponse: "the letter'E'",
+    question: "Je suis le début de la fin et la fin de chaque lieu. Je suis le début de l'éternité, la fin du temps et de l'espace. Qui suis-je ?",
+    reponse: "La lettre 'E'",
   },
   {
-    question: "I'm hard to grasp, but you will hold me in your hand when you find me. Who am I ?",
-    reponse: "Your breath",
+    question: "Je suis difficile à saisir, mais tu me tiendras dans ta main quand tu me trouveras. Qui suis-je ?",
+    reponse: "Ton souffle",
   },
-  ];
-  
-zokou({ nomCom: "riddle", categorie: "GAMES" }, async (dest, zk, commandeOptions) => {
+];
+
+zokou({ nomCom: "devinette", categorie: "CASINO" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre } = commandeOptions;
 
-  // Choose a random riddle
+  // Choisir une devinette au hasard
   const devinette = devinettes[Math.floor(Math.random() * devinettes.length)];
-// Send the riddle question
+  
+  // Envoyer la question de la devinette
   await zk.sendMessage(
     dest,
     {
-      text: `Riddle: ${devinette.question} . \n you have 30 seconds to think about.`,
+      text: `Devinette : ${devinette.question}.\n Tu as 30 secondes pour réfléchir.`,
     },
     { quoted: ms }
   );
 
-  //Wait 60 seconds before sending the response
+  // Attendre 30 secondes avant d'envoyer la réponse
   await delay(30000);
 
-  // Answer
+  // Réponse
   await zk.sendMessage(
     dest,
     {
-      text: `The answer was : ${devinette.reponse}`,
+      text: `La réponse était : ${devinette.reponse}`,
     },
     { quoted: ms }
   );
 });
 
-// Function to create a pause/delay in milliseconds
+// Fonction pour créer une pause/délai en millisecondes
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
