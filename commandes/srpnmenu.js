@@ -87,7 +87,7 @@ zokou(
 
 // Commande system_abm (envoie plusieurs images)
 zokou(
-    { nomCom: 'system_abm', categorie: 'ABM' },
+    { nomCom: 'abm_system', categorie: 'ABM' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -103,7 +103,7 @@ zokou(
 
 // Commande speed_rush (envoie plusieurs images)
 zokou(
-    { nomCom: 'speed_rush', categorie: 'SPEED-RUSH' },
+    { nomCom: 'speedrush_system', categorie: 'SPEED-RUSH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -133,7 +133,7 @@ zokou(
 
 // Commande system_yugioh
 zokou(
-    { nomCom: 'system_yugioh', categorie: 'YU-GI-OH' },
+    { nomCom: 'yugioh_system', categorie: 'YU-GI-OH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const lien = 'https://i.ibb.co/Y3wTs4X/Picsart-24-09-15-08-45-38-072.jpg';
