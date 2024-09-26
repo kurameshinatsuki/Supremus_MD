@@ -47,14 +47,14 @@ zokou(
                             repondre(verdict);
                         }
                     } else {
-                        repondre(`Aucun verdict défini pour '${motCle}'.`);
+                        repondre(`*✅ NEXT...*\n⚠️ Veillez n'avoir sautée aucune section dans le cas contraire vous risquez des pénalités.`);
                     }
                     break;
                 }
             }
 
             if (!found) {
-                repondre("Aucun mot-clé trouvé dans le message.");
+                repondre("Aucun verdict défini pour '${motCle}'.");
             }
         } catch (error) {
             console.log("Erreur lors du traitement de la commande verdict : " + error);
