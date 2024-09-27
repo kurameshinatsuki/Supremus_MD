@@ -159,7 +159,7 @@ zokou({ nomCom: "jid", categorie: "MON-BOT" }, async (dest, zk, commandeOptions)
 
 
 
-zokou({ nomCom: "block", categorie: "MON-BOT }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "block", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage, auteurMsgRepondu } = commandeOptions;
 
