@@ -3,7 +3,7 @@ const { getVerdictByKeyword, updateVerdict } = require('../bdd/origamystory');
 
 zokou(
     {
-        nomCom: 'control_astoria',
+        nomCom: 'astoria_movie',
         categorie: 'ORIGAMY'
     }, async (dest, zk, commandeOptions) => {
         const { ms, arg, repondre, superUser } = commandeOptions;
