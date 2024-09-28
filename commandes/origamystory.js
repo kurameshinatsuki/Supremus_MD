@@ -3,7 +3,7 @@ const { getVerdictByKeyword, updateVerdict } = require('../bdd/origamystory');
 
 zokou(
     {
-        nomCom: 'astoria_movie',
+        nomCom: 'control_astoria',
         categorie: 'ORIGAMY'
     }, async (dest, zk, commandeOptions) => {
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -22,12 +22,15 @@ zokou(
             '🚧': 'Entrée Restreinte',
             '🛍️': 'Marché Central',
             '🍻': 'Luxury Taverne',
+            '1️⃣': 'Chambre 1',
+            '2️⃣': 'Chambre 2',
+            '3️⃣': 'Chambre 3',
             '🥖': 'Baguette Dorée',
             '⚒️': 'Forge d\'Edward',
             '🎎': 'Grand Bazar',
             '🏤': 'Bureau des Missions',
-            '🏦': 'Banque des Trésors',
-            '🏞️': 'Bains de Sagacia',
+            '🏦': 'Salle des Trésors',
+            '🫧': 'Bains Public',
             '🏬': 'Galerie des Arts',
             '📚': 'Grande Bibliothèque',
             '🏥': 'Centre Médical',
@@ -45,7 +48,8 @@ zokou(
             '⚱️': 'Oubliettes',
             '🐎': 'Écuries Royales',
             '🔭': 'Tour Astral',
-            '🗡️': 'Arsenal Royaux'
+            '🗡️': 'Arsenal Royaux',
+            '🗺️': 'Carte Astoria'
             // Ajouter d'autres émojis et mots-clés ici si nécessaire
         };
 
@@ -68,14 +72,14 @@ zokou(
                             repondre(verdict);
                         }
                     } else {
-                        repondre(`*♼ Chargement...*`);
+                        repondre(`*♼ Chargement...*\nAucun verdict trouver pour *${lieu}*`);
                     }
                     break;
                 }
             }
 
             if (!found) {
-                repondre("Aucun verdict défini pour cet emoji.");
+                repondre("♼ *Next...*");
             }
         } catch (error) {
             console.log("Erreur lors du traitement de la commande : " + error);
@@ -86,7 +90,7 @@ zokou(
 
 zokou(
     {
-        nomCom: 'origamy_master',
+        nomCom: 'astoria_master',
         categorie: 'DRPN',
     }, async (dest, zk, commandeOptions) => {
         const { arg, repondre, superUser } = commandeOptions;
@@ -102,7 +106,7 @@ zokou(
                 await updateVerdict(motCle, verdict, imageUrl, etat);
                 repondre(`Verdict pour '${motCle}' mis à jour avec succès.`);
             } else {
-                repondre("Format incorrect. Utilisez: -${nomCom} motCle;verdict;imageUrl;normal");
+                repondre("*Format incorrect.*\n*Utilisez:*  -astoria_master motCle;verdict;imageUrl;normal");
             }
         } catch (error) {
             console.log("Erreur lors de la mise à jour du verdict : " + error);
