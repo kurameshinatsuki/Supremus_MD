@@ -24,7 +24,8 @@ zokou(
     '20km': 'defi13',  // Passez de 50 à 200 km/h en moins de 4 secondes dans un tunnel.
     '22km': 'defi14',  // Atteignez une vitesse de 250 km/h avant de franchir la ligne d'arrivée.
     '25km': 'defi15',  // Réussissez un drift de 6 mètres autour du stade sans perdre de vitesse.
-    '28km': 'defi16'   // Complétez le circuit en moins de 3 tours tout en maintenant une vitesse supérieure à 200 km/h.
+    '28km': 'defi16',   // Complétez le circuit en moins de 3 tours tout en maintenant une vitesse supérieure à 200 km/h.
+            'circuit': 'Westside Circuit'
             // Ajouter d'autres émojis et mots-clés ici
         };
 
