@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player'); // Adapté pour n'importe quel joueur
+const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/player'); // Fonctionnalités pour la base de données
 
 zokou(
     {
@@ -8,49 +8,94 @@ zokou(
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
-
-        // Déterminez le joueur actuel de manière dynamique si possible
         const playerName = 'player1'; // Peut être dynamique en fonction de la commande
 
         try {
-            // Récupérer les données du joueur
+            // Récupérer les données actuelles du joueur depuis la base de données
             const data = await getDataFromPlayer(playerName);
 
             if (!arg || !arg[0] || arg.join('') === '') {
-                // Si aucune commande n'est spécifiée, on affiche les données existantes du joueur
+                // Si aucune commande n'est spécifiée, on affiche la fiche du joueur
                 if (data) {
-                    const { message, lien } = data;
-                    const alivemsg = `${message}`;
+                    // Utilisation de valeurs par défaut si certaines données sont manquantes
+                    const ficheJoueur = `
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+═══════════════════  
+*..........| SRPN PROFIL |..........*  
+═══════════════════  
+> *👤 ID :* ${data.s1 ?? 'ID inconnu'}  
+> *♨️ Statut :* ${data.s2 ?? 'Statut non défini'}  
+> *🪀 Mode :* ${data.s3 ?? 'Mode par défaut'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*..............| EXPLOITS |.............*  
+═══════════════════  
+> *🧘‍♂️ Rang :* ${data.s4 ?? '0'}/${data.s5 ?? '0'}/${data.s6 ?? '0'}  
+- *ABM :* ${data.s4 ?? 'Aucun'}  
+- *SPEED RUSH :* ${data.s5 ?? 'Aucun'}  
+- *YU-GI-OH :* ${data.s6 ?? 'Aucun'}  
+> *🏆 Champion :* ${data.s7 ?? 'Aucun'}  
+> *😎 Spécialité :* ${data.s8 ?? 'Non spécifié'}  
+> *👑 Leader :* ${data.s9 ?? 'Non spécifié'}  
+> *🤼‍♂️ Challenge :* ${data.s10 ?? 'Aucun'}  
+> *💯 Légende :* ${data.s11 ?? 'Inconnue'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*................| STATS |................*  
+═══════════════════  
+> *👊 Battles :* ${data.s12 ?? '0'}  
+- *V :* ${data.s13 ?? '0'} | *D :* ${data.s14 ?? '0'} | *L :* ${data.s15 ?? '0'}  
+> *🏅 TOP 3 :* ${data.s16 ?? '0'}  
+> *🎭 Story Mode :*  
+- *M.W :* ${data.s17 ?? '0'} / *M.L :* ${data.s18 ?? '0'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*.........| HEROES GAME |.........*  
+═══════════════════  
+> *🀄 Cards AMB :*  
+- ${data.s19 ?? 'Aucune'}  
+> *🚗 Vehicles :*  
+- ${data.s20 ?? 'Aucun'}  
+> *🃏 Yu-Gi-Oh :*  
+- ${data.s21 ?? 'Aucune carte'}  
+> *🪐 Origamy World :*  
+- *🚻 Skins :* ${data.s22 ?? 'Aucun'}  
+- *🎒 Items :* ${data.s23 ?? 'Aucun'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*.............| CURRENCY |............*  
+═══════════════════  
+> *🧭 S Tokens :* ${data.s24 ?? '0'}🧭  
+> *💎 S Gemmes :* ${data.s25 ?? '0'}💎  
+> *🎟️ Coupons :* ${data.s26 ?? '0'}🎟️  
+> *🎁 Box VIP :* ${data.s27 ?? '0'}🎁  
+> *📟 Compteur :* ${data.s28 ?? '0'}FCFA💸  
+═══════════════════  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+...........| *♼ Chargement...* |.........`;
 
-                    if (/\.(mp4|gif)$/i.test(lien)) {
-                        await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else if (/\.(jpeg|png|jpg)$/i.test(lien)) {
-                        await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else {
-                        repondre(alivemsg);
-                    }
-
+                    // Envoyer la fiche du joueur
+                    await zk.sendMessage(dest, ficheJoueur, { quoted: ms });
                 } else {
-                    if (!superUser) {
-                        repondre("🛃 Aucune fiche trouvée pour ce joueur.");
-                    } else {
-                        repondre("🔃 Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format : -${nomCom} Message;Lien");
-                        repondre("⚠️ Attention aux infos que vous tapez.");
-                    }
+                    repondre("🛃 Aucune fiche trouvée pour ce joueur.");
                 }
             } else {
                 // Si l'utilisateur a fourni des arguments pour mettre à jour les données
                 if (!superUser) {
                     repondre("🛂 Réservé aux membres de la *DRPS*");
                 } else {
-                    const [texte, tlien] = arg.join(' ').split(';');
+                    // Parser la commande pour obtenir les modifications
+                    const updates = arg.join(' ').split(';').reduce((acc, pair) => {
+                        const [key, value] = pair.split(':');
+                        if (key && value) {
+                            acc[key.trim()] = value.trim();
+                        }
+                        return acc;
+                    }, {});
 
-                    if (texte && tlien) {
-                        await addOrUpdateDataInPlayer(playerName, texte, tlien);
-                        repondre('✔️ Données actualisées avec succès');
-                    } else {
-                        repondre("Format incorrect. Veuillez utiliser: -${nomCom} Message;Lien");
+                    // Appliquer les mises à jour dans la base de données
+                    for (const [key, value] of Object.entries(updates)) {
+                        // Ajouter une logique spécifique pour chaque colonne que tu veux mettre à jour
+                        await addOrUpdateDataInPlayer(playerName, key, value);
                     }
+
+                    repondre('✔️ Données actualisées avec succès');
                 }
             }
         } catch (error) {
@@ -60,6 +105,7 @@ zokou(
     }
 );
 
+
 zokou(
     {
         nomCom: 'player2',  // Peut être dynamique
@@ -67,49 +113,94 @@ zokou(
     }, async (dest, zk, commandeOptions) => {
 
         const { ms, arg, repondre, superUser } = commandeOptions;
-
-        // Déterminez le joueur actuel de manière dynamique si possible
         const playerName = 'player2'; // Peut être dynamique en fonction de la commande
 
         try {
-            // Récupérer les données du joueur
+            // Récupérer les données actuelles du joueur depuis la base de données
             const data = await getDataFromPlayer(playerName);
 
             if (!arg || !arg[0] || arg.join('') === '') {
-                // Si aucune commande n'est spécifiée, on affiche les données existantes du joueur
+                // Si aucune commande n'est spécifiée, on affiche la fiche du joueur
                 if (data) {
-                    const { message, lien } = data;
-                    const alivemsg = `${message}`;
+                    // Utilisation de valeurs par défaut si certaines données sont manquantes
+                    const ficheJoueur = `
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+═══════════════════  
+*..........| SRPN PROFIL |..........*  
+═══════════════════  
+> *👤 ID :* ${data.s1 ?? 'ID inconnu'}  
+> *♨️ Statut :* ${data.s2 ?? 'Statut non défini'}  
+> *🪀 Mode :* ${data.s3 ?? 'Mode par défaut'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*..............| EXPLOITS |.............*  
+═══════════════════  
+> *🧘‍♂️ Rang :* ${data.s4 ?? '0'}/${data.s5 ?? '0'}/${data.s6 ?? '0'}  
+- *ABM :* ${data.s4 ?? 'Aucun'}  
+- *SPEED RUSH :* ${data.s5 ?? 'Aucun'}  
+- *YU-GI-OH :* ${data.s6 ?? 'Aucun'}  
+> *🏆 Champion :* ${data.s7 ?? 'Aucun'}  
+> *😎 Spécialité :* ${data.s8 ?? 'Non spécifié'}  
+> *👑 Leader :* ${data.s9 ?? 'Non spécifié'}  
+> *🤼‍♂️ Challenge :* ${data.s10 ?? 'Aucun'}  
+> *💯 Légende :* ${data.s11 ?? 'Inconnue'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*................| STATS |................*  
+═══════════════════  
+> *👊 Battles :* ${data.s12 ?? '0'}  
+- *V :* ${data.s13 ?? '0'} | *D :* ${data.s14 ?? '0'} | *L :* ${data.s15 ?? '0'}  
+> *🏅 TOP 3 :* ${data.s16 ?? '0'}  
+> *🎭 Story Mode :*  
+- *M.W :* ${data.s17 ?? '0'} / *M.L :* ${data.s18 ?? '0'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*.........| HEROES GAME |.........*  
+═══════════════════  
+> *🀄 Cards AMB :*  
+- ${data.s19 ?? 'Aucune'}  
+> *🚗 Vehicles :*  
+- ${data.s20 ?? 'Aucun'}  
+> *🃏 Yu-Gi-Oh :*  
+- ${data.s21 ?? 'Aucune carte'}  
+> *🪐 Origamy World :*  
+- *🚻 Skins :* ${data.s22 ?? 'Aucun'}  
+- *🎒 Items :* ${data.s23 ?? 'Aucun'}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*.............| CURRENCY |............*  
+═══════════════════  
+> *🧭 S Tokens :* ${data.s24 ?? '0'}🧭  
+> *💎 S Gemmes :* ${data.s25 ?? '0'}💎  
+> *🎟️ Coupons :* ${data.s26 ?? '0'}🎟️  
+> *🎁 Box VIP :* ${data.s27 ?? '0'}🎁  
+> *📟 Compteur :* ${data.s28 ?? '0'}FCFA💸  
+═══════════════════  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+...........| *♼ Chargement...* |.........`;
 
-                    if (/\.(mp4|gif)$/i.test(lien)) {
-                        await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else if (/\.(jpeg|png|jpg)$/i.test(lien)) {
-                        await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
-                    } else {
-                        repondre(alivemsg);
-                    }
-
+                    // Envoyer la fiche du joueur
+                    await zk.sendMessage(dest, ficheJoueur, { quoted: ms });
                 } else {
-                    if (!superUser) {
-                        repondre("🛃 Aucune fiche trouvée pour ce joueur.");
-                    } else {
-                        repondre("🔃 Aucune fiche trouvée pour ce joueur. Pour l'enregistrer, entrez après la commande votre message et votre lien d'image ou vidéo dans ce format : -${nomCom} Message;Lien");
-                        repondre("⚠️ Attention aux infos que vous tapez.");
-                    }
+                    repondre("🛃 Aucune fiche trouvée pour ce joueur.");
                 }
             } else {
                 // Si l'utilisateur a fourni des arguments pour mettre à jour les données
                 if (!superUser) {
                     repondre("🛂 Réservé aux membres de la *DRPS*");
                 } else {
-                    const [texte, tlien] = arg.join(' ').split(';');
+                    // Parser la commande pour obtenir les modifications
+                    const updates = arg.join(' ').split(';').reduce((acc, pair) => {
+                        const [key, value] = pair.split(':');
+                        if (key && value) {
+                            acc[key.trim()] = value.trim();
+                        }
+                        return acc;
+                    }, {});
 
-                    if (texte && tlien) {
-                        await addOrUpdateDataInPlayer(playerName, texte, tlien);
-                        repondre('✔️ Données actualisées avec succès');
-                    } else {
-                        repondre("Format incorrect. Veuillez utiliser: -${nomCom} Message;Lien");
+                    // Appliquer les mises à jour dans la base de données
+                    for (const [key, value] of Object.entries(updates)) {
+                        // Ajouter une logique spécifique pour chaque colonne que tu veux mettre à jour
+                        await addOrUpdateDataInPlayer(playerName, key, value);
                     }
+
+                    repondre('✔️ Données actualisées avec succès');
                 }
             }
         } catch (error) {
