@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 
 // Liste des questions du quiz multiverse animes avec questions et réponses
 const questions = [
@@ -114,4 +114,4 @@ zokou({ nomCom: "quiz", categorie: "OTAKU" }, async (dest, zk, commandeOptions) 
   await zk.sendMessage(dest, {
     text: tableauDesScores,
   }, { quoted: ms });
-});
+});*/
