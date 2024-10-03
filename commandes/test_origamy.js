@@ -42,13 +42,13 @@ const emojimap = {
 
 // Suffixes pour les sous-lieux et événements
 const eventEmojis = {
-    'ℹ️': '- Event',
-    '⬇️': '- Sud',
-    '⬆️': '- Nord',
-    '➡️': '- Est',
-    '⬅️': '- Ouest',
-    '🧑‍🍳': '- Comptoir',
-    '🪑': '- Place',
+    'ℹ️': 'Event',
+    '⬇️': 'Sud',
+    '⬆️': 'Nord',
+    '➡️': 'Est',
+    '⬅️': 'Ouest',
+    '🧑‍🍳': 'Comptoir',
+    '🪑': 'Place',
     '1️⃣': 'Chambre 1',
     '2️⃣': 'Chambre 2',
     '3️⃣': 'Chambre 3'
@@ -88,15 +88,18 @@ zokou(
             const message = arg.join(' ');
             let found = false;
 
-            // Vérifie d'abord les sous-lieux
+            // Parcours des lieux et des événements
             for (const [eventEmoji, eventName] of Object.entries(eventEmojis)) {
                 for (const [emoji, lieu] of Object.entries(emojimap)) {
+                    // Génération dynamique des sous-lieux avec le format `${lieu}_${event}`
                     const subLieuEmoji = emoji + eventEmoji;
+                    const subLieuEventKey = `${lieu}_${eventName}`; // clé dynamique
+
                     if (message.includes(subLieuEmoji)) {
                         found = true;
 
-                        // Récupération du verdict pour ce sous-lieu
-                        const verdictData = await getVerdictByKeyword(subLieuEmoji);
+                        // Récupération du verdict pour le sous-lieu et l'événement spécifique
+                        const verdictData = await getVerdictByKeyword(subLieuEventKey); // Utilisation de la clé dynamique
                         if (verdictData) {
                             const { verdict, image_url } = verdictData;
                             if (image_url) {
@@ -106,7 +109,7 @@ zokou(
                                 repondre(verdict);
                             }
                         } else {
-                            // Réponse personnalisée si aucun verdict n'est trouvé pour le sous-lieu
+                            // Réponse personnalisée si aucun verdict n'est trouvé pour ce sous-lieu
                             repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
                         }
                         return; // On sort de la fonction après avoir trouvé un sous-lieu
