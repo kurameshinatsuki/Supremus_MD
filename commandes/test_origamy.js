@@ -122,3 +122,30 @@ zokou(
         }
     }
 );
+
+zokou(
+    {
+        nomCom: 'test_master',
+        categorie: 'DRPN',
+    }, async (dest, zk, commandeOptions) => {
+        const { arg, repondre, superUser } = commandeOptions;
+
+        if (!superUser) {
+            return repondre("Commande réservée aux *🌐STORY MASTER🎭*.");
+        }
+
+        try {
+            const [motCle, verdict, imageUrl, etat] = arg.join(' ').split(';');
+
+            if (motCle && verdict && etat) {
+                await updateVerdict(motCle, verdict, imageUrl, etat);
+                repondre(`Verdict pour '${motCle}' mis à jour avec succès.`);
+            } else {
+                repondre("*Format incorrect.*\n*Utilisez:*  -astoria_master motCle;verdict;imageUrl;normal");
+            }
+        } catch (error) {
+            console.log("Erreur lors de la mise à jour du verdict : " + error);
+            repondre("Une erreur est survenue. Veuillez réessayer.");
+        }
+    }
+);
