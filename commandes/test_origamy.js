@@ -57,6 +57,7 @@ const eventEmojis = {
 // Fonction pour générer la carte complète des emojis avec leurs sous-lieux et événements
 const completeEmojiMap = {};
 
+// Remplir le completeEmojiMap avec les sous-lieux
 for (const [emoji, lieu] of Object.entries(emojimap)) {
     completeEmojiMap[emoji] = lieu;
 
@@ -87,12 +88,38 @@ zokou(
             const message = arg.join(' ');
             let found = false;
 
-            // Parcours des emojis pour trouver le lieu correspondant dans le message
-            for (const [emoji, lieu] of Object.entries(completeEmojiMap)) {
+            // Vérifie d'abord les sous-lieux
+            for (const [eventEmoji, eventName] of Object.entries(eventEmojis)) {
+                for (const [emoji, lieu] of Object.entries(emojimap)) {
+                    const subLieuEmoji = emoji + eventEmoji;
+                    if (message.includes(subLieuEmoji)) {
+                        found = true;
+
+                        // Récupération du verdict pour ce sous-lieu
+                        const verdictData = await getVerdictByKeyword(subLieuEmoji);
+                        if (verdictData) {
+                            const { verdict, image_url } = verdictData;
+                            if (image_url) {
+                                // Envoi de l'image avec le verdict en légende
+                                await zk.sendMessage(dest, { image: { url: image_url }, caption: verdict }, { quoted: ms });
+                            } else {
+                                repondre(verdict);
+                            }
+                        } else {
+                            // Réponse personnalisée si aucun verdict n'est trouvé pour le sous-lieu
+                            repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
+                        }
+                        return; // On sort de la fonction après avoir trouvé un sous-lieu
+                    }
+                }
+            }
+
+            // Si aucun sous-lieu n'est trouvé, vérifie les lieux principaux
+            for (const [emoji, lieu] of Object.entries(emojimap)) {
                 if (message.includes(emoji)) {
                     found = true;
 
-                    // Récupération du verdict pour ce lieu
+                    // Récupération du verdict pour ce lieu principal
                     const verdictData = await getVerdictByKeyword(lieu);
                     if (verdictData) {
                         const { verdict, image_url } = verdictData;
@@ -106,7 +133,7 @@ zokou(
                         // Réponse personnalisée si aucun verdict n'est trouvé
                         repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
                     }
-                    break;
+                    break; // On sort de la boucle après avoir trouvé un lieu principal
                 }
             }
 
