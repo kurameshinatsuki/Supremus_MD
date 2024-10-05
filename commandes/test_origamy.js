@@ -173,7 +173,7 @@ zokou(
                             }
                         } else {
                             // Réponse personnalisée si aucun verdict n'est trouvé pour ce sous-lieu
-                            repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
+                            repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*,"https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg"`);
                         }
                         return; // On sort de la fonction après avoir trouvé un sous-lieu
                     }
@@ -197,7 +197,7 @@ zokou(
                         }
                     } else {
                         // Réponse personnalisée si aucun verdict n'est trouvé
-                        repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
+                        repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*,"https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg"`);
                     }
                     break; // On sort de la boucle après avoir trouvé un lieu principal
                 }
@@ -205,7 +205,7 @@ zokou(
 
             if (!found) {
                 // Si aucun emoji correspondant n'a été trouvé
-                repondre("♼ *NEXT...*");
+                repondre("♼ *NEXT...*,"https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg"");
             }
 
         } catch (error) {
