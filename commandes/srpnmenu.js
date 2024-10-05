@@ -107,8 +107,9 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/37qwKLP/Picsart-24-09-15-07-54-02-342.jpg',
-            'https://i.ibb.co/y55kDpL/Picsart-24-09-15-08-00-10-160.jpg'
+            https://i.ibb.co/1TrmcF5/Image-2024-10-05-11-58-07-0.jpg',
+            'https://i.ibb.co/yPzLn42/Image-2024-10-05-11-58-07-1.jpg',
+            'https://i.ibb.co/3WDjLN4/Image-2024-10-05-11-58-07-2.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
@@ -122,8 +123,9 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/nrwzjMc/Picsart-24-09-15-09-40-28-343.jpg',
-            'https://i.ibb.co/C5c10sz/Picsart-24-09-15-09-55-20-839.jpg'
+            'https://i.ibb.co/M5nPWj3/Image-2024-10-05-11-58-07-3.jpg',
+            'https://i.ibb.co/zPppSB6/Image-2024-10-05-11-58-07-4.jpg',
+            'https://i.ibb.co/fChCHV0/Image-2024-10-05-11-58-07-5.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
