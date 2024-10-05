@@ -69,33 +69,33 @@ for (const [emoji, lieu] of Object.entries(emojimap)) {
 
 // Messages personnalisés en cas d'absence de verdict
 const customNoVerdictMessages = {
-    'Porte Principale': '\`ORIGAMY STORY\`\n\n> Les gardes montent la garde avec vigilance, observant chaque nouvel arrivant. L’ambiance est remplie d’anticipation.\n\n- Parler aux gardes.\n- Inspecter les alentours.\n- Observer les nouveaux arrivants.\n\n*NEXT...*',
+    'Porte Principale': '\`ORIGAMY STORY\`\n\n> Les gardes montent la garde avec vigilance, observant chaque nouvel arrivant. L’ambiance est remplie d’anticipation.\n\n - Parler aux gardes.\n - Inspecter les alentours.\n - Observer les nouveaux arrivants.\n\n*NEXT...*',
     
-    'Transport Public': '\`ORIGAMY STORY\`\n\n> La navette est attendue avec impatience par des voyageurs de tous horizons. Les discussions sont animées.\n\n- Attendre une navette.\n- Discuter avec des voyageurs.\n- Explorer les itinéraires.\n\n*NEXT...*',
+    'Transport Public': '\`ORIGAMY STORY\`\n\n> La navette est attendue avec impatience par des voyageurs de tous horizons. Les discussions sont animées.\n\n - Attendre une navette.\n - Discuter avec des voyageurs.\n - Explorer les itinéraires.\n\n*NEXT...*',
 
-    'Cimetière': '\`ORIGAMY STORY\`\n\n> Un calme pesant enveloppe le cimetière. Des murmures lointains se font entendre, donnant un air mystique à l’endroit.\n\n- Écouter les murmures des esprits.\n- Déposer une offrande.\n- Méditer en silence.\n\n*NEXT...*',
+    'Cimetière': '\`ORIGAMY STORY\`\n\n> Un calme pesant enveloppe le cimetière. Des murmures lointains se font entendre, donnant un air mystique à l’endroit.\n\n - Écouter les murmures des esprits.\n - Déposer une offrande.\n - Méditer en silence.\n\n*NEXT...*',
 
-    'Bois Sacrés': '\`ORIGAMY STORY\`\n\n> Les arbres majestueux semblent murmurer des secrets anciens. L’atmosphère est empreinte de magie.\n\n- Ramasser des herbes magiques.\n- Écouter les esprits des arbres.\n- Suivre une piste étrange.\n\n*NEXT...*',
+    'Bois Sacrés': '\`ORIGAMY STORY\`\n\n> Les arbres majestueux semblent murmurer des secrets anciens. L’atmosphère est empreinte de magie.\n\n - Ramasser des herbes magiques.\n - Écouter les esprits des arbres.\n - Suivre une piste étrange.\n\n*NEXT...*',
 
-    'Colisée d\'Aurelius': '\`ORIGAMY STORY\`\n\n> L’arène résonne des échos de combats passés. L’excitation des spectateurs est palpable.\n\n- S\'entraîner dans l\'arène.\n- Défier un gladiateur.\n- Observer les combats passés.\n\n*NEXT...*',
+    'Colisée d\'Aurelius': '\`ORIGAMY STORY\`\n\n> L’arène résonne des échos de combats passés. L’excitation des spectateurs est palpable.\n\n - S\'entraîner dans l\'arène.\n - Défier un gladiateur.\n - Observer les combats passés.\n\n*NEXT...*',
 
-    'Arène Souterraine': '\`ORIGAMY STORY\`\n\n> Des murmures de paris secrets flottent dans l’air. L’endroit est sombre et mystérieux.\n\n- Parier sur des combats clandestins.\n- Défier un adversaire.\n- Enquêter sur les rumeurs.\n\n*NEXT...*',
+    'Arène Souterraine': '\`ORIGAMY STORY\`\n\n> Des murmures de paris secrets flottent dans l’air. L’endroit est sombre et mystérieux.\n\n - Parier sur des combats clandestins.\n - Défier un adversaire.\n - Enquêter sur les rumeurs.\n\n*NEXT...*',
 
-    'Centre de Commandement': '\`ORIGAMY STORY\`\n\n> La salle est animée par des discussions stratégiques. Les officiers se concertent sur la meilleure approche.\n\n- Discuter de stratégie avec un officier.\n- Proposer une mission.\n- Observer les cartes militaires.\n\n*NEXT...*',
+    'Centre de Commandement': '\`ORIGAMY STORY\`\n\n> La salle est animée par des discussions stratégiques. Les officiers se concertent sur la meilleure approche.\n\n - Discuter de stratégie avec un officier.\n - Proposer une mission.\n - Observer les cartes militaires.\n\n*NEXT...*',
 
-    'Camp d\'Entraînement': '\`ORIGAMY STORY\`\n\n> Les soldats s’entraînent avec ardeur, faisant résonner leurs armes. L’atmosphère est dynamique.\n\n- S\'entraîner avec les soldats.\n- Apprendre une nouvelle technique.\n- Défier un instructeur.\n\n*NEXT...*',
+    'Camp d\'Entraînement': '\`ORIGAMY STORY\`\n\n> Les soldats s’entraînent avec ardeur, faisant résonner leurs armes. L’atmosphère est dynamique.\n\n - S\'entraîner avec les soldats.\n - Apprendre une nouvelle technique.\n - Défier un instructeur.\n\n*NEXT...*',
 
-    'Académie d\'Arcana': '\`ORIGAMY STORY\`\n\n> Les étudiants étudient attentivement, entourés de livres anciens. La magie est dans l’air.\n\n- Assister à un cours.\n- Étudier un grimoire ancien.\n- Pratiquer un sortilège.\n\n*NEXT...*',
+    'Académie d\'Arcana': '\`ORIGAMY STORY\`\n\n> Les étudiants étudient attentivement, entourés de livres anciens. La magie est dans l’air.\n\n - Assister à un cours.\n - Étudier un grimoire ancien.\n - Pratiquer un sortilège.\n\n*NEXT...*',
 
-    'Caserne de la Garde': '\`ORIGAMY STORY\`\n\n> L’odeur du cuir et du métal flotte dans l’air. Les gardes partagent des histoires captivantes.\n\n- Écouter les récits des gardes.\n- Aider à préparer une patrouille.\n- Découvrir les secrets de la Garde.\n\n*NEXT...*',
+    'Caserne de la Garde': '\`ORIGAMY STORY\`\n\n> L’odeur du cuir et du métal flotte dans l’air. Les gardes partagent des histoires captivantes.\n\n - Écouter les récits des gardes.\n - Aider à préparer une patrouille.\n - Découvrir les secrets de la Garde.\n\n*NEXT...*',
 
-    'Marché Central': '\`ORIGAMY STORY\`\n\n> Le marché est animé, les cris des commerçants et les discussions des clients créent une ambiance vivante.\n\n- Marchander avec les commerçants.\n- Acheter des provisions.\n- Écouter les rumeurs des clients.\n\n*NEXT...*',
+    'Marché Central': '\`ORIGAMY STORY\`\n\n> Le marché est animé, les cris des commerçants et les discussions des clients créent une ambiance vivante.\n\n - Marchander avec les commerçants.\n - Acheter des provisions.\n - Écouter les rumeurs des clients.\n\n*NEXT...*',
 
-    'Luxury Taverne': '\`ORIGAMY STORY\`\n\n> L’atmosphère est chaleureuse et accueillante. Les aventuriers partagent leurs histoires autour d’une bonne bière.\n\n- Partager une boisson.\n- Écouter les récits des aventuriers.\n- Lancer un jeu de dés.\n\n*NEXT...*',
+    'Luxury Taverne': '\`ORIGAMY STORY\`\n\n> L’atmosphère est chaleureuse et accueillante. Les aventuriers partagent leurs histoires autour d’une bonne bière.\n\n - Partager une boisson.\n - Écouter les récits des aventuriers.\n - Lancer un jeu de dés.\n\n*NEXT...*',
 
-    'Baguette Dorée': '\`ORIGAMY STORY\`\n\n> L’odeur du pain frais embaume l’air. Les clients se pressent pour déguster les délices du boulanger.\n\n- Acheter du pain frais.\n- Discuter avec le boulanger.\n- Participer à une dégustation.\n\n*NEXT...*',
+    'Baguette Dorée': '\`ORIGAMY STORY\`\n\n> L’odeur du pain frais embaume l’air. Les clients se pressent pour déguster les délices du boulanger.\n\n - Acheter du pain frais.\n - Discuter avec le boulanger.\n - Participer à une dégustation.\n\n*NEXT...*',
 
-    'Forge d\'Edward': '\`ORIGAMY STORY\`\n\n> Le bruit des marteaux résonne, les étincelles volent. La passion du forgeron se ressent dans chaque création.\n\n- Commander une arme.\n- Aider à la forge.\n- Inspecter les dernières créations.\n\n*NEXT...*',
+    'Forge d\'Edward': '\`ORIGAMY STORY\`\n\n> Le bruit des marteaux résonne, les étincelles volent. La passion du forgeron se ressent dans chaque création.\n\n - Commander une arme.\n - Aider à la forge.\n - Inspecter les dernières créations.\n\n*NEXT...*',
 
     'Grand Bazar': '\`ORIGAMY STORY\`\n\n> Des étals colorés se dressent tout autour. L’excitation de la recherche d’objets rares anime les lieux.\n\n- Chercher des objets rares.\n- Discuter avec les marchands.\n- Organiser un échange.\n\n*NEXT...*',
 
@@ -173,7 +173,7 @@ zokou(
                             }
                         } else {
                             // Réponse personnalisée si aucun verdict n'est trouvé pour ce sous-lieu
-                            repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*,"https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg"`);
+                            repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
                         }
                         return; // On sort de la fonction après avoir trouvé un sous-lieu
                     }
@@ -197,7 +197,7 @@ zokou(
                         }
                     } else {
                         // Réponse personnalisée si aucun verdict n'est trouvé
-                        repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*,"https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg"`);
+                        repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
                     }
                     break; // On sort de la boucle après avoir trouvé un lieu principal
                 }
@@ -205,7 +205,7 @@ zokou(
 
             if (!found) {
                 // Si aucun emoji correspondant n'a été trouvé
-                repondre("♼ *NEXT...*,"https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg"");
+                repondre("♼ *NEXT...*");
             }
 
         } catch (error) {
