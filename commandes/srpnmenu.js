@@ -107,7 +107,7 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            https://i.ibb.co/1TrmcF5/Image-2024-10-05-11-58-07-0.jpg',
+            'https://i.ibb.co/1TrmcF5/Image-2024-10-05-11-58-07-0.jpg',
             'https://i.ibb.co/yPzLn42/Image-2024-10-05-11-58-07-1.jpg',
             'https://i.ibb.co/3WDjLN4/Image-2024-10-05-11-58-07-2.jpg'
         ];
