@@ -69,40 +69,75 @@ for (const [emoji, lieu] of Object.entries(emojimap)) {
 
 // Messages personnalisés en cas d'absence de verdict
 const customNoVerdictMessages = {
-    'Porte Principale': '\`ORIGAMY STORY\`\n\n> À l\'entrée de la ville, les gardes semblent vigilants. Une atmosphère calme, mais les rumeurs de voyageurs alertent l\'attention.\n\n*NEXT...*',
-    'Transport Public': '\`ORIGAMY STORY\`\n\n> Les navettes sont prêtes à partir, mais l\'activité est au ralenti. Les passants semblent discuter des nouvelles.\n\n*NEXT...*',
-    'Cimetière': '\`ORIGAMY STORY\`\n\n> Le cimetière est paisible, un lieu de mémoire. Les ombres des anciens guerriers murmurent des histoires oubliées.\n\n*NEXT...*',
-    'Bois Sacrés': '\`ORIGAMY STORY\`\n\n> Les feuilles murmurent des secrets. Une sensation d\'énergie douce flotte dans l\'air, promettant de la magie.\n\n*NEXT...*',
-    'Colisée d\'Aurelius': '\`ORIGAMY STORY\`\n\n> L\'arène est vide pour l\'instant, mais l\'écho des cris des foules résonne encore dans les murs. L\'excitation est palpable.\n\n*NEXT...*',
-    'Arène Souterraine': '\`ORIGAMY STORY\`\n\n> Des murmures d\'affrontements clandestins parviennent à vos oreilles. L\'adrénaline est présente, même en l\'absence de combats.\n\n*NEXT...*',
-    'Centre de Commandement': '\`ORIGAMY STORY\`\n\n> L\'activité militaire est en cours, mais l\'absence de nouvelles directives laisse place à l\'incertitude. Les stratèges semblent préoccupés.\n\n*NEXT...*',
-    'Camp d\'Entraînement': '\`ORIGAMY STORY\`\n\n> Les soldats s\'entraînent sous le regard vigilant de leurs instructeurs. Une détermination palpable dans l\'air, mais pas de combats en vue.\n\n*NEXT...*',
-    'Académie d\'Arcana': '\`ORIGAMY STORY\`\n\n> Les étudiants se livrent à des discussions animées, mais la magie semble suspendue, attendant d\'être libérée.\n\n*NEXT...*',
-    'Caserne de la Garde': '\`ORIGAMY STORY\`\n\n> Les gardes sont en pause, partageant des histoires de bravoure. L\'endroit est calme, mais prêt à réagir à tout moment.\n\n*NEXT...*',
-    'Marché Central': '\`ORIGAMY STORY\`\n\n> L\'animation est au rendez-vous, les vendeurs crient leurs offres. Une ambiance vivante, mais rien d\'inhabituel à signaler.\n\n*NEXT...*',
-    'Luxury Taverne': '\`ORIGAMY STORY\`\n\n> Les rires et les conversations emplissent l\'air. Un lieu de détente, mais les rumeurs d\'aventures intrigantes circulent.\n\n*NEXT...*',
-    'Baguette Dorée': '\`ORIGAMY STORY\`\n\n> Les arômes de pain frais flottent dans l\'air. Les clients se bousculent pour obtenir le meilleur des produits.\n\n*NEXT...*',
-    'Forge d\'Edward': '\`ORIGAMY STORY\`\n\n> Les sons du marteau résonnent. La forge est animée, mais aucune commande urgente n\'est en attente.\n\n*NEXT...*',
-    'Grand Bazar': '\`ORIGAMY STORY\`\n\n> Les étals sont pleins de trésors variés. Les marchands discutent, mais l\'atmosphère est calme, sans agitation.\n\n*NEXT...*',
-    'Bureau des Missions': '\`ORIGAMY STORY\`\n\n> Les aventuriers attendent des missions, mais aujourd\'hui, rien de nouveau à signaler. Un moment de calme avant l\'action.\n\n*NEXT...*',
-    'Salle des Trésors': '\`ORIGAMY STORY\`\n\n> Les trésors sont bien gardés, scintillant dans la pénombre. Aucun aventurier en vue pour le moment.\n\n*NEXT...*',
-    'Bains Public': '\`ORIGAMY STORY\`\n\n> Un endroit idéal pour se détendre. Les conversations se mêlent aux éclats d\'eau, mais pas d\'événements marquants à l\'horizon.\n\n*NEXT...*',
-    'Galerie des Arts': '\`ORIGAMY STORY\`\n\n> Les œuvres d\'art sont exposées avec soin. Les visiteurs admirent en silence, mais l\'inspiration semble en attente.\n\n*NEXT...*',
-    'Grande Bibliothèque': '\`ORIGAMY STORY\`\n\n> Les pages tournent lentement, empreintes de connaissances. Le silence est d\'or, mais les secrets dorment ici.\n\n*NEXT...*',
-    'Centre Médical': '\`ORIGAMY STORY\`\n\n> Les médecins s\'affairent, mais aujourd\'hui, les blessures semblent rares. Une ambiance calme et professionnelle.\n\n*NEXT...*',
-    'Laboratoire d\'Oris': '\`ORIGAMY STORY\`\n\n> Les effluves d\'alchimie flottent dans l\'air. Rien de nouveau à signaler pour l\'instant, mais l\'innovation est toujours en marche.\n\n*NEXT...*',
-    'Quartier Résidentiel': '\`ORIGAMY STORY\`\n\n> Les habitants vaquent à leurs occupations. Une atmosphère paisible, mais des secrets peuvent se cacher ici.\n\n*NEXT...*',
-    'Salle des Jeux': '\`ORIGAMY STORY\`\n\n> Les dés roulent et les rires s\'élèvent. Une ambiance de compétition, mais pas d\'événements majeurs à signaler.\n\n*NEXT...*',
-    'Bains Royaux': '\`ORIGAMY STORY\`\n\n> Un havre de paix, l\'eau apaise les esprits. Les murmures de nobles discutant résonnent, mais rien d\'extraordinaire.\n\n*NEXT...*',
-    'Résidences Nobles': '\`ORIGAMY STORY\`\n\n> Les nobles se rassemblent, mais les portes sont fermées. Un lieu de mystère, calme et préservé.\n\n*NEXT...*',
-    'Cour d\'Honneur': '\`ORIGAMY STORY\`\n\n> La statue d\'Iris se tient majestueusement. L\'endroit est calme, mais un sentiment de grandeur persiste.\n\n*NEXT...*',
-    'Palais Royal': '\`ORIGAMY STORY\`\n\n> Les gardes surveillent avec rigueur. L\'opulence est présente, mais aucune audience ne se déroule aujourd\'hui.\n\n*NEXT...*',
-    'Jardins Privés': '\`ORIGAMY STORY\`\n\n> La sérénité règne parmi les fleurs. Un endroit pour la méditation, sans événements notables pour l\'instant.\n\n*NEXT...*',
-    'Hall des Gardiens': '\`ORIGAMY STORY\`\n\n> Les préparatifs de sécurité sont en cours, mais rien d\'urgent ne semble se passer. L\'équipe est prête à agir.\n\n*NEXT...*',
-    'Oubliettes': '\`ORIGAMY STORY\`\n\n> Les murs de pierre racontent des histoires sombres. Aucun écho de vie n\'est présent, un lieu à éviter.\n\n*NEXT...*',
-    'Écuries Royales': '\`ORIGAMY STORY\`\n\n> Les montures se reposent, l\'activité est tranquille. Les écuries, bien entretenues, n\'attendent que les nobles pour les chevaucher.\n\n*NEXT...*',
-    'Tour Astral': '\`ORIGAMY STORY\`\n\n> Les étoiles sont observées avec soin, mais aujourd\'hui, aucune nouvelle constellation ne se dévoile. Un moment de calme dans l\'étude.\n\n*NEXT...*',
-    'Arsenal Royaux': '\`ORIGAMY STORY\`\n\n> Les armements sont bien en place, la sécurité est optimale. Rien d\'extraordinaire à signaler ici non plus.\n\n*NEXT...*',
+    'Porte Principale': '\`ORIGAMY STORY\`\n\n> Les gardes montent la garde avec vigilance, observant chaque nouvel arrivant. L’ambiance est remplie d’anticipation.\n\n- Parler aux gardes.\n- Inspecter les alentours.\n- Observer les nouveaux arrivants.\n\n*NEXT...*',
+    
+    'Transport Public': '\`ORIGAMY STORY\`\n\n> La navette est attendue avec impatience par des voyageurs de tous horizons. Les discussions sont animées.\n\n- Attendre une navette.\n- Discuter avec des voyageurs.\n- Explorer les itinéraires.\n\n*NEXT...*',
+
+    'Cimetière': '\`ORIGAMY STORY\`\n\n> Un calme pesant enveloppe le cimetière. Des murmures lointains se font entendre, donnant un air mystique à l’endroit.\n\n- Écouter les murmures des esprits.\n- Déposer une offrande.\n- Méditer en silence.\n\n*NEXT...*',
+
+    'Bois Sacrés': '\`ORIGAMY STORY\`\n\n> Les arbres majestueux semblent murmurer des secrets anciens. L’atmosphère est empreinte de magie.\n\n- Ramasser des herbes magiques.\n- Écouter les esprits des arbres.\n- Suivre une piste étrange.\n\n*NEXT...*',
+
+    'Colisée d\'Aurelius': '\`ORIGAMY STORY\`\n\n> L’arène résonne des échos de combats passés. L’excitation des spectateurs est palpable.\n\n- S\'entraîner dans l\'arène.\n- Défier un gladiateur.\n- Observer les combats passés.\n\n*NEXT...*',
+
+    'Arène Souterraine': '\`ORIGAMY STORY\`\n\n> Des murmures de paris secrets flottent dans l’air. L’endroit est sombre et mystérieux.\n\n- Parier sur des combats clandestins.\n- Défier un adversaire.\n- Enquêter sur les rumeurs.\n\n*NEXT...*',
+
+    'Centre de Commandement': '\`ORIGAMY STORY\`\n\n> La salle est animée par des discussions stratégiques. Les officiers se concertent sur la meilleure approche.\n\n- Discuter de stratégie avec un officier.\n- Proposer une mission.\n- Observer les cartes militaires.\n\n*NEXT...*',
+
+    'Camp d\'Entraînement': '\`ORIGAMY STORY\`\n\n> Les soldats s’entraînent avec ardeur, faisant résonner leurs armes. L’atmosphère est dynamique.\n\n- S\'entraîner avec les soldats.\n- Apprendre une nouvelle technique.\n- Défier un instructeur.\n\n*NEXT...*',
+
+    'Académie d\'Arcana': '\`ORIGAMY STORY\`\n\n> Les étudiants étudient attentivement, entourés de livres anciens. La magie est dans l’air.\n\n- Assister à un cours.\n- Étudier un grimoire ancien.\n- Pratiquer un sortilège.\n\n*NEXT...*',
+
+    'Caserne de la Garde': '\`ORIGAMY STORY\`\n\n> L’odeur du cuir et du métal flotte dans l’air. Les gardes partagent des histoires captivantes.\n\n- Écouter les récits des gardes.\n- Aider à préparer une patrouille.\n- Découvrir les secrets de la Garde.\n\n*NEXT...*',
+
+    'Marché Central': '\`ORIGAMY STORY\`\n\n> Le marché est animé, les cris des commerçants et les discussions des clients créent une ambiance vivante.\n\n- Marchander avec les commerçants.\n- Acheter des provisions.\n- Écouter les rumeurs des clients.\n\n*NEXT...*',
+
+    'Luxury Taverne': '\`ORIGAMY STORY\`\n\n> L’atmosphère est chaleureuse et accueillante. Les aventuriers partagent leurs histoires autour d’une bonne bière.\n\n- Partager une boisson.\n- Écouter les récits des aventuriers.\n- Lancer un jeu de dés.\n\n*NEXT...*',
+
+    'Baguette Dorée': '\`ORIGAMY STORY\`\n\n> L’odeur du pain frais embaume l’air. Les clients se pressent pour déguster les délices du boulanger.\n\n- Acheter du pain frais.\n- Discuter avec le boulanger.\n- Participer à une dégustation.\n\n*NEXT...*',
+
+    'Forge d\'Edward': '\`ORIGAMY STORY\`\n\n> Le bruit des marteaux résonne, les étincelles volent. La passion du forgeron se ressent dans chaque création.\n\n- Commander une arme.\n- Aider à la forge.\n- Inspecter les dernières créations.\n\n*NEXT...*',
+
+    'Grand Bazar': '\`ORIGAMY STORY\`\n\n> Des étals colorés se dressent tout autour. L’excitation de la recherche d’objets rares anime les lieux.\n\n- Chercher des objets rares.\n- Discuter avec les marchands.\n- Organiser un échange.\n\n*NEXT...*',
+
+    'Bureau des Missions': '\`ORIGAMY STORY\`\n\n> Le tableau des quêtes est couvert de missions en attente. Les aventuriers affluent pour accepter des tâches.\n\n- Accepter une mission.\n- Recruter des aventuriers.\n- Consulter le tableau des quêtes.\n\n*NEXT...*',
+
+    'Salle des Trésors': '\`ORIGAMY STORY\`\n\n> Les trésors scintillent sous la lumière, chaque objet a une histoire à raconter. L’émerveillement est palpable.\n\n- Observer les trésors exposés.\n- Enquêter sur une relique.\n- Discuter avec le gardien.\n\n*NEXT...*',
+
+    'Bains Publics': '\`ORIGAMY STORY\`\n\n> La vapeur flotte dans l’air, créant une atmosphère relaxante. Les conversations vont bon train.\n\n- Se détendre.\n- Écouter les conversations.\n- Participer à une cérémonie de purification.\n\n*NEXT...*',
+
+    'Galerie des Arts': '\`ORIGAMY STORY\`\n\n> Les œuvres d’art décorent les murs, chaque pièce témoigne d’un talent exceptionnel. L’inspiration est partout.\n\n- Admirer les œuvres.\n- Discuter avec un artiste.\n- Organiser une exposition.\n\n*NEXT...*',
+
+    'Grande Bibliothèque': '\`ORIGAMY STORY\`\n\n> Les livres sont rangés avec soin, chaque page renferme un savoir ancien. Le silence est sacré ici.\n\n- Lire un manuscrit rare.\n- Étudier un sujet.\n- Parler à un érudit.\n\n*NEXT...*',
+
+    'Centre Médical': '\`ORIGAMY STORY\`\n\n> L’odeur des herbes médicinales embaume l’air. Les blessés reçoivent des soins avec diligence.\n\n- Aider à soigner les blessés.\n- Consulter un médecin.\n- Récupérer après un combat.\n\n*NEXT...*',
+
+    'Laboratoire d\'Oris': '\`ORIGAMY STORY\`\n\n> Les fioles colorées brillent sur les étagères. L’alchimiste s’affaire à ses expériences.\n\n- Expérimenter une nouvelle potion.\n- Discuter avec l’alchimiste.\n- Étudier les ingrédients.\n\n*NEXT...*',
+
+    'Quartier Résidentiel': '\`ORIGAMY STORY\`\n\n> La vie quotidienne s’écoule paisiblement. Les habitants vaquent à leurs occupations.\n\n- Visiter un habitant.\n- Observer la vie quotidienne.\n- Découvrir un secret caché.\n\n*NEXT...*',
+
+    'Salle des Jeux': '\`ORIGAMY STORY\`\n\n> L’excitation des jeux emplit l’air. Les rires et les cris de victoire résonnent autour des tables.\n\n- Participer à un tournoi.\n- Parier sur une partie.\n- Défier un champion.\n\n*NEXT...*',
+
+    'Bains Royaux': '\`ORIGAMY STORY\`\n\n> Le luxe des bains royaux est inégalé. Des nobles se prélassent tout en échangeant des secrets.\n\n- Se relaxer.\n- Écouter les rumeurs des nobles.\n- Participer à une discussion secrète.\n\n*NEXT...*',
+
+    'Résidences Nobles': '\`ORIGAMY STORY\`\n\n> Le raffinement est à chaque coin de rue. Les nobles se rencontrent pour discuter affaires et intrigues.\n\n- Visiter un noble.\n- Participer à un dîner.\n- Enquêter sur les intrigues de la cour.\n\n*NEXT...*',
+
+    'Résidences Nobles': '\`ORIGAMY STORY\`\n\n> Le raffinement est à chaque coin de rue. Les nobles se rencontrent pour discuter affaires et intrigues.\n\n- Visiter un noble.\n- Participer à un dîner.\n- Enquêter sur les intrigues de la cour.\n\n*NEXT...*',
+
+    'Cour d\'Honneur': '\`ORIGAMY STORY\`\n\n> Un silence sacré règne ici, brisé seulement par le murmure du vent. La majesté de la statue impose le respect.\n\n- Méditer devant la statue.\n- Organiser une cérémonie.\n- Assister à une audience.\n\n*NEXT...*',
+
+    'Palais Royal': '\`ORIGAMY STORY\`\n\n> Les murs du palais résonnent des échos de l’histoire. Chaque coin abrite des secrets et des légendes.\n\n- Assister à une audience royale.\n- Discuter avec un conseiller.\n- Explorer les couloirs du palais.\n\n*NEXT...*',
+
+    'Jardins Privés': '\`ORIGAMY STORY\`\n\n> Les jardins sont un havre de paix, remplis de fleurs rares et d’arbres majestueux. Un parfum envoûtant flotte dans l’air.\n\n- Se promener.\n- Cueillir des fleurs rares.\n- Méditer en silence.\n\n*NEXT...*',
+
+    'Hall des Gardiens': '\`ORIGAMY STORY\`\n\n> L’atmosphère est chargée de tension, les préparatifs pour la protection du royaume sont en cours.\n\n- Observer les préparatifs.\n- Discuter avec un Gardien.\n- Inspecter les dispositifs de sécurité.\n\n*NEXT...*',
+
+    'Oubliettes': '\`ORIGAMY STORY\`\n\n> Les murs de pierre semblent raconter des histoires oubliées. Un frisson parcourt l’échine.\n\n- Explorer les sous-sols.\n- Enquêter sur les prisonniers passés.\n- Écouter les échos des murs.\n\n*NEXT...*',
+
+    'Écuries Royales': '\`ORIGAMY STORY\`\n\n> Les odeurs de foin et de cuir flottent dans l’air. Les montures nobles sont préparées pour de grandes aventures.\n\n- Soigner une monture.\n- Préparer une course.\n- Discuter avec un palefrenier.\n\n*NEXT...*',
+
+    'Tour Astral': '\`ORIGAMY STORY\`\n\n> La tour offre une vue imprenable sur le ciel. Les étoiles brillent comme des diamants dans la nuit.\n\n- Observer les étoiles.\n- Consulter un astronome.\n- Rechercher une constellation disparue.\n\n*NEXT...*',
+
+    'Arsenal Royaux': '\`ORIGAMY STORY\`\n\n> Les armements sont bien en place, la sécurité est optimale. Rien d\'extraordinaire à signaler ici non plus.\n\n- Inspecter les armes.\n- Aider à forger une lame.\n- Discuter avec le maître d\'armes.\n\n*NEXT...*',
 };
 
 zokou(
