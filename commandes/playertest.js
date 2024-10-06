@@ -71,3 +71,14 @@ zokou(
         }
     }
 );
+
+zokou(
+    {
+        nomCom: 'createProfile',  
+        categorie: 'Player-Profile'
+    }, async (dest, zk, commandeOptions) => {
+        const playerID = 'player1';
+        await createProfile(playerID);
+        zk.repondre(`Profil créé pour le joueur ${playerID}`);
+    }
+);
