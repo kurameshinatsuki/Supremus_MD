@@ -1,0 +1,19 @@
+name: Migrate PostgreSQL Database
+
+on: workflow_dispatch
+
+jobs:
+  migrate-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump PostgreSQL source
+        run: |
+          pg_dump -h <source_host> -U <source_user> -d <source_db> -F c > dump.sql
+        env:
+          PGPASSWORD: ${{ secrets.SOURCE_DB_PASSWORD }}
+      
+      - name: Restore to new PostgreSQL
+        run: |
+          pg_restore -h <target_host> -U <target_user> -d <target_db> -F c dump.sql
+        env:
+          PGPASSWORD: ${{ secrets.TARGET_DB_PASSWORD }}
