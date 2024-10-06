@@ -1,19 +1,23 @@
 name: Migrate PostgreSQL Database
 
-on: workflow_dispatch
+on: workflow_dispatch  # Pour déclencher manuellement la migration
 
 jobs:
   migrate-db:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Dump PostgreSQL source
         run: |
-          pg_dump -h <source_host> -U <source_user> -d <source_db> -F c > dump.sql
+          pg_dump -h dpg-crk7qpdumphs73afi4pg-a.oregon-postgres.render.com -U john_supremus_user -d john_supremus -F c > dump.sql
         env:
-          PGPASSWORD: ${{ secrets.SOURCE_DB_PASSWORD }}
-      
+          PGPASSWORD: JXhE00g0H2uY4X58sgk5OSOxTKmNcVzw psql
+
       - name: Restore to new PostgreSQL
         run: |
-          pg_restore -h <target_host> -U <target_user> -d <target_db> -F c dump.sql
+          pg_restore -h dpg-cs0nj58gph6c73ac546g-a.oregon-postgres.render.com -U johnsupremus -d srpndb -F c dump.sql
         env:
-          PGPASSWORD: ${{ secrets.TARGET_DB_PASSWORD }}
+          PGPASSWORD: m21hvTFQv8QotihLvJAodiExOQdUHfP6 psql
