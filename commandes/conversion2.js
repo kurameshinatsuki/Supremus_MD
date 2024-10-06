@@ -29,7 +29,7 @@ async function uploadToImgBB(Path) {
         if (data && data.data && data.data.url) {
             return data.data.url;
         } else {
-            throw new Error("Erreur lors de la récupération du lien de l'image/vidéo");
+            throw new Error("Erreur lors de la récupération du lien de l'image.");
         }
     } catch (err) {
         throw new Error(String(err));
@@ -50,34 +50,60 @@ async function uploadVideoToCloudinary(filePath) {
     }
 }
 
-// Commande pour gérer les images et vidéos
+// Commande pour l'upload d'image (via ImgBB)
 zokou({ nomCom: "url", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
     const { msgRepondu, repondre } = commandeOptions;
 
-    if (!msgRepondu) {
-        repondre('Veuillez mentionner une image ou une vidéo.');
+    if (!msgRepondu || !msgRepondu.imageMessage) {
+        repondre('Veuillez mentionner une image.');
         return;
     }
 
     let mediaPath;
 
     try {
-        // Télécharge l'image ou la vidéo
-        if (msgRepondu.videoMessage) {
-            mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
-            const videoUrl = await uploadVideoToCloudinary(mediaPath); // Upload de la vidéo sur Cloudinary
-            repondre(videoUrl); // Répond avec le lien de la vidéo
-        } else if (msgRepondu.imageMessage) {
-            mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
-            const imgbbUrl = await uploadToImgBB(mediaPath); // Upload de l'image sur ImgBB
-            repondre(imgbbUrl); // Répond avec le lien de l'image
-        } else {
-            repondre('Veuillez mentionner une image ou une vidéo.');
-        }
+        // Télécharge l'image depuis le message
+        mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
 
-        fs.unlinkSync(mediaPath);  // Supprime le fichier après l'upload
+        // Upload l'image sur ImgBB
+        const imgbbUrl = await uploadToImgBB(mediaPath);
+
+        // Supprime l'image après l'upload
+        fs.unlinkSync(mediaPath);
+
+        // Répond avec le lien de l'image
+        repondre(imgbbUrl);
     } catch (error) {
-        console.error('Erreur lors de l\'upload :', error);
-        repondre('Erreur lors de l\'upload de l\'image ou de la vidéo.');
+        console.error('Erreur lors de l\'upload de l\'image :', error);
+        repondre('Erreur lors de l\'upload de l\'image.');
+    }
+});
+
+// Commande pour l'upload de vidéo (via Cloudinary)
+zokou({ nomCom: "urlv", categorie: "Other", reaction: "🎥" }, async (origineMessage, zk, commandeOptions) => {
+    const { msgRepondu, repondre } = commandeOptions;
+
+    if (!msgRepondu || !msgRepondu.videoMessage) {
+        repondre('Veuillez mentionner une vidéo.');
+        return;
+    }
+
+    let mediaPath;
+
+    try {
+        // Télécharge la vidéo depuis le message
+        mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
+
+        // Upload la vidéo sur Cloudinary
+        const videoUrl = await uploadVideoToCloudinary(mediaPath);
+
+        // Supprime la vidéo après l'upload
+        fs.unlinkSync(mediaPath);
+
+        // Répond avec le lien de la vidéo
+        repondre(videoUrl);
+    } catch (error) {
+        console.error('Erreur lors de l\'upload de la vidéo :', error);
+        repondre('Erreur lors de l\'upload de la vidéo.');
     }
 });
