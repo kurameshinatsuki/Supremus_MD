@@ -1,14 +1,14 @@
 const { zokou } = require('../framework/zokou');
-const { createProfile, updateProfile, getProfile } = require('../bdd/playertest');
+const { createProfile, updateProfile, getProfile } = require('../bdd/playertest');  // Remplacez le chemin par celui de votre fichier de base de données
 
 zokou(
     {
-        nomCom: 'profile',  // Peut être dynamique
+        nomCom: 'profile',  // Nom dynamique de la commande
         categorie: 'Player-Profile'
     }, async (dest, zk, commandeOptions) => {
 
         const { arg, repondre, superUser } = commandeOptions;
-        const playerID = 'player1'; // Déterminez dynamiquement le joueur actuel
+        const playerID = 'player1';  // Ici, le playerID est statique, mais il peut être récupéré dynamiquement en fonction du joueur
 
         if (!arg || !arg[0]) {
             // Affiche le profil du joueur
