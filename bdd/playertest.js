@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-const s = require("../set");
+const s = require("../set");  // Remplacez par votre propre fichier de configuration
 
 // URL de la base de données
 const dbUrl = s.SPDB;
