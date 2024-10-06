@@ -80,7 +80,7 @@ zokou({ nomCom: "url", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, asyn
 });
 
 // Commande pour l'upload de vidéo (via Cloudinary)
-zokou({ nomCom: "urlv", categorie: "Other", reaction: "🎥" }, async (origineMessage, zk, commandeOptions) => {
+zokou({ nomCom: "urlv", categorie: "MON-BOT", reaction: "🎥" }, async (origineMessage, zk, commandeOptions) => {
     const { msgRepondu, repondre } = commandeOptions;
 
     if (!msgRepondu || !msgRepondu.videoMessage) {
