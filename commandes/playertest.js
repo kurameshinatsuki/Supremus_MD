@@ -1,84 +1,89 @@
 const { zokou } = require('../framework/zokou');
-const { createProfile, updateProfile, getProfile } = require('../bdd/playertest');  // Remplacez le chemin par celui de votre fichier de base de données
+const db = require('../bdd/playertest'); // Assurez-vous d'importer votre module de base de données
 
 zokou(
     {
-        nomCom: 'profile',  // Nom dynamique de la commande
-        categorie: 'Player-Profile'
-    }, async (dest, zk, commandeOptions) => {
+        nomCom: 'profil_player',
+        categorie: 'ABM'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg } = commandeOptions;
 
-        const { arg, repondre, superUser } = commandeOptions;
-        const playerID = 'player1';  // Ici, le playerID est statique, mais il peut être récupéré dynamiquement en fonction du joueur
+        // Vérifiez si l'ID du joueur est fourni
+        if (!arg || arg.length === 0) {
+            return repondre("Veuillez spécifier l'ID du joueur.");
+        }
 
-        if (!arg || !arg[0]) {
-            // Affiche le profil du joueur
-            const profile = await getProfile(playerID);
-            if (profile) {
-                const profilTexte = `
+        const joueurID = arg[0]; // On prend le premier argument comme ID du joueur
+
+        // Récupérer les données du joueur depuis la base de données
+        const joueurData = await db.getDataFromPlayer(joueurID);
+        if (!joueurData) {
+            return repondre("Joueur non trouvé.");
+        }
+
+        // Si d'autres données à mettre à jour sont fournies
+        const updates = arg.slice(1);
+        if (updates.length > 0) {
+            const modifications = {};
+            updates.forEach(update => {
+                const [key, value] = update.split('=');
+                modifications[key.trim()] = value.trim(); // Ajoute chaque modification à l'objet
+            });
+
+            // Mettre à jour les données du joueur
+            await db.addOrUpdateDataInPlayer(joueurID, modifications.message || joueurData.message, modifications.lien || joueurData.lien);
+            repondre(`Profil de ${joueurID} mis à jour avec succès.`);
+        }
+
+        // Préparer le message d'affichage du profil
+        const msg = `
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 ═══════════════════  
 *..........| SRPN PROFIL |..........*  
 ═══════════════════  
-> *👤 ID :* ${playerID}  
-> *♨️ Statut :* ${profile.status}  
-> *🪀 Mode :* ${profile.mode}  
+> *👤 ID :* ${joueurID}  
+> *♨️ Statut :* ${joueurData.statut || 'Non spécifié'}  
+> *🪀 Mode :* ${joueurData.mode || 'Non spécifié'}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *..............| EXPLOITS |.............*  
 ═══════════════════  
-> *🧘‍♂️ Rang :* ABM: ${profile.rank.ABM}, Speed Rush: ${profile.rank['Speed Rush']}, Yu-Gi-Oh: ${profile.rank['Yu-Gi-Oh']}  
-> *🏆 Champion :* ${profile.champion}  
-> *😎 Spécialité :* ${profile.specialty}  
-> *👑 Leader :* ${profile.leader}  
-> *🤼‍♂️ Challenge :* ${profile.challenge_count}  
-> *💯 Légende :* ${profile.legend_titles}  
+> *🧘‍♂️ Rang :* 
+- *ABM :* ${joueurData.rang_abm || 'Non spécifié'}  
+- *SPEED RUSH :* ${joueurData.rang_speed || 'Non spécifié'}  
+- *YU-GI-OH :* ${joueurData.rang_yugioh || 'Non spécifié'}  
+> *🏆 Champion :* ${joueurData.champion || 'Non spécifié'}  
+> *😎 Spécialité :* ${joueurData.specialite || 'Non spécifié'}  
+> *👑 Leader :* ${joueurData.leader || 'Non spécifié'}  
+> *🤼‍♂️ Challenge :* ${joueurData.challenge || 0}  
+> *💯 Légende :* ${joueurData.legend || 'Non spécifié'}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *................| STATS |................*  
 ═══════════════════  
-> *👊 Battles :* V: ${profile.battles.V} | D: ${profile.battles.D} | L: ${profile.battles.L}  
-> *🏅 TOP 3 :* ${profile.top3}  
-> *🎭 Story Mode :* M.W: ${profile.story_mode["M.W"]} / M.L: ${profile.story_mode["M.L"]}  
+> *👊 Battles :* ${joueurData.battles ? `Victoire : ${joueurData.battles.v} | Défaite : ${joueurData.battles.d} | Forfait : ${joueurData.battles.l}` : 'Non spécifié'}  
+> *🏅 TOP 3 :* ${joueurData.top3 || 0}  
+> *🎭 Story Mode :* 
+- *M.W :* ${joueurData.storyMode ? joueurData.storyMode.mw : 0} / *M.L :* ${joueurData.storyMode ? joueurData.storyMode.ml : 0}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *.........| HEROES GAME |.........*  
 ═══════════════════  
-> *🀄 Cards AMB :* ${profile.heroes_game['Cards AMB']}  
-> *🚗 Vehicles :* ${profile.heroes_game['Vehicles']}  
-> *🃏 Yu-Gi-Oh :* ${profile.heroes_game['Yu-Gi-Oh']}  
+> *🀄 Cards AMB :* ${joueurData.cards_amb ? joueurData.cards_amb.join(', ') : 'Aucune carte AMB'}  
+> *🚗 Vehicles :* ${joueurData.vehicles ? joueurData.vehicles.join(', ') : 'Aucun véhicule'}  
+> *🃏 Yu-Gi-Oh :* ${joueurData.yugioh || 'Aucun deck Yu-Gi-Oh'}  
+> *🪐 Origamy Skins :* 
+- *🚻 Skins :* ${joueurData.origamy_skins ? joueurData.origamy_skins.join(', ') : 'Aucun skin'}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *.............| CURRENCY |............*  
 ═══════════════════  
-> *🧭 S Tokens :* ${profile.currency['S Tokens']}🧭  
-> *💎 S Gemmes :* ${profile.currency['S Gemmes']}💎  
-> *🎟️ Coupons :* ${profile.currency['Coupons']}🎟️  
-> *🎁 Box VIP :* ${profile.currency['Box VIP']}🎁  
-> *📟 Compteur :* ${profile.currency['Compteur']}FCFA💸  
+> *🧭 S Tokens :* ${joueurData.s_tokens || 0}🧭  
+> *💎 S Gemmes :* ${joueurData.s_gemmes || 0}💎  
+> *🎟️ Coupons :* ${joueurData.coupons || 0}🎟️  
+> *🎁 Box VIP :* ${joueurData.box_vip || 0}🎁  
+> *📟 Compteur :* ${joueurData.compteur || 0}FCFA💸  
 ═══════════════════  
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-...........| *♼ Chargement...* |.........
-                `;
-                repondre(profilTexte);
-            } else {
-                repondre("Aucun profil trouvé pour ce joueur.");
-            }
-        } else {
-            // Met à jour une section du profil
-            if (!superUser) {
-                repondre("🛂 Réservé aux membres de la *DRPN*");
-            } else {
-                const [section, value] = arg.join(' ').split(';');
-                await updateProfile(playerID, section, value);
-                repondre(`Profil mis à jour : Section ${section}`);
-            }
-        }
-    }
-);
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+...........| *♼ Chargement...* |.........`;
 
-zokou(
-    {
-        nomCom: 'create_profile',  
-        categorie: 'Player-Profile'
-    }, async (dest, zk, commandeOptions) => {
-        const playerID = 'player1';
-        await createProfile(playerID);
-        zk.repondre(`Profil créé pour le joueur ${playerID}`);
+        repondre(msg);
     }
 );
