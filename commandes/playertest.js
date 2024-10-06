@@ -74,7 +74,7 @@ zokou(
 
 zokou(
     {
-        nomCom: 'createProfile',  
+        nomCom: 'create_profile',  
         categorie: 'Player-Profile'
     }, async (dest, zk, commandeOptions) => {
         const playerID = 'player1';
