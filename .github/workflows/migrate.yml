@@ -8,16 +8,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Utilisation de la version la plus récente
 
       - name: Dump PostgreSQL source
         run: |
           pg_dump -h dpg-crk7qpdumphs73afi4pg-a.oregon-postgres.render.com -U john_supremus_user -d john_supremus -F c > dump.sql
         env:
-          PGPASSWORD: JXhE00g0H2uY4X58sgk5OSOxTKmNcVzw psql
+          PGPASSWORD: JXhE00g0H2uY4X58sgk5OSOxTKmNcVzw
 
       - name: Restore to new PostgreSQL
         run: |
           pg_restore -h dpg-cs0nj58gph6c73ac546g-a.oregon-postgres.render.com -U johnsupremus -d srpndb -F c dump.sql
         env:
-          PGPASSWORD: m21hvTFQv8QotihLvJAodiExOQdUHfP6 psql
+          PGPASSWORD: m21hvTFQv8QotihLvJAodiExOQdUHfP6
