@@ -1,8 +1,6 @@
-// index.js
-
 const { zokou } = require('../framework/zokou');
 const { getVerdictByKeyword } = require('../bdd/test_origamy');
-const { generateCompleteEmojiMap, customNoVerdictMessages } = require('./playertest');
+const { generateCompleteEmojiMap, customNoVerdictMessages, emojimap } = require('./playertest');
 
 // Génération de la carte complète des emojis
 const completeEmojiMap = generateCompleteEmojiMap();
@@ -26,13 +24,11 @@ zokou({
                 // Récupération du verdict pour le lieu
                 const verdictData = await getVerdictByKeyword(lieu);
                 if (verdictData) {
-                    const { verdict, image_url } = verdictData;
-                    if (image_url) {
-                        // Envoi de l'image avec le verdict en légende
-                        await zk.sendMessage(dest, { image: { url: image_url }, caption: verdict }, { quoted: ms });
-                    } else {
-                        repondre(verdict);
-                    }
+                    const { verdict } = verdictData;
+                    const image_url = emojimap[emoji]?.image || 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg'; // Image par défaut
+
+                    // Envoi de l'image avec le verdict en légende
+                    await zk.sendMessage(dest, { image: { url: image_url }, caption: verdict }, { quoted: ms });
                 } else {
                     // Réponse personnalisée si aucun verdict n'est trouvé
                     repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
@@ -41,9 +37,9 @@ zokou({
             }
         }
 
-        if (!found) {
-            // Si aucun emoji correspondant n'a été trouvé
-            repondre("Lieu inconnu ou emoji invalide. Veuillez utiliser un emoji correspondant à un lieu.");
+         if (!found) {
+            // Si aucun emoji correspondant n'a été trouvé, envoi d'un message avec une image par défaut
+            await zk.sendMessage(dest, { image: { url: 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg' }, caption: "*\`ORIGAMY WORLD\`\n\n> *Rien n'a signalé...*\n\n*NEXT...*" }, { quoted: ms });
         }
 
     } catch (error) {
