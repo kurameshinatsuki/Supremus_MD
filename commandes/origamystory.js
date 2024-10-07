@@ -1,116 +1,54 @@
+// index.js
+
 const { zokou } = require('../framework/zokou');
-const { getVerdictByKeyword, updateVerdict } = require('../bdd/origamystory');
+const { getVerdictByKeyword } = require('../bdd/test_origamy');
+const { generateCompleteEmojiMap, customNoVerdictMessages } = require('./playertest');
 
-zokou(
-    {
-        nomCom: 'control_astoria',
-        categorie: 'ORIGAMY'
-    }, async (dest, zk, commandeOptions) => {
-        const { ms, arg, repondre, superUser } = commandeOptions;
+// Génération de la carte complète des emojis
+const completeEmojiMap = generateCompleteEmojiMap();
 
-        const emojimap = {
-            '⛩️': 'Porte Principale',
-            '🛞': 'Transport Public',
-            '🪦': 'Cimetière',
-            '🌲': 'Bois Sacrés',
-            '🏟️': 'Colisée d\'Aurelius',
-            '🕳️': 'Arène Souterraine',
-            '🏛️': 'Centre de Commandement',
-            '🏹': 'Camp d\'Entraînement',
-            '🎓': 'Académie d\'Arcana',
-            '🏢': 'Caserne de la Garde',
-            '🚧': 'Entrée Restreinte',
-            '🛍️': 'Marché Central',
-            '🍻': 'Luxury Taverne',
-            '1️⃣': 'Chambre 1',
-            '2️⃣': 'Chambre 2',
-            '3️⃣': 'Chambre 3',
-            '🥖': 'Baguette Dorée',
-            '⚒️': 'Forge d\'Edward',
-            '🎎': 'Grand Bazar',
-            '🏤': 'Bureau des Missions',
-            '🏦': 'Salle des Trésors',
-            '🫧': 'Bains Public',
-            '🏬': 'Galerie des Arts',
-            '📚': 'Grande Bibliothèque',
-            '🏥': 'Centre Médical',
-            '⚗️': 'Laboratoire d\'Oris',
-            '🏘️': 'Quartier Résidentiel',
-            '🎮': 'Salle des Jeux',
-            '🛀': 'Bains Royaux',
-            '🏡': 'Résidences Nobles',
-            '🚪': 'Entrée Privée',
-            '🧵': 'Nobles Couture',
-            '⛲': 'Cour d\'Honneur',
-            '🏰': 'Palais Royal',
-            '🪴': 'Jardins Privés',
-            '🏯': 'Hall des Gardiens',
-            '⚱️': 'Oubliettes',
-            '🐎': 'Écuries Royales',
-            '🔭': 'Tour Astral',
-            '🗡️': 'Arsenal Royaux',
-            '🗺️': 'Carte Astoria'
-            // Ajouter d'autres émojis et mots-clés ici si nécessaire
-        };
+// Commande principale pour gérer les lieux et verdicts
+zokou({
+    nomCom: 'control_astoria',
+    categorie: 'ORIGAMY'
+}, async (dest, zk, commandeOptions) => {
+    const { ms, arg, repondre } = commandeOptions;
 
-        try {
-            const message = arg.join(' ');
+    try {
+        const message = arg.join(' ');
+        let found = false;
 
-            // Cherche si le message contient un emoji
-            let found = false;
-            for (const [emoji, lieu] of Object.entries(emojimap)) {
-                if (message.includes(emoji)) {
-                    found = true;
+        // Parcours des lieux et des événements
+        for (const [emoji, lieu] of Object.entries(completeEmojiMap)) {
+            if (message.includes(emoji)) {
+                found = true;
 
-                    // Récupérer le verdict pour ce lieu
-                    const verdictData = await getVerdictByKeyword(lieu);
-                    if (verdictData) {
-                        const { verdict, image_url } = verdictData;
-                        if (image_url) {
-                            await zk.sendMessage(dest, { image: { url: image_url }, caption: verdict }, { quoted: ms });
-                        } else {
-                            repondre(verdict);
-                        }
+                // Récupération du verdict pour le lieu
+                const verdictData = await getVerdictByKeyword(lieu);
+                if (verdictData) {
+                    const { verdict, image_url } = verdictData;
+                    if (image_url) {
+                        // Envoi de l'image avec le verdict en légende
+                        await zk.sendMessage(dest, { image: { url: image_url }, caption: verdict }, { quoted: ms });
                     } else {
-                        repondre(`*♼ Chargement...*\nAucun verdict trouver pour *${lieu}*`);
+                        repondre(verdict);
                     }
-                    break;
+                } else {
+                    // Réponse personnalisée si aucun verdict n'est trouvé
+                    repondre(customNoVerdictMessages[lieu] || `\`ORIGAMY STORY\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT... Veuillez continuer votre exploration.*`);
                 }
+                break; // Sort de la boucle après avoir trouvé un lieu correspondant
             }
-
-            if (!found) {
-                repondre("♼ *Next...*");
-            }
-        } catch (error) {
-            console.log("Erreur lors du traitement de la commande : " + error);
-            repondre("Une erreur est survenue. Veuillez réessayer.");
         }
+
+        if (!found) {
+            // Si aucun emoji correspondant n'a été trouvé
+            repondre("Lieu inconnu ou emoji invalide. Veuillez utiliser un emoji correspondant à un lieu.");
+        }
+
+    } catch (error) {
+        // Gestion des erreurs avec informations détaillées
+        console.error(`Erreur lors du traitement du lieu avec l'emoji: ` + error);
+        repondre("Une erreur est survenue. Veuillez réessayer.");
     }
-);
-
-zokou(
-    {
-        nomCom: 'astoria_master',
-        categorie: 'DRPN',
-    }, async (dest, zk, commandeOptions) => {
-        const { arg, repondre, superUser } = commandeOptions;
-
-        if (!superUser) {
-            return repondre("Commande réservée aux *🌐STORY MASTER🎭*.");
-        }
-
-        try {
-            const [motCle, verdict, imageUrl, etat] = arg.join(' ').split(';');
-
-            if (motCle && verdict && etat) {
-                await updateVerdict(motCle, verdict, imageUrl, etat);
-                repondre(`Verdict pour '${motCle}' mis à jour avec succès.`);
-            } else {
-                repondre("*Format incorrect.*\n*Utilisez:*  -astoria_master motCle;verdict;imageUrl;normal");
-            }
-        } catch (error) {
-            console.log("Erreur lors de la mise à jour du verdict : " + error);
-            repondre("Une erreur est survenue. Veuillez réessayer.");
-        }
-    }
-);
+});
