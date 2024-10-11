@@ -908,14 +908,14 @@
                    
                  if((conf.DP).toLowerCase() === 'oui') {
                     let cmsg = `╔════◇
-    ║ 『𝐙𝐨𝐤𝐨𝐮-𝐌𝐃』
+    ║ 『Supremus-MD』
     ║    Prefix : [ ${prefixe} ]
     ║    Mode :${md}
     ║    Nombre total de Commandes : ${evt.cm.length}︎
     ╚══════════════════╝
     
     ╔═════◇
-    ║『𝗯𝘆 Djalega++』
+    ║『𝗯𝘆 John Suprêmus』
     ║ 
     ╚══════════════════╝`;
                    
