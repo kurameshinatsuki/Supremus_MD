@@ -5,7 +5,7 @@ const dbUrl = s.SPDB;
 
 zokou(
   {
-    nomCom: 'profilSRPN',
+    nomCom: 'profil_srpn',
     categorie: 'SRPN'
   },
   async (dest, zk, commandeOptions) => {
