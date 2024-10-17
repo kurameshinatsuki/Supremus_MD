@@ -1,6 +1,7 @@
 const { Pool } = require("pg");
 const s = require("../set");
 
+// Config de la base de données
 var dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
@@ -11,6 +12,7 @@ const proConfig = {
 
 const pool = new Pool(proConfig);
 
+// Fonction pour créer les tables si elles n'existent pas encore
 async function createTables() {
   const client = await pool.connect();
 
@@ -107,20 +109,40 @@ async function insertPlayerProfile(username) {
   }
 }
 
-// Fonction pour récupérer les données du joueur
-async function getPlayerProfile(id) {
+// Fonction pour récupérer les données du joueur via l'ID ou le nom d'utilisateur
+async function getPlayerProfile(identifier) {
   const client = await pool.connect();
 
   try {
-    const query = `
-      SELECT p.*, s.*, h.*, c.*
-      FROM player_profiles p
-      LEFT JOIN player_stats s ON p.id = s.player_id
-      LEFT JOIN player_heroes h ON p.id = h.player_id
-      LEFT JOIN player_currency c ON p.id = c.player_id
-      WHERE p.id = $1;
-    `;
-    const result = await client.query(query, [id]);
+    let query;
+    if (isNaN(identifier)) {
+      // Si l'identifiant n'est pas un nombre, on considère que c'est un nom d'utilisateur
+      query = `
+        SELECT p.*, s.*, h.*, c.*
+        FROM player_profiles p
+        LEFT JOIN player_stats s ON p.id = s.player_id
+        LEFT JOIN player_heroes h ON p.id = h.player_id
+        LEFT JOIN player_currency c ON p.id = c.player_id
+        WHERE p.username = $1;
+      `;
+    } else {
+      // Sinon, c'est un ID numérique
+      query = `
+        SELECT p.*, s.*, h.*, c.*
+        FROM player_profiles p
+        LEFT JOIN player_stats s ON p.id = s.player_id
+        LEFT JOIN player_heroes h ON p.id = h.player_id
+        LEFT JOIN player_currency c ON p.id = c.player_id
+        WHERE p.id = $1;
+      `;
+    }
+
+    const result = await client.query(query, [identifier]);
+
+    if (result.rows.length === 0) {
+      console.log("Joueur non trouvé");
+      return null;
+    }
 
     return result.rows[0];
   } catch (error) {
