@@ -124,7 +124,7 @@ zokou(
                         }
                     } else {
                         // Si aucun verdict n'est trouvé pour ce lieu principal
-                        repondre(`\𝗢𝗥𝗜𝗚𝗔𝗠𝗬 𝗪𝗢𝗥𝗟𝗗\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT...*`);
+                        repondre(`\`𝗢𝗥𝗜𝗚𝗔𝗠𝗬 𝗪𝗢𝗥𝗟𝗗\`\n\n> Aucun verdict trouvé pour '${lieu}'.\n\n*NEXT...*`);
                     }
                     break; // On sort de la boucle après avoir trouvé un lieu principal
                 }
