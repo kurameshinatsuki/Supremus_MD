@@ -1,12 +1,12 @@
 const { zokou } = require('../framework/zokou');
-const { getData } = require('../bdd/player_bdd');
+const {  insertPlayerProfile, getPlayerProfile } = require('../bdd/player_bdd');
 
-const dbUrl = s.DB;
+const dbUrl = s.SPDB;
 
 zokou(
   {
-    nomCom: 'profilSRPN👤',
-    categorie: 'SRPN📋'
+    nomCom: 'profilSRPN',
+    categorie: 'SRPN'
   },
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, superUser } = commandeOptions;
