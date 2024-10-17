@@ -15,7 +15,7 @@ zokou(
     
     try {
       // Récupération des données du joueur
-      const data = await getData(arg[0]); // arg[0] est l'ID du joueur
+      const data = await getPlayerProfile(arg[0]); // arg[0] est l'ID du joueur
 
       // Si aucun argument n'est fourni, afficher le profil du joueur
       if (!arg || arg.length === 0) {
