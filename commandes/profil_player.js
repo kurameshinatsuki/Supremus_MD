@@ -1,5 +1,6 @@
 const { zokou } = require('../framework/zokou');
 const {  insertPlayerProfile, getPlayerProfile } = require('../bdd/player_bdd');
+const s = require("../set");
 
 const dbUrl = s.SPDB;
 
