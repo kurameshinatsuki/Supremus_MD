@@ -1,8 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const {  insertPlayerProfile, getPlayerProfile } = require('../bdd/player_bdd');
-const s = require("../set");
-
-const dbUrl = s.SPDB;
+const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
 zokou(
   {
@@ -11,14 +8,13 @@ zokou(
   },
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, superUser } = commandeOptions;
-    let client;
-    
+
     try {
-      // Récupération des données du joueur
+      // Récupération des données du joueur via le module `player_bdd`
       const data = await getPlayerProfile(arg[0]); // arg[0] est l'ID du joueur
 
-      // Si aucun argument n'est fourni, afficher le profil du joueur
       if (!arg || arg.length === 0) {
+        // Si aucun argument n'est fourni, afficher le profil du joueur
         let profilMessage = `
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
         ═══════════════════  
@@ -31,9 +27,9 @@ zokou(
         *..............| EXPLOITS |.............*  
         ═══════════════════  
         > *🧘‍♂️ Rang :*  
-        - *ABM :* ${data.abm_rang}  
-        - *SPEED RUSH :* ${data.speed_rush_rang}  
-        - *YU-GI-OH :* ${data.yugioh_rang}  
+        - *ABM :* ${data.rang_abm}  
+        - *SPEED RUSH :* ${data.rang_speed_rush}  
+        - *YU-GI-OH :* ${data.rang_yugioh}  
         > *🏆 Champion :* ${data.champion}  
         > *😎 Spécialité :* ${data.specialite}  
         > *👑 Leader :* ${data.leader}  
@@ -48,12 +44,12 @@ zokou(
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
         *.........| HEROES GAME |.........*  
         ═══════════════════  
-        > *🀄 Cards AMB :* ${data.cards_amb}  
-        > *🚗 Vehicles :* ${data.vehicles_speedrush}  
-        > *🃏 Yu-Gi-Oh :* ${data.deck_yugioh}  
+        > *🀄 Cards AMB :* ${data.amb_cards}  
+        > *🚗 Vehicles :* ${data.vehicles}  
+        > *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
         > *🪐 Origamy Skins :*  
-        - *🚻 Skins :* ${data.skins_origamy}  
-        - *🎒 Items :* ${data.items_origamy}  
+        - *🚻 Skins :* ${data.skins}  
+        - *🎒 Items :* ${data.items}  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
         *.............| CURRENCY |............*  
         ═══════════════════  
@@ -67,19 +63,14 @@ zokou(
 
         zk.sendMessage(dest, { img: 'https://i.ibb.co/Y2byHsh/image.jpg', text: profilMessage }, { quoted: ms });
       } else if (superUser) {
-        // Logique de mise à jour (simplifiée)
-        const proConfig = { connectionString: dbUrl, ssl: { rejectUnauthorized: false } };
-        const { Pool } = require('pg');
-        const pool = new Pool(proConfig);
-        client = await pool.connect();
-
+        // Logique de mise à jour via le module `player_bdd`
         let columnMap = {
           id: "id",
           statut: "statut",
           mode: "mode",
-          abm_rang: "abm_rang",
-          speed_rush_rang: "speed_rush_rang",
-          yugioh_rang: "yugioh_rang",
+          rang_abm: "rang_abm",
+          rang_speed_rush: "rang_speed_rush",
+          rang_yugioh: "rang_yugioh",
           champion: "champion",
           specialite: "specialite",
           leader: "leader",
@@ -91,11 +82,11 @@ zokou(
           top3: "top3",
           missions_reussies: "missions_reussies",
           missions_echouees: "missions_echouees",
-          cards_amb: "cards_amb",
-          vehicles_speedrush: "vehicles_speedrush",
-          deck_yugioh: "deck_yugioh",
-          skins_origamy: "skins_origamy",
-          items_origamy: "items_origamy",
+          amb_cards: "amb_cards",
+          vehicles: "vehicles",
+          yugioh_deck: "yugioh_deck",
+          skins: "skins",
+          items: "items",
           s_tokens: "s_tokens",
           s_gemmes: "s_gemmes",
           coupons: "coupons",
@@ -107,7 +98,7 @@ zokou(
         let newValue = arg[2];
 
         if (field && newValue) {
-          await client.query(`UPDATE srpn_data SET ${field} = $1 WHERE id = $2`, [newValue, arg[0]]);
+          await updatePlayerProfile(arg[0], field, newValue); // Mise à jour via `player_bdd`
           repondre(`La fiche du joueur a été mise à jour : ${field} = ${newValue}`);
         } else {
           repondre("Champ ou valeur invalide.");
@@ -118,10 +109,6 @@ zokou(
     } catch (error) {
       console.error("Erreur:", error);
       repondre('Une erreur est survenue. Veuillez réessayer.');
-    } finally {
-      if (client) {
-        client.release();
-      }
     }
   }
 );
