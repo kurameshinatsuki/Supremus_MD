@@ -4,7 +4,7 @@ const { attribuerUnevaleur } = require('../bdd/welcome');
 async function events(nomCom) {
     zokou({
         nomCom: nomCom,
-        categorie: 'Group'
+        categorie: 'GROUP'
     }, async (dest, zk, commandeOptions) => {
         const { ms, arg, repondre, superUser, verifAdmin } = commandeOptions;
 
