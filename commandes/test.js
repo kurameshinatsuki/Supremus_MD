@@ -6,7 +6,7 @@ zokou({ nomCom: "test", reaction: "😌", nomFichier: __filename, categorie: 'MO
     let z = 'Salut je suis *SP-ZK-MD* \n\n ' + "un bot WhatsApp dynamique et tout droit réserver au service de la *🪀 Supremus Prod 🪀*";
     let d = 'développer par Jøhñ Sũpręmũs*';
     let varmess = z + d;
-    var img = mybotpic();
+    var img = 'https://i.ibb.co/k81T2WX/image.jpg';
     await zk.sendMessage(dest, { image: { url: img }, caption: varmess });
     //console.log("montest")
 });
