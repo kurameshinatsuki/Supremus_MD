@@ -32,14 +32,14 @@ const temps = moment().format('HH:mm:ss');
 const date = moment().format('DD/MM/YYYY');
 
   let infoMsg =  `
-╭━━━| *${s.BOT}* |━━━╮
->   *🔑 Prefixe* : ${s.PREFIXE}
->   *👤 Proprio* : ${s.OWNER_NAME}
->   *🔄 Mode* : ${mode}
->   *🧮 Commandes* : ${cm.length}
->   *💾 Stockage* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
->   *🧑‍💻 Développeur* : John Supremus
-╰━━━━━━━━━━━━━━━━━━╯ \n\n`;    
+╭━━━━| *${s.BOT}* |━━━━╮
+> *🔑 Prefixe* : ${s.PREFIXE}
+> *👤 Proprio* : ${s.OWNER_NAME}
+> *🔄 Mode* : ${mode}
+> *🧮 Commandes* : ${cm.length}
+> *💾 Stockage* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
+> *🧑‍💻 Développeur* : John Supremus
+╰━━━━━━━━━━━━━━━━━╯ \n\n`;    
 let menuMsg =  `
 *Listes des commandes :*
 ◇                             ◇
@@ -51,7 +51,8 @@ let menuMsg =  `
             menuMsg += `
 > *${cmd}*`;
         }
-        menuMsg += `╰━━━━━━━━━━━━━━━━━━╯\n`
+        menuMsg += `
+╰━━━━━━━━━━━━━━━━╯\n`
     }
 
     menuMsg += `
