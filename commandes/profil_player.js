@@ -75,11 +75,11 @@ zokou(
         ═══════════════════  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
 
-        zk.sendMessage(dest, { img: 'https://i.ibb.co/3mp1zty/image.jpg', text: profilMessage }, { quoted: ms });
+        zk.sendMessage(dest, { url: 'https://i.ibb.co/3mp1zty/image.jpg', text: profilMessage }, { quoted: ms });
       } else if (superUser) {
         // Logique de mise à jour multiple
         let updates = {};
-        let fields = arg.slice(1).join(' ').split(';'); // Séparer par points-virgules
+        let fields = arg.join(' ').split(';'); // Séparer par points-virgules
 
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
@@ -89,7 +89,7 @@ zokou(
         });
 
         if (Object.keys(updates).length > 0) {
-          await updatePlayerProfile(arg[0], updates); // Mise à jour multiple
+          await updatePlayerProfile(playerName, updates); // Mise à jour multiple
           repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
         } else {
           repondre("Aucun champ valide trouvé pour la mise à jour.");
