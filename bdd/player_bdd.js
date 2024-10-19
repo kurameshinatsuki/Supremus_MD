@@ -102,6 +102,7 @@ async function insertPlayerProfile(username) {
     await client.query(`INSERT INTO player_currency(player_id) VALUES ($1)`, [playerId]);
 
     console.log(`Profil du joueur créé avec succès : ID ${playerId}`);
+    return playerId;
   } catch (error) {
     console.error('Erreur lors de la création du profil du joueur:', error);
   } finally {
@@ -110,34 +111,20 @@ async function insertPlayerProfile(username) {
 }
 
 // Fonction pour récupérer les données du joueur via l'ID ou le nom d'utilisateur
-async function getPlayerProfile(identifier) {
+async function getPlayerProfile(PlayerName) {
   const client = await pool.connect();
 
   try {
-    let query;
-    if (isNaN(identifier)) {
-      // Si l'identifiant n'est pas un nombre, on considère que c'est un nom d'utilisateur
-      query = `
-        SELECT p.*, s.*, h.*, c.*
-        FROM player_profiles p
-        LEFT JOIN player_stats s ON p.id = s.player_id
-        LEFT JOIN player_heroes h ON p.id = h.player_id
-        LEFT JOIN player_currency c ON p.id = c.player_id
-        WHERE p.username = $1;
-      `;
-    } else {
-      // Sinon, c'est un ID numérique
-      query = `
-        SELECT p.*, s.*, h.*, c.*
-        FROM player_profiles p
-        LEFT JOIN player_stats s ON p.id = s.player_id
-        LEFT JOIN player_heroes h ON p.id = h.player_id
-        LEFT JOIN player_currency c ON p.id = c.player_id
-        WHERE p.id = $1;
-      `;
-    }
+    let query = `
+      SELECT p.*, s.*, h.*, c.*
+      FROM player_profiles p
+      LEFT JOIN player_stats s ON p.id = s.player_id
+      LEFT JOIN player_heroes h ON p.id = h.player_id
+      LEFT JOIN player_currency c ON p.id = c.player_id
+      WHERE p.username = $1;
+    `;
 
-    const result = await client.query(query, [identifier]);
+    const result = await client.query(query, [PlayerName]);
 
     if (result.rows.length === 0) {
       console.log("Joueur non trouvé");
@@ -152,10 +139,51 @@ async function getPlayerProfile(identifier) {
   }
 }
 
+// Fonction pour mettre à jour un champ spécifique dans le profil du joueur
+async function updatePlayerProfile(PlayerName, field, value) {
+  const client = await pool.connect();
+
+  try {
+    const query = `
+      UPDATE player_profiles
+      SET ${field} = $2
+      WHERE username = $1
+      RETURNING *;
+    `;
+    const result = await client.query(query, [PlayerName, value]);
+
+    if (result.rows.length === 0) {
+      console.log("Aucun profil mis à jour");
+      return null;
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du profil du joueur:', error);
+  } finally {
+    client.release();
+  }
+}
+
+// Fonction pour vérifier l'existence d'un profil et le créer si besoin
+async function getOrCreatePlayerProfile(PlayerName) {
+  let profile = await getPlayerProfile(PlayerName);
+
+  if (!profile) {
+    console.log(`Création d'un nouveau profil pour ${PlayerName}`);
+    const playerId = await insertPlayerProfile(PlayerName);
+    profile = await getPlayerProfile(PlayerName);
+  }
+
+  return profile;
+}
+
 // Appel de la fonction pour créer les tables
 createTables();
 
 module.exports = {
   insertPlayerProfile,
-  getPlayerProfile
+  getPlayerProfile,
+  updatePlayerProfile,
+  getOrCreatePlayerProfile
 };
