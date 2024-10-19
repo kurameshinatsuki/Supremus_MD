@@ -65,51 +65,34 @@ zokou(
         > *💎 S Gemmes :* ${data.s_gemmes}💎  
         > *🎟️ Coupons :* ${data.coupons}🎟️  
         > *🎁 Box VIP :* ${data.box_vip}🎁  
-        > *📟 Compteur :* ${data.compteur}FCFA💸  
+        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+        *.............| COMPTE |..............*  
+        ═══════════════════  
+        > *💰 Dépenses :* ${data.depenses} FCFA  
+        > *💵 Profits :* ${data.profits} FCFA  
+        > *🏧 Retraits :* ${data.retraits} FCFA  
+        > *💳 Solde :* ${data.solde} FCFA  
         ═══════════════════  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
 
-        zk.sendMessage(dest, { img: 'https://i.ibb.co/Y2byHsh/image.jpg', text: profilMessage }, { quoted: ms });
+        zk.sendMessage(dest, { img: 'https://i.ibb.co/3mp1zty/image.jpg', text: profilMessage }, { quoted: ms });
       } else if (superUser) {
-        // Logique de mise à jour via le module `player_bdd`
-        let columnMap = {
-          id: "id",
-          statut: "statut",
-          mode: "mode",
-          rang_abm: "rang_abm",
-          rang_speed_rush: "rang_speed_rush",
-          rang_yugioh: "rang_yugioh",
-          champion: "champion",
-          specialite: "specialite",
-          leader: "leader",
-          defis_remportes: "defis_remportes",
-          legende: "legende",
-          victoires: "victoires",
-          defaites: "defaites",
-          forfaits: "forfaits",
-          top3: "top3",
-          missions_reussies: "missions_reussies",
-          missions_echouees: "missions_echouees",
-          amb_cards: "amb_cards",
-          vehicles: "vehicles",
-          yugioh_deck: "yugioh_deck",
-          skins: "skins",
-          items: "items",
-          s_tokens: "s_tokens",
-          s_gemmes: "s_gemmes",
-          coupons: "coupons",
-          box_vip: "box_vip",
-          compteur: "compteur"
-        };
+        // Logique de mise à jour multiple
+        let updates = {};
+        let fields = arg.slice(1).join(' ').split(';'); // Séparer par points-virgules
 
-        let field = columnMap[arg[1]];
-        let newValue = arg[2];
+        fields.forEach(fieldPair => {
+          let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
+          if (field && value) {
+            updates[field] = value;
+          }
+        });
 
-        if (field && newValue) {
-          await updatePlayerProfile(arg[0], field, newValue); // Mise à jour via `player_bdd`
-          repondre(`La fiche du joueur a été mise à jour : ${field} = ${newValue}`);
+        if (Object.keys(updates).length > 0) {
+          await updatePlayerProfile(arg[0], updates); // Mise à jour multiple
+          repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
         } else {
-          repondre("Champ ou valeur invalide.");
+          repondre("Aucun champ valide trouvé pour la mise à jour.");
         }
       } else {
         repondre("Vous n'avez pas les permissions pour modifier cette fiche.");
