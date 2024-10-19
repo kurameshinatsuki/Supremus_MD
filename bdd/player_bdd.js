@@ -70,7 +70,18 @@ async function createTables() {
         s_gemmes INTEGER DEFAULT 0,
         coupons INTEGER DEFAULT 0,
         box_vip INTEGER DEFAULT 0,
-        compteur INTEGER DEFAULT 0, -- Montant en FCFA
+        PRIMARY KEY (player_id)
+      );
+    `);
+
+    // Créer la table pour la section COMPTE (transactions d'argent réel)
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS player_account(
+        player_id INTEGER REFERENCES player_profiles(id),
+        depenses INTEGER DEFAULT 0, -- Total des dépenses
+        profits INTEGER DEFAULT 0, -- Total des profits
+        retraits INTEGER DEFAULT 0, -- Total des retraits
+        solde INTEGER DEFAULT 0, -- Solde actuel
         PRIMARY KEY (player_id)
       );
     `);
@@ -96,10 +107,11 @@ async function insertPlayerProfile(username) {
 
     const playerId = result.rows[0].id;
 
-    // Initialiser les stats et devises pour le joueur
+    // Initialiser les stats, devises et comptes pour le joueur
     await client.query(`INSERT INTO player_stats(player_id) VALUES ($1)`, [playerId]);
     await client.query(`INSERT INTO player_heroes(player_id) VALUES ($1)`, [playerId]);
     await client.query(`INSERT INTO player_currency(player_id) VALUES ($1)`, [playerId]);
+    await client.query(`INSERT INTO player_account(player_id) VALUES ($1)`, [playerId]);
 
     console.log(`Profil du joueur créé avec succès : ID ${playerId}`);
     return playerId;
@@ -116,11 +128,12 @@ async function getPlayerProfile(PlayerName) {
 
   try {
     let query = `
-      SELECT p.*, s.*, h.*, c.*
+      SELECT p.*, s.*, h.*, c.*, a.*
       FROM player_profiles p
       LEFT JOIN player_stats s ON p.id = s.player_id
       LEFT JOIN player_heroes h ON p.id = h.player_id
       LEFT JOIN player_currency c ON p.id = c.player_id
+      LEFT JOIN player_account a ON p.id = a.player_id
       WHERE p.username = $1;
     `;
 
