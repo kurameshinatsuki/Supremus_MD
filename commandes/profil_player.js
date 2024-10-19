@@ -3,15 +3,23 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
 
 zokou(
   {
-    nomCom: 'profil_srpn',
-    categorie: 'SRPN'
+    nomCom: 'john',
+    categorie: 'PLAYER-PROFIL'
   },
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, superUser } = commandeOptions;
 
     try {
-      // Récupération des données du joueur via le module `player_bdd`
-      const data = await getPlayerProfile(arg[0]); // arg[0] est l'ID du joueur
+      const playerName = 'john';  // Par défaut, "john"
+      // Récupération des données du joueur
+      let data = await getPlayerProfile(playerName);
+
+      // Si les données du joueur n'existent pas, créer un nouveau profil
+      if (!data) {
+        await insertPlayerProfile(playerName);
+        data = await getPlayerProfile(playerName);
+        repondre(`Le profil du joueur ${playerName} a été créé.`);
+      }
 
       if (!arg || arg.length === 0) {
         // Si aucun argument n'est fourni, afficher le profil du joueur
