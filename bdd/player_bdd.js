@@ -17,25 +17,23 @@ async function createTables() {
   const client = await pool.connect();
 
   try {
-    // Créer la table des profils des joueurs
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_profiles(
         id SERIAL PRIMARY KEY,
         username TEXT NOT NULL,
-        statut TEXT DEFAULT 'Novice', -- Statut du joueur (Novice, Maître, Expert)
-        mode TEXT DEFAULT 'Free', -- Mode du joueur (Free/Pro)
+        statut TEXT DEFAULT 'Novice',
+        mode TEXT DEFAULT 'Free',
         rang_abm TEXT DEFAULT 'aucun',
         rang_speed_rush TEXT DEFAULT 'aucun',
         rang_yugioh TEXT DEFAULT 'aucun',
-        champion TEXT DEFAULT 'aucun', -- Dernière performance ou titre
-        specialite TEXT DEFAULT 'aucune', -- Spécialité du joueur
-        leader TEXT DEFAULT 'aucun', -- Leader d'équipe
-        defis_remportes INTEGER DEFAULT 0, -- Nombre de défis remportés
-        legende TEXT DEFAULT 'aucune' -- Classements légendaires
+        champion TEXT DEFAULT 'aucun',
+        specialite TEXT DEFAULT 'aucune',
+        leader TEXT DEFAULT 'aucun',
+        defis_remportes INTEGER DEFAULT 0,
+        legende TEXT DEFAULT 'aucune'
       );
     `);
 
-    // Créer la table des stats de jeu
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_stats(
         player_id INTEGER REFERENCES player_profiles(id),
@@ -49,20 +47,18 @@ async function createTables() {
       );
     `);
 
-    // Créer la table des héros de jeu
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_heroes(
         player_id INTEGER REFERENCES player_profiles(id),
-        amb_cards TEXT DEFAULT 'aucun', -- Personnages ABM
-        vehicles TEXT DEFAULT 'aucun', -- Véhicules pour Speed Rush
-        yugioh_deck TEXT DEFAULT 'aucun', -- Deck Yu-Gi-Oh
-        skins TEXT DEFAULT 'aucun', -- Skins Origamy World
-        items TEXT DEFAULT 'aucun', -- Items Origamy World
+        amb_cards TEXT DEFAULT 'aucun',
+        vehicles TEXT DEFAULT 'aucun',
+        yugioh_deck TEXT DEFAULT 'aucun',
+        skins TEXT DEFAULT 'aucun',
+        items TEXT DEFAULT 'aucun',
         PRIMARY KEY (player_id)
       );
     `);
 
-    // Créer la table des devises
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_currency(
         player_id INTEGER REFERENCES player_profiles(id),
@@ -70,7 +66,7 @@ async function createTables() {
         s_gemmes INTEGER DEFAULT 0,
         coupons INTEGER DEFAULT 0,
         box_vip INTEGER DEFAULT 0,
-        compteur INTEGER DEFAULT 0, -- Montant en FCFA
+        compteur INTEGER DEFAULT 0,
         PRIMARY KEY (player_id)
       );
     `);
@@ -96,7 +92,6 @@ async function insertPlayerProfile(username) {
 
     const playerId = result.rows[0].id;
 
-    // Initialiser les stats et devises pour le joueur
     await client.query(`INSERT INTO player_stats(player_id) VALUES ($1)`, [playerId]);
     await client.query(`INSERT INTO player_heroes(player_id) VALUES ($1)`, [playerId]);
     await client.query(`INSERT INTO player_currency(player_id) VALUES ($1)`, [playerId]);
@@ -109,14 +104,13 @@ async function insertPlayerProfile(username) {
   }
 }
 
-// Fonction pour récupérer les données du joueur via l'ID ou le nom d'utilisateur
+// Fonction pour récupérer les données du joueur
 async function getPlayerProfile(identifier) {
   const client = await pool.connect();
 
   try {
     let query;
     if (isNaN(identifier)) {
-      // Si l'identifiant n'est pas un nombre, on considère que c'est un nom d'utilisateur
       query = `
         SELECT p.*, s.*, h.*, c.*
         FROM player_profiles p
@@ -126,7 +120,6 @@ async function getPlayerProfile(identifier) {
         WHERE p.username = $1;
       `;
     } else {
-      // Sinon, c'est un ID numérique
       query = `
         SELECT p.*, s.*, h.*, c.*
         FROM player_profiles p
@@ -152,10 +145,45 @@ async function getPlayerProfile(identifier) {
   }
 }
 
+// Fonction pour mettre à jour le profil du joueur
+async function updatePlayerProfile(username, updates) {
+  const client = await pool.connect();
+
+  try {
+    let setClauses = [];
+    let values = [];
+    let index = 1;
+
+    // Construire dynamiquement la requête de mise à jour
+    for (let field in updates) {
+      setClauses.push(`${field} = $${index}`);
+      values.push(updates[field]);
+      index++;
+    }
+
+    const query = `
+      UPDATE player_profiles
+      SET ${setClauses.join(', ')}
+      WHERE username = $${index}
+    `;
+
+    values.push(username);
+
+    await client.query(query, values);
+
+    console.log(`Profil du joueur ${username} mis à jour avec succès`);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du profil du joueur:', error);
+  } finally {
+    client.release();
+  }
+}
+
 // Appel de la fonction pour créer les tables
 createTables();
 
 module.exports = {
   insertPlayerProfile,
-  getPlayerProfile
+  getPlayerProfile,
+  updatePlayerProfile
 };
