@@ -83,8 +83,10 @@ zokou(
 
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
-          if (field && value) {
-            updates[field] = value;
+          if (field && value && !isNaN(value)) { // Validation de la valeur (ex: vérification si c'est un nombre)
+            updates[field] = Number(value); // Convertir en nombre si possible
+          } else if (field && value) {
+            updates[field] = value; // Conserver la chaîne si non numérique
           }
         });
 
