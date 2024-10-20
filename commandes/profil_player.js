@@ -84,7 +84,7 @@ zokou(
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
           if (field && value) {
-            updates field = value;
+            updates[field] = value;
           }
         });
 
