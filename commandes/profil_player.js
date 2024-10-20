@@ -75,7 +75,7 @@ zokou(
         ═══════════════════  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
 
-        zk.sendMessage(dest, { url: 'https://i.ibb.co/3mp1zty/image.jpg', text: profilMessage }, { quoted: ms });
+        zk.sendMessage(dest, { image: { url: 'https://i.ibb.co/3mp1zty/image.jpg' }, caption: profilMessage }, { quoted: ms });
       } else if (superUser) {
         // Logique de mise à jour multiple
         let updates = {};
@@ -84,7 +84,7 @@ zokou(
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
           if (field && value) {
-            updates[field] = value;
+            updates field = value;
           }
         });
 
