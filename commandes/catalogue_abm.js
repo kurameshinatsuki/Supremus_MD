@@ -76,7 +76,7 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { arg, ms } = commandeOptions;
 
-        if (!arg ou arg.length === 0) {
+        if (!arg && arg.length === 0) {
             zk.sendMessage(dest, { text: 'Veuillez spécifier un personnage.' }, { quoted: ms });
         } else {
             const personnage = arg[0];
