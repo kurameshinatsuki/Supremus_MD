@@ -1,7 +1,7 @@
 const { zokou } = require('../framework/zokou');
 
 // Dictionnaire des personnages avec leurs liens et rangs par univers
-const personnages = {
+const characters_rang_c = {
     'black_clover': {
         NOELLE: { lien: 'https://i.ibb.co/kMbkzL9/Image-2024-10-02-19-26-48-3.jpg', rang: 'C' },
         MAGNA: { lien: 'https://i.ibb.co/DfDv87k/Image-2024-10-02-19-26-48-2.jpg', rang: 'C' },
@@ -12,7 +12,7 @@ const personnages = {
         LANGRIS: { lien: 'https://i.ibb.co/rGbpzD4/Image-2024-10-02-19-26-48-9.jpg', rang: 'C' },
         LEOPOLD: { lien: 'https://i.ibb.co/Cw3yfjD/Image-2024-10-02-19-26-48-6.jpg', rang: 'C' },
         LUCK: { lien: 'https://i.ibb.co/PMwq7ZC/Image-2024-10-02-19-26-48-5.jpg', rang: 'C' },
-        ASTA: { lien: 'https://i.ibb.co/khfFhfQ/Image-2024-10-02-19-26-48-0.jpg', rang: 'C' },
+        ASTA: { lien: 'https://i.ibb.co/khfFhfQ/Image-2024-10-02-19-26-48-0.jpg', rang: 'C' }
     },
     'demon_slayer': {
         TANJIRO_2: { lien: 'https://i.ibb.co/K9xHhtJ/Image-2024-10-02-19-51-46-8.jpg', rang: 'C' },
@@ -24,7 +24,7 @@ const personnages = {
         SUSAMARU: { lien: 'https://i.ibb.co/JsfJKSr/Image-2024-10-02-19-51-46-5.jpg', rang: 'C' },
         TANJIRO: { lien: 'https://i.ibb.co/NsZp3mb/Image-2024-10-02-19-51-46-0.jpg', rang: 'C' },
         KANAO: { lien: 'https://i.ibb.co/FxRz0Kx/Image-2024-10-02-19-51-46-9.jpg', rang: 'C' },
-        YAHABA: { lien: 'https://i.ibb.co/SNhjnbW/Image-2024-10-02-19-51-46-4.jpg', rang: 'C' },
+        YAHABA: { lien: 'https://i.ibb.co/SNhjnbW/Image-2024-10-02-19-51-46-4.jpg', rang: 'C' }
     },
     'jujutsu_kaisen': {
         INO: { lien: 'https://i.ibb.co/6HSKdfR/Image-2024-10-02-20-05-39-13.jpg', rang: 'C' },
@@ -41,79 +41,46 @@ const personnages = {
         MIWA: { lien: 'https://i.ibb.co/vd0FNTL/Image-2024-10-02-20-05-39-7.jpg', rang: 'C' },
         TOGE: { lien: 'https://i.ibb.co/kMVTKLy/Image-2024-10-02-20-05-39-8.jpg', rang: 'C' },
         NOBARA: { lien: 'https://i.ibb.co/znZCXYX/Image-2024-10-02-20-05-39-3.jpg', rang: 'C' },
-        MAKI: { lien: 'https://i.ibb.co/4Vbv31Q/Image-2024-10-02-20-05-39-5.jpg', rang: 'C' },
+        MAKI: { lien: 'https://i.ibb.co/4Vbv31Q/Image-2024-10-02-20-05-39-5.jpg', rang: 'C' }
     }
 };
 
 // Fonction pour envoyer la carte du personnage
-async function envoyerCarte(dest, zk, ms, verse, personnage) {
-    const verseData = personnages[verse];
+async function envoyerCarte(dest, zk, ms, personnage) {
+    let personnageTrouve = false;
 
-    if (!verseData) {
-        zk.sendMessage(dest, { text: `Verse ${verse} non trouvé.` }, { quoted: ms });
-        return;
+    // Parcourir tous les univers pour trouver le personnage
+    for (const [verse, personnages] of Object.entries(characters_rang_c)) {
+        const personnageInfo = personnages[personnage.toUpperCase()];
+
+        if (personnageInfo) {
+            personnageTrouve = true;
+            const { lien } = personnageInfo;
+            zk.sendMessage(dest, { image: { url: lien }, caption: `${personnage} (${verse})` }, { quoted: ms });
+            break;  // Si le personnage est trouvé, on arrête la boucle
+        }
     }
 
-    const personnageInfo = verseData[personnage.toUpperCase()];
-
-    if (personnageInfo) {
-        const { lien } = personnageInfo;
-        zk.sendMessage(dest, { image: { url: lien }, caption: personnage }, { quoted: ms });
-    } else {
-        zk.sendMessage(dest, { text: `Personnage ${personnage} non trouvé dans le verse ${verse}.` }, { quoted: ms });
+    // Si le personnage n'a pas été trouvé dans aucun univers
+    if (!personnageTrouve) {
+        zk.sendMessage(dest, { text: `Personnage ${personnage} non trouvé dans aucun univers.` }, { quoted: ms });
     }
 }
 
-// Commande pour Black Clover
+// Commande générale pour tous les univers
 zokou(
     {
-        nomCom: 'black_clover',
+        nomCom: 'heroes',
         categorie: 'ABM'
     },
     async (dest, zk, commandeOptions) => {
         const { arg, ms } = commandeOptions;
 
-        if (!arg || arg.length === 0) {
+        if (!arg ou arg.length === 0) {
             zk.sendMessage(dest, { text: 'Veuillez spécifier un personnage.' }, { quoted: ms });
         } else {
             const personnage = arg[0];
-            await envoyerCarte(dest, zk, ms, 'black_clover', personnage);
-        }
-    }
-);
-
-// Commande pour Demon Slayer
-zokou(
-    {
-        nomCom: 'demon_slayer',
-        categorie: 'ABM'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0) {
-            zk.sendMessage(dest, { text: 'Veuillez spécifier un personnage.' }, { quoted: ms });
-        } else {
-            const personnage = arg[0];
-            await envoyerCarte(dest, zk, ms, 'demon_slayer', personnage);
-        }
-    }
-);
-
-// Commande pour Jujutsu Kaisen
-zokou(
-    {
-        nomCom: 'jujutsu_kaisen',
-        categorie: 'ABM'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0) {
-            zk.sendMessage(dest, { text: 'Veuillez spécifier un personnage.' }, { quoted: ms });
-        } else {
-            const personnage = arg[0];
-            await envoyerCarte(dest, zk, ms, 'jujutsu_kaisen', personnage);
+            await envoyerCarte(dest, zk, ms, personnage);
         }
     }
 );
