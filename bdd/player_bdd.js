@@ -19,7 +19,8 @@ async function createTables() {
   try {
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_profiles(
-        name TEXT PRIMARY KEY,
+        id TEXT PRIMARY KEY,
+        name TEXT DEFAULT 'aucun',
         statut TEXT DEFAULT 'Novice',
         mode TEXT DEFAULT 'Free',
         rang_abm TEXT DEFAULT 'aucun',
