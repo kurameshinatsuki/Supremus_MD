@@ -28,7 +28,7 @@ zokou(
         ═══════════════════  
         *..........| SRPN PROFIL |..........*  
         ═══════════════════  
-        > *👤 ID :* ${data.id}  
+        > *👤 Nom :* ${data.name}  
         > *♨️ Statut :* ${data.statut}  
         > *🪀 Mode :* ${data.mode}  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
@@ -68,10 +68,10 @@ zokou(
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
         *.............| COMPTE |..............*  
         ═══════════════════  
-        > *💰 Dépenses :* ${data.depenses} FCFA  
-        > *💵 Profits :* ${data.profits} FCFA  
-        > *🏧 Retraits :* ${data.retraits} FCFA  
-        > *💳 Solde :* ${data.solde} FCFA  
+        > *💰 Dépenses :* ${data.depenses}FCFA  
+        > *💵 Profits :* ${data.profits}FCFA  
+        > *🏧 Retraits :* ${data.retraits}FCFA  
+        > *💳 Solde :* ${data.solde}FCFA  
         ═══════════════════  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
 
