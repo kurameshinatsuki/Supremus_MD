@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { characters_rang_c } = require('../catalogue_abm')
+const { characters_rang_c } = require('../commandes/catalogue_abm')
 
 // Commande générale pour tous les univers
 zokou(
