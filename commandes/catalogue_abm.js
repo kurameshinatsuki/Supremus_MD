@@ -43,28 +43,6 @@ const characters_rang_c = {
     }
 };
 
-// Fonction pour envoyer la carte du personnage
-async function envoyerCarte(dest, zk, ms, personnage) {
-    let personnageTrouve = false;
-
-    // Parcourir tous les univers pour trouver le personnage
-    for (const [verse, personnages] of Object.entries(characters_rang_c)) {
-        const personnageInfo = personnages[personnage.toUpperCase()];
-
-        if (personnageInfo) {
-            personnageTrouve = true;
-            const { lien } = personnageInfo;
-            zk.sendMessage(dest, { image: { url: lien }, caption: `${personnage} (${verse})` }, { quoted: ms });
-            break;  // Si le personnage est trouvé, on arrête la boucle
-        }
-    }
-
-    // Si le personnage n'a pas été trouvé dans aucun univers
-    if (!personnageTrouve) {
-        zk.sendMessage(dest, { text: `Personnage ${personnage} non trouvé dans aucun univers.` }, { quoted: ms });
-    }
-}
-
 module.exports = {
     characters_rang_c
 };
