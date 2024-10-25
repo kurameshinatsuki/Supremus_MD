@@ -25,7 +25,7 @@ const ongoingTransactions = {};
 const sendDefaultImage = async (zk, origineMessage) => {
   await zk.sendMessage(origineMessage, {
     image: { url: 'https://i.ibb.co/16p6w2D/image.jpg' },
-    caption: message
+    caption: text
   });
 };
 
