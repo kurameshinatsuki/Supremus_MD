@@ -1,5 +1,3 @@
-const { zokou } = require('../framework/zokou');
-
 // Dictionnaire des personnages avec leurs liens et rangs par univers
 const characters_rang_c = {
     'black_clover': {
@@ -67,20 +65,6 @@ async function envoyerCarte(dest, zk, ms, personnage) {
     }
 }
 
-// Commande générale pour tous les univers
-zokou(
-    {
-        nomCom: 'heroes',
-        categorie: 'ABM'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { arg, ms } = commandeOptions;
-
-        if (!arg && arg.length === 0) {
-            zk.sendMessage(dest, { text: 'Veuillez spécifier un personnage.' }, { quoted: ms });
-        } else {
-            const personnage = arg[0];
-            await envoyerCarte(dest, zk, ms, personnage);
-        }
-    }
-);
+module.exports = {
+    characters_rang_c
+};
