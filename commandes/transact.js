@@ -24,8 +24,8 @@ const ongoingTransactions = {};
 // Fonction pour envoyer une image par défaut
 const sendDefaultImage = async (zk, origineMessage) => {
   await zk.sendMessage(origineMessage, {
-    image: { url: 'https://i.ibb.co/16p6w2D/image.jpg' }, // Remplacez par l'URL de votre image
-    caption: 'Image par défaut'
+    image: { url: 'https://i.ibb.co/16p6w2D/image.jpg' },
+    caption: message
   });
 };
 
@@ -35,24 +35,38 @@ const getPlayerResponse = async (zk, auteurMessage, origineMessage, timeout = 60
     const rep = await zk.awaitForMessage({
       sender: auteurMessage,
       chatJid: origineMessage,
-      timeout: timeout
+      timeout
     });
 
-    let selection;
-    try {
-      selection = rep.message.extendedTextMessage.text;
-    } catch {
-      selection = rep.message.conversation;
-    }
-    return selection;
+    return rep.message.extendedTextMessage?.text || rep.message.conversation;
   } catch (error) {
     throw new Error('Délai dépassé ou erreur de réception de message.');
   }
 };
 
 // Fonction pour calculer le montant total d'un achat
-const calculerMontant = (quantite, prixUnitaire) => {
-  return quantite * prixUnitaire;
+const calculerMontant = (quantite, prixUnitaire) => quantite * prixUnitaire;
+
+// Fonction pour générer un message de bienvenue et d'options de transaction
+const generateWelcomeMessage = () => {
+  let message = `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒\n═══════════════════\n*Bienvenue dans la Transact Zone💸 !*\n\nVeuillez choisir une option parmi les suivantes :\n`;
+  transactions.forEach((t, i) => {
+    message += `${i + 1}. ${t.option}\n`;
+  });
+  message += `\nTapez le numéro de l'option ou le nom de la commande (ex: "achat, vente, echange, etc...").\n═══════════════════\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
+  return message;
+};
+
+// Fonction pour obtenir la sélection du joueur avec vérification
+const getSelection = async (zk, auteurMessage, origineMessage, options, repondre) => {
+  const selection = await getPlayerResponse(zk, auteurMessage, origineMessage);
+  const selectedOption = options.find((t, i) => selection == (i + 1) || selection.toLowerCase() === t.commande);
+
+  if (!selectedOption) {
+    await repondre("Veuillez choisir une option valide.");
+    return await getSelection(zk, auteurMessage, origineMessage, options, repondre);
+  }
+  return selectedOption;
 };
 
 zokou(
@@ -74,78 +88,38 @@ zokou(
       // Démarrer une nouvelle transaction
       ongoingTransactions[auteurMessage] = { status: 'started' };
 
-      let bienvenueMsg = `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-═══════════════════
-*Bienvenue dans la Transact Zone💸 !*\n\nVeuillez choisir une option parmi les suivantes :\n`;
-      transactions.forEach((t, i) => {
-        bienvenueMsg += `${i + 1}. ${t.option}\n`;
-      });
-      bienvenueMsg += `\nTapez le numéro de l'option ou le nom de la commande (ex: "achat, vente, echange, etc...").
-═══════════════════
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
-
       await sendDefaultImage(zk, origineMessage);
-      await zk.sendMessage(origineMessage, { text: bienvenueMsg });
+      await zk.sendMessage(origineMessage, { text: generateWelcomeMessage() });
 
-      // Fonction pour obtenir la sélection du joueur
-      const getSelection = async () => {
-        const selection = await getPlayerResponse(zk, auteurMessage, origineMessage);
-
-        let selectedTransaction = transactions.find(
-          (t, i) => selection == (i + 1) || selection.toLowerCase() === t.commande
-        );
-
-        if (!selectedTransaction) {
-          await repondre("Veuillez choisir une option valide.");
-          return await getSelection();
-        }
-
-        return selectedTransaction;
-      };
-
-      const selectedTransaction = await getSelection();
+      const selectedTransaction = await getSelection(zk, auteurMessage, origineMessage, transactions, repondre);
 
       switch (selectedTransaction.commande) {
         case 'achat':
           await repondre('Voici les packs et coupons disponibles à l\'achat :');
-          await sendDefaultImage(zk, origineMessage);
           await zk.sendMessage(origineMessage, {
             text: catalogue.map(item => `${item.nom} - Prix : ${item.prix}💎`).join('\n')
           });
-          await repondre('Tapez "pack" pour voir les packs ou "coupon" pour acheter des coupons.');
 
-          const achatSelection = await getSelection();
+          const achatSelection = await getSelection(zk, auteurMessage, origineMessage, [
+            { commande: 'pack' }, { commande: 'coupon' }
+          ], repondre);
 
-          if (achatSelection.toLowerCase() === 'pack') {
+          if (achatSelection.commande === 'pack') {
             await repondre('Veuillez entrer le nom du pack que vous souhaitez acheter :');
+            const packChoisi = await getSelection(zk, auteurMessage, origineMessage, catalogue, repondre);
 
-            const packSelection = await getSelection();
-
-            const packChoisi = catalogue.find(item => item.nom.toLowerCase() === packSelection.toLowerCase());
-
-            if (packChoisi) {
-              await repondre(`Vous avez choisi ${packChoisi.nom}. Combien en voulez-vous ?`);
-
-              const quantite = await getSelection();
-              const total = calculerMontant(Number(quantite), packChoisi.prix);
-
-              await repondre(`Le montant total pour ${quantite} ${packChoisi.nom} est de ${total}💎.`);
-            } else {
-              await repondre('Pack non valide.');
-            }
+            await repondre(`Vous avez choisi ${packChoisi.nom}. Combien en voulez-vous ?`);
+            const quantite = await getPlayerResponse(zk, auteurMessage, origineMessage);
+            const total = calculerMontant(Number(quantite), packChoisi.prix);
+            await repondre(`Le montant total pour ${quantite} ${packChoisi.nom} est de ${total}💎.`);
 
             await sendDefaultImage(zk, origineMessage);
-
-          } else if (achatSelection.toLowerCase() === 'coupon') {
+          } else if (achatSelection.commande === 'coupon') {
             await repondre('Entrez le montant souhaité en 💎 ou en 🧭 pour acheter des coupons.');
-            // Logique pour calculer la valeur des coupons
             await sendDefaultImage(zk, origineMessage);
-          } else {
-            await repondre('Option invalide.');
           }
           break;
 
-        // Autres cas (vente, echange, inscription, etc.) restent inchangés
         default:
           await repondre("Option invalide.");
           await sendDefaultImage(zk, origineMessage);
