@@ -9,21 +9,9 @@ zokou(
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, superUser } = commandeOptions;
 
-    try {
-      const playerName = 'john';  // Par défaut, "john"
-      // Récupération des données du joueur
-      let data = await getPlayerProfile(playerName);
-
-      // Si les données du joueur n'existent pas, créer un nouveau profil
-      if (!data) {
-        await insertPlayerProfile(playerName);
-        data = await getPlayerProfile(playerName);
-        repondre(`Le profil du joueur ${playerName} a été créé.`);
-      }
-
-      if (!arg || arg.length === 0) {
-        // Si aucun argument n'est fourni, afficher le profil du joueur
-        let profilMessage = `
+    // Fonction pour formater le message de profil du joueur
+    function formatProfileMessage(data) {
+      return `
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
         ═══════════════════  
         *..........| SRPN PROFIL |..........*  
@@ -74,8 +62,23 @@ zokou(
         > *💳 Solde :* ${data.solde}FCFA  
         ═══════════════════  
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
+    }
 
-        zk.sendMessage(dest, { image: { url: 'https://i.ibb.co/3mp1zty/image.jpg' }, caption: profilMessage }, { quoted: ms });
+    try {
+      const playerName = 'john';  // Par défaut, "john"
+      // Récupération des données du joueur
+      let data = await getPlayerProfile(playerName);
+
+      // Si les données du joueur n'existent pas, créer un nouveau profil
+      if (!data) {
+        await insertPlayerProfile(playerName);
+        data = await getPlayerProfile(playerName);
+        repondre(`Le profil du joueur ${playerName} a été créé.`);
+      }
+
+      if (!arg || arg.length === 0) {
+        // Si aucun argument n'est fourni, afficher le profil du joueur
+        zk.sendMessage(dest, { image: { url: 'https://i.ibb.co/3mp1zty/image.jpg' }, caption: formatProfileMessage(data) }, { quoted: ms });
       } else if (superUser) {
         // Logique de mise à jour multiple
         let updates = {};
@@ -83,10 +86,8 @@ zokou(
 
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
-          if (field && value && !isNaN(value)) { // Validation de la valeur (ex: vérification si c'est un nombre)
-            updates[field] = Number(value); // Convertir en nombre si possible
-          } else if (field && value) {
-            updates[field] = value; // Conserver la chaîne si non numérique
+          if (field && value) {
+            updates[field] = isNaN(value) ? value : Number(value); // Convertir en nombre si possible
           }
         });
 
@@ -105,3 +106,9 @@ zokou(
     }
   }
 );
+
+module.exports = {
+  insertPlayerProfile,
+  getPlayerProfile,
+  updatePlayerProfile
+};
