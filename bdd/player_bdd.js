@@ -1,8 +1,8 @@
 const { Pool } = require("pg");
 const s = require("../set");
 
-// Config de la base de données
-var dbUrl = s.SPDB;
+// Configuration de la base de données
+const dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
   ssl: {
@@ -12,15 +12,14 @@ const proConfig = {
 
 const pool = new Pool(proConfig);
 
-// Fonction pour créer les tables si elles n'existent pas encore
+// Création des tables si elles n'existent pas encore
 async function createTables() {
   const client = await pool.connect();
-
   try {
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_profiles(
         id TEXT PRIMARY KEY,
-        name TEXT DEFAULT 'aucun',
+        name TEXT UNIQUE NOT NULL,
         statut TEXT DEFAULT 'Novice',
         mode TEXT DEFAULT 'Free',
         rang_abm TEXT DEFAULT 'aucun',
@@ -52,8 +51,7 @@ async function createTables() {
         solde INTEGER DEFAULT 0
       );
     `);
-
-    console.log('Table créée avec succès');
+    console.log('Table créée ou déjà existante');
   } catch (error) {
     console.error('Erreur lors de la création des tables:', error);
   } finally {
@@ -61,16 +59,25 @@ async function createTables() {
   }
 }
 
-// Fonction pour insérer un profil de joueur
+// Insère un profil de joueur s'il n'existe pas déjà
 async function insertPlayerProfile(name) {
   const client = await pool.connect();
-
   try {
-    const query = `
+    const queryExistence = `
+      SELECT 1 FROM player_profiles WHERE name = $1;
+    `;
+    const resultExistence = await client.query(queryExistence, [name]);
+
+    if (resultExistence.rows.length > 0) {
+      console.log(`Le profil du joueur ${name} existe déjà.`);
+      return;
+    }
+
+    const queryInsert = `
       INSERT INTO player_profiles(name)
       VALUES ($1);
     `;
-    await client.query(query, [name]);
+    await client.query(queryInsert, [name]);
 
     console.log(`Profil du joueur créé avec succès : Nom ${name}`);
   } catch (error) {
@@ -80,24 +87,19 @@ async function insertPlayerProfile(name) {
   }
 }
 
-// Fonction pour récupérer les données du joueur
+// Récupère les données du joueur
 async function getPlayerProfile(name) {
   const client = await pool.connect();
-
   try {
     const query = `
-      SELECT *
-      FROM player_profiles
-      WHERE name = $1;
+      SELECT * FROM player_profiles WHERE name = $1;
     `;
-
     const result = await client.query(query, [name]);
 
     if (result.rows.length === 0) {
-      console.log("Joueur non trouvé");
+      console.log(`Joueur non trouvé : ${name}`);
       return null;
     }
-
     return result.rows[0];
   } catch (error) {
     console.error('Erreur lors de la récupération du profil du joueur:', error);
@@ -106,33 +108,41 @@ async function getPlayerProfile(name) {
   }
 }
 
-// Fonction pour mettre à jour le profil du joueur
+// Met à jour le profil du joueur
 async function updatePlayerProfile(name, updates) {
   const client = await pool.connect();
-
   try {
-    let setClauses = [];
-    let values = [];
+    const setClauses = [];
+    const values = [];
     let index = 1;
 
-    // Construire dynamiquement la requête de mise à jour
-    for (let field in updates) {
+    for (const field in updates) {
       setClauses.push(`${field} = $${index}`);
       values.push(updates[field]);
       index++;
+    }
+
+    if (setClauses.length === 0) {
+      console.log("Aucune mise à jour fournie");
+      return;
     }
 
     const query = `
       UPDATE player_profiles
       SET ${setClauses.join(', ')}
       WHERE name = $${index}
+      RETURNING *;
     `;
-
     values.push(name);
 
-    await client.query(query, values);
+    const result = await client.query(query, values);
+    if (result.rowCount === 0) {
+      console.log(`Joueur non trouvé pour mise à jour : ${name}`);
+      return null;
+    }
 
     console.log(`Profil du joueur ${name} mis à jour avec succès`);
+    return result.rows[0];
   } catch (error) {
     console.error('Erreur lors de la mise à jour du profil du joueur:', error);
   } finally {
@@ -140,7 +150,7 @@ async function updatePlayerProfile(name, updates) {
   }
 }
 
-// Appel de la fonction pour créer les tables
+// Crée les tables à l'initialisation
 createTables();
 
 module.exports = {
