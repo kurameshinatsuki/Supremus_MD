@@ -1,46 +1,79 @@
 const { zokou } = require("../framework/zokou");
 
-zokou({ nomCom: "crash", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
-  const { repondre, args } = commandeOptions; // On extrait les arguments
-  
-  // Vérifie si un nombre de répétitions est fourni
-  const repetitions = args[0] && !isNaN(args[0]) ? Math.min(parseInt(args[0]), 10000) : 5000;
-  
-  // Texte spécifique à répéter pour provoquer une surcharge
-  const texteCrash = "\u200B".repeat(repetitions) + "💥"; // Utilisation de caractères invisibles
+zokou({ nomCom: "confirm", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
+  const { repondre, args } = commandeOptions;
 
   try {
-    // Envoi du message avec le texte de crash
-    await repondre(texteCrash);
+    console.log("Commande confirm appelée avec args:", args);
+
+    // Vérification du numéro de destinataire
+    if (!args[0]) {
+      return await repondre("Veuillez fournir un numéro de téléphone après la commande. Exemple : /confirm +2250154191194");
+    }
+
+    const numero = args[0].replace(/[^0-9]/g, '');
+    if (numero.length < 8) {
+      return await repondre("Numéro invalide. Veuillez vérifier le format.");
+    }
+
+    // Message à envoyer au destinataire
+    const messageDestinataire = {
+      text: "Ceci est un message automatique de votre bot !"
+    };
+
+    // Envoi du message au destinataire
+    await zk.sendMessage(numero + "@s.whatsapp.net", messageDestinataire);
+    console.log(`Message envoyé à ${numero}`);
+
+    // Message de confirmation pour l'utilisateur
+    const messageConfirmation = {
+      text: "Le message a bien été envoyé au destinataire !",
+      image: { url: "https://i.ibb.co/5GLqTHG/Image-2024-10-23-08-42-33.jpg" } // Lien d'une image en ligne
+    };
+
+    await repondre(messageConfirmation);
+    console.log("Confirmation envoyée à l'utilisateur.");
   } catch (error) {
-    console.error(error);
-    repondre("Une erreur est survenue lors de la génération du message.");
+    console.error("Erreur dans la commande confirm:", error);
+    await repondre("Une erreur est survenue lors de l'envoi du message. Veuillez vérifier le numéro.");
   }
 });
 
-zokou({ nomCom: "send", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
-  const { ms, repondre, args } = commandeOptions; // On extrait les arguments
-  
-  // Vérifie si un numéro est fourni
-  if (!args[0]) {
-    return repondre("Veuillez fournir un numéro de téléphone après la commande. Exemple : /send +2250154191194");
-  }
-  
-  const numero = args[0].replace(/[^0-9]/g, ''); // Nettoyage du numéro pour garder uniquement les chiffres
-  
-  // Vérification de la longueur du numéro
-  if (numero.length < 8) {
-    return repondre("Numéro invalide. Veuillez vérifier le format.");
-  }
-  
-  const messageSpecifique = "Ceci est un message automatique de votre bot !"; // Message à envoyer
-  
+zokou({ nomCom: "alert", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
+  const { repondre, args } = commandeOptions;
+
   try {
-    // Envoi du message au numéro indiqué
-    await zk.sendMessage(numero + "@s.whatsapp.net", { text: messageSpecifique });
-    repondre(`Message envoyé avec succès au numéro : ${args[0]}`);
+    console.log("Commande alert appelée avec args:", args);
+
+    // Vérification du numéro de destinataire
+    if (!args[0]) {
+      return await repondre("Veuillez fournir un numéro de téléphone après la commande. Exemple : /alert +2250154191194");
+    }
+
+    const numero = args[0].replace(/[^0-9]/g, '');
+    if (numero.length < 8) {
+      return await repondre("Numéro invalide. Veuillez vérifier le format.");
+    }
+
+    // Message à envoyer au destinataire
+    const messageDestinataire = {
+      text: "Ceci est une alerte automatique envoyée par votre bot !"
+    };
+
+    // Envoi du message au destinataire
+    await zk.sendMessage(numero + "@s.whatsapp.net", messageDestinataire);
+    console.log(`Message envoyé à ${numero}`);
+
+    // Message de confirmation pour l'utilisateur
+    const messageConfirmation = {
+      text: "Votre alerte a bien été envoyée au destinataire !",
+      image: { url: "https://i.ibb.co/5GLqTHG/Image-2024-10-23-08-42-33.jpg" } // Lien d'une image en ligne
+    };
+
+    await repondre(messageConfirmation);
+    console.log("Confirmation envoyée à l'utilisateur.");
   } catch (error) {
-    console.error(error);
-    repondre("Une erreur est survenue lors de l'envoi du message. Veuillez vérifier le numéro.");
+    console.error("Erreur dans la commande alert:", error);
+    await repondre("Une erreur est survenue lors de l'envoi de l'alerte. Veuillez vérifier le numéro.");
   }
 });
