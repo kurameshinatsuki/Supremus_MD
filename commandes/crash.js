@@ -16,7 +16,7 @@ zokou({ nomCom: "confirm", categorie: "MON-BOT" }, async (dest, zk, commandeOpti
     console.log("Numéro ou contenu fourni:", numero);
 
     // Envoi du message au destinataire
-    await zk.sendMessage(numero + "@s.whatsapp.net", { text: "Ceci est un message automatique de votre bot !" });
+    await zk.sendMessage( "https://wa.me/" + numero, { text: "Ceci est un message automatique de votre bot !" });
 
     // Message de confirmation pour l'utilisateur
     await repondre({
