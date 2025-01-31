@@ -1,31 +1,28 @@
 const { zokou } = require("../framework/zokou");
 
-// Commande: confirm
-zokou({ nomCom: "confirm", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
-  try {
-    const { repondre, args } = commandeOptions || {};
-    console.log("Commande confirm appelée avec args:", args);
+zokou({ nomCom: "send", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
+  const { ms, repondre, auteurMessage, args, auteurMsgRepondu } = commandeOptions;
 
-    // Vérification si args est défini et contient un message
-    if (!args || args.length === 0) {
-      return await repondre("Veuillez fournir un message après la commande. Exemple : /confirm +2250154191194");
-    }
+  let cible;
+  
+  // 1️⃣ Si un JID est fourni en argument
+  if (args.length > 0) {
+    cible = args[0]; // Récupère le JID
+  }
+  // 2️⃣ Si la commande est exécutée en réponse à un message
+  else if (auteurMsgRepondu) {
+    cible = auteurMsgRepondu.participant; // Récupère l'auteur du message répondu
+  }
+  // 3️⃣ Si aucun JID et pas de réponse à un message
+  else {
+    cible = dest; // Envoie le message dans la discussion actuelle
+  }
 
-    // Récupérer tout le contenu après la commande
-    const numero = args.join(" ").trim();
-    console.log("Numéro ou contenu fourni:", numero);
+  // Message envoyé à la cible
+  await zk.sendMessage(cible, { text: `*✅ Test réussi.*` }, { quoted: ms });
 
-    // Envoi du message au destinataire
-    await zk.sendMessage(numero + "@s.whatsapp.net", { text: "Ceci est un message automatique de votre bot !" });
-
-    // Message de confirmation pour l'utilisateur
-    await repondre({
-      text: "Le message a bien été envoyé au destinataire !" }
-    });
-
-    console.log(`Message envoyé à ${numero}`);
-  } catch (error) {
-    console.error("Erreur dans la commande confirm:", error);
-    await commandeOptions.repondre("Une erreur est survenue lors de l'envoi du message. Vérifiez le format des arguments.");
+  // Message de confirmation à l'utilisateur
+  if (cible !== dest) {
+    repondre("✨ Le message a bien été envoyé.");
   }
 });
