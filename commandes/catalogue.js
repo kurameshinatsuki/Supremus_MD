@@ -14,6 +14,41 @@ const characters = {
             'LEOPOLD': { lien: 'https://i.ibb.co/Cw3yfjD/Image-2024-10-02-19-26-48-6.jpg' },
             'LUCK': { lien: 'https://i.ibb.co/PMwq7ZC/Image-2024-10-02-19-26-48-5.jpg' }
         },
+        'FAIRY_TAIL': {
+          'ROGUE': {'lien': 'https://i.ibb.co/MxCbY7mx/Image-2025-02-12-16-42-49-7.jpg'},
+          'LYON': {'lien': 'https://i.ibb.co/gMtX2t32/Image-2025-02-12-16-42-49-8.jpg'},
+          'GAJEEL': {'lien': 'https://i.ibb.co/mVspng8r/Image-2025-02-12-16-42-49-5.jpg'},
+          'STING': {'lien': 'https://i.ibb.co/xqcBw6YK/Image-2025-02-12-16-42-49-6.jpg'},
+          'GRAY': {'lien': 'https://i.ibb.co/ZpjczDny/Image-2025-02-12-16-42-49-3.jpg'},
+          'LUCY': {'lien': 'https://i.ibb.co/C3rKy3Pj/Image-2025-02-12-16-42-49-2.jpg'},
+          'WENDY': {'lien': 'https://i.ibb.co/m5VJZMNR/Image-2025-02-12-16-42-49-4.jpg'}
+    },
+    'MY_HERO_ACADEMIA': {
+        'FUMIKAGE': {'lien': 'https://i.ibb.co/6R1y6Tmx/Image-2025-02-12-13-12-17-4.jpg'},
+        'DABI': {'lien': 'https://i.ibb.co/4RSk9xwP/Image-2025-02-12-13-12-17-7.jpg'},
+        'SHOTO': {'lien': 'https://i.ibb.co/C3954bBv/Image-2025-02-12-13-12-17-6.jpg'},
+        'NEJIRE': {'lien': 'https://i.ibb.co/Gfb9fWSZ/Image-2025-02-12-13-12-17-9.jpg'},
+        'MIRKO': {'lien': 'https://i.ibb.co/5W9MHzwM/Image-2025-02-12-13-12-17-8.jpg'},
+        'OVERHAUL': {'lien': 'https://i.ibb.co/nM0hYLwM/Image-2025-02-12-13-12-17-11.jpg'},
+        'HAWKS': {'lien': 'https://i.ibb.co/FkT1xJBT/Image-2025-02-12-13-12-17-10.jpg'},
+        'HIMIKO': {'lien': 'https://i.ibb.co/d4L6P4BK/Image-2025-02-12-13-12-17-12.jpg'},
+        'OCHACO': {'lien': 'https://i.ibb.co/7dGVxvwt/Image-2025-02-12-13-12-17-5.jpg'},
+        'LEMILLION': {'lien': 'https://i.ibb.co/9mL6dF7Z/Image-2025-02-12-13-12-17-2.jpg'},
+        'MOMO': {'lien': 'https://i.ibb.co/svhRjbsh/Image-2025-02-12-13-12-17-3.jpg'},
+        'BAKUGO': {'lien': 'https://i.ibb.co/rGP0WrR8/Image-2025-02-12-13-12-17-0.jpg'},
+        'DEKU': {'lien': 'https://i.ibb.co/qMy95d4P/Image-2025-02-12-13-12-17-1.jpg'}
+    },
+    'BORUTO': {
+        'INOJIN': {'lien': 'https://i.ibb.co/Kz9yCJbn/Image-2025-02-16-13-22-54-7.jpg'},
+        'SHIKADAI': {'lien': 'https://i.ibb.co/bjLJP2Bq/Image-2025-02-16-13-22-54-8.jpg'},
+        'SHIN': {'lien': 'https://i.ibb.co/qLnKWwK6/Image-2025-02-16-13-22-54-5.jpg'},
+        'SHINKI': {'lien': 'https://i.ibb.co/gZ2wwZm9/Image-2025-02-16-13-22-54-6.jpg'},
+        'KAWAKI': {'lien': 'https://i.ibb.co/gLxs2TJH/Image-2025-02-16-13-22-54-4.jpg'},
+        'SARADA': {'lien': 'https://i.ibb.co/LX83Y3Y1/Image-2025-02-16-13-22-54-3.jpg'},
+        'METAL_LEE': {'lien': 'https://i.ibb.co/ycmNTNY9/Image-2025-02-16-13-22-54-1.jpg'},
+        'MITSUKI': {'lien': 'https://i.ibb.co/XZwSCcmH/Image-2025-02-16-13-22-54-2.jpg'},
+        'BORUTO': {'lien': 'https://i.ibb.co/svrmRCq8/Image-2025-02-16-13-22-54-0.jpg'}
+    },
         'DEMON_SLAYER': {
             'TANJIRO': { lien: 'https://i.ibb.co/NsZp3mb/Image-2024-10-02-19-51-46-0.jpg' },
             'NEZUKO': { lien: 'https://i.ibb.co/DGMgsBR/Image-2024-10-02-19-51-46-1.jpg' },
