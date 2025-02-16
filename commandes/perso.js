@@ -22,7 +22,7 @@ async function envoyerCarte(dest, zk, ms, personnage) {
                 // Envoi de l'image avec une légende contenant le nom du personnage, son univers et son rang.
                 zk.sendMessage(dest, { 
                     image: { url: lien }, 
-                    caption: `${personnageUpper} (${verse}) - Rang ${rang}` 
+                    caption: `*${personnageUpper} | ${verse} | RANG ${rang}*` 
                 }, { quoted: ms });
 
                 return; // On arrête la recherche dès qu'on trouve un personnage correspondant.
@@ -32,7 +32,7 @@ async function envoyerCarte(dest, zk, ms, personnage) {
 
     // Message d'erreur si le personnage n'est pas trouvé.
     if (!personnageTrouve) {
-        zk.sendMessage(dest, { text: `Personnage ${personnage} non trouvé.` }, { quoted: ms });
+        zk.sendMessage(dest, { text: `*❌ Personnage ${personnage} indisponible.*` }, { quoted: ms });
     }
 }
 
@@ -43,14 +43,14 @@ async function envoyerCarte(dest, zk, ms, personnage) {
  * @param {object} ms - Message source pour la citation.
  */
 async function envoyerListe(dest, zk, ms) {
-    let message = '*Liste des personnages disponibles :*\n\n';
+    let message = '*Liste des personnages disponibles:*\n\n';
 
     // Parcours des rangs et des univers pour construire la liste
     for (const [rang, univers] of Object.entries(characters)) {
-        message += `*Rang ${rang} :*\n`;
+        message += `*🏅 RANG ${rang} : 🏅*\n`;
         for (const [verse, personnages] of Object.entries(univers)) {
-            message += `\n_${verse}_ :\n`;
-            message += Object.keys(personnages).join(', ') + '\n'; // Ajout des noms des personnages séparés par des virgules.
+            message += `\n*🌐 ${verse} :*\n\n`;
+            message += Object.keys(personnages).join('\n') + '\n'; // Ajout des noms des personnages séparés par des virgules.
         }
         message += '\n'; // Ajout d'un espace entre chaque rang pour une meilleure lisibilité.
     }
@@ -96,14 +96,14 @@ async function personnageAleatoire(dest, zk, ms, rang = null, verse = null) {
     // Envoi du personnage sélectionné aléatoirement avec son image et sa description.
     zk.sendMessage(dest, { 
         image: { url: randomPerso.lien }, 
-        caption: `${randomPerso.nom} (${randomPerso.verse}) - Rang ${randomPerso.rang}` 
+        caption: `*${randomPerso.nom} | ${randomPerso.verse} | RANG ${randomPerso.rang}*` 
     }, { quoted: ms });
 }
 
 // Commande principale pour la gestion des personnages
 zokou(
     {
-        nomCom: 'perso',
+        nomCom: 'heroes',
         categorie: 'ABM'
     },
     async (dest, zk, commandeOptions) => {
