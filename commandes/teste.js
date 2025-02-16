@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { characters_rang_c } = require('../commandes/catalogue_abm')
 
 // Fonction pour envoyer la carte du personnage
@@ -39,4 +39,4 @@ zokou(
             await envoyerCarte(dest, zk, ms, personnage);
         }
     }
-);
+);*/
