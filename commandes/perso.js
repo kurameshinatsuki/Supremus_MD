@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { characters } = require('../commandes/catalogue_abm');
+const { characters } = require('../commandes/catalogue');
 
 /**
  * Fonction pour envoyer l'image et les informations d'un personnage spécifique.
