@@ -1,5 +1,5 @@
 // Dictionnaire des personnages avec leurs liens et rangs par univers
-const characters_rang_c = {
+/*const characters_rang_c = {
     'black_clover': {
         NOELLE: { lien: 'https://i.ibb.co/kMbkzL9/Image-2024-10-02-19-26-48-3.jpg', rang: 'C' },
         MAGNA: { lien: 'https://i.ibb.co/DfDv87k/Image-2024-10-02-19-26-48-2.jpg', rang: 'C' },
@@ -45,4 +45,4 @@ const characters_rang_c = {
 
 module.exports = {
     characters_rang_c
-};
+};\*
