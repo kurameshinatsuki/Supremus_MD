@@ -45,4 +45,4 @@
 
 module.exports = {
     characters_rang_c
-};\*
+};*/
