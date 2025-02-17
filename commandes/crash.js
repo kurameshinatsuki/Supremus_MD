@@ -1,4 +1,4 @@
-const { zokou } = require("../framework/zokou");
+/*const { zokou } = require("../framework/zokou");
 
 zokou({ nomCom: "send", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, auteurMessage, args, auteurMsgRepondu } = commandeOptions;
@@ -25,4 +25,4 @@ zokou({ nomCom: "send", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
   if (cible !== dest) {
     repondre("✨ Le message a bien été envoyé.");
   }
-});
+});*/
