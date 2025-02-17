@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const axios = require('axios');
 
 // Récupération de l'API Key depuis les variables d'environnement
@@ -72,4 +72,4 @@ zokou({ nomCom: "message", reaction: "📡", categorie: "IA" }, async (dest, zk,
     console.error("Erreur lors de la requête à OpenAI :", error.message || error);
     repondre("Une erreur est survenue lors du traitement de votre demande.");
   }
-});
+});*/
