@@ -48,7 +48,7 @@ zokou({ nomCom: "tagall", categorie: 'GROUP', reaction: "📣" }, async (dest, z
 
 
   for (const membre of membresGroupe) {
-    tag += `${emoji[random]}      @${membre.id.split("@")[0]}\n`
+    tag += `${emoji[random]}      @${membre.id.split("@")[0]}\n========================`
   }
 
  
@@ -63,13 +63,13 @@ zokou({ nomCom: "tagall", categorie: 'GROUP', reaction: "📣" }, async (dest, z
 
 zokou({ nomCom: "link", categorie: 'GROUP', reaction: "🙋" }, async (dest, zk, commandeOptions) => {
   const { repondre, nomGroupe, nomAuteurMessage, verifGroupe } = commandeOptions;
-  if (!verifGroupe) { repondre("wait bro , you want the link to my dm?"); return; };
+  if (!verifGroupe) { repondre("✨ attends mec, tu veux le lien vers mon dm ?"); return; };
 
 
   var link = await zk.groupInviteCode(dest)
   var lien = `https://chat.whatsapp.com/${link}`;
 
-  let mess = `hello ${nomAuteurMessage} , here is the group link ${nomGroupe} \n
+  let mess = `✨ Salut ${nomAuteurMessage} , voici le lien du groupe ${nomGroupe} \n
 
 Lien :${lien}`
   repondre(mess)
