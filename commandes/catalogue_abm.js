@@ -1,48 +1,120 @@
-// Dictionnaire des personnages avec leurs liens et rangs par univers
-/*const characters_rang_c = {
-    'black_clover': {
-        NOELLE: { lien: 'https://i.ibb.co/kMbkzL9/Image-2024-10-02-19-26-48-3.jpg', rang: 'C' },
-        MAGNA: { lien: 'https://i.ibb.co/DfDv87k/Image-2024-10-02-19-26-48-2.jpg', rang: 'C' },
-        GAUCHE: { lien: 'https://i.ibb.co/KFNVJ9h/Image-2024-10-02-19-26-48-4.jpg', rang: 'C' },
-        YUNO: { lien: 'https://i.ibb.co/K7yv6pw/Image-2024-10-02-19-26-48-1.jpg', rang: 'C' },
-        VANESSA: { lien: 'https://i.ibb.co/DDSGBnH/Image-2024-10-02-19-26-48-7.jpg', rang: 'C' },
-        ZORA: { lien: 'https://i.ibb.co/0cDXhjK/Image-2024-10-02-19-26-48-8.jpg', rang: 'C' },
-        LANGRIS: { lien: 'https://i.ibb.co/rGbpzD4/Image-2024-10-02-19-26-48-9.jpg', rang: 'C' },
-        LEOPOLD: { lien: 'https://i.ibb.co/Cw3yfjD/Image-2024-10-02-19-26-48-6.jpg', rang: 'C' },
-        LUCK: { lien: 'https://i.ibb.co/PMwq7ZC/Image-2024-10-02-19-26-48-5.jpg', rang: 'C' },
-        ASTA: { lien: 'https://i.ibb.co/khfFhfQ/Image-2024-10-02-19-26-48-0.jpg', rang: 'C' }
-    },
-    'demon_slayer': {
-        TANJIRO_2: { lien: 'https://i.ibb.co/K9xHhtJ/Image-2024-10-02-19-51-46-8.jpg', rang: 'C' },
-        ENMU: { lien: 'https://i.ibb.co/gVCfKsX/Image-2024-10-02-19-51-46-7.jpg', rang: 'C' },
-        RIU: { lien: 'https://i.ibb.co/7gh2Hvz/Image-2024-10-02-19-51-46-6.jpg', rang: 'C' },
-        NEZUKO: { lien: 'https://i.ibb.co/DGMgsBR/Image-2024-10-02-19-51-46-1.jpg', rang: 'C' },
-        INOSUKE: { lien: 'https://i.ibb.co/2PsDh85/Image-2024-10-02-19-51-46-3.jpg', rang: 'C' },
-        ZENITSU: { lien: 'https://i.ibb.co/nQZt1nM/Image-2024-10-02-19-51-46-2.jpg', rang: 'C' },
-        SUSAMARU: { lien: 'https://i.ibb.co/JsfJKSr/Image-2024-10-02-19-51-46-5.jpg', rang: 'C' },
-        TANJIRO: { lien: 'https://i.ibb.co/NsZp3mb/Image-2024-10-02-19-51-46-0.jpg', rang: 'C' },
-        KANAO: { lien: 'https://i.ibb.co/FxRz0Kx/Image-2024-10-02-19-51-46-9.jpg', rang: 'C' },
-        YAHABA: { lien: 'https://i.ibb.co/SNhjnbW/Image-2024-10-02-19-51-46-4.jpg', rang: 'C' }
-    },
-    'jujutsu_kaisen': {
-        INO: { lien: 'https://i.ibb.co/6HSKdfR/Image-2024-10-02-20-05-39-13.jpg', rang: 'C' },
-        GETO: { lien: 'https://i.ibb.co/dgn0FHn/Image-2024-10-02-20-05-39-11.jpg', rang: 'C' },
-        MEGUMI: { lien: 'https://i.ibb.co/VMXWTgh/Image-2024-10-02-20-05-39-1.jpg', rang: 'C' },
-        MAI: { lien: 'https://i.ibb.co/RH46BwN/Image-2024-10-02-20-05-39-9.jpg', rang: 'C' },
-        MAHITO: { lien: 'https://i.ibb.co/cgySkn4/Image-2024-10-02-20-05-39-6.jpg', rang: 'C' },
-        NANAMI: { lien: 'https://i.ibb.co/j6GrFtm/Image-2024-10-02-20-05-39-4.jpg', rang: 'C' },
-        MECHAMARU: { lien: 'https://i.ibb.co/cgdRNfG/Image-2024-10-02-20-05-39-12.jpg', rang: 'C' },
-        YUJI: { lien: 'https://i.ibb.co/kGrfKgW/Image-2024-10-02-20-05-39-0.jpg', rang: 'C' },
-        KAMO: { lien: 'https://i.ibb.co/XVdST0Y/Image-2024-10-02-20-05-39-14.jpg', rang: 'C' },
-        AOI: { lien: 'https://i.ibb.co/FDqvc7r/Image-2024-10-02-20-05-39-2.jpg', rang: 'C' },
-        CHOSO: { lien: 'https://i.ibb.co/27fNC4H/Image-2024-10-02-20-05-39-10.jpg', rang: 'C' },
-        MIWA: { lien: 'https://i.ibb.co/vd0FNTL/Image-2024-10-02-20-05-39-7.jpg', rang: 'C' },
-        TOGE: { lien: 'https://i.ibb.co/kMVTKLy/Image-2024-10-02-20-05-39-8.jpg', rang: 'C' },
-        NOBARA: { lien: 'https://i.ibb.co/znZCXYX/Image-2024-10-02-20-05-39-3.jpg', rang: 'C' },
-        MAKI: { lien: 'https://i.ibb.co/4Vbv31Q/Image-2024-10-02-20-05-39-5.jpg', rang: 'C' }
-    }
-};
+const { zokou } = require('../framework/zokou');
+const { select_cars } = require('../commandes/select_cars');
 
-module.exports = {
-    characters_rang_c
-};*/
+/**
+ * Fonction pour envoyer l'image et les informations d'un véhicule spécifique.
+ * @param {string} dest - L'identifiant du destinataire.
+ * @param {object} zk - Instance du bot.
+ * @param {object} ms - Message source pour la citation.
+ * @param {string} vehicule - Nom du véhicule recherché.
+ */
+async function envoyerVehicule(dest, zk, ms, vehicule) {
+    let vehiculeTrouve = false;
+    const vehiculeUpper = vehicule.toUpperCase();
+
+    // Parcourir toutes les catégories et types pour trouver le véhicule
+    for (const [categorie, types] of Object.entries(select_cars)) {
+        for (const [type, vehicules] of Object.entries(types)) {
+            if (vehicules[vehiculeUpper]) {
+                vehiculeTrouve = true;
+                const { lien } = vehicules[vehiculeUpper];
+
+                // Envoi de l'image avec une légende contenant le nom, la catégorie et le type du véhicule.
+                zk.sendMessage(dest, { 
+                    image: { url: lien }, 
+                    caption: `*${vehiculeUpper} | ${categorie} | ${type}*`
+                }, { quoted: ms });
+
+                return; // On arrête la recherche dès qu'on trouve un véhicule correspondant.
+            }
+        }
+    }
+
+    // Message d'erreur si le véhicule n'est pas trouvé.
+    if (!vehiculeTrouve) {
+        zk.sendMessage(dest, { text: `*❌ Véhicule ${vehicule} indisponible.*` }, { quoted: ms });
+    }
+}
+
+/**
+ * Fonction pour envoyer la liste complète des véhicules disponibles.
+ * @param {string} dest - L'identifiant du destinataire.
+ * @param {object} zk - Instance du bot.
+ * @param {object} ms - Message source pour la citation.
+ */
+async function envoyerListeVehicules(dest, zk, ms) {
+    let message = '*🚗 Liste des véhicules disponibles:*\n\n';
+
+    for (const [categorie, types] of Object.entries(select_cars)) {
+        message += `*🚀 ${categorie} :*\n`;
+        for (const [type, vehicules] of Object.entries(types)) {
+            message += `\n🔹 *${type} :*\n`;
+            message += Object.keys(vehicules).join('\n') + '\n';
+        }
+        message += '\n';
+    }
+
+    zk.sendMessage(dest, { text: message }, { quoted: ms });
+}
+
+/**
+ * Fonction pour sélectionner un véhicule aléatoire selon les critères donnés.
+ * @param {string} dest - L'identifiant du destinataire.
+ * @param {object} zk - Instance du bot.
+ * @param {object} ms - Message source pour la citation.
+ * @param {string|null} categorie - Catégorie du véhicule (optionnel).
+ * @param {string|null} type - Type du véhicule (optionnel).
+ */
+async function vehiculeAleatoire(dest, zk, ms, categorie = null, type = null) {
+    let vehiculesFiltres = [];
+
+    // Filtrage des véhicules selon les critères
+    for (const [c, types] of Object.entries(select_cars)) {
+        if (categorie && c !== categorie.toUpperCase()) continue;
+
+        for (const [t, vehicules] of Object.entries(types)) {
+            if (type && t !== type.toUpperCase()) continue;
+
+            for (const [nom, data] of Object.entries(vehicules)) {
+                vehiculesFiltres.push({ nom, categorie: c, type: t, lien: data.lien });
+            }
+        }
+    }
+
+    if (vehiculesFiltres.length === 0) {
+        zk.sendMessage(dest, { text: 'Aucun véhicule trouvé avec ces critères.' }, { quoted: ms });
+        return;
+    }
+
+    // Sélection aléatoire
+    const randomVehicule = vehiculesFiltres[Math.floor(Math.random() * vehiculesFiltres.length)];
+
+    // Envoi du véhicule sélectionné
+    zk.sendMessage(dest, { 
+        image: { url: randomVehicule.lien }, 
+        caption: `*${randomVehicule.nom} | ${randomVehicule.categorie} | ${randomVehicule.type}*`
+    }, { quoted: ms });
+}
+
+// Commande principale pour la gestion des véhicules
+zokou(
+    {
+        nomCom: 'vehicles',
+        categorie: 'SPEED-RUSH'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0) {
+            await envoyerListeVehicules(dest, zk, ms);
+        } 
+        else if (arg[0].toUpperCase() === 'RANDOM') {
+            const categorie = arg[1] ? arg[1].toUpperCase() : null;
+            const type = arg[2] ? arg[2].toUpperCase() : null;
+            await vehiculeAleatoire(dest, zk, ms, categorie, type);
+        } 
+        else {
+            await envoyerVehicule(dest, zk, ms, arg[0]);
+        }
+    }
+);
