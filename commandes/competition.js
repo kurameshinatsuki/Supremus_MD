@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { addOrUpdateDataInCompetition, getDataFromCompetition } = require('../bdd/competition'); // Adapté pour n'importe quel joueur
 
 zokou(
@@ -179,4 +179,4 @@ zokou(
             repondre('✨ Compétition enregistré avec succès');
 
         }
-    });
+    });*/
