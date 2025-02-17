@@ -1,7 +1,7 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 
 // Nouvelle commande pour le jeu "Jackpot Whirl"
-/*zokou(
+zokou(
     {
         nomCom: 'whirl',
         reaction: '🎰',
@@ -317,4 +317,4 @@ zokou(
             await repondre("⏳ Temps écoulé ou commande invalide. Les cartes n'ont pas été révélées.");
         }
     }
-);
+);*/
