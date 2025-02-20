@@ -22,37 +22,43 @@ zokou(
   { nomCom: 'acheter', reaction: '🛒', categorie: 'TRANSACT' },
   async (origineMessage, zk, commandeOptions) => {
     const { auteurMessage, repondre } = commandeOptions;
+    
     try {
       // Sélection du jeu
-      await repondre("📌 Choisissez le jeu :\n1️⃣ ABM\n2️⃣ Speed Rush\n3️⃣ Yu-Gi-Oh\n4️⃣ Origamy World");
+      await repondre("📌 *Choisissez le jeu :*\n1️⃣ ABM\n2️⃣ Speed Rush\n3️⃣ Yu-Gi-Oh\n4️⃣ Origamy World\n\nRépondez avec le numéro correspondant.");
       const reponseJeu = await zk.awaitForMessage({ sender: auteurMessage, chatJid: origineMessage, timeout: 60000 });
 
-      const jeux = ["ABM", "Speed Rush", "Yu-Gi-Oh Speed Duel", "Origamy World"];
-      const choixJeu = jeux[parseInt(reponseJeu.message.conversation.trim(), 10) - 1];
+      if (!reponseJeu?.message?.conversation) return await repondre("❌ Temps écoulé ou réponse invalide.");
 
-      if (!choixJeu) return await repondre("❌ Jeu invalide.");
+      const jeux = ["ABM", "Speed Rush", "Yu-Gi-Oh Speed Duel", "Origamy World"];
+      const choixIndex = parseInt(reponseJeu.message.conversation.trim(), 10) - 1;
+      if (isNaN(choixIndex) || choixIndex < 0 || choixIndex >= jeux.length) return await repondre("❌ Sélection invalide. Veuillez réessayer.");
+
+      const choixJeu = jeux[choixIndex];
 
       // Sélection du pack
-      await repondre("📦 Choisissez votre pack :\n🥉 (150🎫)\n🥈 (200🎫)\n🥇 (250🎫)\n🏅 (300🎫)");
+      await repondre("📦 *Choisissez votre pack :*\n🥉 (150🎫)\n🥈 (200🎫)\n🥇 (250🎫)\n🏅 (300🎫)\n\nRépondez avec l'emoji correspondant.");
       const reponsePack = await zk.awaitForMessage({ sender: auteurMessage, chatJid: origineMessage, timeout: 60000 });
 
+      if (!reponsePack?.message?.conversation) return await repondre("❌ Temps écoulé ou réponse invalide.");
+
       const choixPack = Object.keys(packs).find(pack => pack === reponsePack.message.conversation.trim());
-      if (!choixPack) return await repondre("❌ Pack invalide.");
+      if (!choixPack) return await repondre("❌ Pack invalide. Veuillez réessayer.");
 
       const packSelectionne = packs[choixPack];
 
       // Vérification du solde (simulation)
-      const soldeCoupons = 500;
-      if (soldeCoupons < packSelectionne.prix) return await repondre("❌ Fonds insuffisants.");
+      const soldeCoupons = 500; // À remplacer par une récupération du vrai solde
+      if (soldeCoupons < packSelectionne.prix) return await repondre(`❌ Fonds insuffisants. Il vous faut ${packSelectionne.prix}🎫.`);
 
       // Génération du loot
       const lootObtenu = Array.from({ length: 3 }, () => genererLoot(packSelectionne));
 
       // Confirmation
-      await repondre(`✅ *Achat réussi !* 🎁\nPack *${choixJeu} ${choixPack}* ouvert :\n- ${lootObtenu.join("\n- ")}`);
+      await repondre(`✅ *Achat réussi !* 🎁\nVous avez acheté un pack *${choixPack}* pour *${choixJeu}*.\n\n📦 Contenu :\n- ${lootObtenu.join("\n- ")}`);
     } catch (error) {
       console.error("Erreur lors de l'achat :", error);
-      await repondre("❌ Une erreur est survenue.");
+      await repondre("❌ Une erreur est survenue. Veuillez réessayer plus tard.");
     }
   }
 );
