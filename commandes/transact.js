@@ -25,7 +25,7 @@ const ongoingTransactions = {};
 const sendDefaultImage = async (zk, origineMessage) => {
   await zk.sendMessage(origineMessage, {
     image: { url: 'https://i.ibb.co/16p6w2D/image.jpg' },
-    caption: text
+    caption: "Bienvenue dans la Transact Zone 💸"
   });
 };
 
@@ -60,7 +60,11 @@ const generateWelcomeMessage = () => {
 // Fonction pour obtenir la sélection du joueur avec vérification
 const getSelection = async (zk, auteurMessage, origineMessage, options, repondre) => {
   const selection = await getPlayerResponse(zk, auteurMessage, origineMessage);
-  const selectedOption = options.find((t, i) => selection == (i + 1) || selection.toLowerCase() === t.commande);
+  const selectedOption = options.find((t, i) => 
+    selection == (i + 1) || 
+    (t.commande && selection.toLowerCase() === t.commande.toLowerCase()) || 
+    (t.nom && selection.toLowerCase() === t.nom.toLowerCase())
+  );
 
   if (!selectedOption) {
     await repondre("Veuillez choisir une option valide.");
@@ -76,7 +80,7 @@ zokou(
     categorie: 'TRANSACT'
   },
   async (origineMessage, zk, commandeOptions) => {
-    const { ms, repondre, auteurMessage } = commandeOptions;
+    const { repondre, auteurMessage } = commandeOptions;
 
     try {
       // Si une transaction est déjà en cours, l'annuler
@@ -101,7 +105,7 @@ zokou(
           });
 
           const achatSelection = await getSelection(zk, auteurMessage, origineMessage, [
-            { commande: 'pack' }, { commande: 'coupon' }
+            { commande: 'pack', nom: 'Pack' }, { commande: 'coupon', nom: 'Coupon' }
           ], repondre);
 
           if (achatSelection.commande === 'pack') {
@@ -109,11 +113,17 @@ zokou(
             const packChoisi = await getSelection(zk, auteurMessage, origineMessage, catalogue, repondre);
 
             await repondre(`Vous avez choisi ${packChoisi.nom}. Combien en voulez-vous ?`);
-            const quantite = await getPlayerResponse(zk, auteurMessage, origineMessage);
-            const total = calculerMontant(Number(quantite), packChoisi.prix);
-            await repondre(`Le montant total pour ${quantite} ${packChoisi.nom} est de ${total}💎.`);
+            const quantite = parseInt(await getPlayerResponse(zk, auteurMessage, origineMessage));
 
+            if (isNaN(quantite) || quantite <= 0) {
+              await repondre("Veuillez entrer une quantité valide.");
+              return;
+            }
+
+            const total = calculerMontant(quantite, packChoisi.prix);
+            await repondre(`Le montant total pour ${quantite} ${packChoisi.nom} est de ${total}💎.`);
             await sendDefaultImage(zk, origineMessage);
+
           } else if (achatSelection.commande === 'coupon') {
             await repondre('Entrez le montant souhaité en 💎 ou en 🧭 pour acheter des coupons.');
             await sendDefaultImage(zk, origineMessage);
@@ -124,12 +134,12 @@ zokou(
           await repondre("Option invalide.");
           await sendDefaultImage(zk, origineMessage);
       }
-
-      delete ongoingTransactions[auteurMessage]; // Fin de la transaction
     } catch (error) {
       console.error("Erreur lors de la transaction:", error);
       await repondre('Une erreur est survenue. Veuillez réessayer.');
       await sendDefaultImage(zk, origineMessage);
+    } finally {
+      delete ongoingTransactions[auteurMessage]; // Toujours nettoyer après la transaction
     }
   }
 );
