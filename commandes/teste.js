@@ -1,134 +1,105 @@
 const { zokou } = require('../framework/zokou');
 
-// Configuration des packs et des taux de loot
+// 📦 Packs disponibles et leur coût
 const packs = {
-  "🥉": { prix: 150, loot: { commun: 80, rare: 15, epique: 5 } },
-  "🥈": { prix: 200, loot: { commun: 60, rare: 30, epique: 10 } },
-  "🥇": { prix: 250, loot: { commun: 40, rare: 40, epique: 15, legendaire: 5 } },
-  "🏅": { prix: 300, loot: { commun: 20, rare: 40, epique: 30, legendaire: 10 } }
+    "🥉": { name: "Pack Bronze", cost: 150, rewards: 3, rates: { common: 80, rare: 15, epic: 5 } },
+    "🥈": { name: "Pack Argent", cost: 200, rewards: 3, rates: { common: 60, rare: 30, epic: 10 } },
+    "🥇": { name: "Pack Or", cost: 250, rewards: 5, rates: { common: 40, rare: 40, epic: 15, legendary: 5 } },
+    "🏅": { name: "Pack Spécial", cost: 300, rewards: 6, rates: { common: 20, rare: 40, epic: 30, legendary: 10 } }
 };
 
-// Génération de loot aléatoire
-const genererLoot = (typePack) => {
-  const lootTable = [];
-  for (const [rarete, taux] of Object.entries(typePack.loot)) {
-    lootTable.push(...Array(taux).fill(rarete));
-  }
-  return lootTable[Math.floor(Math.random() * lootTable.length)];
-};
-
-// 🛒 Commande /acheter
-zokou(
-  { nomCom: 'acheter', reaction: '🛒', categorie: 'TRANSACT' },
-  async (origineMessage, zk, commandeOptions) => {
-    const { auteurMessage, repondre } = commandeOptions;
-    
-    try {
-      // Sélection du jeu
-      await repondre("📌 *Choisissez le jeu :*\n1️⃣ ABM\n2️⃣ Speed Rush\n3️⃣ Yu-Gi-Oh\n4️⃣ Origamy World\n\nRépondez avec le numéro correspondant.");
-      const reponseJeu = await zk.awaitForMessage({ sender: auteurMessage, chatJid: origineMessage, timeout: 60000 });
-
-      if (!reponseJeu?.message?.conversation) return await repondre("❌ Temps écoulé ou réponse invalide.");
-
-      const jeux = ["ABM", "Speed Rush", "Yu-Gi-Oh Speed Duel", "Origamy World"];
-      const choixIndex = parseInt(reponseJeu.message.conversation.trim(), 10) - 1;
-      if (isNaN(choixIndex) || choixIndex < 0 || choixIndex >= jeux.length) return await repondre("❌ Sélection invalide. Veuillez réessayer.");
-
-      const choixJeu = jeux[choixIndex];
-
-      // Sélection du pack
-      await repondre("📦 *Choisissez votre pack :*\n🥉 (150🎫)\n🥈 (200🎫)\n🥇 (250🎫)\n🏅 (300🎫)\n\nRépondez avec l'emoji correspondant.");
-      const reponsePack = await zk.awaitForMessage({ sender: auteurMessage, chatJid: origineMessage, timeout: 60000 });
-
-      if (!reponsePack?.message?.conversation) return await repondre("❌ Temps écoulé ou réponse invalide.");
-
-      const choixPack = Object.keys(packs).find(pack => pack === reponsePack.message.conversation.trim());
-      if (!choixPack) return await repondre("❌ Pack invalide. Veuillez réessayer.");
-
-      const packSelectionne = packs[choixPack];
-
-      // Vérification du solde (simulation)
-      const soldeCoupons = 500; // À remplacer par une récupération du vrai solde
-      if (soldeCoupons < packSelectionne.prix) return await repondre(`❌ Fonds insuffisants. Il vous faut ${packSelectionne.prix}🎫.`);
-
-      // Génération du loot
-      const lootObtenu = Array.from({ length: 3 }, () => genererLoot(packSelectionne));
-
-      // Confirmation
-      await repondre(`✅ *Achat réussi !* 🎁\nVous avez acheté un pack *${choixPack}* pour *${choixJeu}*.\n\n📦 Contenu :\n- ${lootObtenu.join("\n- ")}`);
-    } catch (error) {
-      console.error("Erreur lors de l'achat :", error);
-      await repondre("❌ Une erreur est survenue. Veuillez réessayer plus tard.");
+// 📜 Contenu des jeux
+const gameContents = {
+    "ABM": {
+        common: ["Asta", "Magna", "Gauche", "Zora", "Leopold"],
+        rare: ["Noelle", "Yuno", "Vanessa", "Langris", "Luck"],
+        epic: ["Natsu", "Erza"],
+        legendary: [] // Pas de légendaire dans ABM
+    },
+    "Speed Rush": {
+        common: ["Lamborghini Aventador", "Ferrari SF90 Stradale", "Porsche 911 Turbo S"],
+        rare: ["Bugatti Chiron", "McLaren P1"],
+        epic: ["Custom 🥉 (Vitesse/Maniabilité/Résistance)"],
+        legendary: ["Custom 🥈 (Vitesse/Maniabilité/Résistance)"]
+    },
+    "Yu-Gi-Oh Speed Duel": {
+        common: ["Monster Normal", "Magie Générique", "Trap Normal"],
+        rare: ["Carte stratégique", "Monstre utile"],
+        epic: ["Dark Magician", "Blue-Eyes White Dragon"],
+        legendary: ["Red-Eyes Black Dragon", "Polymerization", "Mirror Force"]
     }
-  }
-);
+};
 
-// 💰 Commande /vendre
-zokou(
-  { nomCom: 'vendre', reaction: '💰', categorie: 'TRANSACT' },
-  async (origineMessage, zk, commandeOptions) => {
-    const { args, repondre } = commandeOptions;
-    if (args.length < 2) return await repondre("❌ Usage : /vendre [objet] [quantité]");
+// 🎟 Simuler une base de données locale des joueurs
+let players = {
+    "player123": { name: "Joueur 1", coupons: 500 },
+    "player456": { name: "Joueur 2", coupons: 200 }
+};
 
-    const [objet, quantiteStr] = args;
-    const quantite = parseInt(quantiteStr, 10);
-    if (isNaN(quantite) || quantite <= 0) return await repondre("❌ Quantité invalide.");
+// 📜 Génération d'un ID de transaction unique
+function generateTransactionID() {
+    return `TXN-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
 
-    const prixUnitaire = 50; // Simulation du prix
-    const totalGain = prixUnitaire * quantite;
+// 🎁 Génération aléatoire d’un objet selon les probabilités
+function getRandomItem(game) {
+    const items = gameContents[game];
+    const rand = Math.random() * 100;
 
-    await repondre(`✅ *Vente réussie !*\nVous avez vendu ${quantite}x *${objet}* pour ${totalGain}🪙.`);
-  }
-);
+    if (rand < (packs["🏅"].rates.legendary || 0) && items.legendary.length) return items.legendary[Math.floor(Math.random() * items.legendary.length)];
+    if (rand < (packs["🏅"].rates.epic || 0) && items.epic.length) return items.epic[Math.floor(Math.random() * items.epic.length)];
+    if (rand < (packs["🏅"].rates.rare || 0) && items.rare.length) return items.rare[Math.floor(Math.random() * items.rare.length)];
+    return items.common[Math.floor(Math.random() * items.common.length)];
+}
 
-// 🔄 Commande /échanger
-zokou(
-  { nomCom: 'echanger', reaction: '🔄', categorie: 'TRANSACT' },
-  async (origineMessage, zk, commandeOptions) => {
-    const { args, repondre } = commandeOptions;
-    if (args.length < 2) return await repondre("❌ Usage : /echanger [montant] [type]");
+// 🎟 Achat d’un pack
+function acheterPack(playerID, game, packType) {
+    let player = players[playerID]; // Récupérer les infos du joueur
+    if (!player) return "⚠ Joueur introuvable.";
 
-    const [montantStr, type] = args;
-    const montant = parseInt(montantStr, 10);
-    if (isNaN(montant) || montant <= 0) return await repondre("❌ Montant invalide.");
+    let pack = packs[packType];
+    if (!pack) return "⚠ Pack invalide.";
 
-    const taux = 0.9;
-    const montantFinal = Math.floor(montant * taux);
+    // 💰 Vérification des coupons
+    if (player.coupons < pack.cost) return `⚠ Vous n'avez pas assez de coupons. (${player.coupons}🎫 disponibles, ${pack.cost}🎫 requis)`;
 
-    await repondre(`✅ *Échange effectué !*\n${montant} ${type} → ${montantFinal} convertis après taxe.`);
-  }
-);
+    // 🎲 Génération des gains
+    let rewards = [];
+    for (let i = 0; i < pack.rewards; i++) {
+        rewards.push(getRandomItem(game));
+    }
 
-// 🎫 Commande /coupons
-zokou(
-  { nomCom: 'coupons', reaction: '🎫', categorie: 'TRANSACT' },
-  async (origineMessage, zk, commandeOptions) => {
-    const { args, repondre } = commandeOptions;
-    if (args.length < 2) return await repondre("❌ Usage : /coupons [montant] [monnaie]");
+    // 💳 Déduction des coupons
+    player.coupons -= pack.cost;
 
-    const [montantStr, monnaie] = args;
-    const montant = parseInt(montantStr, 10);
-    if (isNaN(montant) || montant <= 0) return await repondre("❌ Montant invalide.");
+    // 📜 Génération du reçu
+    let transactionID = generateTransactionID();
+    let receipt = `\`\`\`
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+═══════════════════
+*..........|  SRPN - REÇU  |..........*
+═══════════════════
+🆔 Transact ID : ${transactionID}
 
-    const taux = monnaie === "🪙" ? 0.01 : 0.1;
-    const couponsObtenus = montant * taux;
+📌 Type : 💰 Achat
+👤 Expéditeur : ${player.name}
+🎯 Transaction : Achat de ${pack.name}
 
-    await repondre(`✅ *Conversion réussie !*\n${montant}${monnaie} → ${couponsObtenus}🎫.`);
-  }
-);
+💰 Détails :
+📦 Gain(s) reçu(s) :
+- ${rewards.join("\n- ")}
 
-// 🎰 Commande /casino
-zokou(
-  { nomCom: 'casino', reaction: '🎰', categorie: 'TRANSACT' },
-  async (origineMessage, zk, commandeOptions) => {
-    const { args, repondre } = commandeOptions;
-    if (args.length < 2) return await repondre("❌ Usage : /casino [jeu] [mise]");
+💸 Montant débité : ${pack.cost}🎫
+💰 Nouveau solde : ${player.coupons}🎫
 
-    const [jeu, miseStr] = args;
-    const mise = parseInt(miseStr, 10);
-    if (isNaN(mise) || mise <= 0) return await repondre("❌ Mise invalide.");
+🕒 Date & Heure : ${new Date().toLocaleString()}
+🔄 Statut : Validé
+═══════════════════
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+\`\`\``;
 
-    const gain = Math.random() < 0.5 ? mise * 2 : 0;
-    await repondre(`🎲 *Résultat du Casino (${jeu})*\nMise : ${mise}🪙\n${gain > 0 ? `Gagné : ${gain}🪙` : "Perdu !"}`);
-  }
-);
+    return `✅ *ACHAT RÉUSSI ! 🎁*\n\n*${player.name}* a ouvert un *${pack.name}* et obtenu :\n- ${rewards.join("\n- ")}\n\n${receipt}`;
+}
+
+// 📌 Exemple d’appel de la fonction
+console.log(acheterPack("player123", "ABM", "🥇"));
