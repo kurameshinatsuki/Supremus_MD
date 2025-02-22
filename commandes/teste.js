@@ -101,5 +101,31 @@ function acheterPack(playerID, game, packType) {
     return `✅ *ACHAT RÉUSSI ! 🎁*\n\n*${player.name}* a ouvert un *${pack.name}* et obtenu :\n- ${rewards.join("\n- ")}\n\n${receipt}`;
 }
 
-// 📌 Exemple d’appel de la fonction
-console.log(acheterPack("player123", "ABM", "🥇"));
+// Commande /acheter
+zokou(
+  {
+    nomCom: 'acheter',
+    reaction: '🛒',
+    categorie: 'TRANSACT'
+  },
+  async (message, args) => {
+    let playerID = message.sender;
+    
+    if (args.length < 2) {
+        return message.reply("⚠ Utilisation incorrecte. Format : `/acheter [jeu] [pack]`\nExemple : `/acheter ABM 🥇`");
+    }
+
+    let game = args[0];   // Nom du jeu
+    let packType = args[1]; // Type de pack (🥉, 🥈, 🥇, 🏅)
+
+    if (!gameContents[game]) {
+        return message.reply("⚠ Jeu invalide. Choisissez parmi : ABM, Speed Rush, Yu-Gi-Oh Speed Duel.");
+    }
+
+    if (!packs[packType]) {
+        return message.reply("⚠ Pack invalide. Choisissez parmi : 🥉, 🥈, 🥇, 🏅.");
+    }
+
+    let result = acheterPack(playerID, game, packType);
+    return message.reply(result);
+});
