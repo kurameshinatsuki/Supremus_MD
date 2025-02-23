@@ -1,74 +1,105 @@
 const { zokou } = require('../framework/zokou');
 
-// Fonction pour vérifier si un joueur a assez de coupons
-const verifierCoupons = (joueur, prix) => {
-    return joueur.coupons >= prix;
+// 📦 Packs disponibles et leur coût
+const packs = {
+    "🥉": { name: "Pack Bronze", cost: 150, rewards: 3, rates: { common: 80, rare: 15, epic: 5 } },
+    "🥈": { name: "Pack Argent", cost: 200, rewards: 3, rates: { common: 60, rare: 30, epic: 10 } },
+    "🥇": { name: "Pack Or", cost: 250, rewards: 5, rates: { common: 40, rare: 40, epic: 15, legendary: 5 } },
+    "🏅": { name: "Pack Spécial", cost: 300, rewards: 6, rates: { common: 20, rare: 40, epic: 30, legendary: 10 } }
 };
 
-// Fonction pour générer le contenu du pack
-const genererPack = (typePack) => {
-    const packs = {
-        bronze: { communs: 80, rares: 15, epics: 5, prix: 150 },
-        argent: { communs: 60, rares: 30, epics: 10, prix: 200 },
-        or: { communs: 40, rares: 40, epics: 15, legendaires: 5, prix: 250 },
-        special: { communs: 20, rares: 40, epics: 30, legendaires: 10, prix: 300 }
-    };
-
-    const probabilites = packs[typePack.toLowerCase()];
-    if (!probabilites) return null;
-
-    // Générer le contenu en fonction des probabilités
-    const contenu = [];
-    const types = Object.keys(probabilites).filter(k => k !== 'prix');
-    
-    for (const type of types) {
-        if (Math.random() * 100 <= probabilites[type]) {
-            contenu.push(type);
-        }
+// 📜 Contenu des jeux
+const gameContents = {
+    "ABM": {
+        common: ["Asta", "Magna", "Gauche", "Zora", "Leopold"],
+        rare: ["Noelle", "Yuno", "Vanessa", "Langris", "Luck"],
+        epic: ["Natsu", "Erza"],
+        legendary: [] // Pas de légendaire dans ABM
+    },
+    "Speed Rush": {
+        common: ["Lamborghini Aventador", "Ferrari SF90 Stradale", "Porsche 911 Turbo S"],
+        rare: ["Bugatti Chiron", "McLaren P1"],
+        epic: ["Custom 🥉 (Vitesse/Maniabilité/Résistance)"],
+        legendary: ["Custom 🥈 (Vitesse/Maniabilité/Résistance)"]
+    },
+    "Yu-Gi-Oh Speed Duel": {
+        common: ["Monster Normal", "Magie Générique", "Trap Normal"],
+        rare: ["Carte stratégique", "Monstre utile"],
+        epic: ["Dark Magician", "Blue-Eyes White Dragon"],
+        legendary: ["Red-Eyes Black Dragon", "Polymerization", "Mirror Force"]
     }
-    
-    return { contenu, prix: probabilites.prix };
 };
 
-// Commande `acheter`
-zokou(
-    { nomCom: 'acheter', categorie: 'TRANSACTION' },
-    async (dest, zk, commandeOptions) => {
-        try {
-            const { ms, args } = commandeOptions;
+// 🎟 Simuler une base de données locale des joueurs
+let players = {
+    "player123": { name: "Joueur 1", coupons: 500 },
+    "player456": { name: "Joueur 2", coupons: 200 }
+};
 
-            if (!args || args.length < 2) {
-                await zk.sendMessage(dest, { text: "⚠️ Utilisation correcte : `-acheter [jeu] [pack]`" }, { quoted: ms });
-                return;
-            }
+// 📜 Génération d'un ID de transaction unique
+function generateTransactionID() {
+    return `TXN-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
 
-            const [jeu, typePack] = args;
-            const joueur = { coupons: 500 }; // Simulation du joueur (à remplacer par une vraie BDD)
+// 🎁 Génération aléatoire d’un objet selon les probabilités
+function getRandomItem(game) {
+    const items = gameContents[game];
+    const rand = Math.random() * 100;
 
-            // Vérifier si le pack existe
-            const pack = genererPack(typePack);
-            if (!pack) {
-                await zk.sendMessage(dest, { text: "❌ Pack invalide ! Choisissez parmi : Bronze, Argent, Or, Spécial." }, { quoted: ms });
-                return;
-            }
+    if (rand < (packs["🏅"].rates.legendary || 0) && items.legendary.length) return items.legendary[Math.floor(Math.random() * items.legendary.length)];
+    if (rand < (packs["🏅"].rates.epic || 0) && items.epic.length) return items.epic[Math.floor(Math.random() * items.epic.length)];
+    if (rand < (packs["🏅"].rates.rare || 0) && items.rare.length) return items.rare[Math.floor(Math.random() * items.rare.length)];
+    return items.common[Math.floor(Math.random() * items.common.length)];
+}
 
-            // Vérifier si le joueur a assez de coupons
-            if (!verifierCoupons(joueur, pack.prix)) {
-                await zk.sendMessage(dest, { text: "💰 Fonds insuffisants ! Vous avez " + joueur.coupons + "🎫" }, { quoted: ms });
-                return;
-            }
+// 🎟 Achat d’un pack
+function acheterPack(playerID, game, packType) {
+    let player = players[playerID]; // Récupérer les infos du joueur
+    if (!player) return "⚠ Joueur introuvable.";
 
-            // Simuler la réduction des coupons du joueur
-            joueur.coupons -= pack.prix;
+    let pack = packs[packType];
+    if (!pack) return "⚠ Pack invalide.";
 
-            // Générer le message de confirmation
-            const message = `🎁 **Achat Réussi !** 🎁\n\n📌 **Jeu :** ${jeu}\n📦 **Pack :** ${typePack}\n🪙 **Prix :** ${pack.prix}🎫\n📜 **Contenu :** ${pack.contenu.join(", ")}\n\nMerci pour votre achat !`;
+    // 💰 Vérification des coupons
+    if (player.coupons < pack.cost) return `⚠ Vous n'avez pas assez de coupons. (${player.coupons}🎫 disponibles, ${pack.cost}🎫 requis)`;
 
-            await zk.sendMessage(dest, { text: message }, { quoted: ms });
-
-        } catch (error) {
-            console.error("❌ Erreur Commande Acheter :", error);
-            await zk.sendMessage(dest, { text: "⚠️ Une erreur est survenue lors de l'achat." }, { quoted: ms });
-        }
+    // 🎲 Génération des gains
+    let rewards = [];
+    for (let i = 0; i < pack.rewards; i++) {
+        rewards.push(getRandomItem(game));
     }
-);
+
+    // 💳 Déduction des coupons
+    player.coupons -= pack.cost;
+
+    // 📜 Génération du reçu
+    let transactionID = generateTransactionID();
+    let receipt = `\`\`\`
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+═══════════════════
+*..........|  SRPN - REÇU  |..........*
+═══════════════════
+🆔 Transact ID : ${transactionID}
+
+📌 Type : 💰 Achat
+👤 Expéditeur : ${player.name}
+🎯 Transaction : Achat de ${pack.name}
+
+💰 Détails :
+📦 Gain(s) reçu(s) :
+- ${rewards.join("\n- ")}
+
+💸 Montant débité : ${pack.cost}🎫
+💰 Nouveau solde : ${player.coupons}🎫
+
+🕒 Date & Heure : ${new Date().toLocaleString()}
+🔄 Statut : Validé
+═══════════════════
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+\`\`\``;
+
+    return `✅ *ACHAT RÉUSSI ! 🎁*\n\n*${player.name}* a ouvert un *${pack.name}* et obtenu :\n- ${rewards.join("\n- ")}\n\n${receipt}`;
+}
+
+// 📌 Exemple d’appel de la fonction
+console.log(acheterPack("player123", "ABM", "🥇"));
