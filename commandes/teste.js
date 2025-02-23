@@ -14,7 +14,7 @@ const gameContents = {
         common: ["Asta", "Magna", "Gauche", "Zora", "Leopold"],
         rare: ["Noelle", "Yuno", "Vanessa", "Langris", "Luck"],
         epic: ["Natsu", "Erza"],
-        legendary: [] // Pas de légendaire dans ABM
+        legendary: []
     },
     "Speed Rush": {
         common: ["Lamborghini Aventador", "Ferrari SF90 Stradale", "Porsche 911 Turbo S"],
@@ -30,7 +30,15 @@ const gameContents = {
     }
 };
 
-// 🎟 Simuler une base de données locale des joueurs
+// 🎁 Gains bonus selon la rareté
+const bonusRewards = {
+    common: ["🎫 Coupons (5 à 10)", "🧭 Supremus Tokens (500 à 1.000)", "💎 Supremus Gemmes (10 à 20)", "⚡ Boost XP (×2)"],
+    rare: ["🎫 Coupons (10 à 20)", "🧭 Supremus Tokens (1.000 à 2.500)", "💎 Supremus Gemmes (20 à 50)", "⏳ Boost XP (×3)", "🎟 Ticket de Loterie", "🛒 Réduction Boutique (-10%)"],
+    epic: ["🎫 Coupons (20 à 50)", "🧭 Supremus Tokens (2.500 à 5.000)", "💎 Supremus Gemmes (50 à 100)", "⏳ Boost XP (×4)", "🔑 Clé Mystère", "🎟 Ticket de Loterie", "🛒 Réduction Boutique (-25%)", "🎁 Box VIP (×1)"],
+    legendary: ["🎫 Coupons (50 à 100)", "🧭 Supremus Tokens (5.000 à 10.000)", "💎 Supremus Gemmes (100 à 250)", "⏳ Boost XP (×5)", "💳 Pass VIP", "🔑 Clé Légendaire"]
+};
+
+// 🎟 Base de données des joueurs (simulée)
 let players = {
     "player123": { name: "Joueur 1", coupons: 500 },
     "player456": { name: "Joueur 2", coupons: 200 }
@@ -42,31 +50,39 @@ function generateTransactionID() {
 }
 
 // 🎁 Génération aléatoire d’un objet selon les probabilités
-function getRandomItem(game) {
-    const items = gameContents[game];
-    const rand = Math.random() * 100;
-
-    if (rand < (packs["🏅"].rates.legendary || 0) && items.legendary.length) return items.legendary[Math.floor(Math.random() * items.legendary.length)];
-    if (rand < (packs["🏅"].rates.epic || 0) && items.epic.length) return items.epic[Math.floor(Math.random() * items.epic.length)];
-    if (rand < (packs["🏅"].rates.rare || 0) && items.rare.length) return items.rare[Math.floor(Math.random() * items.rare.length)];
-    return items.common[Math.floor(Math.random() * items.common.length)];
+function getRandomItem(category, game) {
+    const items = gameContents[game][category] || [];
+    return items.length ? items[Math.floor(Math.random() * items.length)] : null;
 }
 
-// 🎟 Achat d’un pack
+// 🎁 Génération aléatoire d’un bonus selon la rareté
+function getRandomBonus(category) {
+    const items = bonusRewards[category] || [];
+    return items.length ? items[Math.floor(Math.random() * items.length)] : null;
+}
+
+// 🎟 Achat d’un pack avec contenu + bonus
 function acheterPack(playerID, game, packType) {
-    let player = players[playerID]; // Récupérer les infos du joueur
+    let player = players[playerID];
     if (!player) return "⚠ Joueur introuvable.";
 
     let pack = packs[packType];
     if (!pack) return "⚠ Pack invalide.";
 
     // 💰 Vérification des coupons
-    if (player.coupons < pack.cost) return `⚠ Vous n'avez pas assez de coupons. (${player.coupons}🎫 disponibles, ${pack.cost}🎫 requis)`;
+    if (player.coupons < pack.cost) return `⚠ Pas assez de coupons. (${player.coupons}🎫 dispos, ${pack.cost}🎫 requis)`;
 
-    // 🎲 Génération des gains
+    // 🎲 Génération des gains (contenu du jeu + bonus)
     let rewards = [];
+    let bonus = [];
+
     for (let i = 0; i < pack.rewards; i++) {
-        rewards.push(getRandomItem(game));
+        let category = Object.keys(pack.rates).find((r) => Math.random() * 100 < pack.rates[r]);
+        let item = getRandomItem(category, game);
+        let bonusItem = getRandomBonus(category);
+
+        if (item) rewards.push(item);
+        if (bonusItem) bonus.push(bonusItem);
     }
 
     // 💳 Déduction des coupons
@@ -85,9 +101,11 @@ function acheterPack(playerID, game, packType) {
 👤 Expéditeur : ${player.name}
 🎯 Transaction : Achat de ${pack.name}
 
-💰 Détails :
-📦 Gain(s) reçu(s) :
+🎁 Contenu du jeu :
 - ${rewards.join("\n- ")}
+
+🎉 Bonus :
+- ${bonus.join("\n- ")}
 
 💸 Montant débité : ${pack.cost}🎫
 💰 Nouveau solde : ${player.coupons}🎫
@@ -98,8 +116,31 @@ function acheterPack(playerID, game, packType) {
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 \`\`\``;
 
-    return `✅ *ACHAT RÉUSSI ! 🎁*\n\n*${player.name}* a ouvert un *${pack.name}* et obtenu :\n- ${rewards.join("\n- ")}\n\n${receipt}`;
+    return `✅ *ACHAT RÉUSSI ! 🎁*\n\n*${player.name}* a ouvert un *${pack.name}* et obtenu :\n\n🎮 **Contenu du jeu** :\n- ${rewards.join("\n- ")}\n\n🎁 **Gains Bonus** :\n- ${bonus.join("\n- ")}\n\n${receipt}`;
 }
 
-// 📌 Exemple d’appel de la fonction
-console.log(acheterPack("player123", "ABM", "🥇"));
+// 📌 Commande /acheter intégrée à Zokou
+zokou(
+    { nomCom: 'acheter', categorie: 'TRANSACTION' },
+    async (dest, zk, commandeOptions) => {
+        const { ms, args, sender } = commandeOptions;
+        
+        if (args.length < 2) {
+            return zk.sendMessage(dest, { text: "⚠ Usage : *!acheter [jeu] [pack]*\nEx : *!acheter ABM 🥇*" }, { quoted: ms });
+        }
+
+        let [game, packType] = args;
+        game = game.toUpperCase();
+
+        if (!gameContents[game]) {
+            return zk.sendMessage(dest, { text: "⚠ Jeu invalide. Choisissez parmi : ABM, Speed Rush, Yu-Gi-Oh Speed Duel." }, { quoted: ms });
+        }
+
+        if (!packs[packType]) {
+            return zk.sendMessage(dest, { text: "⚠ Pack invalide. Choisissez parmi : 🥉, 🥈, 🥇, 🏅." }, { quoted: ms });
+        }
+
+        const resultat = acheterPack(sender, game, packType);
+        await zk.sendMessage(dest, { text: resultat }, { quoted: ms });
+    }
+);
