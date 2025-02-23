@@ -1,128 +1,121 @@
 const { zokou } = require('../framework/zokou');
 
-// Fonction pour générer un nombre aléatoire dans un intervalle donné
-const getRandomFromRange = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+// Fonction utilitaire pour générer un nombre aléatoire dans un intervalle
+function randomInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-// Fonction pour obtenir un gain selon les probabilités
-const getPackContents = (packType) => {
-    const contents = {
-        // Définition des packs avec leurs chances de rareté et les types de contenu associés
-        "🥉": { count: 3, commons: 80, rares: 15, epics: 5, legendaries: 0 },
-        "🥈": { count: 4, commons: 60, rares: 30, epics: 10, legendaries: 0 },
-        "🥇": { count: 5, commons: 40, rares: 40, epics: 15, legendaries: 5 },
-        "🏅": { count: 6, commons: 20, rares: 40, epics: 30, legendaries: 10 },
+// Fonction pour créer le contenu d'un pack basé sur le type
+function createPack(packType) {
+    const packs = {
+        "🥉": { size: 3, commons: 80, rares: 15, epics: 5, legendaries: 0 },
+        "🥈": { size: 4, commons: 60, rares: 30, epics: 10, legendaries: 0 },
+        "🥇": { size: 5, commons: 40, rares: 40, epics: 15, legendaries: 5 },
+        "🏅": { size: 6, commons: 20, rares: 40, epics: 30, legendaries: 10 },
     };
 
-    const { count, commons, rares, epics, legendaries } = contents[packType];
-    let pack = [];
+    const { size, commons, rares, epics, legendaries } = packs[packType];
+    const results = [];
 
-    // Ajout des éléments au pack en fonction des probabilités
-    for (let i = 0; i < count; i++) {
-        const roll = Math.random() * 100;
-        if (roll < commons) {
-            pack.push('Commun');
-        } else if (roll < commons + rares) {
-            pack.push('Rare');
-        } else if (roll < commons + rares + epics) {
-            pack.push('Epique');
+    for (let i = 0; i < size; i++) {
+        const chance = Math.random() * 100;
+        if (chance < commons) {
+            results.push('Commun');
+        } else if (chance < commons + rares) {
+            results.push('Rare');
+        } else if (chance < commons + rares + epics) {
+            results.push('Epique');
         } else {
-            pack.push('Légendaire');
+            results.push('Légendaire');
         }
     }
 
-    return pack;
-};
+    return results;
+}
 
-// Commande principale pour l'achat de packs
+// Commande d'achat de pack
 zokou(
     {
-        nomCom: 'achat',
+        nomCom: 'acheter',
         categorie: 'TRANSACT',
     },
     async (message, args) => {
-        const player = message.author; // Récupérer l'utilisateur qui a lancé la commande
-        const packType = args[0]; // Le type de pack choisi
+        try {
+            const player = message.author;
+            const selectedPack = args[0];
 
-        // Vérifier si le type de pack est valide
-        const validPacks = ['🥉', '🥈', '🥇', '🏅'];
-        if (!validPacks.includes(packType)) {
-            return message.reply('Veuillez choisir un pack valide : 🥉, 🥈, 🥇, 🏅');
+            // Vérification de la validité du type de pack
+            const validTypes = ['🥉', '🥈', '🥇', '🏅'];
+            if (!validTypes.includes(selectedPack)) {
+                return message.reply('Veuillez choisir un pack valide : 🥉, 🥈, 🥇, 🏅');
+            }
+
+            // Vérification des coupons du joueur
+            const playerCoupons = await getCoupons(player);
+            const packPrices = { "🥉": 150, "🥈": 200, "🥇": 250, "🏅": 300 };
+            
+            if (playerCoupons < packPrices[selectedPack]) {
+                return message.reply('Vous n\'avez pas assez de coupons pour acheter ce pack.');
+            }
+
+            // Déduction des coupons et génération des gains
+            await deductCoupons(player, packPrices[selectedPack]);
+            const packContents = createPack(selectedPack);
+
+            // Message récapitulatif des gains
+            const gainsMessage = `🎁 Achat réussi !\nPack ${selectedPack} :\n` + packContents.join('\n');
+
+            // Générer un reçu de la transaction
+            const receipt = createReceipt(player, selectedPack, packPrices[selectedPack], packContents);
+
+            // Envoi des messages de confirmation
+            message.reply(gainsMessage);
+            message.reply(receipt);
+        } catch (error) {
+            console.error('Erreur achat:', error);
+            message.reply('Une erreur est survenue. Veuillez réessayer plus tard.');
         }
-
-        // Vérifier le nombre de coupons du joueur
-        const playerCoupons = await getPlayerCoupons(player); // Fonction fictive pour obtenir le nombre de coupons du joueur
-        const packCosts = {
-            "🥉": 150,
-            "🥈": 200,
-            "🥇": 250,
-            "🏅": 300,
-        };
-
-        if (playerCoupons < packCosts[packType]) {
-            return message.reply('Vous n\'avez pas assez de coupons pour acheter ce pack.');
-        }
-
-        // Déduire les coupons du joueur
-        await updatePlayerCoupons(player, -packCosts[packType]); // Fonction fictive pour déduire les coupons
-
-        // Générer les gains du pack
-        const packContents = getPackContents(packType);
-
-        // Envoyer un récapitulatif des gains
-        const gainMessage = `✅ ACHAT RÉUSSI ! 🎁\nVous avez ouvert un Pack ${packType} et obtenu :\n` + packContents.join('\n');
-
-        // Générer un reçu de transaction
-        const transactionReceipt = generateReceipt(player, packType, packCosts[packType], packContents);
-
-        // Envoyer le message récapitulatif et le reçu
-        message.reply(gainMessage);
-        message.reply(transactionReceipt);
     }
 );
 
-// Fonction fictive pour récupérer les coupons du joueur
-async function getPlayerCoupons(player) {
-    // Récupérer les coupons du joueur depuis la base de données ou un système de stockage
-    return 200; // Exemple
+// Simulation d'obtention des coupons du joueur
+async function getCoupons(player) {
+    // Exemple simulé pour récupérer les coupons du joueur
+    return 200;
 }
 
-// Fonction fictive pour mettre à jour les coupons du joueur
-async function updatePlayerCoupons(player, amount) {
-    // Mettre à jour les coupons du joueur dans la base de données ou un système de stockage
+// Simulation de déduction de coupons du joueur
+async function deductCoupons(player, amount) {
+    // Déduire le montant des coupons dans la base de données ou autre système
 }
 
-// Fonction pour générer un reçu de transaction
-function generateReceipt(player, packType, cost, contents) {
-    const transactionId = generateTransactionId(); // Fonction fictive pour générer un ID unique
-    const currentDate = new Date();
+// Fonction pour générer le reçu de transaction
+function createReceipt(player, packType, cost, contents) {
+    const transactionId = generateTransactionId();
+    const now = new Date();
 
     return `
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-═══════════════════
-..........|  SRPN - REÇU  |..........
-═══════════════════
-🆔 Transact ID : ${transactionId}
-
-> 📌 Type : 💰 Achat
-👤 Expéditeur : ${player.username}
-🎯 Transaction : Achat du Pack ${packType}
-═══════════════════
-💰 Détails de la transaction :
-📦 Gain(s) reçu(s) : 
+════════════════════════
+          REÇU SRPN
+════════════════════════
+🆔 Transaction ID : ${transactionId}
+🎯 Type : Achat de Pack ${packType}
+👤 Utilisateur : ${player.username}
+════════════════════════
+Gains :
 ${contents.join('\n')}
 
-> 💸 Montant débité : ${cost}🎫
-💰 Nouveau solde : ${await getPlayerCoupons(player) - cost}🎫
-═══════════════════
-🕒 Date & Heure : ${currentDate.toLocaleDateString()} / ${currentDate.toLocaleTimeString()}
-🔄 Statut : Validé
-═══════════════════
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-*............| ♼ Traitement... |..........*
+Montant débité : ${cost}🎫
+Nouveau solde : ${await getCoupons(player) - cost}🎫
+════════════════════════
+Date : ${now.toLocaleDateString()} / ${now.toLocaleTimeString()}
+Statut : Validé
+════════════════════════
+*Traitement terminé.*
 `;
 }
 
-// Fonction fictive pour générer un ID unique pour la transaction
+// Fonction pour générer un ID unique de transaction
 function generateTransactionId() {
-    return Math.random().toString(36).substr(2, 9);
+    return Math.random().toString(36).substring(2, 9);
 }
