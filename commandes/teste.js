@@ -90,9 +90,10 @@ async function deductCoupons(player, amount) {
 }
 
 // Fonction pour générer le reçu de transaction
-function createReceipt(player, packType, cost, contents) {
+async function createReceipt(player, packType, cost, contents) {
     const transactionId = generateTransactionId();
     const now = new Date();
+    const newBalance = await getCoupons(player) - cost; // Calcul avant l'affichage
 
     return `
 ════════════════════════
@@ -106,16 +107,11 @@ Gains :
 ${contents.join('\n')}
 
 Montant débité : ${cost}🎫
-Nouveau solde : ${await getCoupons(player) - cost}🎫
+Nouveau solde : ${newBalance}🎫
 ════════════════════════
 Date : ${now.toLocaleDateString()} / ${now.toLocaleTimeString()}
 Statut : Validé
 ════════════════════════
 *Traitement terminé.*
 `;
-}
-
-// Fonction pour générer un ID unique de transaction
-function generateTransactionId() {
-    return Math.random().toString(36).substring(2, 9);
 }
