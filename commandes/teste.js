@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 
 zokou(
     {
@@ -99,4 +99,4 @@ zokou(
         // Envoi de l'image de l'arène avec la fiche de combat
         zk.sendMessage(dest, { image: { url: arene.url }, caption: msg }, { quoted: ms });
     }
-);
+);*/
