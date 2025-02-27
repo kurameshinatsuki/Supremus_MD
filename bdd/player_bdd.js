@@ -7,11 +7,17 @@ const dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
   ssl: {
-    rejectUnauthorized: false, // À désactiver en production avec un certificat valide
+    rejectUnauthorized: false,
   },
 };
 
 const pool = new Pool(proConfig);
+
+// Fonction pour générer un ID unique
+function generateUniqueId(name) {
+  const timestamp = Date.now(); // Timestamp actuel
+  return `${name}_${timestamp}`; // Combinaison du nom et du timestamp
+}
 
 // Création des tables si elles n'existent pas encore
 async function createTables() {
@@ -19,7 +25,7 @@ async function createTables() {
   try {
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_profiles(
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        id TEXT PRIMARY KEY,
         name TEXT UNIQUE NOT NULL,
         statut TEXT DEFAULT 'Novice',
         mode TEXT DEFAULT 'Free',
@@ -77,11 +83,12 @@ async function insertPlayerProfile(name) {
       return;
     }
 
+    const id = generateUniqueId(name); // Génération de l'ID
     const queryInsert = `
-      INSERT INTO player_profiles(name)
-      VALUES ($1);
+      INSERT INTO player_profiles(id, name)
+      VALUES ($1, $2);
     `;
-    await client.query(queryInsert, [name]);
+    await client.query(queryInsert, [id, name]);
 
     await client.query('COMMIT'); // Validation de la transaction
     console.log(`Profil du joueur créé avec succès : Nom ${name}`);
