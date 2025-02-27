@@ -1,4 +1,4 @@
-require("dotenv").config();
+/*require("dotenv").config();
 const { Pool } = require("pg");
 const s = require("../set");
 
@@ -80,4 +80,4 @@ async function updateVerdict(motCle, verdict, imageUrl, etat) {
 module.exports = {
     getVerdictByKeyword,
     updateVerdict,
-};
+};*/
