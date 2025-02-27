@@ -6,7 +6,7 @@ const dbUrl = s.SPDB;
 const proConfig = {
   connectionString: dbUrl,
   ssl: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false, // À désactiver en production avec un certificat valide
   },
 };
 
@@ -18,7 +18,7 @@ async function createTables() {
   try {
     await client.query(`
       CREATE TABLE IF NOT EXISTS player_profiles(
-        id TEXT PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name TEXT UNIQUE NOT NULL,
         statut TEXT DEFAULT 'Novice',
         mode TEXT DEFAULT 'Free',
@@ -63,6 +63,8 @@ async function createTables() {
 async function insertPlayerProfile(name) {
   const client = await pool.connect();
   try {
+    await client.query('BEGIN'); // Début de la transaction
+
     const queryExistence = `
       SELECT 1 FROM player_profiles WHERE name = $1;
     `;
@@ -70,6 +72,7 @@ async function insertPlayerProfile(name) {
 
     if (resultExistence.rows.length > 0) {
       console.log(`Le profil du joueur ${name} existe déjà.`);
+      await client.query('COMMIT');
       return;
     }
 
@@ -79,8 +82,10 @@ async function insertPlayerProfile(name) {
     `;
     await client.query(queryInsert, [name]);
 
+    await client.query('COMMIT'); // Validation de la transaction
     console.log(`Profil du joueur créé avec succès : Nom ${name}`);
   } catch (error) {
+    await client.query('ROLLBACK'); // Annulation de la transaction en cas d'erreur
     console.error('Erreur lors de la création du profil du joueur:', error);
   } finally {
     client.release();
@@ -112,6 +117,8 @@ async function getPlayerProfile(name) {
 async function updatePlayerProfile(name, updates) {
   const client = await pool.connect();
   try {
+    await client.query('BEGIN'); // Début de la transaction
+
     const setClauses = [];
     const values = [];
     let index = 1;
@@ -124,6 +131,7 @@ async function updatePlayerProfile(name, updates) {
 
     if (setClauses.length === 0) {
       console.log("Aucune mise à jour fournie");
+      await client.query('COMMIT');
       return;
     }
 
@@ -138,12 +146,15 @@ async function updatePlayerProfile(name, updates) {
     const result = await client.query(query, values);
     if (result.rowCount === 0) {
       console.log(`Joueur non trouvé pour mise à jour : ${name}`);
+      await client.query('COMMIT');
       return null;
     }
 
+    await client.query('COMMIT'); // Validation de la transaction
     console.log(`Profil du joueur ${name} mis à jour avec succès`);
     return result.rows[0];
   } catch (error) {
+    await client.query('ROLLBACK'); // Annulation de la transaction en cas d'erreur
     console.error('Erreur lors de la mise à jour du profil du joueur:', error);
   } finally {
     client.release();
