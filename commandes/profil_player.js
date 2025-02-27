@@ -11,57 +11,56 @@ zokou(
 
     // Fonction pour formater le message de profil du joueur
     function formatProfileMessage(data) {
-      return `
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-        ═══════════════════  
-        *..........| SRPN PROFIL |..........*  
-        ═══════════════════  
-        > *👤 Nom :* ${data.name}  
-        > *♨️ Statut :* ${data.statut}  
-        > *🪀 Mode :* ${data.mode}  
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-        *..............| EXPLOITS |.............*  
-        ═══════════════════  
-        > *🧘‍♂️ Rang :*  
-        - *ABM :* ${data.rang_abm}  
-        - *SPEED RUSH :* ${data.rang_speed_rush}  
-        - *YU-GI-OH :* ${data.rang_yugioh}  
-        > *🏆 Champion :* ${data.champion}  
-        > *😎 Spécialité :* ${data.specialite}  
-        > *👑 Leader :* ${data.leader}  
-        > *🤼‍♂️ Challenge :* ${data.defis_remportes}  
-        > *💯 Légende :* ${data.legende}  
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-        *................| STATS |................*  
-        ═══════════════════  
-        > *👊 Battles :* V : ${data.victoires} | D : ${data.defaites} | L : ${data.forfaits}  
-        > *🏅 TOP 3 :* ${data.top3}  
-        > *🎭 Story Mode :* M.W : ${data.missions_reussies} / M.L : ${data.missions_echouees}  
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-        *.........| HEROES GAME |.........*  
-        ═══════════════════  
-        > *🀄 Cards AMB :* ${data.amb_cards}  
-        > *🚗 Vehicles :* ${data.vehicles}  
-        > *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
-        > *🪐 Origamy Skins :*  
-        - *🚻 Skins :* ${data.skins}  
-        - *🎒 Items :* ${data.items}  
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-        *.............| CURRENCY |............*  
-        ═══════════════════  
-        > *🧭 S Tokens :* ${data.s_tokens}🧭  
-        > *💎 S Gemmes :* ${data.s_gemmes}💎  
-        > *🎟️ Coupons :* ${data.coupons}🎟️  
-        > *🎁 Box VIP :* ${data.box_vip}🎁  
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
-        *.............| COMPTE |..............*  
-        ═══════════════════  
-        > *💰 Dépenses :* ${data.depenses}FCFA  
-        > *💵 Profits :* ${data.profits}FCFA  
-        > *🏧 Retraits :* ${data.retraits}FCFA  
-        > *💳 Solde :* ${data.solde}FCFA  
-        ═══════════════════  
-        ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
+      return `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+═══════════════════  
+*..........| SRPN PROFIL |..........*  
+═══════════════════  
+> *👤 Nom :* ${data.name}  
+> *♨️ Statut :* ${data.statut}  
+> *🪀 Mode :* ${data.mode}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*..............| EXPLOITS |.............*  
+═══════════════════  
+> *🧘‍♂️ Rang :*  
+- *ABM :* ${data.rang_abm}  
+- *SPEED RUSH :* ${data.rang_speed_rush}  
+- *YU-GI-OH :* ${data.rang_yugioh}  
+> *🏆 Champion :* ${data.champion}  
+> *😎 Spécialité :* ${data.specialite}  
+> *👑 Leader :* ${data.leader}  
+> *🤼‍♂️ Challenge :* ${data.defis_remportes}  
+> *💯 Légende :* ${data.legende}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*................| STATS |................*  
+═══════════════════  
+> *👊 Battles :* V : ${data.victoires} | D : ${data.defaites} | L : ${data.forfaits}  
+> *🏅 TOP 3 :* ${data.top3}  
+> *🎭 Story Mode :* M.W : ${data.missions_reussies} / M.L : ${data.missions_echouees}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*.........| HEROES GAME |.........*  
+═══════════════════  
+> *🀄 Cards AMB :* ${data.amb_cards}  
+> *🚗 Vehicles :* ${data.vehicles} 
+> *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
+> *🪐 Origamy Skins :*  
+- *🚻 Skins :* ${data.skins}  
+- *🎒 Items :* ${data.items}  
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+*.............| CURRENCY |............* 
+═══════════════════ 
+> *🧭 S Tokens :* ${data.s_tokens}🧭  
+> *💎 S Gemmes :* ${data.s_gemmes}💎  
+> *🎟️ Coupons :* ${data.coupons}🎟️  
+> *🎁 Box VIP :* ${data.box_vip}🎁
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 
+*.............| COMPTE |..............*
+═══════════════════  
+> *💰 Dépenses :* ${data.depenses}FCFA  
+> *💵 Profits :* ${data.profits}FCFA  
+> *🏧 Retraits :* ${data.retraits}FCFA  
+> *💳 Solde :* ${data.solde}FCFA
+═══════════════════
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒`;
     }
 
     try {
