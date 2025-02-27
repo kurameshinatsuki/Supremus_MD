@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { getVerdictByKeyword, updateVerdict } = require('../bdd/speedrush');
 
 zokou(
@@ -89,4 +89,4 @@ zokou(
             repondre("Une erreur est survenue. Veuillez réessayer.");
         }
     }
-);
+);*/
