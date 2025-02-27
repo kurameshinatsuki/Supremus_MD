@@ -85,15 +85,14 @@ zokou(
     }
 );
 
-// Commande system_abm (envoie plusieurs images)
+// Commande speedrush_system (envoie plusieurs images)
 zokou(
-    { nomCom: 'abm_system', categorie: 'ABM' },
+    { nomCom: 'speedrush_system', categorie: 'SPEED-RUSH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/tXzHV8s/Picsart-24-09-15-00-26-37-972.jpg',
-            'https://i.ibb.co/VjcFtdZ/Picsart-24-09-15-01-33-29-343.jpg',
-            'https://i.ibb.co/sqDW5BK/Picsart-24-09-15-02-17-35-095.jpg'
+            'https://i.ibb.co/37qwKLP/Picsart-24-09-15-07-54-02-342.jpg',
+            'https://i.ibb.co/y55kDpL/Picsart-24-09-15-08-00-10-160.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
@@ -101,9 +100,9 @@ zokou(
     }
 );
 
-// Commande speed_rush (envoie plusieurs images)
+// Commande amb_system (envoie plusieurs images)
 zokou(
-    { nomCom: 'speedrush_system', categorie: 'SPEED-RUSH' },
+    { nomCom: 'abm_system', categorie: 'ABM' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
