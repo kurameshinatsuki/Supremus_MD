@@ -1,4 +1,4 @@
-const axios = require('axios');
+/*const axios = require('axios');
 const { zokou } = require("../framework/zokou");
 const fs = require("fs-extra");
 const { exec } = require("child_process");
@@ -100,4 +100,4 @@ generateReactionCommand("happy", "😄");
 generateReactionCommand("wink", "😉");
 generateReactionCommand("poke", "👉");
 generateReactionCommand("dance", "💃");
-generateReactionCommand("cringe", "😬");
+generateReactionCommand("cringe", "😬");*/
