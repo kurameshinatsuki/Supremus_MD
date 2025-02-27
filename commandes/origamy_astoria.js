@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { getVerdictByKeyword, updateVerdict } = require('../bdd/origamy_bdd');
 
 // Emojis de base pour les lieux principaux
@@ -141,4 +141,4 @@ zokou(
             repondre("Une erreur est survenue. Veuillez réessayer.");
         }
     }
-);
+);*/
