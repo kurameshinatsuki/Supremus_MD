@@ -66,6 +66,7 @@ zokou(
 
     try {
       const playerName = 'john';  // Par défaut, "john"
+
       // Récupération des données du joueur
       let data = await getPlayerProfile(playerName);
 
@@ -78,7 +79,14 @@ zokou(
 
       if (!arg || arg.length === 0) {
         // Si aucun argument n'est fourni, afficher le profil du joueur
-        zk.sendMessage(dest, { image: { url: 'https://i.ibb.co/3mp1zty/image.jpg' }, caption: formatProfileMessage(data) }, { quoted: ms });
+        const imageUrl = 'https://i.ibb.co/3mp1zty/image.jpg';
+        try {
+          await fetch(imageUrl); // Vérifier que l'image est accessible
+          zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
+        } catch (error) {
+          console.error("Erreur lors de la récupération de l'image :", error);
+          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms }); // Envoyer uniquement le texte
+        }
       } else if (superUser) {
         // Logique de mise à jour multiple
         let updates = {};
@@ -87,13 +95,18 @@ zokou(
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
           if (field && value) {
-            updates[field] = isNaN(value) ? value : Number(value); // Convertir en nombre si possible
+            updates[field] = !isNaN(parseFloat(value)) && isFinite(value) ? Number(value) : value; // Convertir en nombre si possible
           }
         });
 
         if (Object.keys(updates).length > 0) {
-          await updatePlayerProfile(playerName, updates); // Mise à jour multiple
-          repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
+          try {
+            await updatePlayerProfile(playerName, updates); // Mise à jour multiple
+            repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
+          } catch (error) {
+            console.error("Erreur lors de la mise à jour du profil :", error);
+            repondre("Une erreur est survenue lors de la mise à jour du profil.");
+          }
         } else {
           repondre("Aucun champ valide trouvé pour la mise à jour.");
         }
