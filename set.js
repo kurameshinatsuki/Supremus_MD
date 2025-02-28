@@ -33,7 +33,7 @@ module.exports = {
     WARN_COUNT : process.env.WARN_COUNT || '3' ,
     ETAT : process.env.PRESENCE || '1',
     //GPT : process.env.OPENAI_API_KEY || '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',
-    DP : process.env.STARTING_BOT_MESSAGE || "yes",
+    DP : process.env.STARTING_BOT_MESSAGE || "no",
     ADM : process.env.ANTI_DELETE_MESSAGE || 'yes',
     CHATBOT : process.env.PM_CHATBOT || 'no',  
     SPDB,         
