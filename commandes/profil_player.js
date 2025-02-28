@@ -33,7 +33,8 @@ zokou(
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *................| STATS |................*  
 ═══════════════════  
-> *👊 Battles :* V : ${data.victoires} | D : ${data.defaites} | L : ${data.forfaits}  
+> *👊 Battles :* 
+> V : ${data.victoires} | D : ${data.defaites} | L : ${data.forfaits}   
 > *🏅 TOP 3 :* ${data.top3}  
 > *🎭 Story Mode :* M.W : ${data.missions_reussies} / M.L : ${data.missions_echouees}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
