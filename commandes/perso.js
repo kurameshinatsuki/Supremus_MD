@@ -56,8 +56,12 @@ async function envoyerListe(dest, zk, ms) {
     }
 
     // Envoi de la liste complète au joueur
-    zk.sendMessage(dest, { text: message }, { quoted: ms });
-}
+const imageUrl = 'https://exemple.com/image.jpg';
+
+// Envoi du message avec l'image et le texte
+zk.sendMessage(dest, { 
+    image: { url: imageUrl }, 
+    caption: message }, { quoted: ms });
 
 /**
  * Fonction pour sélectionner un personnage aléatoire en fonction des critères donnés.
