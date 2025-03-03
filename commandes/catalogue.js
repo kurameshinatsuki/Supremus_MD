@@ -77,7 +77,6 @@ const characters = {
             'MECHAMARU': { lien: 'https://i.ibb.co/cgdRNfG/Image-2024-10-02-20-05-39-12.jpg' },
             'INO': { lien: 'https://i.ibb.co/6HSKdfR/Image-2024-10-02-20-05-39-13.jpg' },
             'KAMO': { lien: 'https://i.ibb.co/XVdST0Y/Image-2024-10-02-20-05-39-14.jpg' }
-        }
     },
     'ONE_PUNCH_MAN': {
             'GENOS': { lien: 'https://i.ibb.co/VW4XRWwg/Image-2025-03-03-15-12-14-0.jpg' },
