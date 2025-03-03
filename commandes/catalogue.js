@@ -79,6 +79,18 @@ const characters = {
             'KAMO': { lien: 'https://i.ibb.co/XVdST0Y/Image-2024-10-02-20-05-39-14.jpg' }
         }
     },
+    'ONE_PUNCH_MAN': {
+            'GENOS': { lien: 'https://i.ibb.co/VW4XRWwg/Image-2025-03-03-15-12-14-0.jpg' },
+            'BANG': { lien: 'https://i.ibb.co/LdqTLWgP/Image-2025-03-03-15-12-14-1.jpg' },
+            'BLIZZARD': { lien: 'https://i.ibb.co/KpLT4RHQ/Image-2025-03-03-15-12-14-2.jpg' },
+            'METAL_BAT': { lien: 'https://i.ibb.co/n8rTT5JH/Image-2025-03-03-15-12-14-3.jpg' },
+            'ATOMIC_SAMURAI': { lien: 'https://i.ibb.co/xS7JRrFS/Image-2025-03-03-15-12-14-5.jpg' },
+            'TANKTOP_MARCEL': { lien: 'https://i.ibb.co/rfzJwp5z/Image-2025-03-03-15-12-14-4.jpg' },
+            'SONIC': { lien: 'https://i.ibb.co/N60bQyQX/Image-2025-03-03-15-12-14-6.jpg' },
+            'GAROU': { lien: 'https://i.ibb.co/mV3xW4pS/Image-2025-03-03-15-12-14-8.jpg' },
+            'SUIRYU': { lien: 'https://i.ibb.co/QFK6sRq5/Image-2025-03-03-15-12-14-7.jpg' }
+        }
+    },
     'B': {
         'FAIRYTAIL': {
             'NATSU': { lien: 'https://i.ibb.co/1GjBFZBY/Image-2025-02-12-16-42-49-0.jpg' },
