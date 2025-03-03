@@ -62,6 +62,7 @@ const imageUrl = 'https://i.ibb.co/0ysns1QM/image.jpg';
 zk.sendMessage(dest, { 
     image: { url: imageUrl }, 
     caption: message }, { quoted: ms });
+}
 
 /**
  * Fonction pour sélectionner un personnage aléatoire en fonction des critères donnés.
