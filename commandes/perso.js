@@ -56,7 +56,7 @@ async function envoyerListe(dest, zk, ms) {
     }
 
     // Envoi de la liste complète au joueur
-const imageUrl = 'https://exemple.com/image.jpg';
+const imageUrl = 'https://i.ibb.co/0ysns1QM/image.jpg';
 
 // Envoi du message avec l'image et le texte
 zk.sendMessage(dest, { 
