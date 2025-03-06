@@ -70,7 +70,7 @@ const requestOnApi = async (path, method, params = null, body = null) => {
 
 
 zokou({
-    nomCom: "addPlayer",
+    nomCom: "addplayer",
     categorie: "economy",
 }, async (dest, zk, commandOptions) => {
 
@@ -124,7 +124,7 @@ addPlayer <mention> <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
 
 
 zokou({
-    nomCom: "getPlayer",
+    nomCom: "getplayer",
     categorie: "economy",
 }, async (dest, zk, commandOptions) => {
 
@@ -164,7 +164,7 @@ zokou({
 
 
 zokou({
-    nomCom: "updatePlayer",
+    nomCom: "updateplayer",
     categorie: "economy",
 }, async (dest, zk, commandOptions) => {
 
