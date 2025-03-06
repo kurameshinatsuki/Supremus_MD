@@ -12,7 +12,7 @@
 // ============================================================
 
 
-const { zokou } = require('../frameworks/zokou');
+const { zokou } = require('../framework/zokou');
 const axios = require("axios");
 
 /**
