@@ -151,11 +151,11 @@ zokou({
         const response = await requestOnApi(`/users/${userId}`, "GET");
 
         const rpgStyleMessage = `
-        🧙‍♂️ *${response.username}* 🧙‍♂️
+        📱 *${response.username}* 📱
         ---------------------------------
-        🏅 *Coupons*: ${response.coupons}
-        💎 *Supremus Tokens*: ${response.supremus_tokens}
-        💠 *Supremus Gemmes*: ${response.supremus_gemmes}
+        🎫 *Coupons*: ${response.coupons}
+        🧭 *Supremus Tokens*: ${response.supremus_tokens}
+        💎 *Supremus Gemmes*: ${response.supremus_gemmes}
         ---------------------------------
         `;
 
@@ -220,11 +220,11 @@ Vous pouvez ajouter un a plusieurs prefix et par default la valeurs entrer sera 
         });
 
         const rpgStyleMessage = `
-        🧙‍♂️ *${response.username}* 🧙‍♂️
+        📱 *${response.username}* 📱
         ---------------------------------
-        🏅 *Coupons*: ${response.coupons}
-        💎 *Supremus Tokens*: ${response.supremus_tokens}
-        💠 *Supremus Gemmes*: ${response.supremus_gemmes}
+        🎫 *Coupons*: ${response.coupons}
+        🧭 *Supremus Tokens*: ${response.supremus_tokens}
+        💎 *Supremus Gemmes*: ${response.supremus_gemmes}
         ---------------------------------
         `;
 
