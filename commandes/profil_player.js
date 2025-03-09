@@ -34,9 +34,9 @@ zokou(
 *................| STATS |................*  
 ═══════════════════  
 > *👊 Battles :* 
-> V : ${data.victoires} | D : ${data.defaites} | L : ${data.forfaits}   
-> *🏅 TOP 3 :* ${data.top3}  
-> *🎭 Story Mode :* M.W : ${data.missions_reussies} / M.L : ${data.missions_echouees}  
+> V : 00${data.victoires} | D : 00${data.defaites} | L : 00${data.forfaits}   
+> *🏅 TOP 3 :* 00${data.top3}  
+> *🎭 Story Mode :* M.W : 00${data.missions_reussies} / M.L : 00${data.missions_echouees}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *.........| HEROES GAME |.........*  
 ═══════════════════  
@@ -65,7 +65,7 @@ zokou(
     }
 
     try {
-      const playerName = 'john';  // Par défaut, "john"
+      const playerName = 'John_Supremus';  // Par défaut, "John Supremus"
 
       // Récupération des données du joueur
       let data = await getPlayerProfile(playerName);
