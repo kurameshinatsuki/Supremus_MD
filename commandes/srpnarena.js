@@ -67,7 +67,7 @@ zokou(
 - *Latence :* ${latence}
 - *Items :* (voir perso)
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-*🔄 Tourneur :* ${joueurs.join(" → ")}
+*🔄 Tourneur :* ${joueurs.join(" -> ")}
 *⚖️ Arbitre :* Auto Modo
 *🌦️ Météo :* ${meteo}
 *🌍 Zone :* ${arene.nom}
