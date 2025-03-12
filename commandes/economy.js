@@ -115,15 +115,16 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
 
 zokou({
     nomCom: "addplayer",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu } = commandOptions;
 
     if (!superUser) return repondre("Vous n'avez pas les permissions pour exécuter cette commande !");
 
-    const consigne = `Veillez ajouter repondre a un message ou mentionner un utilisateur en suivant l'ordre:
-addPlayer <mention> <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
+    const consigne = `*Veuillez repondre a au message du joueur à ajouter en suivant l'ordre:*
+
+addPlayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
 
     if (arg?.length == 0 || arg.join("").trim("") == "") return repondre(consigne);
 
@@ -172,7 +173,7 @@ addPlayer <mention> <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
 
 zokou({
     nomCom: "getplayer",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -193,11 +194,11 @@ zokou({
         const response = await requestOnApi(`/users/${userId}`, "GET");
 
         const rpgStyleMessage = `
-🧙‍♂️ *${response.username}* 🧙‍♂️
+📱 *${response.username}* 📱
 ---------------------------------
-🏅 *Coupons*: ${response.coupons}
-💎 *Supremus Tokens*: ${response.supremus_tokens}
-💠 *Supremus Gemmes*: ${response.supremus_gemmes}
+🎫 *Coupons*: ${response.coupons}
+🧭 *Supremus Tokens*: ${response.supremus_tokens}
+💎 *Supremus Gemmes*: ${response.supremus_gemmes}
 ---------------------------------`;
 
         repondre(rpgStyleMessage);
@@ -211,7 +212,7 @@ zokou({
 
 zokou({
     nomCom: "updateplayer",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu } = commandOptions;
@@ -262,11 +263,11 @@ Veillez repondre au message d'un joueurs ou mentionner un joueurs en ajoutant un
         const response = await requestOnApi(`/users/${id}`, 'PUT', null, data);
 
         const rpgStyleMessage = `
-🧙‍♂️ *${response.username}* 🧙‍♂️
+📱 *${response.username}* 📱
 ---------------------------------
-🏅 *Coupons*: ${response.coupons}
-💎 *Supremus Tokens*: ${response.supremus_tokens}
-💠 *Supremus Gemmes*: ${response.supremus_gemmes}
+🎫 *Coupons*: ${response.coupons}
+🧭 *Supremus Tokens*: ${response.supremus_tokens}
+💎 *Supremus Gemmes*: ${response.supremus_gemmes}
 ---------------------------------`;
 
         repondre(rpgStyleMessage);
@@ -281,7 +282,7 @@ Veillez repondre au message d'un joueurs ou mentionner un joueurs en ajoutant un
 
 zokou({
     nomCom: "buypack",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -289,13 +290,13 @@ zokou({
     try {
         const packList = await requestOnApi('/packs/list', 'GET');
 
-        let texte = `Packs disponibles choisissez un par son index\n\n`
+        let texte = `*Packs disponibles choisissez un par son index*\n\n`
 
         for (const pack in packList) {
             texte += `${parseInt(pack) + 1} :  ${packList[pack]}\n`
         }
 
-        texte += `\n Choissiez un pack par son index et un grade (bronze, argent, or, special )\n Exemple 1 or`;
+        texte += `\n *Choissiez un pack par son index et un grade (bronze, argent, or, special ). Exemple: 1 or*`;
 
         repondre(texte);
 
@@ -348,7 +349,7 @@ zokou({
 
 zokou({
     nomCom: "getitems",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -382,7 +383,7 @@ zokou({
 
 zokou({
     nomCom: "sell",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -409,7 +410,7 @@ zokou({
 
 zokou({
     nomCom: "market",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -439,7 +440,7 @@ zokou({
 
 zokou({
     nomCom: "unsell",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -467,7 +468,7 @@ zokou({
 
 zokou({
     nomCom: "buy",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -496,7 +497,7 @@ zokou({
 
 zokou({
     nomCom: "newbet",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -561,7 +562,7 @@ newbet <titre> / <description> / <option 1>, <option 2>, ..., <option n> / <type
 
 zokou({
     nomCom: "betlist",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -592,7 +593,7 @@ zokou({
 
 zokou({
     nomCom: 'bet',
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -631,7 +632,7 @@ bet <ID> <numero de l'option>`
 
 zokou({
     nomCom: "finishbet",
-    categorie: "economy",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     try {
