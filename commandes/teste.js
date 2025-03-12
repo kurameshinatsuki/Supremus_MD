@@ -195,9 +195,9 @@ zokou({
 
         const rpgStyleMessage = `.        📟 *${response.username}* 📟
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
-*🎫 Coupons*: ${response.coupons}
-*🧭 $ Tokens*: ${response.supremus_tokens}
-*💎 $ Gemmes*: ${response.supremus_gemmes}
+> *🎫 Coupons*: ${response.coupons}
+> *🧭 $ Tokens*: ${response.supremus_tokens}
+> *💎 $ Gemmes*: ${response.supremus_gemmes}
 ▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
         repondre(rpgStyleMessage);
@@ -264,9 +264,9 @@ zokou({
 
         const rpgStyleMessage = `.        📟 *${response.username}* 📟
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
-*🎫 Coupons*: ${response.coupons}
-*🧭 $ Tokens*: ${response.supremus_tokens}
-*💎 $ Gemmes*: ${response.supremus_gemmes}
+> *🎫 Coupons*: ${response.coupons}
+> *🧭 $ Tokens*: ${response.supremus_tokens}
+> *💎 $ Gemmes*: ${response.supremus_gemmes}
 ▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
         repondre(rpgStyleMessage);
@@ -671,3 +671,79 @@ gains : ${response.event.amount * 2} ${response.event.currencyType}`);
         console.log(error);
     }
 });
+
+zokou({
+    nomCom: "cancel_bet",
+    categorie: "ECONOMY",
+}, async (dest, zk, commandOptions) => {
+
+    const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
+
+    if (!superUser) return repondre("Vous n'avez pas les droits pour annuler un parie");
+
+    try {
+
+        consigne = `
+Usage:
+cancel_bet <ID>`
+
+        if (!arg || arg.length < 1) {
+            return repondre(consigne);
+        }
+
+        const id = arg[0].trim();
+
+        const response = await requestOnApi('/bets/cancel/' + id, 'PUT', null, null);
+
+        repondre(`Parie ${response.eventName} annule`);
+    }
+    catch {
+        return repondre("Une erreur est survenue");
+    }
+});
+
+
+zokou({
+    nomCom: "exchange",
+    categorie: "ECONOMY",
+}, async (dest, zk, commandOptions) => {
+
+    const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
+
+    try {
+
+        const consigne = `
+usage:
+exchange <montant> <monnaie_source> <monnaie_cible>`
+
+        if (!arg || arg.length < 3) {
+            return repondre(consigne);
+        }
+
+        let [montant, monnaieSource, monnaieCible] = arg.map(e => e.trim());
+
+        if (isNaN(montant)) {
+            return repondre("Le montant doit etre un nombre");
+        }
+
+        montant = parseInt(montant);
+
+        const valideCurrency = ["supremus_tokens", "supremus_gemmes", "coupons"]
+
+        if (!valideCurrency.includes(monnaieSource) || !valideCurrency.includes(monnaieCible)) {
+            return repondre("Les monnaies doivent etre dans la liste suivante : " + valideCurrency.join(", "));
+        }
+
+        const response = await requestOnApi('/exchanges', 'POST', null, {
+            fromCurrency: monnaieSource,
+            toCurrency: monnaieCible,
+            amount: montant,
+            userId: auteurMessage
+        });
+
+        repondre(response.transaction.summary);
+    }
+    catch (error) {
+        return repondre(error.message);
+    }
+})
