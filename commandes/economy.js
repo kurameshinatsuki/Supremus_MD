@@ -12,7 +12,7 @@
 // ============================================================
 
 
-const { createWriteStream, readFileSync, writeFileSync, unlinkSync } = require('fs');
+/*const { createWriteStream, readFileSync, writeFileSync, unlinkSync } = require('fs');
 const { zokou } = require('../framework/zokou');
 const { randomInt } = require('crypto');
 const axios = require("axios");
@@ -671,4 +671,4 @@ gains : ${response.event.amount * 2} ${response.event.currencyType}`);
     } catch (error) {
         console.log(error);
     }
-});
+});*/
