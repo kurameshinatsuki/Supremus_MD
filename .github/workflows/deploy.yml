@@ -1,19 +1,12 @@
-/*name: Node.js CI
+name: Node.js CI
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '0 */4 * * *'
+  workflow_dispatch: # Désactivé en usage normal
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    if: ${{ false }} # Condition toujours fausse
 
     strategy:
       matrix:
@@ -40,4 +33,4 @@ jobs:
 
     - name: Start application with timeout
       run: |
-        timeout 14520s npm run zokou*/
+        timeout 14520s npm run zokou
