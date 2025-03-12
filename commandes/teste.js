@@ -28,7 +28,7 @@ const supremusApi = 'https://supremus-api.vercel.app/api';
  * @type {string}
  * @description Le token d'authentification pour l'API Supremus Necessaire pour s'authentifier a l'API.
  */
-const supremusToken = 'no_token';
+const supremusToken = 'free_token_for_test';
 
 
 /**
