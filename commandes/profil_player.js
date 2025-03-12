@@ -21,10 +21,10 @@ zokou(
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *..............| EXPLOITS |.............*  
 ═══════════════════  
-> *🧘‍♂️ Rang :*  
-- *ABM :* ${data.rang_abm}  
-- *SPEED RUSH :* ${data.rang_speed_rush}  
-- *YU-GI-OH :* ${data.rang_yugioh}  
+> *🧘‍♂️ RANG :*  
+> - *ABM :* ${data.rang_abm}  
+> - *SPEED RUSH :* ${data.rang_speed_rush}  
+> - *YU-GI-OH :* ${data.rang_yugioh}  
 > *🏆 Champion :* ${data.champion}  
 > *😎 Spécialité :* ${data.specialite}  
 > *👑 Leader :* ${data.leader}  
@@ -33,10 +33,11 @@ zokou(
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *................| STATS |................*  
 ═══════════════════  
-> *👊 Battles :* 
-> V : 00${data.victoires} | D : 00${data.defaites} | L : 00${data.forfaits}   
+> *👊 Battles :* V : 00${data.victoires}
+> D : 00${data.defaites} | L : 00${data.forfaits}   
 > *🏅 TOP 3 :* 00${data.top3}  
-> *🎭 Story Mode :* M.W : 00${data.missions_reussies} / M.L : 00${data.missions_echouees}  
+> *🎭 Story Mode :* 
+> M.W : 00${data.missions_reussies} / M.L : 00${data.missions_echouees}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *.........| HEROES GAME |.........*  
 ═══════════════════  
@@ -44,15 +45,15 @@ zokou(
 > *🚗 Vehicles :* ${data.vehicles} 
 > *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
 > *🪐 Origamy Skins :*  
-- *🚻 Skins :* ${data.skins}  
-- *🎒 Items :* ${data.items}  
+> - *🚻 Skins :* ${data.skins}  
+> - *🎒 Items :* ${data.items}  
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
 *.............| CURRENCY |............* 
 ═══════════════════ 
 > *🧭 S Tokens :* ${data.s_tokens}🧭  
 > *💎 S Gemmes :* ${data.s_gemmes}💎  
 > *🎟️ Coupons :* ${data.coupons}🎟️  
-> *🎁 Box VIP :* ${data.box_vip}🎁
+> *🎁 Box VIP :* 0${data.box_vip}🎁
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 
 *.............| COMPTE |..............*
 ═══════════════════  
@@ -65,7 +66,7 @@ zokou(
     }
 
     try {
-      const playerName = 'John_Supremus';  // Par défaut, "John Supremus"
+      const playerName = 'John Supremus';  // Par défaut, "John Supremus"
 
       // Récupération des données du joueur
       let data = await getPlayerProfile(playerName);
