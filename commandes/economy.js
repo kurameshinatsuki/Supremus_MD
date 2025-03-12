@@ -113,7 +113,7 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
 
 
 
-zokou({
+/*zokou({
     nomCom: "addplayer",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
