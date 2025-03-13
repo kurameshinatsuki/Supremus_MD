@@ -7,7 +7,7 @@
 //               liées à l'économie du bot Supremus.
 //
 // Date de création : 06/03/2025
-// Dernière modification : 12/03/2025
+// Dernière modification : 13/03/2025
 //
 // ============================================================
 
@@ -114,7 +114,7 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
 
 
 zokou({
-    nomCom: "add_player",
+    nomCom: "addplayer",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -124,7 +124,7 @@ zokou({
 
     const consigne = `*Veuillez repondre au message du joueur que vous souhaitez ajouter en suivant l'ordre:*
     
-add_player <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
+addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
 
     if (arg?.length == 0 || arg.join("").trim("") == "") return repondre(consigne);
 
@@ -163,7 +163,7 @@ add_player <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
             supremus_gemmes: supremus_gemmes
         });
 
-        repondre(`Le joueur ${response.username} a été ajouté avec succès !`);
+        repondre(`_✅ Le joueur ${response.username} a été ajouté avec succès !_`);
     }
     catch (error) {
         return repondre(error.message);
@@ -172,7 +172,7 @@ add_player <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
 
 
 zokou({
-    nomCom: "get_player",
+    nomCom: "getplayer",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -193,16 +193,20 @@ zokou({
     try {
         const response = await requestOnApi(`/users/${userId}`, "GET");
 
-        const rpgStyleMessage = `.        📟 *${response.username}* 📟
+        const rpgStyleMessage = `*👤Player : ${response.username}*
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
 > *🧭 $ Tokens*: ${response.supremus_tokens}
 > *💎 $ Gemmes*: ${response.supremus_gemmes}
 ▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
-        repondre(rpgStyleMessage);
-    }
-    catch (error) {
+        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+        await zk.sendMessage(dest, {
+            image: { url: imageUrl },
+            caption: rpgStyleMessage,
+        });
+    } catch (error) {
         return repondre(error.message);
     }
 });
@@ -210,7 +214,7 @@ zokou({
 
 
 zokou({
-    nomCom: "update_player",
+    nomCom: "updateplayer",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -220,12 +224,12 @@ zokou({
 
     const consigne = `*Veuillez repondre au message d'un joueurs en ajoutant le prefix de la variable a modifier:*
     
-*exemple :* update_player <variable> <valeur> <method>*
+*exemple :* updateplayer <variable> <valeur> <method>
 
-*[tag]:* a ignorer si vous repondez au message
+*[tag]:* a ignorer si vous repondez au message du joueur
 *[variable]:* supremus_tokens, coupons, supremus_gemmes, username
 *[valeur]:* la nouvelle valeur
-*[type]* add,new (par default c'est add : c'est a dire la valeur entrée est additionnée a celle initialement sauvegarder.`
+*[method]* add,new (par default c'est add : c'est a dire la valeur entrée est additionnée a celle initialement sauvegarder.`
 
     if (arg?.length == 0 || arg.join("").trim("") == "") return repondre(consigne);
 
@@ -262,16 +266,22 @@ zokou({
 
         const response = await requestOnApi(`/users/${id}`, 'PUT', null, data);
 
-        const rpgStyleMessage = `.        📟 *${response.username}* 📟
+        const rpgStyleMessage = `*👤Player : ${response.username}*
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
 > *🧭 $ Tokens*: ${response.supremus_tokens}
 > *💎 $ Gemmes*: ${response.supremus_gemmes}
 ▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
-        repondre(rpgStyleMessage);
-    }
-    catch (error) {
+        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+
+
+        await zk.sendMessage(dest, {
+            image: { url: imageUrl },
+            caption: rpgStyleMessage,
+        });
+    } catch (error) {
         return repondre(error.message);
     }
 });
@@ -280,7 +290,7 @@ zokou({
 
 
 zokou({
-    nomCom: "buy_pack",
+    nomCom: "buypack",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -297,7 +307,13 @@ zokou({
 
         texte += `\n *Choissiez un pack par son index et un grade (bronze, argent, or, special ) Exemple 1 bronze*`;
 
-        repondre(texte);
+        // URL ou chemin de l'image représentant les packs
+        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg";
+
+        await zk.sendMessage(dest, {
+            image: { url: imageUrl },
+            caption: texte,
+        });
 
         let userResponse;
 
@@ -347,7 +363,7 @@ zokou({
 
 
 zokou({
-    nomCom: "get_items",
+    nomCom: "getitems",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -369,7 +385,7 @@ zokou({
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'items.html',
-            caption: '📦 Inventaire de ' + result.user.username
+            caption: '*📦 Inventaire de :* ' + result.user.username
         }, { quoted: ms });
 
         unlinkSync(filename);
@@ -381,7 +397,7 @@ zokou({
 
 
 zokou({
-    nomCom: "vendre",
+    nomCom: "sell",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -399,7 +415,7 @@ zokou({
             ownerId: auteurMessage
         });
 
-        repondre(`l'item ${response.item.name} est mis en vente pour ${response.market.object_price}🧭`);
+        repondre(`_✅ L’item ${response.item.name} est mis en vente pour ${response.market.object_price}🧭_`);
     }
     catch (error) {
         return repondre(error.message);
@@ -408,8 +424,8 @@ zokou({
 
 
 zokou({
-    nomCom: "marché",
-    categorie: "economy",
+    nomCom: "market",
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -426,7 +442,7 @@ zokou({
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'market.html',
-            caption: '🏛️ SRPN MARKET'
+            caption: '*🛒 SRPN MARKET 🛍️*'
         });
 
         unlinkSync(filename);
@@ -438,7 +454,7 @@ zokou({
 
 
 zokou({
-    nomCom: "annule_vente",
+    nomCom: "unsell",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -457,7 +473,7 @@ zokou({
             ownerId: auteurMessage
         });
 
-        repondre("Mise en vente annulée !");
+        repondre("_✅ Mise en vente annulée !_");
     }
     catch (error) {
         return repondre(error.message);
@@ -466,7 +482,7 @@ zokou({
 
 
 zokou({
-    nomCom: "achat",
+    nomCom: "buy",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -495,7 +511,7 @@ zokou({
 
 
 zokou({
-    nomCom: "pari",
+    nomCom: "newbet",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -503,11 +519,11 @@ zokou({
 
     try {
 
-        if (!superUser) return repondre("Vous n'avez pas les droits pour faire ca");
+        if (!superUser) return repondre("Vous n'êtes pas autorisé à utiliser cette commande.");
 
-        const consigne = `
-usage :
-pari <titre> / <description> / <option 1>, <option 2>, ..., <option n> / <type de monnaie> / <montant de la mise>`
+        const consigne = `*usage :*
+        
+newbet <titre> / <description> / <option 1>, <option 2>, <option n> / <type de monnaie> / <montant de la mise>`
 
         if (!arg || arg.length < 1) {
             return repondre(consigne);
@@ -560,7 +576,7 @@ pari <titre> / <description> / <option 1>, <option 2>, ..., <option n> / <type d
 
 
 zokou({
-    nomCom: "pari_list",
+    nomCom: "betlist",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -578,7 +594,7 @@ zokou({
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'Paries.html',
-            caption: 'Liste des paries en cours'
+            caption: '*🎰 Liste des paries en cours*'
         });
 
         unlinkSync(filename);
@@ -591,16 +607,16 @@ zokou({
 
 
 zokou({
-    nomCom: 'parie',
-    categorie: "economy",
+    nomCom: 'bet',
+    categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
     try {
 
-        const consigne = `
-usage : 
+        const consigne = `*usage :* 
+        
 bet <ID> <numero de l'option>`
 
         if (!arg || arg.length < 2) {
@@ -630,7 +646,7 @@ bet <ID> <numero de l'option>`
 
 
 zokou({
-    nomCom: "fin_pari",
+    nomCom: "finishbet",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -640,8 +656,8 @@ zokou({
 
         if (!superUser) return repondre("Vous n'avez pas les droits pour finir un parie")
 
-        const consigne = `
-usage :
+        const consigne = `*usage :*
+        
 finishbet <id du parie> <option gagnant>`
 
         if (!arg || arg.length < 2) {
@@ -660,20 +676,22 @@ finishbet <id du parie> <option gagnant>`
             winningOption: option
         });
 
-        repondre(`Parie ${response.event.eventName} conlus sur l'option ${response.event.winningOption}
+        repondre(`*Parie ${response.event.eventName} conlus sur l'option ${response.event.winningOption}*
 
-Vainqueur(s):
+*🎊 Vainqueur(s):*
+
 ${response.winners.map(e => e?.username || null).join("\n")}
 
-gains : ${response.event.amount * 2} ${response.event.currencyType}`);
+*🎁 Gains:* ${response.event.amount * 2} ${response.event.currencyType}`);
 
     } catch (error) {
         console.log(error);
     }
 });
 
+
 zokou({
-    nomCom: "cancel_bet",
+    nomCom: "cancelbet",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -683,9 +701,9 @@ zokou({
 
     try {
 
-        consigne = `
-Usage:
-cancel_bet <ID>`
+        consigne = `*Usage:*
+        
+cancelbet <ID>`
 
         if (!arg || arg.length < 1) {
             return repondre(consigne);
@@ -712,8 +730,8 @@ zokou({
 
     try {
 
-        const consigne = `
-usage:
+        const consigne = `*usage:*
+        
 exchange <montant> <monnaie_source> <monnaie_cible>`
 
         if (!arg || arg.length < 3) {
