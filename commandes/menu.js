@@ -7,84 +7,67 @@ const moment = require("moment-timezone");
 const s = require(__dirname + "/../set");
 
 zokou({ nomCom: "menu", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
-    let { ms, repondre ,prefixe,nomAuteurMessage,mybotpic} = commandeOptions;
-    let { cm } = require(__dirname + "/../framework//zokou");
+    let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
+    let { cm } = require(__dirname + "/../framework/zokou");
     var coms = {};
-    var mode = "public";
+    var mode = (s.MODE).toLowerCase() === "yes" ? "public" : "private";
 
-    if ((s.MODE).toLocaleLowerCase() != "yes") {
-        mode = "private";
-    }
-
-
-
-
-    cm.map(async (com, index) => {
-        if (!coms[com.categorie])
-            coms[com.categorie] = [];
+    // Organiser les commandes par catégorie
+    cm.map((com) => {
+        if (!coms[com.categorie]) coms[com.categorie] = [];
         coms[com.categorie].push(com.nomCom);
     });
 
+    // Format de la date et de l'heure
     moment.tz.setDefault('Etc/GMT');
+    const temps = moment().format('HH:mm:ss');
+    const date = moment().format('DD/MM/YYYY');
 
-// Créer une date et une heure en GMT
-const temps = moment().format('HH:mm:ss');
-const date = moment().format('DD/MM/YYYY');
-
-  let infoMsg =  `
-╭━━━━| *${s.BOT}* |━━━━╮
-> *🔑 Prefixe :* ${s.PREFIXE}
-> *👤 Proprio :* ${s.OWNER_NAME}
-> *🔄 Mode :* ${mode}
-> *🧮 Commandes :* ${cm.length}
-> *💾 Stockage :* ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
-> *🧑‍💻 Développeur :* Jøhñ Sũpręmũs
-╰━━━━━━━━━━━━━━━━╯ \n\n`;    
-let menuMsg =  `
-*Listes des commandes :*
-۞                             ۞
+    // Informations sur le bot
+    let infoMsg = `
+┏━━━━━━ ${s.BOT} ━━━━━━┓
+┃ *🔑 Prefixe :* ${s.PREFIXE}
+┃ *👤 Proprio :* ${s.OWNER_NAME}
+┃ *🔄 Mode    :* ${mode}
+┃ *🧮 Commandes :* ${cm.length}
+┃ *💾 Stockage :* ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
+┃ *🧑‍💻 Développeur :* Jøhñ Sũpręmũs
+┗━━━━━━━━━━━━━━━━━━━━━━┛
 `;
 
+    // Liste des commandes
+    let menuMsg = `\n*Liste des commandes*\n\n`;
     for (const cat in coms) {
-        menuMsg += `╭━━━━━━| *${cat}* |━`;
+        menuMsg += `🪀 *${cat}*
+┏━━━━━━━━━━━━━━━━━━━━━━┓\n`;
         for (const cmd of coms[cat]) {
-            menuMsg += `
-> *${cmd}*`;
+            menuMsg += `> *${cmd}*\n`;
         }
-        menuMsg += `
-╰━━━━━━━━━━━━━━━━╯\n`
+        menuMsg += `┗━━━━━━━━━━━━━━━━━━━━━━┛\n`;
     }
+    menuMsg += `🌐 *Suprêmus Prod* - Propulsé par Jøhñ Sũpręmũs\n`;
 
-    menuMsg += `
-۞            ۞
-  *🪀 𝙎𝙐𝙋𝙍𝙀𝙈𝙐𝙎 𝙋𝙍𝙊𝘿 🪀*
-`;
-
-   var lien = mybotpic();
-
-   if (lien.match(/\.(mp4|gif)$/i)) {
+    // Envoi du menu
+    var lien = mybotpic();
     try {
-        zk.sendMessage(dest, { video: { url: lien }, caption:infoMsg + menuMsg, footer: "Je suis *Supremus-MD*, développé par Jøhñ Sũpręmús" , gifPlayback : true }, { quoted: ms });
+        if (lien.match(/\.(mp4|gif)$/i)) {
+            zk.sendMessage(dest, {
+                video: { url: lien },
+                caption: infoMsg + menuMsg,
+                footer: "Je suis *Supremus-MD*, développé par Jøhñ Sũpręmũs",
+                gifPlayback: true
+            }, { quoted: ms });
+        } else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+            zk.sendMessage(dest, {
+                image: { url: lien },
+                caption: infoMsg + menuMsg,
+                footer: "Je suis *Supremus-MD*, développé par Jøhñ Sũpręmũs"
+            }, { quoted: ms });
+        } else {
+            repondre(infoMsg + menuMsg);
+        }
+    } catch (e) {
+        console.log("🥵 Menu erreur " + e);
+        repondre("🥵 Menu erreur " + e);
     }
-    catch (e) {
-        console.log("🥵🥵 Menu erreur " + e);
-        repondre("🥵🥵 Menu erreur " + e);
-    }
-} 
-// Vérification pour .jpeg ou .png
-else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-    try {
-        zk.sendMessage(dest, { image: { url: lien }, caption:infoMsg + menuMsg, footer: "Je suis *Supremus-MD*, développé par Jøhñ Sũpręmũs" }, { quoted: ms });
-    }
-    catch (e) {
-        console.log("🥵🥵 Menu erreur " + e);
-        repondre("🥵🥵 Menu erreur " + e);
-    }
-} 
-else {
-
-    repondre(infoMsg + menuMsg);
-
-}
-
 });
