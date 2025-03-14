@@ -629,15 +629,18 @@ zokou({
 
         const consigne = `*usage :* 
         
-bet <ID> <numero de l'option>`
+bet <ID> <numero de l'option>`;
 
         if (!arg || arg.length < 2) {
-            return const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+            const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
 
-        await zk.sendMessage(dest, {
-            image: { url: imageUrl },
-            caption: consigne,
-        });
+            await zk.sendMessage(dest, {
+                image: { url: imageUrl },
+                caption: consigne,
+            });
+
+            return; // On arrête la fonction après avoir envoyé l'image et le message
+        }
 
         let [id, option] = arg.map(e => e.trim());
 
@@ -657,7 +660,7 @@ bet <ID> <numero de l'option>`
     catch (error) {
         return repondre(error.message);
     }
-})
+});
 
 
 
