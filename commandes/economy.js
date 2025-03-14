@@ -196,11 +196,11 @@ zokou({
         const response = await requestOnApi(`/users/${userId}`, "GET");
 
         const rpgStyleMessage = `*👤PLAYER : ${response.username}*
-▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
+▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
 > *🧭 $ Tokens*: ${response.supremus_tokens}
 > *💎 $ Gemmes*: ${response.supremus_gemmes}
-▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
+▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
         const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
 
@@ -270,11 +270,11 @@ zokou({
         const response = await requestOnApi(`/users/${id}`, 'PUT', null, data);
 
         const rpgStyleMessage = `*👤PLAYER : ${response.username}*
-▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
+▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
 > *🧭 $ Tokens*: ${response.supremus_tokens}
 > *💎 $ Gemmes*: ${response.supremus_gemmes}
-▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
+▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
         const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
 
