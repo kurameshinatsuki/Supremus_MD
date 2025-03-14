@@ -25,7 +25,7 @@ zokou({ nomCom: "menu", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
 
     // Informations sur le bot
     let infoMsg = `
-┏━━━━━  *${s.BOT}* ━━━━━┓
+┏━━━━━  *${s.BOT}*  ━━━━━┓
 ┃ *🔑 Prefixe :* ${s.PREFIXE}
 ┃ *👤 Proprio :* ${s.OWNER_NAME}
 ┃ *🔄 Mode    :* ${mode}
