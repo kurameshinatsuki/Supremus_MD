@@ -193,7 +193,7 @@ zokou({
     try {
         const response = await requestOnApi(`/users/${userId}`, "GET");
 
-        const rpgStyleMessage = `*👤Player : ${response.username}*
+        const rpgStyleMessage = `*👤PLAYER : ${response.username}*
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
 > *🧭 $ Tokens*: ${response.supremus_tokens}
@@ -266,7 +266,7 @@ zokou({
 
         const response = await requestOnApi(`/users/${id}`, 'PUT', null, data);
 
-        const rpgStyleMessage = `*👤Player : ${response.username}*
+        const rpgStyleMessage = `*👤PLAYER : ${response.username}*
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
 > *🧭 $ Tokens*: ${response.supremus_tokens}
@@ -620,8 +620,12 @@ zokou({
 bet <ID> <numero de l'option>`
 
         if (!arg || arg.length < 2) {
-            return repondre(consigne);
-        }
+            return const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+        await zk.sendMessage(dest, {
+            image: { url: imageUrl },
+            caption: consigne,
+        });
 
         let [id, option] = arg.map(e => e.trim());
 
@@ -735,8 +739,12 @@ zokou({
 exchange <montant> <monnaie_source> <monnaie_cible>`
 
         if (!arg || arg.length < 3) {
-            return repondre(consigne);
-        }
+            return const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+        await zk.sendMessage(dest, {
+            image: { url: imageUrl },
+            caption: consigne,
+        });
 
         let [montant, monnaieSource, monnaieCible] = arg.map(e => e.trim());
 
