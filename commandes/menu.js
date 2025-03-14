@@ -25,7 +25,7 @@ zokou({ nomCom: "menu", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
 
     // Informations sur le bot
     let infoMsg = `
-┏━━━━━ *${s.BOT}* ━━━━━┓
+┏━━━━━  *${s.BOT}* ━━━━━┓
 ┃ *🔑 Prefixe :* ${s.PREFIXE}
 ┃ *👤 Proprio :* ${s.OWNER_NAME}
 ┃ *🔄 Mode    :* ${mode}
@@ -36,16 +36,16 @@ zokou({ nomCom: "menu", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
 `;
 
     // Liste des commandes
-    let menuMsg = `\n*Liste des commandes*\n\n`;
+    let menuMsg = `\n*Liste des commandes disponibles*\n`;
     for (const cat in coms) {
-        menuMsg += `🖲️ *${cat}*
+        menuMsg += `\n🖲️ *${cat}*
 ┏━━━━━━━━━━━━━━━━━━━┓\n`;
         for (const cmd of coms[cat]) {
             menuMsg += `> *${cmd}*\n`;
         }
         menuMsg += `┗━━━━━━━━━━━━━━━━━━━┛\n`;
     }
-    menuMsg += `🪀 𝙎𝙐𝙋𝙍𝙀𝙈𝙐𝙎 𝙋𝙍𝙊𝘿 🪀\n`;
+    menuMsg += `   🪀 𝙎𝙐𝙋𝙍𝙀𝙈𝙐𝙎 𝙋𝙍𝙊𝘿 🪀\n`;
 
     // Envoi du menu
     var lien = mybotpic();
