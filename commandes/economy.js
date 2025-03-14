@@ -688,8 +688,15 @@ zokou({
 finishbet <id du parie> <option gagnant>`
 
         if (!arg || arg.length < 2) {
-            return repondre(consigne);
-        }
+    const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+    await zk.sendMessage(dest, {
+        image: { url: imageUrl },
+        caption: consigne,
+    });
+
+    return;
+}
 
         let [id, option] = arg.map(e => e.trim());
 
@@ -734,8 +741,15 @@ zokou({
 cancelbet <ID>`
 
         if (!arg || arg.length < 1) {
-            return repondre(consigne);
-        }
+    const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+    await zk.sendMessage(dest, {
+        image: { url: imageUrl },
+        caption: consigne,
+    });
+
+    return;
+}
 
         const id = arg[0].trim();
 
