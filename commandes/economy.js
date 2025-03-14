@@ -7,7 +7,7 @@
 //               liées à l'économie du bot Supremus.
 //
 // Date de création : 06/03/2025
-// Dernière modification : 13/03/2025
+// Dernière modification : 14/03/2025
 //
 // ============================================================
 
@@ -115,6 +115,7 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
 
 zokou({
     nomCom: "addplayer",
+    reaction: "👤",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -173,6 +174,7 @@ addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
 
 zokou({
     nomCom: "getplayer",
+    reaction: "👨🏻‍💻",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -215,6 +217,7 @@ zokou({
 
 zokou({
     nomCom: "updateplayer",
+    reaction: "🔄",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -291,6 +294,7 @@ zokou({
 
 zokou({
     nomCom: "buypack",
+    reaction: "🎁",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -364,6 +368,7 @@ zokou({
 
 zokou({
     nomCom: "getitems",
+    reaction: "📦",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -398,6 +403,7 @@ zokou({
 
 zokou({
     nomCom: "sell",
+    reaction: "💸",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -425,6 +431,7 @@ zokou({
 
 zokou({
     nomCom: "market",
+    reaction: "🛒",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -455,6 +462,7 @@ zokou({
 
 zokou({
     nomCom: "unsell",
+    reaction: "🔄",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -483,6 +491,7 @@ zokou({
 
 zokou({
     nomCom: "buy",
+    reaction: "🛍️",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -512,6 +521,7 @@ zokou({
 
 zokou({
     nomCom: "newbet",
+    reaction: "💲",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -577,6 +587,7 @@ newbet <titre> / <description> / <option 1>, <option 2>, <option n> / <type de m
 
 zokou({
     nomCom: "betlist",
+    reaction: "💹",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -608,6 +619,7 @@ zokou({
 
 zokou({
     nomCom: 'bet',
+    reaction: "💰",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -651,6 +663,7 @@ bet <ID> <numero de l'option>`
 
 zokou({
     nomCom: "finishbet",
+    reaction: "⚖️",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -696,6 +709,7 @@ ${response.winners.map(e => e?.username || null).join("\n")}
 
 zokou({
     nomCom: "cancelbet",
+    reaction: "🔄",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
@@ -727,6 +741,7 @@ cancelbet <ID>`
 
 zokou({
     nomCom: "exchange",
+    reaction: "💱",
     categorie: "ECONOMY",
 }, async (dest, zk, commandOptions) => {
 
