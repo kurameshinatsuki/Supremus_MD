@@ -15,49 +15,46 @@ const {generatepp} = require('../framework/mesfonctions')
 
 
 zokou({ nomCom: "tagall", categorie: 'GROUP', reaction: "📣" }, async (dest, zk, commandeOptions) => {
+    const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions;
 
-  const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions
+    // Vérification si la commande est utilisée dans un groupe
+    if (!verifGroupe) { 
+        repondre("✋🏿 Cette commande est réservée aux groupes ❌");
+        return;
+    }
 
+    // Vérification du message personnalisé
+    const mess = (!arg || arg === ' ') ? 'Aucun message' : arg.join(' ');
 
- 
+    // Récupération des membres du groupe
+    let membresGroupe = verifGroupe ? await infosGroupe.participants : [];
+    let tag = `
+╭─────────────◈
+┃ 🪀 *SP-ZK-MD* 🪀
+╰─────────────◈
+┃ 👥 *Groupe* : ${nomGroupe}
+┃ 👤 *Auteur* : ${nomAuteurMessage}
+┃ 📜 *Message* : ${mess}
+╭─────────────◈
+`;
 
-  if (!verifGroupe) { repondre("✋🏿 ✋🏿this command is reserved for groups ❌"); return; }
-  if (!arg || arg === ' ') {
-  mess = 'Aucun Message'
-  } else {
-    mess = arg.join(' ')
-  } ;
-  let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
-  var tag = ""; 
-  tag += `========================\n  
-        🪀 *SP-ZK-MD* 🪀
-========================\n
-👥 Group : ${nomGroupe}  
-👤 Autor : *${nomAuteurMessage}*  
-📜 Message : *${mess}* 
-========================\n
-\n
+    // Liste d'emojis pour rendre les tags aléatoires
+    const emojis = ['🦴', '👀', '😮‍💨', '❌', '✔️', '😇', '⚙️', '🔧', '🎊', '😡', '🙏🏿', '⛔️', '$', '😟', '🥵', '🐅'];
+    
+    // Générer les tags pour chaque membre
+    for (const membre of membresGroupe) {
+        let randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        tag += `┃ ${randomEmoji} @${membre.id.split("@")[0]}\n`;
+    }
 
-` ;
+    tag += `╰─────────────◈`;
 
-
-
-
-  let emoji = ['🦴', '👀', '😮‍💨', '❌', '✔️', '😇', '⚙️', '🔧', '🎊', '😡', '🙏🏿', '⛔️', '$','😟','🥵','🐅']
-  let random = Math.floor(Math.random() * (emoji.length - 1))
-
-
-  for (const membre of membresGroupe) {
-    tag += `${emoji[random]}      @${membre.id.split("@")[0]}\n========================`
-  }
-
- 
- if (verifAdmin || superUser) {
-
-  zk.sendMessage(dest, { text: tag, mentions: membresGroupe.map((i) => i.id) }, { quoted: ms })
-
-   } else { repondre('command reserved for admins')}
-
+    // Vérification des privilèges d'administration
+    if (verifAdmin || superUser) {
+        zk.sendMessage(dest, { text: tag, mentions: membresGroupe.map((i) => i.id) }, { quoted: ms });
+    } else {
+        repondre("🔒 Commande réservée aux admins");
+    }
 });
 
 
@@ -76,6 +73,7 @@ Lien :${lien}`
 
 
 });
+
 /** *nommer un membre comme admin */
 zokou({ nomCom: "promote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
@@ -120,8 +118,8 @@ zokou({ nomCom: "promote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, as
         if (zkad) {
           if (membre) {
             if (admin == false) {
-              var txt = `🎊🎊🎊  @${auteurMsgRepondu.split("@")[0]} rose in rank.\n
-                      he/she has been named group administrator.`
+              var txt = `🎊🎊🎊  @${auteurMsgRepondu.split("@")[0]} est monté en grade.\n
+                      il/elle est désormais nommé administrateur de ce groupe.`
               await zk.groupParticipantsUpdate(dest, [auteurMsgRepondu], "promote");
               zk.sendMessage(dest, { text: txt, mentions: [auteurMsgRepondu] })
             } else { return repondre("This member is already an administrator of the group.") }
@@ -186,7 +184,7 @@ zokou({ nomCom: "demote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, asy
               repondre("This member is not a group administrator.")
 
             } else {
-              var txt = `@${auteurMsgRepondu.split("@")[0]} was removed from his position as a group administrator\n`
+              var txt = `@${auteurMsgRepondu.split("@")[0]} à été révoquer des droits administrateur de ce groupe\n`
               await zk.groupParticipantsUpdate(dest, [auteurMsgRepondu], "demote");
               zk.sendMessage(dest, { text: txt, mentions: [auteurMsgRepondu] })
             }
