@@ -536,8 +536,15 @@ zokou({
 newbet <titre> / <description> / <option 1>, <option 2>, <option n> / <type de monnaie> / <montant de la mise>`
 
         if (!arg || arg.length < 1) {
-            return repondre(consigne);
-        }
+    const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+
+    await zk.sendMessage(dest, {
+        image: { url: imageUrl },
+        caption: consigne,
+    });
+
+    return;
+}
 
         const args = arg.join(" ").split("/").map(e => e.trim());
 
