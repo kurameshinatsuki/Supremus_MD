@@ -757,12 +757,13 @@ zokou({
 exchange <montant> <monnaie_source> <monnaie_cible>`
 
         if (!arg || arg.length < 3) {
-            return const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
-
-        await zk.sendMessage(dest, {
-            image: { url: imageUrl },
-            caption: consigne,
-        });
+            const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // Correctement déclaré avant
+            await zk.sendMessage(dest, {
+                image: { url: imageUrl },
+                caption: consigne,
+            });
+            return; // Arrêter l'exécution après l'envoi de l'image
+        }
 
         let [montant, monnaieSource, monnaieCible] = arg.map(e => e.trim());
 
@@ -790,4 +791,4 @@ exchange <montant> <monnaie_source> <monnaie_cible>`
     catch (error) {
         return repondre(error.message);
     }
-})
+});
