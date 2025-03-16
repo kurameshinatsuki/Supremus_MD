@@ -25,7 +25,7 @@ module.exports = {
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "yes",
     AUTO_DOWNLOAD_STATUS: process.env.AUTO_DOWNLOAD_STATUS || 'no',
     BOT : process.env.BOT_NAME || 'SP-ZK-MD',
-    URL : process.env.BOT_MENU_LINKS || 'https://telegra.ph/file/56b1d88e0e35b86047cce.jpg,https://telegra.ph/file/7068013a88d85786fd858.jpg,https://telegra.ph/file/4d1ebf93f7419068aefe3.mp4,https://telegra.ph/file/b8f0a09e2da3f2ee5ea2e.mp4',
+    URL : process.env.BOT_MENU_LINKS || 'https://i.ibb.co/k81T2WX/image.jpg',
     MODE: process.env.PUBLIC_MODE || "no",
     PM_PERMIT: process.env.PM_PERMIT || 'no',
     HEROKU_APP_NAME : process.env.HEROKU_APP_NAME || null,
