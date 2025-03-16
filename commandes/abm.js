@@ -1,4 +1,4 @@
-/*const { zokou } = require("../framework/zokou");
+const { zokou } = require("../framework/zokou");
 
 const arenesABM = [
     { nom: 'Onigashima', image: 'https://i.ibb.co/mDvjVL0/20240925-123112.jpg' },
@@ -170,4 +170,4 @@ zokou(
         const ficheDuel = generateFicheDuelABM(duel);
         zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
     }
-);*/
+);
