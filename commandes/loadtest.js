@@ -15,9 +15,6 @@ async function simulateLoading(zk, origineMessage, ms) {
     ];
 
     try {
-        // Vérification si le message provient d'un groupe
-        if (verifGroupe) return;
-
         let loadingMessage = await zk.sendMessage(origineMessage, { text: frames[0] });
 
         for (let i = 1; i < frames.length; i++) {
@@ -37,8 +34,9 @@ async function simulateLoading(zk, origineMessage, ms) {
 zokou(
     { nomCom: 'load', categorie: 'MON-BOT' }, 
     async (dest, zk, commandeOptions) => {
-        const { ms, repondre } = commandeOptions;
+        const { ms, repondre, verifGroupe } = commandeOptions;
 
+        if (verifGroupe) return;
         await simulateLoading(zk, dest, ms);
     }
 );
