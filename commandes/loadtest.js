@@ -18,7 +18,7 @@ async function simulateLoading(zk, origineMessage, ms) {
         let loadingMessage = await zk.sendMessage(origineMessage, { text: frames[0] });
 
         for (let i = 1; i < frames.length; i++) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise((resolve) => setTimeout(resolve, 50));
             await zk.sendMessage(origineMessage, {
                 text: frames[i],
                 edit: loadingMessage.key,
