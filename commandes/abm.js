@@ -111,11 +111,60 @@ zokou(
     }
 );
 
-// Commande pour ajuster les statistiques pendant un duel
 zokou(
-    { nomCom: 'stats_abm', categorie: 'ABM' },
+    { nomCom: 'duel_abm', categorie: 'ABM' },
     (dest, zk, { repondre, arg, ms }) => {
-        if (arg.length < 4) return repondre('Format: @NomDuJoueur stat +/- valeur. Ex: duel_stats_abm Sukuna heart -30');
+        if (arg.length < 1) return repondre(
+            'Format: \n' +
+            '- Pour ajuster une stat : @Joueur stat +/- valeur\n' +
+            '  Ex: duel_abm Sukuna heart - 30\n' +
+            '- Pour réinitialiser un joueur : reset @Joueur\n' +
+            '- Pour réinitialiser tous les joueurs : reset all\n' +
+            '- Pour supprimer tous les duels : delete'
+        );
+
+        const action = arg[0].trim().toLowerCase();
+
+        // Gestion de la suppression de tous les duels
+        if (action === 'delete') {
+            for (const duelKey in duelsABM) {
+                delete duelsABM[duelKey];
+            }
+            return repondre('Tous les duels en cours ont été supprimés.');
+        }
+
+        // Gestion de la réinitialisation des statistiques
+        if (action === 'reset') {
+            if (arg.length < 2) return repondre('Format: reset @Joueur ou reset all');
+
+            const joueurId = arg[1].trim().toLowerCase();
+            const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
+
+            if (joueurId === 'all') {
+                // Réinitialisation de tous les joueurs dans tous les duels
+                for (const key in duelsABM) {
+                    const duel = duelsABM[key];
+                    duel.equipe1.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
+                    duel.equipe2.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
+                }
+                return repondre('Les statistiques de tous les joueurs ont été réinitialisées.');
+            }
+
+            if (!duelKey) return repondre('Joueur non trouvé ou aucun duel en cours.');
+
+            const duel = duelsABM[duelKey];
+            const joueur = duel.equipe1.find(j => j.nom.toLowerCase() === joueurId) || duel.equipe2.find(j => j.nom.toLowerCase() === joueurId);
+
+            if (!joueur) return repondre('Joueur non trouvé.');
+            joueur.stats = { heart: 100, energie: 100, vie: 100 };
+            repondre(`Les statistiques de ${joueur.nom} ont été réinitialisées.`);
+
+            const ficheDuel = generateFicheDuelABM(duel);
+            return zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
+        }
+
+        // Gestion de l'ajustement des statistiques
+        if (arg.length < 4) return repondre('Format: @Joueur stat +/- valeur');
 
         const [joueurId, stat, signe, valeurStr] = arg;
         const valeur = parseInt(valeurStr);
@@ -131,54 +180,7 @@ zokou(
         const { stats, message } = limiterStatsABM(joueur.stats, stat, (signe === '-' ? -valeur : valeur));
         joueur.stats = stats;
 
-        if (message) {
-            repondre(message); 
-        }
-
-        const ficheDuel = generateFicheDuelABM(duel);
-        zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
-    }
-);
-
-// Commande pour réinitialiser les statistiques des joueurs ou supprimer tous les duels
-zokou(
-    { nomCom: 'reset_stats', categorie: 'ABM' },
-    (dest, zk, { repondre, arg, ms }) => {
-        if (arg.length < 1) return repondre('Format: @NomDuJoueur ou "all" pour réinitialiser tous les joueurs ou "reset" pour supprimer tous les duels.');
-
-        const joueurId = arg[0].trim().toLowerCase();
-
-        if (joueurId === 'reset') {
-            // Supprimer tous les duels en cours
-            for (const duelKey in duelsABM) {
-                delete duelsABM[duelKey];
-            }
-            return repondre('Tous les duels en cours ont été supprimés.');
-        }
-
-        const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
-
-        if (!duelKey) return repondre('Joueur non trouvé ou aucun duel en cours.');
-
-        const duel = duelsABM[duelKey];
-
-        if (joueurId === 'all') {
-            // Réinitialiser les statistiques de tous les joueurs
-            duel.equipe1.forEach(joueur => {
-                joueur.stats = { heart: 100, energie: 100, vie: 100 };
-            });
-            duel.equipe2.forEach(joueur => {
-                joueur.stats = { heart: 100, energie: 100, vie: 100 };
-            });
-            repondre('Les statistiques de tous les joueurs ont été réinitialisées.');
-        } else {
-            // Réinitialiser les statistiques d'un joueur spécifique
-            const joueur = duel.equipe1.find(j => j.nom.toLowerCase() === joueurId) || duel.equipe2.find(j => j.nom.toLowerCase() === joueurId);
-            if (!joueur) return repondre('Joueur non trouvé.');
-
-            joueur.stats = { heart: 100, energie: 100, vie: 100 };
-            repondre(`Les statistiques de ${joueur.nom} ont été réinitialisées.`);
-        }
+        if (message) repondre(message);
 
         const ficheDuel = generateFicheDuelABM(duel);
         zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
