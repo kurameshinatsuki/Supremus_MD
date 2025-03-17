@@ -123,46 +123,48 @@ zokou({
 
     if (!superUser) return repondre("Vous n'êtes pas autorisé à exécuter cette commande !");
 
-    const consigne = `*Veuillez repondre au message du joueur que vous souhaitez ajouter en suivant l'ordre:*
-    
+    try {
+        const consigne = `*Veuillez répondre au message du joueur que vous souhaitez ajouter en suivant l'ordre :*
+        
 addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>
 
 *Ex:* addplayer JOHN 50 2000 100.`;
 
-        if (arg?.length == 0 || arg.join("").trim("") == "") {
-        // URL de l'image à envoyer
-        const imageURL = 'https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+        if (!arg || arg.length === 0) {
+            const imageUrl = "https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg";
+            await zk.sendMessage(dest, {
+                image: { url: imageUrl },
+                caption: consigne,
+            });
+            return;
+        }
 
-        return repondre(consigne, imageURL);
-    }
+        let id = null;
+        let fetchIndex = null;
 
-    let id = null
-    let fetchIndex = null
+        if (msgRepondu) {
+            id = auteurMsgRepondu;
+            fetchIndex = 0;
+        } else if (arg[0].startsWith("@")) {
+            id = arg[0].replace("@", "") + "@s.whatsapp.net";
+            fetchIndex = 1;
+        } else {
+            return repondre(consigne);
+        }
 
-    if (msgRepondu) {
-        id = auteurMsgRepondu;
-        fetchIndex = 0;
-    }
-    else if (arg[0].startsWith("@")) {
-        id = arg[0].replace("@", "") + "@s.whatsapp.net";
-        fetchIndex = 1;
-    }
-    else {
-        return repondre(consigne);
-    }
+        let username = arg[fetchIndex] || "";
+        let coupons = arg[fetchIndex + 1] || 0;
+        let supremus_tokens = arg[fetchIndex + 2] || 0;
+        let supremus_gemmes = arg[fetchIndex + 3] || 0;
 
-    let username = arg[fetchIndex] || "";
-    let coupons = arg[fetchIndex + 1] || 0;
-    let supremus_tokens = arg[fetchIndex + 2] || 0;
-    let supremus_gemmes = arg[fetchIndex + 3] || 0;
+        if (isNaN(coupons) || isNaN(supremus_tokens) || isNaN(supremus_gemmes)) {
+            return repondre("Les valeurs doivent être des nombres !");
+        }
 
-    if (isNaN(coupons) || isNaN(supremus_tokens) || isNaN(supremus_gemmes)) return repondre("Les valeurs doivent être des nombres !");
+        coupons = parseInt(coupons);
+        supremus_tokens = parseInt(supremus_tokens);
+        supremus_gemmes = parseInt(supremus_gemmes);
 
-    coupons = parseInt(coupons);
-    supremus_tokens = parseInt(supremus_tokens);
-    supremus_gemmes = parseInt(supremus_gemmes);
-
-    try {
         const response = await requestOnApi(`/users/add`, "POST", null, {
             id: id,
             username: username,
@@ -172,8 +174,7 @@ addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>
         });
 
         repondre(`_✅ Le joueur ${response.username} a été ajouté avec succès !_`);
-    }
-    catch (error) {
+    } catch (error) {
         return repondre(error.message);
     }
 });
@@ -232,67 +233,70 @@ zokou({
 
     if (!superUser) return repondre("Vous n'êtes pas autorisé à exécuter cette commande !");
 
-    const consigne = `*Veuillez repondre au message d'un joueurs en ajoutant le prefix de la variable a modifier:*
-    
-updateplayer <variable> <valeur> <method>
-
-*[tag]:* a ignorer si vous repondez au message du joueur
-*[variable]:* supremus_tokens, coupons, supremus_gemmes, username
-*[valeur]:* la nouvelle valeur
-*[method]* add,new (par default c'est add : c'est a dire la valeur entrée est additionnée a celle initialement sauvegarder.
-
-*Ex:* updateplayer coupons 200 new.`;
-
-        if (arg?.length == 0 || arg.join("").trim("") == "") {
-        // URL de l'image à envoyer
-        const imageURL = 'https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
-
-        return repondre(consigne, imageURL);
-    }
-
-    let id = null;
-    let index = 0;
-
-    if (msgRepondu) {
-        id = auteurMsgRepondu;
-        index = 0;
-    }
-    else if (arg[0].startsWith("@")) {
-        id = arg[0].replace("@", "") + "@s.whatsapp.net";
-        index = 1;
-    }
-    else {
-        return repondre(consigne);
-    }
-
-    let variable = arg[index];
-    let valeur = arg[index + 1];
-    let type = arg[index + 2] || "add";
-
-    if (!['supremus_tokens', 'coupons', 'supremus_gemmes', 'username'].includes(variable)) return repondre("*La variable doit être une des suivantes : supremus_tokens, coupons, supremus_gemmes, username*");
-
-    if (isNaN(valeur) && variable != "username") return repondre("La valeur doit être un nombre !");
-
-    valeur = parseInt(valeur);
-
-    let data = { [variable]: valeur };
-
-    data.appendCurrency = type == "add" ? true : false;
-
     try {
+        const consigne = `*Veuillez répondre au message d'un joueur en ajoutant le préfixe de la variable à modifier :*
+        
+updateplayer <variable> <valeur> <méthode>
+
+*[tag]* : à ignorer si vous répondez au message du joueur
+*[variable]* : supremus_tokens, coupons, supremus_gemmes, username
+*[valeur]* : la nouvelle valeur
+*[méthode]* : add, new (par défaut c'est *add*, c'est-à-dire que la valeur entrée est additionnée à celle initialement sauvegardée)
+
+*Exemple:* updateplayer coupons 200 new.`;
+
+        if (!arg || arg.length === 0) {
+            const imageUrl = 'https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg';
+            await zk.sendMessage(dest, {
+                image: { url: imageUrl },
+                caption: consigne,
+            });
+            return;
+        }
+
+        let id = null;
+        let index = 0;
+
+        if (msgRepondu) {
+            id = auteurMsgRepondu;
+            index = 0;
+        } else if (arg[0].startsWith("@")) {
+            id = arg[0].replace("@", "") + "@s.whatsapp.net";
+            index = 1;
+        } else {
+            return repondre(consigne);
+        }
+
+        let variable = arg[index];
+        let valeur = arg[index + 1];
+        let type = arg[index + 2] || "add";
+
+        if (!['supremus_tokens', 'coupons', 'supremus_gemmes', 'username'].includes(variable)) {
+            return repondre("*La variable doit être une des suivantes : supremus_tokens, coupons, supremus_gemmes, username*");
+        }
+
+        if (variable !== "username" && isNaN(valeur)) {
+            return repondre("La valeur doit être un nombre !");
+        }
+
+        // Convertir en nombre si ce n'est pas un username
+        if (variable !== "username") valeur = parseInt(valeur);
+
+        let data = { [variable]: valeur };
+
+        // Ajouter l'option pour l'addition ou la mise à jour
+        data.appendCurrency = (type === "add");
 
         const response = await requestOnApi(`/users/${id}`, 'PUT', null, data);
 
-        const rpgStyleMessage = `*👤PLAYER : ${response.username}*
+        const rpgStyleMessage = `*👤 PLAYER : ${response.username}*
 ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜
 > *🎫 Coupons*: ${response.coupons}
-> *🧭 $ Tokens*: ${response.supremus_tokens}
-> *💎 $ Gemmes*: ${response.supremus_gemmes}
+> *🧭 Tokens*: ${response.supremus_tokens}
+> *💎 Gemmes*: ${response.supremus_gemmes}
 ▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
-        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
-
-
+        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg";
 
         await zk.sendMessage(dest, {
             image: { url: imageUrl },
@@ -423,16 +427,20 @@ zokou({
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
-    const consigne = `*Veuillez entrer l'ID du items a vendre.*`
-   
-    if (!arg || arg.length < 1) {
-      // URL de l'image à envoyer
-        const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
-
-        return repondre(consigne, imageURL);
-    }
-
     try {
+        const consigne = `*Veuillez entrer l'ID de l'item à vendre.*`;
+
+        if (!arg || arg.length < 1) {
+            // URL de l'image à envoyer
+            const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg';
+
+            await zk.sendMessage(dest, {
+                image: { url: imageURL },
+                caption: consigne,
+            });
+            return;
+        }
+
         const itemId = arg[0];
 
         const response = await requestOnApi('/market/additem', 'POST', null, {
@@ -440,7 +448,12 @@ zokou({
             ownerId: auteurMessage
         });
 
-        repondre(`_✅ L’item ${response.item.name} est mis en vente pour ${response.market.object_price}🧭_`);
+        // Vérifie si la réponse contient les informations sur l'item
+        if (response?.item?.name && response?.market?.object_price) {
+            repondre(`_✅ L’item *${response.item.name}* est mis en vente pour *${response.market.object_price}🧭*._`);
+        } else {
+            repondre("_❌ Mise en vente échouée. Veuillez vérifier l'ID de l'item ou réessayer plus tard._");
+        }
     }
     catch (error) {
         return repondre(error.message);
@@ -487,17 +500,19 @@ zokou({
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
-    const consigne = `*Veuillez entrer l'ID du items a annuler la mise en vente (Recuperable sur le marché)*`
-
     try {
+        const consigne = `*Veuillez entrer l'ID de l'item à annuler la mise en vente (récupérable sur le marché).*`;
 
         if (!arg || arg.length < 1) {
             // URL de l'image à envoyer
-        const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+            const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg';
 
-
-        return repondre(consigne, imageURL);
-    }
+            await zk.sendMessage(dest, {
+                image: { url: imageURL },
+                caption: consigne,
+            });
+            return;
+        }
 
         const itemId = arg[0];
 
@@ -506,9 +521,8 @@ zokou({
             ownerId: auteurMessage
         });
 
-        repondre("_✅ Mise en vente annulée !_");
-    }
-    catch (error) {
+        repondre("_✅ Mise en vente annulée avec succès !_");
+    } catch (error) {
         return repondre(error.message);
     }
 });
@@ -522,15 +536,18 @@ zokou({
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
-    const consigne = `*Veuillez entrer l'ID du items a acheter (Recuperable sur le marché)*`
-
     try {
+        const consigne = `*Veuillez entrer l'ID de l'item à acheter (récupérable sur le marché).*`;
 
         if (!arg || arg.length < 1) {
-       // URL de l'image à envoyer
-        const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+            // URL de l'image à envoyer
+            const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg';
 
-        return repondre(consigne, imageURL);
+            await zk.sendMessage(dest, {
+                image: { url: imageURL },
+                caption: consigne,
+            });
+            return;
         }
 
         const itemId = arg[0];
@@ -540,9 +557,13 @@ zokou({
             userId: auteurMessage
         });
 
-        repondre(response.transaction.buyer.summary);
-    }
-    catch (error) {
+        // Vérifie si la réponse contient les informations sur l'acheteur
+        if (response?.transaction?.buyer?.summary) {
+            repondre(response.transaction.buyer.summary);
+        } else {
+            repondre("_❌ Achat échoué. Veuillez vérifier l'ID de l'item (récupérable sur le marché)._");
+        }
+    } catch (error) {
         return repondre(error.message);
     }
 });
