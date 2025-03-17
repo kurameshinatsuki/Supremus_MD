@@ -15,6 +15,9 @@ async function simulateLoading(zk, origineMessage, ms) {
     ];
 
     try {
+        // Vérification si le message provient d'un groupe
+        if (verifGroupe) return;
+
         let loadingMessage = await zk.sendMessage(origineMessage, { text: frames[0] });
 
         for (let i = 1; i < frames.length; i++) {
