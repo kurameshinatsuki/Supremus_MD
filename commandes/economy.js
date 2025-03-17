@@ -7,7 +7,7 @@
 //               liées à l'économie du bot Supremus.
 //
 // Date de création : 06/03/2025
-// Dernière modification : 14/03/2025
+// Dernière modification : 17/03/2025
 //
 // ============================================================
 
@@ -125,9 +125,16 @@ zokou({
 
     const consigne = `*Veuillez repondre au message du joueur que vous souhaitez ajouter en suivant l'ordre:*
     
-addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>`
+addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>
 
-    if (arg?.length == 0 || arg.join("").trim("") == "") return repondre(consigne);
+*Ex:* addplayer JOHN 50 2000 100.`;
+
+        if (arg?.length == 0 || arg.join("").trim("") == "") {
+        // URL de l'image à envoyer
+        const imageURL = 'https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+
+        return repondre(consigne, imageURL);
+    }
 
     let id = null
     let fetchIndex = null
@@ -227,14 +234,21 @@ zokou({
 
     const consigne = `*Veuillez repondre au message d'un joueurs en ajoutant le prefix de la variable a modifier:*
     
-*exemple :* updateplayer <variable> <valeur> <method>
+updateplayer <variable> <valeur> <method>
 
 *[tag]:* a ignorer si vous repondez au message du joueur
 *[variable]:* supremus_tokens, coupons, supremus_gemmes, username
 *[valeur]:* la nouvelle valeur
-*[method]* add,new (par default c'est add : c'est a dire la valeur entrée est additionnée a celle initialement sauvegarder.`
+*[method]* add,new (par default c'est add : c'est a dire la valeur entrée est additionnée a celle initialement sauvegarder.
 
-    if (arg?.length == 0 || arg.join("").trim("") == "") return repondre(consigne);
+*Ex:* updateplayer coupons 200 new.`;
+
+        if (arg?.length == 0 || arg.join("").trim("") == "") {
+        // URL de l'image à envoyer
+        const imageURL = 'https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+
+        return repondre(consigne, imageURL);
+    }
 
     let id = null;
     let index = 0;
@@ -312,7 +326,7 @@ zokou({
         texte += `\n *Choissiez un pack par son index et un grade (bronze, argent, or, special ) Exemple 1 bronze*`;
 
         // URL ou chemin de l'image représentant les packs
-        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg";
+        const imageUrl = "https://i.ibb.co/ycJLcFn6/Image-2025-03-17-00-21-51-2.jpg";
 
         await zk.sendMessage(dest, {
             image: { url: imageUrl },
@@ -409,8 +423,13 @@ zokou({
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
+    const consigne = `*Veuillez entrer l'ID du items a vendre.*`
+   
     if (!arg || arg.length < 1) {
-        return repondre(`Veuillez entrer l'ID du items a vendre`);
+      // URL de l'image à envoyer
+        const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+
+        return repondre(consigne, imageURL);
     }
 
     try {
@@ -468,11 +487,17 @@ zokou({
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
+    const consigne = `*Veuillez entrer l'ID du items a annuler la mise en vente (Recuperable sur le marché)*`
+
     try {
 
         if (!arg || arg.length < 1) {
-            return repondre(`Veuillez entrer l'ID du items a annuler la mise en vente (Recuperable sur le marché)`);
-        }
+            // URL de l'image à envoyer
+        const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+
+
+        return repondre(consigne, imageURL);
+    }
 
         const itemId = arg[0];
 
@@ -497,10 +522,15 @@ zokou({
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
+    const consigne = `*Veuillez entrer l'ID du items a acheter (Recuperable sur le marché)*`
+
     try {
 
         if (!arg || arg.length < 1) {
-            return repondre(`Veuillez entrer l'ID du items a acheter (Recuperable sur le marché)`);
+       // URL de l'image à envoyer
+        const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplace par l'URL de l'image que tu veux envoyer
+
+        return repondre(consigne, imageURL);
         }
 
         const itemId = arg[0];
@@ -531,12 +561,12 @@ zokou({
 
         if (!superUser) return repondre("Vous n'êtes pas autorisé à utiliser cette commande.");
 
-        const consigne = `*usage :*
+        const consigne = `*Usage :*
         
 newbet <titre> / <description> / <option 1>, <option 2>, <option n> / <type de monnaie> / <montant de la mise>`
 
         if (!arg || arg.length < 1) {
-    const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+    const imageUrl = "https://i.ibb.co/Hf8N8p2g/Image-2025-03-17-00-21-51-4.jpg"; // URL de l'image
 
     await zk.sendMessage(dest, {
         image: { url: imageUrl },
@@ -639,7 +669,7 @@ zokou({
 bet <ID> <numero de l'option>`;
 
         if (!arg || arg.length < 2) {
-            const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+            const imageUrl = "https://i.ibb.co/273YJ1yW/Image-2025-03-17-00-21-51-1.jpg"; // URL de l'image
 
             await zk.sendMessage(dest, {
                 image: { url: imageUrl },
@@ -688,7 +718,7 @@ zokou({
 finishbet <id du parie> <option gagnant>`
 
         if (!arg || arg.length < 2) {
-    const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+    const imageUrl = "https://i.ibb.co/Hf8N8p2g/Image-2025-03-17-00-21-51-4.jpg"; // URL de l'image
 
     await zk.sendMessage(dest, {
         image: { url: imageUrl },
@@ -741,7 +771,7 @@ zokou({
 cancelbet <ID>`
 
         if (!arg || arg.length < 1) {
-    const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+    const imageUrl = "https://i.ibb.co/Hf8N8p2g/Image-2025-03-17-00-21-51-4.jpg"; // URL de l'image
 
     await zk.sendMessage(dest, {
         image: { url: imageUrl },
@@ -778,7 +808,7 @@ zokou({
 exchange <montant> <monnaie_source> <monnaie_cible>`
 
         if (!arg || arg.length < 3) {
-            const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // Correctement déclaré avant
+            const imageUrl = "https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg"; // Correctement déclaré avant
             await zk.sendMessage(dest, {
                 image: { url: imageUrl },
                 caption: consigne,
