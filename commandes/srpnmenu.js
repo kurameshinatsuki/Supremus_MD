@@ -5,22 +5,12 @@ const envoyerImage = async (dest, zk, ms, lien, caption = '') => {
     await zk.sendMessage(dest, { image: { url: lien }, caption }, { quoted: ms });
 };
 
-// Commande srpn_menu
-zokou(
-    { nomCom: 'srpn_menu', categorie: 'CENTRAL' },
-    async (dest, zk, commandeOptions) => {
-        const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/wMTg7Nb/Picsart-24-09-15-17-38-15-634.jpg';
-        await envoyerImage(dest, zk, ms, lien);
-    }
-);
-
 // Commande guide
 zokou(
     { nomCom: 'guide', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/t302NRH/Picsart-24-09-15-22-07-18-958.jpg';
+        const lien = 'https://i.ibb.co/9385N887/Image-2025-03-15-09-31-07-0.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
 );
@@ -30,37 +20,27 @@ zokou(
     { nomCom: 'competition', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/kGhL9fD/Picsart-24-09-15-23-13-07-768.jpg';
+        const lien = 'https://i.ibb.co/fd6rWQTV/Image-2025-03-15-09-31-07-1.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
 );
 
 // Commande reward
-zokou(
+/*zokou(
     { nomCom: 'reward', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const lien = 'https://i.ibb.co/Xxs9yD6/Picsart-24-09-18-13-44-38-374.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
-);
+);*/
 
 // Commande currency
 zokou(
     { nomCom: 'currency', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/cvdDHmF/Picsart-24-09-16-08-03-22-285-1.jpg';
-        await envoyerImage(dest, zk, ms, lien);
-    }
-);
-
-// Commande jobs
-zokou(
-    { nomCom: 'jobs', categorie: 'CENTRAL' },
-    async (dest, zk, commandeOptions) => {
-        const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/TBksJSH/Picsart-24-09-16-10-49-25-952-1.jpg';
+        const lien = 'https://i.ibb.co/5xjZ3kg9/Image-2025-03-15-09-31-07-2.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
 );
@@ -70,24 +50,24 @@ zokou(
     { nomCom: 'generale', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/9VbPVZs/Picsart-24-09-16-10-53-14-009-1.jpg';
+        const lien = 'https://i.ibb.co/V02kdXWt/Image-2025-03-15-09-31-07-3.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
 );
 
 // Commande guide_pro
-zokou(
+/*zokou(
     { nomCom: 'guide_pro', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const lien = 'https://i.ibb.co/hKyphPC/Picsart-24-09-17-22-41-09-565-1.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
-);
+);*/
 
-// Commande speedrush_system (envoie plusieurs images)
+// Commande speedrush_system
 zokou(
-    { nomCom: 'speedrush_system', categorie: 'SPEED-RUSH' },
+    { nomCom: 'speedrush', categorie: 'SPEED-RUSH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -100,15 +80,15 @@ zokou(
     }
 );
 
-// Commande amb_system (envoie plusieurs images)
+// Commande amb_system
 zokou(
-    { nomCom: 'abm_system', categorie: 'ABM' },
+    { nomCom: 'abm', categorie: 'ABM' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/1TrmcF5/Image-2024-10-05-11-58-07-0.jpg',
-            'https://i.ibb.co/yPzLn42/Image-2024-10-05-11-58-07-1.jpg',
-            'https://i.ibb.co/3WDjLN4/Image-2024-10-05-11-58-07-2.jpg'
+            'https://i.ibb.co/QFY5HnG0/Image-2025-03-17-06-59-48-2.jpg',
+            'https://i.ibb.co/4qRr9b4/Image-2025-03-17-06-59-48-1.jpg',
+            'https://i.ibb.co/qMVzB1Jt/Image-2025-03-17-06-59-48-0.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
@@ -116,9 +96,9 @@ zokou(
     }
 );
 
-// Commande origamy_system (envoie plusieurs images)
+// Commande origamy_system
 zokou(
-    { nomCom: 'origamy_system', categorie: 'ORIGAMY' },
+    { nomCom: 'origamy', categorie: 'ORIGAMY' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
@@ -134,7 +114,7 @@ zokou(
 
 // Commande system_yugioh
 zokou(
-    { nomCom: 'yugioh_system', categorie: 'YU-GI-OH' },
+    { nomCom: 'yugioh', categorie: 'YU-GI-OH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const lien = 'https://i.ibb.co/Y3wTs4X/Picsart-24-09-15-08-45-38-072.jpg';
