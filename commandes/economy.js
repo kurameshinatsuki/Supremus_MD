@@ -564,9 +564,18 @@ zokou({
 
         // Vérifie si la réponse contient les informations sur l'acheteur
         if (response?.transaction?.buyer?.summary) {
-            repondre(response.transaction.buyer.summary);
+            // URL de l'image à envoyer avec la réponse
+            const imageURL = 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg'; // Remplacer par l'URL de l'image spécifique
+
+            await zk.sendMessage(dest, {
+                image: { url: imageURL },
+                caption: response.transaction.buyer.summary,  // Envoi du résumé de l'achat avec l'image
+            });
         } else {
-            repondre("_❌ Achat échoué. Veuillez vérifier l'ID de l'item (récupérable sur le marché)._");
+            await zk.sendMessage(dest, {
+                image: { url: 'https://i.ibb.co/5gMVCyFD/Image-2025-03-17-00-21-51-0.jpg' },  // Image d'erreur ou générique
+                caption: "_❌ Achat échoué. Veuillez vérifier l'ID de l'item (récupérable sur le marché)._",
+            });
         }
     } catch (error) {
         return repondre(error.message);
