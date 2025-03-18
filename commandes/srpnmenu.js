@@ -102,9 +102,9 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/M5nPWj3/Image-2024-10-05-11-58-07-3.jpg',
-            'https://i.ibb.co/zPppSB6/Image-2024-10-05-11-58-07-4.jpg',
-            'https://i.ibb.co/fChCHV0/Image-2024-10-05-11-58-07-5.jpg'
+            'https://i.ibb.co/VWwGgGMg/Image-2025-03-18-21-31-47-2.jpg',
+            'https://i.ibb.co/LzrGD9wg/Image-2025-03-18-21-31-47-1.jpg',
+            'https://i.ibb.co/xcpVWb3/Image-2025-03-18-21-31-47-0.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
