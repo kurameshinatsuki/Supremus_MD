@@ -340,7 +340,6 @@ zokou({
         let userResponse;
 
         try {
-
             userResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
@@ -375,10 +374,16 @@ zokou({
             userId: auteurMessage
         });
 
-        repondre(response.summary);
+        // URL de l'image à envoyer avec le résumé de l'achat
+        const responseImageUrl = "https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg"; // Remplacer par l'URL de l'image spécifique que tu souhaites
+
+        await zk.sendMessage(dest, {
+            image: { url: responseImageUrl },
+            caption: response.summary,  // Envoi du résumé de la réponse avec l'image
+        });
 
     } catch (error) {
-        repondre(error.message);
+        return repondre(error.message);
     }
 });
 
