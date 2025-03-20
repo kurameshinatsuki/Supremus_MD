@@ -7,7 +7,7 @@
 //               liées à l'économie du bot Supremus.
 //
 // Date de création : 06/03/2025
-// Dernière modification : 17/03/2025
+// Dernière modification : 20/03/2025
 //
 // ============================================================
 
@@ -872,7 +872,13 @@ exchange <montant> <monnaie_source> <monnaie_cible>`
             userId: auteurMessage
         });
 
-        repondre(response.transaction.summary);
+                // URL de l'image à envoyer avec le résumé de l'achat
+        const responseImageUrl = "https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg"; // Remplacer par l'URL de l'image spécifique que tu souhaites
+
+        await zk.sendMessage(dest, {
+            image: { url: responseImageUrl },
+            caption: response.summary,  // Envoi du résumé de la réponse avec l'image
+        });
     }
     catch (error) {
         return repondre(error.message);
