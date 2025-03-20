@@ -877,7 +877,7 @@ exchange <montant> <monnaie_source> <monnaie_cible>`
 
         await zk.sendMessage(dest, {
             image: { url: responseImageUrl },
-            caption: response.summary,  // Envoi du résumé de la réponse avec l'image
+            caption: response.transaction.summary,  // Envoi du résumé de la réponse avec l'image
         });
     }
     catch (error) {
