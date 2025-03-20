@@ -122,3 +122,157 @@ zokou(
         await envoyerImage(dest, zk, ms, lien, msg);
     }
 );
+
+zokou(
+    {
+        nomCom: 'activites',
+        categorie: 'CENTRAL'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            const lien = 'https://i.ibb.co/5GLqTHG/Image-2024-10-23-08-42-33.jpg';
+            const msg = `░░░░░░░░░░░░░░░░░░░░
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  *PROGRAMME D'ACTIVITÉS*
+▁▁▁▁▁▁▁ *SRPN* ▁▁▁▁▁▁▁▁
+░░░░░░░░░░░░░░░░░░░░
+*Pour tout savoir sur les activités, le programme, et services :*
+ 
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+               *EN SEMAINE*
+▔╔ ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ╗▔
+     *ACTIVITÉS RÉGULIÈRES :*
+   ╚                                               ╝
+
+1️⃣ *Défis Quotidien ABM :* Chaque jour, un nouveau défi de combat ABM avec des règles spéciales. Vous obtenez le double de récompense si vous réalisez le défi.
+
+2️⃣ *Speed Rush Time Attack :* Défiez le chrono sur un circuit différent chaque jour et grimpez au classement. Vous obtenez le double de récompense en réalisant ce défi.
+
+3️⃣ *Yu-Gi-Oh! Speed Duel Practice :* Sessions d'entraînement et de duels amicaux pour tester de nouveaux decks et améliorer vos compétences. Vous touché la récompense en réalisant ce défi.
+
+4️⃣ *Origamy World Speed Quest :* Petites quêtes et missions courtes dans Origamy World pour gagner de l'XP et des récompenses. Vous obtenez +10pts chaque 5 tours réalisé et -5pts pour chaque pavé contraire au système de jeu.
+
+5️⃣ *Casino SRPN :* Tentez votre chance aux jeux de hasard pour gagner des 🧭 et des 💎. Assuré vous d'avoir suffisamment de fonds sur votre compte *Transact Zone* sous peine d'amendement.
+
+6️⃣ *Day off :* Jour de repos pour les joueurs et agents de DRPN généralement fixé le lundi.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+               *EN WEEK-END*
+▔╔ ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ╗▔
+     *ACTIVITÉS RÉGULIÈRES :*
+   ╚                                               ╝
+
+🏆 *Supremus Cup :* La *Supremus Cup* est une compétition indirectement lié à la *Supremus Ligue*, lorsque vous atteigné la "Division Émeraude" et finissez "🥇Golden Star" vous obtenez la "Supremus Cup" ce qui vous fait gagner un "🌟Star Awards".
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    *▷ SUPREMUS AWARDS ◁*
+> - "🥇Golden Star" obtient "1🎁🏅 & 20.000🧭 & 2.000💎 & 600🎟️"
+> - "🥈Silver Star" obtient "1🎁🥇 & 15.000🧭 & 1.500💎 & 400🎟️"
+> - "🥉Brown Star" obtient "2🎁🥈 & 10.000🧭 & 1.000💎 & 200🎟️"
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+🎖️ *Supremus Ligue :* Lancement de la *Supremus Ligue*, compte tout les activités de jeu. La *Supremus Ligue* est divisé en 5 divisions "Bronze, Argent, Or, Diamant et Émeraude" vous devez accumuler un maximum de points pour atteindre le *🔝TOP5* afin de passé en division supérieure à la fin de la ligue.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    *▷ SUPREMUS AWARDS ◁*
+
+*▶ Division Bronze :* 
+> - "🥇Golden Star" obtient "1🎁🥉 & 600💎 & 60🎟️"
+> - "🥈Silver Star" obtient "400💎 & 40🎟️"
+> - "🥉Brown Star" obtient "200💎 & 20🎟️"
+> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "100💎".
+
+*▶ Division Argent :* 
+> - "🥇Golden Star" obtient "2🎁🥉 & 800💎 & 80🎟️"
+> - "🥈Silver Star" obtient "1🎁🥉 & 600💎 & 60🎟️"
+> - "🥉Brown Star" obtient "400💎 & 40🎟️"
+> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "200💎".
+
+*▶ Division Or :* 
+> - "🥇Golden Star" obtient "1🎁🥈 & 1000💎 & 100🎟️"
+> - "🥈Silver Star" obtient "1🎁🥉 & 800💎 & 80🎟️"
+> - "🥉Brown Star" obtient "1🎁🥉 & 600💎 & 60🎟️"
+> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "400💎".
+
+*▶ Division Diamant :* 
+> - "🥇Golden Star" obtient "2🎁🥈 & 1200💎 & 120🎟️"
+> - "🥈Silver Star" obtient "1🎁🥈 & 1.000💎 & 100🎟️"
+> - "🥉Brown Star" obtient "1🎁🥉 & 800💎 & 80🎟️"
+> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "800💎".
+
+*▶ Division Émeraude :* 
+> - "🥇Golden Star" obtient "1🎁🏅 & 2.000💎 & 250🎟️"
+> - "🥈Silver Star" obtient "1🎁🥇 & 1.500💎 & 200🎟️"
+> - "🥉Brown Star" obtient "1🎁🥈 & 1.000💎 & 150🎟️"
+> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "1.000💎".
+
+> *⚠️ Les récompenses peuvent être réclamés seulement si vous avez réalisé minimum 5 activités.*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+🌐 *Origamy World Story Event :* Lancement d'un événements narratifs spéciaux dans *Origamy World* avec des quêtes complexes et des récompenses épiques.
+
+🎡 *Challenge Wheel :* Lancement de la roue du défi pour des affrontements aléatoires en 1 vs 1, jouables en solo ou en duo.
+
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                     *DRPN*
+▔╔ ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ╗▔
+     *ACTIVITÉS DE LA DRPN :*
+ (Direction de Rôle Play Nation)
+   ╚                                               ╝
+
+🤝 *Recrutement et Formation :* Sessions de recrutement et de formation pour les nouveaux joueurs et agents de DRPN.
+
+✍🏻 *Rédaction d'annonce :* Rédaction, planification et diffusion des annonces et des résumés d'événements.
+
+🛂 *Supervision :* Arbitrage des combats, des duels et mise à jour des fiches de joueurs.
+
+👨🏻‍💻 *Gestion des Transactions :* Vérification des transactions, résolution des problèmes liés aux transactions et actualisation des données joueurs.
+
+🖼️ *Création de Visuels :* Conception de bannières, d'icônes et d'autres éléments visuels pour la communauté.
+
+🎭 *Mode Histoire :* Création de nouvelles quêtes, de nouveaux personnages et d'événements spéciaux pour le mode histoire.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+░░░░░░░░░░░░░░░░░░░░░`;
+            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+
+        }
+    }
+);
+
+zokou(
+    {
+        nomCom: 'annonce',
+        categorie: 'DRPN'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            // const lien = '';
+            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓[ ANNONCE ]▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*🎤[Annonceur] :* [Résumé]
+
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*👤[Gagnant] :*
+> 🧠 Maîtrise:
+> 💯 Score:
+> 💢 Difficult:
+> 🎤 Comment:
+
+*👤[Perdant] :
+> 🧠 Maîtrise:
+> 💯 Score:
+> 💢 Difficult:
+> 🎤 Comment:
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*👾 GAME :* 
+*🌐 SERVEUR :
+*🛂 MASTER :
+
+*_✒️ Signature : ⟮ ✓ ⟯_*
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+           // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   repondre(msg);
+        }
+    }
+);
