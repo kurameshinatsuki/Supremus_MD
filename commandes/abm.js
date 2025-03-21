@@ -65,7 +65,7 @@ function generateFicheDuelABM(duel) {
 > *🌍 Zone :*  ${duel.arene.nom}
 > *📌 Distance initiale :* 5m
 > *⭕ Arène Stats :* (voir arène)
-> *⏱️ Délai :* 6 + 2min max
+> *⏱️ Délai :* 5 + 1min max
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 > *🌍 Environnement :* (voir arène)
 
@@ -250,7 +250,7 @@ ${course.pilote3 ? `*🏎️ ${course.pilote3.nom} :*\n> 🚘: ${course.pilote3.
 *🌦️ Conditions :* ${course.conditions}
 *🌐 Circuit :* ${course.circuit.nom}
 *📌 Départ :* ${course.depart}
-*⏱️ Latence :* 6 + 2min max
+*⏱️ Latence :* 5 + 1min max
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 ═══════════════════
  *MAÎTRISE INITIALE "⭐" : 5*
