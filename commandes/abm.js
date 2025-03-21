@@ -226,7 +226,7 @@ function generateFicheCourseSpeedRush(course) {
 *🏎️ ${course.pilote2.nom} :* 
 > 🚘: ${course.pilote2.stats.voiture} | ⛽: ${course.pilote2.stats.essence} | 🛢️: ${course.pilote2.stats.turbo}
 
-${course.pilote3 ? `*🏎️ ${course.pilote3.nom} :*\n> 🚘: ${course.pilote3.stats.voiture} | ⛽: ${course.pilote3.stats.essence} | 🛢️: ${course.pilote3.stats.huile}` : ''}
+${course.pilote3 ? `*🏎️ ${course.pilote3.nom} :*\n> 🚘: ${course.pilote3.stats.voiture} | ⛽: ${course.pilote3.stats.essence} | 🛢️: ${course.pilote3.stats.turbo}` : ''}
 ═══════════════════
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
  *⚠️ RÈGLES DE COURSE ⚠️*
