@@ -302,70 +302,78 @@ zokou(
   }
 );
 
-// Commande pour gérer les stats pendant la course
+// Commande pour suivre une course 
 zokou(
-  { nomCom: 'sr_stats', categorie: 'SPEED-RUSH' },
-  (dest, zk, { repondre, arg, ms }) => {
-    if (arg.length < 4) {
-      return repondre('*Usage:* -sr_stats @Pilote stat +/- valeur.  Ex: -sr_stats @Pilote1 voiture - 20');
-    }
-
-    const [piloteId, stat, signe, valeurStr] = arg;
-    const valeur = parseInt(valeurStr);
-
-    if (isNaN(valeur)) {
-      return repondre('Valeur invalide.');
-    }
-
-    if (!['voiture', 'essence', 'turbo'].includes(stat)) {
-      return repondre('Stat invalide. Les stats valides sont : voiture, essence, turbo.');
-    }
-
-    const courseKey = Object.keys(coursesSpeedRush).find(key => key.includes(piloteId));
-    if (!courseKey) {
-      return repondre('Pilote non trouvé dans une course en cours.');
-    }
-
-    const course = coursesSpeedRush[courseKey];
-    let pilote;
-
-    if (course.pilote1.nom === piloteId) {
-      pilote = course.pilote1;
-    } else if (course.pilote2.nom === piloteId) {
-      pilote = course.pilote2;
-    } else if (course.pilote3 && course.pilote3.nom === piloteId) {
-      pilote = course.pilote3;
-    } else {
-      return repondre('Pilote non trouvé dans cette course.');
-    }
-
-    const { stats, message } = limiterStatsSpeedRush(pilote.stats, stat, (signe === '-' ? -valeur : valeur));
-    pilote.stats = stats;
-
-    if (message) {
-      repondre(message);
-    }
-
-    const ficheCourse = generateFicheCourseSpeedRush(course);
-    zk.sendMessage(dest, { image: { url: course.circuit.image }, caption: ficheCourse }, { quoted: ms });
-  }
-);
-
-// Commande pour supprimer une course
-zokou(
-  { nomCom: 'sr_delete', categorie: 'SPEED-RUSH' },
+  { nomCom: 'sr', categorie: 'SPEED-RUSH' },
   (dest, zk, { repondre, arg, ms }) => {
     if (arg.length < 1) {
-      return repondre('*Usage:* -sr_delete courseKey.  Ex: -sr_delete @Pilote1 vs @Pilote2');
+      return repondre('*Usage:* -sr stats/delete [options]');
     }
 
-    const courseKey = arg.join(' ');
+    const action = arg[0].toLowerCase();
 
-    if (!coursesSpeedRush[courseKey]) {
-      return repondre('Course non trouvée.');
+    switch (action) {
+      case 'stats':
+        if (arg.length < 5) {
+          return repondre('*Usage:* -sr stats @Pilote stat +/- valeur. Ex: -sr_admin stats @Pilote1 voiture - 20');
+        }
+
+        const [_, piloteId, stat, signe, valeurStr] = arg;
+        const valeur = parseInt(valeurStr);
+
+        if (isNaN(valeur)) {
+          return repondre('Valeur invalide.');
+        }
+
+        if (!['voiture', 'essence', 'turbo'].includes(stat)) {
+          return repondre('Stat invalide. Les stats valides sont : voiture, essence, turbo.');
+        }
+
+        const courseKey = Object.keys(coursesSpeedRush).find(key => key.includes(piloteId));
+        if (!courseKey) {
+          return repondre('Pilote non trouvé dans une course en cours.');
+        }
+
+        const course = coursesSpeedRush[courseKey];
+        let pilote;
+
+        if (course.pilote1.nom === piloteId) {
+          pilote = course.pilote1;
+        } else if (course.pilote2.nom === piloteId) {
+          pilote = course.pilote2;
+        } else if (course.pilote3 && course.pilote3.nom === piloteId) {
+          pilote = course.pilote3;
+        } else {
+          return repondre('Pilote non trouvé dans cette course.');
+        }
+
+        const { stats, message } = limiterStatsSpeedRush(pilote.stats, stat, (signe === '-' ? -valeur : valeur));
+        pilote.stats = stats;
+
+        if (message) {
+          repondre(message);
+        }
+
+        const ficheCourse = generateFicheCourseSpeedRush(course);
+        zk.sendMessage(dest, { image: { url: course.circuit.image }, caption: ficheCourse }, { quoted: ms });
+        break;
+
+      case 'delete':
+        if (arg.length < 2) {
+          return repondre('*Usage:* -sr delete courseKey. Ex: -sr delete @Pilote1 vs @Pilote2');
+        }
+
+        const courseKeyToDelete = arg.slice(1).join(' ');
+
+        if (!coursesSpeedRush[courseKeyToDelete]) {
+          return repondre('Course non trouvée.');
+        }
+
+        delete coursesSpeedRush[courseKeyToDelete];
+        return repondre(`La course ${courseKeyToDelete} a été supprimée.`);
+
+      default:
+        return repondre('Action invalide. Utilisez "stats" ou "delete".');
     }
-
-    delete coursesSpeedRush[courseKey];
-    return repondre(`La course ${courseKey} a été supprimée.`);
   }
 );
