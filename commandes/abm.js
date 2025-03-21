@@ -1,10 +1,20 @@
 const { zokou } = require("../framework/zokou");
 
 const arenesABM = [
-    { nom: 'Onigashima', image: 'https://i.ibb.co/mDvjVL0/20240925-123112.jpg' },
-    { nom: 'Exorcism School', image: 'https://i.ibb.co/1z3LZhZ/20240925-121617.jpg' },
-    { nom: 'Plaine', image: 'https://i.ibb.co/4R0WptC/20240925-114159.jpg' },
-    { nom: 'Fairy Tail Building', image: 'https://i.ibb.co/sq8ymQC/20240925-113237.jpg' }
+    { nom: 'Infinity Fortress', image: 'https://i.ibb.co/1gGcfDr/Image-2025-03-21-14-41-20-14.jpg' },
+    { nom: 'Shibuya Champ de Destruction', image: 'https://i.ibb.co/4v7vxCC/Image-2025-03-21-14-41-20-13.jpg' },
+    { nom: 'Vallée de la Fin', image: 'https://i.ibb.co/0pn2SJmf/Image-2025-03-21-14-41-20-11.jpg' },
+    { nom: 'Dimension de Jigen', image: 'https://i.ibb.co/0yz8yqpM/Image-2025-03-21-14-41-20-12.jpg' },
+    { nom: 'Greed Island', image: 'https://i.ibb.co/0y8CzHZR/Image-2025-03-21-14-41-20-8.jpg' },
+    { nom: 'Repair Uchiha', image: 'https://i.ibb.co/ksnG6xmC/Image-2025-03-21-14-41-20-9.jpg' },
+    { nom: 'Desert Egyptien', image: 'https://i.ibb.co/39Jb3jYp/Image-2025-03-21-14-41-20-10.jpg' },
+    { nom: 'Plaine Rocheuse', image: 'https://i.ibb.co/Y7F7H1Ky/Image-2025-03-21-14-41-20-6.jpg' },
+    { nom: 'Tokyo Exorcism School', image: 'https://i.ibb.co/fVsbHtx8/Image-2025-03-21-14-41-20-7.jpg' },
+    { nom: 'Temple des Dieux', image: 'https://i.ibb.co/VcjTcFHx/Image-2025-03-21-14-41-20-5.jpg' },
+    { nom: 'Place Enneigée', image: 'https://i.ibb.co/G3JDksbn/Image-2025-03-21-14-41-20-1.jpg' },
+    { nom: 'Ville Z', image: 'https://i.ibb.co/7dzdXJvD/Image-2025-03-21-14-41-20-2.jpg' },
+    { nom: 'Clover Arena', image: 'https://i.ibb.co/PGtVPx8M/Image-2025-03-21-14-41-20-3.jpg' },
+    { nom: 'Forêt Dense', image: 'https://i.ibb.co/XxzW23W7/Image-2025-03-21-14-41-20-0.jpg' }
 ];
 
 const duelsABM = {};
