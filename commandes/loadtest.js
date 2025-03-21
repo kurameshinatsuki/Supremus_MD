@@ -31,12 +31,15 @@ async function simulateLoading(zk, origineMessage, ms) {
     }
 }
 
+
 zokou(
     { nomCom: 'load', categorie: 'MON-BOT' }, 
     async (dest, zk, commandeOptions) => {
         const { ms, repondre, verifGroupe } = commandeOptions;
 
-        if (verifGroupe) return;
+        // Suppression de la ligne qui empêche l'exécution dans les groupes
+        // if (verifGroupe) return;
+
         await simulateLoading(zk, dest, ms);
     }
 );
