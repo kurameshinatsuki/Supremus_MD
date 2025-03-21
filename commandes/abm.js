@@ -186,3 +186,186 @@ zokou(
         zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
     }
 );
+
+// Définition des circuits
+const circuitsSpeedRush = [
+  { nom: 'Burnwood', image: 'https://i.ibb.co/xGtFbZ9/Image-2024-09-24-07-37-21-0.jpg' },
+  { nom: 'Franklin Terrace', image: 'https://i.ibb.co/Xj1hmx0/Image-2024-09-24-07-37-21-1.jpg' },
+  { nom: 'Crescent Mountains', image: 'https://i.ibb.co/WP917KC/Image-2024-09-24-07-37-21-2.jpg' },
+  { nom: 'El Rey', image: 'https://i.ibb.co/Q8HpY8w/Image-2024-09-24-07-37-21-3.jpg' }
+];
+
+// Stockage des courses en cours
+const coursesSpeedRush = {};
+
+// Fonction pour tirer un circuit aléatoire
+function tirerCircuitSpeedRush() {
+  return circuitsSpeedRush[Math.floor(Math.random() * circuitsSpeedRush.length)];
+}
+
+// Fonction pour limiter les stats (0-100)
+function limiterStatsSpeedRush(stats, stat, valeur) {
+  if (stats[stat] === 100 && valeur > 0) {
+    return { stats, message: '⚠️ Statistique déjà au maximum!' };
+  }
+  stats[stat] = Math.max(0, Math.min(stats[stat] + valeur, 100)); // S'assure que la valeur reste entre 0 et 100
+  return { stats, message: null };
+}
+
+// Fonction pour générer la fiche de course
+function generateFicheCourseSpeedRush(course) {
+  return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+   🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
+             🏁 𝐒𝐩𝐞𝐞𝐝 𝐑𝐮𝐬𝐡 🏁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*🏎️ ${course.pilote1.nom} :* 
+> 🚘: ${course.pilote1.stats.voiture} | ⛽: ${course.pilote1.stats.essence} | 🛢️: ${course.pilote1.stats.turbo}
+
+*🏎️ ${course.pilote2.nom} :* 
+> 🚘: ${course.pilote2.stats.voiture} | ⛽: ${course.pilote2.stats.essence} | 🛢️: ${course.pilote2.stats.turbo}
+
+${course.pilote3 ? `*🏎️ ${course.pilote3.nom} :*\n> 🚘: ${course.pilote3.stats.voiture} | ⛽: ${course.pilote3.stats.essence} | 🛢️: ${course.pilote3.stats.huile}` : ''}
+═══════════════════
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+ *⚠️ RÈGLES DE COURSE ⚠️*
+
+> - Saut de défi : Reboot 🔄
+> - Latence : Tour Suivant
+> - Gadgets : 3 max
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+*🔄 Tourneur :* ${course.tourneur}
+*⚖️ Master :* ${course.master}
+*🌦️ Conditions :* ${course.conditions}
+*🌐 Circuit :* ${course.circuit.nom}
+*📌 Départ :* ${course.depart}
+*⏱️ Latence :* 6 + 2min max
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+═══════════════════
+ *MAÎTRISE INITIALE "⭐" : 5*
+
+> *❌ Sortie de Piste :* -1⭐
+> *❌ Collision obstacle :* -2⭐
+> *❌ Saut de défi :* -1⭐
+═══════════════════
+> *🥇 1ère PLACE: 3*
+> *🥈 2ème PLACE: 2*
+> *🥉 3ème PLACE: 1*
+═══════════════════
+> *⚠️ Si vous dépassez vos adversaires dans le dernier tour, c'est un "OVERTAKE" +2⭐. Si vous finissez la course avec boost total, c'est "TURBO MASTER" +2⭐. Et si vous gagnez sans avoir reçu de dégâts au véhicule, c'est "KING OF THE ROAD" +4⭐.*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *⏱️ TEMPS LIMITE: Si vous ne terminez pas avant la fin du chrono, la victoire revient au pilote avec le meilleur chrono ou la meilleure position.*
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+}
+
+// Commande pour démarrer une course
+zokou(
+  { nomCom: 'sr_rule', categorie: 'SPEED-RUSH' },
+  (dest, zk, { repondre, arg, ms }) => {
+    if (arg.length < 2) {
+      return repondre('*Usage:* -sr_rule pilote1 pilote2 [pilote3] / <tourneur> <master> <conditions> <depart>');
+    }
+
+    try {
+      const [pilotesStr, detailsCourse] = arg.join(' ').split('/').map(p => p.trim());
+      const pilotes = pilotesStr.split(' ').map(p => ({ nom: p.trim(), stats: { voiture: 100, essence: 100, turbo: 100 } }));
+
+      if (pilotes.length < 2 || pilotes.length > 3) {
+        return repondre('Il faut 2 ou 3 pilotes pour démarrer une course.');
+      }
+
+      const [tourneur, master, conditions, depart] = detailsCourse ? detailsCourse.split(' ').map(p => p.trim()) : ['Auto', 'Auto', 'Sec', 'Ligne'];
+
+      const circuit = tirerCircuitSpeedRush();
+
+      const courseKey = `${pilotes[0].nom} vs ${pilotes[1].nom}${pilotes.length === 3 ? ' vs ' + pilotes[2].nom : ''}`;
+      coursesSpeedRush[courseKey] = {
+        pilote1: pilotes[0],
+        pilote2: pilotes[1],
+        pilote3: pilotes.length === 3 ? pilotes[2] : null,
+        tourneur,
+        master,
+        conditions,
+        depart,
+        circuit
+      };
+
+      const ficheCourse = generateFicheCourseSpeedRush(coursesSpeedRush[courseKey]);
+      zk.sendMessage(dest, { image: { url: circuit.image }, caption: ficheCourse }, { quoted: ms });
+
+    } catch (error) {
+      console.error('Erreur lors du démarrage de la course Speed Rush:', error);
+      repondre('Une erreur est survenue lors du démarrage de la course.');
+    }
+  }
+);
+
+// Commande pour gérer les stats pendant la course
+zokou(
+  { nomCom: 'sr_stats', categorie: 'SPEED-RUSH' },
+  (dest, zk, { repondre, arg, ms }) => {
+    if (arg.length < 4) {
+      return repondre('*Usage:* -sr_stats @Pilote stat +/- valeur.  Ex: -sr_stats @Pilote1 voiture - 20');
+    }
+
+    const [piloteId, stat, signe, valeurStr] = arg;
+    const valeur = parseInt(valeurStr);
+
+    if (isNaN(valeur)) {
+      return repondre('Valeur invalide.');
+    }
+
+    if (!['voiture', 'essence', 'turbo'].includes(stat)) {
+      return repondre('Stat invalide. Les stats valides sont : voiture, essence, turbo.');
+    }
+
+    const courseKey = Object.keys(coursesSpeedRush).find(key => key.includes(piloteId));
+    if (!courseKey) {
+      return repondre('Pilote non trouvé dans une course en cours.');
+    }
+
+    const course = coursesSpeedRush[courseKey];
+    let pilote;
+
+    if (course.pilote1.nom === piloteId) {
+      pilote = course.pilote1;
+    } else if (course.pilote2.nom === piloteId) {
+      pilote = course.pilote2;
+    } else if (course.pilote3 && course.pilote3.nom === piloteId) {
+      pilote = course.pilote3;
+    } else {
+      return repondre('Pilote non trouvé dans cette course.');
+    }
+
+    const { stats, message } = limiterStatsSpeedRush(pilote.stats, stat, (signe === '-' ? -valeur : valeur));
+    pilote.stats = stats;
+
+    if (message) {
+      repondre(message);
+    }
+
+    const ficheCourse = generateFicheCourseSpeedRush(course);
+    zk.sendMessage(dest, { image: { url: course.circuit.image }, caption: ficheCourse }, { quoted: ms });
+  }
+);
+
+// Commande pour supprimer une course
+zokou(
+  { nomCom: 'sr_delete', categorie: 'SPEED-RUSH' },
+  (dest, zk, { repondre, arg, ms }) => {
+    if (arg.length < 1) {
+      return repondre('*Usage:* -sr_delete courseKey.  Ex: -sr_delete @Pilote1 vs @Pilote2');
+    }
+
+    const courseKey = arg.join(' ');
+
+    if (!coursesSpeedRush[courseKey]) {
+      return repondre('Course non trouvée.');
+    }
+
+    delete coursesSpeedRush[courseKey];
+    return repondre(`La course ${courseKey} a été supprimée.`);
+  }
+);
