@@ -35,38 +35,6 @@ zokou(
 
 zokou(
     {
-        nomCom: 'yugi_fight',
-        categorie: 'YU-GI-OH'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            // const lien = '';
-            const msg = `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-═══════════════════
-*......| 🎴 SPEED DUEL 🎴 |.....*
-═══════════════════
-        *\`👤 Duelliste :\`* 
-
-> .[Pioche / Effet de Carte]
-
-> .[Invoquer/Poser/Activer/Changer]
-
-> .[Attaquer / Calcul / Fin.]
-═══════════════════
-> *\`❤️ LIFE POINTS:\`* 4000
-═══════════════════
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-...........| *♼ Chargement...* |.........`;
-           // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-   repondre(msg);
-        }
-    }
-);
-
-zokou(
-    {
         nomCom: 'yugi_rule',
         categorie: 'YU-GI-OH'
     },
@@ -75,49 +43,55 @@ zokou(
 
         if (!arg || arg.length === 0)  {
             // const lien = '';
-            const msg = `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-═══════════════════
- 🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
-           🎴 𝐒𝐩𝐞𝐞𝐝 𝐃𝐮𝐞𝐥 🎴
-═══════════════════
+            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+    🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
+             🎴 𝐒𝐩𝐞𝐞𝐝 𝐃𝐮𝐞𝐥 🎴
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 *\`👤 DUELLISTE 1 :\`* 
 > *LP❤️:* 4000 | *CM🀄:* 4
 
-                     *𝙑𝙎*
+> *Deck Principal :* (20 à 30 cartes)
+> *Extra Deck :* (0 à 5 cartes)
+> *Cimetière :* 
+> *Zone Magie de Terrain :* 
+> *Zone Monstre :* (3 max)
+> *Zone Magies et Pièges :* (3 max)
+
+                      *𝙑𝙎*
 
 *\`👤 DUELLISTE 2 :\`* 
 > *LP❤️:* 4000 | *CM🀄:* 4
-═══════════════════
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
- *\`⚠️ RÈGLES DU DUEL ⚠️\`*
 
-- *Triche :* Game Over
-- *Latence :* -1⭐
-- *Zones de Monstres :* 3
-- *Zones de Magie/Piège :* 3
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-*🔄 Tourneur  :* 
-*⚖️ Arbitre :* 
-*⌚ Délai :* 8 + 2 min max
-*💥 Conditions :* Life Points ou Deck out.
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-═══════════════════
-*🧠 Maîtrise du Duel : 5⭐.*
-> *❌ Mauvais Contre :* -1⭐
-> *❌ Oubli de Règle :* -2⭐
-> *❌ Tour Trop Long :* -1⭐
-═══════════════════
+> *Deck Principal :* (20 à 30 cartes)
+> *Extra Deck :* (0 à 5 cartes)
+> *Cimetière :* 
+> *Zone Magie de Terrain :* 
+> *Zone Monstre :* (3 max)
+> *Zone Magies et Pièges :* (3 max)
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   *\`⚠️ RÈGLES DU DUEL ⚠️\`*
+
+> - *Triche :* Game Over
+> - *Latence :* -1⭐
+> - *Zones de Monstres :* 3
+> - *Zones de Magie/Piège :* 3
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *🔄 Tourneur  :* 
+> *⚖️ Arbitre :* 
+> *⌚ Délai :* 5 + 2 min max
+> *💥 Conditions :* Life Points ou Deck out.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 > *🥇 Easy Win: 3:* Victory
-> *🥈 Medium Win: 2:* Main Deck -20🀄
+> *🥈 Medium Win: 2:* Main Deck -10🀄
 > *🥉 Hard Win: 1:* Main Deck -10🀄 ou - 2000LP❤️.
 > *🏅 Perfect Win: 5:* LP❤️ no variation.
-═══════════════════
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 > *⚠️ Si vous infligez des dégâts directs supérieurs à 2000 en un seul coup, c'est un "POWER STRIKE" +2⭐. Si vous gagnez avec une carte combo, c'est "COMBO MASTER" +2⭐.*
-═══════════════════
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 > *⏱️ TEMPS LIMITE:* Si aucun des deux joueurs n'a gagné avant la fin du temps, le joueur avec le plus de Points de Vie gagne le duel.
-═══════════════════
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-...........| *♼ Chargement...* |.........`;
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
            // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    repondre(msg);
         }
@@ -134,7 +108,7 @@ zokou(
         const { repondre, auteurMessage, ms } = commandeOptions;
 
         // Fonction pour simuler un pile ou face
-        const flipCoin = () => (Math.random() < 0.5) ? 'Pile' : 'Face';
+        const flipCoin = () => (Math.random() < 0.5) ? 'Pile' : 'Face' : 'Pile' : 'Face' : 'Face' : 'Pile';
         
         const coin = flipCoin();
         
@@ -203,28 +177,27 @@ zokou(
 zokou(
     {
         nomCom: 'speed_master',
-        categorie: 'DRPN'
+        categorie: 'SPEED-RUSH'
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0)  {
             // const lien = '';
-            const msg = `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-═══════════════════
-*......| 🏁 SPEED RUSH 🏁 |.....*
-═══════════════════
+            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+*.......| 🏁 SPEED RUSH 🏁 |......*
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 > *\`[SECTION] :\`*
-
-═══════════════════
-      *\`RACING GADGETS\`*
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   *\`🚘RACING GADGETS\🚘`*
 
 > . *Ligne 1️⃣:* null
 > . *Ligne 2️⃣:* null
 > . *Ligne 3️⃣:* null
-═══════════════════
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-...........| *♼ Chargement...* |.........`;
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
            // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    repondre(msg);
         }
