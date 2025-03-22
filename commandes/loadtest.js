@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 
 async function simulateLoading(zk, origineMessage, ms) {
 const frames = [
@@ -133,4 +133,4 @@ zokou(
             }
         }
     }
-);
+);*/
