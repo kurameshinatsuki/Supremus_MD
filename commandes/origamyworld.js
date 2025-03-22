@@ -14,7 +14,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASTORIA]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *\`⬇️ ZONE SUD ⬇️\`*
+          *\`⬇️ ZONE SUD ⬇️\`*
 
 > *⛩️ Porte Principale :* (X: 0, Y: -5)
 > L’entrée monumentale d’Astoria, protégée par quatre gardes asurans en faction. Les marchands et aventuriers y sont inspectés avant d’accéder à la ville.
