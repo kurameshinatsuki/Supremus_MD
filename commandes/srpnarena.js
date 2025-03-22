@@ -108,7 +108,7 @@ zokou(
         const { repondre, auteurMessage, ms } = commandeOptions;
 
         // Fonction pour simuler un pile ou face
-        const flipCoin = () => (Math.random() < 0.5) ? 'Pile' : 'Face' : 'Pile' : 'Face' : 'Face' : 'Pile';
+        const flipCoin = () => (Math.random() < 0.5) ? 'Pile' : 'Face';
         
         const coin = flipCoin();
         
