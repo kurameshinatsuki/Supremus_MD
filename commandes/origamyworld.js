@@ -14,7 +14,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASTORIA]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *`⬇️ ZONE SUD ⬇️`*
+           *\`⬇️ ZONE SUD ⬇️\`*
 
 > *⛩️ Porte Principale :* (X: 0, Y: -5)
 > L’entrée monumentale d’Astoria, protégée par quatre gardes asurans en faction. Les marchands et aventuriers y sont inspectés avant d’accéder à la ville.
@@ -28,7 +28,7 @@ zokou(
 > *🌲 Bois Sacrés :* (X: 1, Y: -7)
 > Forêt sanctuaire où les citoyens viennent méditer. Une rumeur parle d’un autel caché accordant des bénédictions à ceux qui le trouvent.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-        *`➡️ ZONE OUEST ➡️`*
+        *\`➡️ ZONE OUEST ➡️\`*
 
 > *🏟️ Colisée d'Aurelius :* (X: -4.5, Y: 0)
 > Arène imposante où se déroulent tournois et combats de gladiateurs. Les tribunes vibrent sous les acclamations des spectateurs en quête de spectacle.
@@ -49,7 +49,7 @@ zokou(
 > *🚧 Entrée Restreinte :* (X: -7, Y: 0)
 > Passage surveillé menant vers des installations militaires interdites au public.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-       *`↔️ CENTRE VILLE ↕️`*
+       *\`↔️ CENTRE VILLE ↕️\`*
 
 > *🛍️ Marché Central :* (0, 0)
 > Cœur commerçant d’Astoria, où résonnent les cris des marchands et artisans toujours bondées en journée.
@@ -76,7 +76,7 @@ zokou(
 > *🏘️ Quartier Résidentiel :* NE (3, 3), NO (-3, 3)
 > Regroupement d’habitations, allant des maisons modestes aux demeures de riches marchands. Vous pourriez y résider sous tutelle mais seul vous devrez loué.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *`⬅️ ZONE EST ⬅️`*
+           *\`⬅️ ZONE EST ⬅️\`*
 
 > *🎮 Salle des Jeux :* (X: 3.5, Y: 0)
 > Complexe proposant divers jeux d’argent et de stratégie, souvent fréquenté par les nobles. Vous pourriez y faire des jeux de cartes, de fléchettes ou autres.
@@ -93,7 +93,7 @@ zokou(
 > *🧵 Nobles Couture :* (X: 7, Y: 0.5)
 > Ateliers de mode produisant vêtements raffinés et broderies enchantées.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-         *`⬆️ ZONE NORD ⬆️`*
+         *\`⬆️ ZONE NORD ⬆️\`*
 
 > *⛲ Cour d'Honneur :* (X: 0, Y: 2.5)
 > Grande place ornementée, avec la statue d’Iris et des fontaines éclatantes. Vous y trouverez 2 gardes asurans bloquant le chemin vers le palais royal.
@@ -134,7 +134,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*`↔️ CENTRE DE LA RÉGION ↕️`*
+*\`↔️ CENTRE DE LA RÉGION ↕️\`*
 
 > *🏰 Astoria, Capitale :* (X: 0, Y: 0)  
 > Cœur politique et militaire d’Asura, ville cosmopolite abritant guildes de marchands, académies de magie et arènes de gladiateurs. Vous y pourriez y vivre paisiblement et trouver du travail.
@@ -167,7 +167,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-          *`⬆️ ZONE NORD ⬆️`*
+          *\`⬆️ ZONE NORD ⬆️\`*
 
 > *🏞️ Vallée des Brumes :* (X: 0, Y: 12)  
 > Lieu mystique où le brouillard ne se lève jamais. Les esprits des anciens rois y apparaissent parfois aux voyageurs égarés.  
@@ -223,7 +223,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *`⬇️ ZONE SUD ⬇️`*
+           *\`⬇️ ZONE SUD ⬇️\`*
 
 > *⛩️ Port de Vaeloria :* (X: 0, Y: -12)  
 > Situé au sud de la capitale, ce port florissant est le centre du commerce maritime et de la défense navale d’Asura.  
@@ -263,7 +263,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *`⬅️ ZONE EST ⬅️`*
+           *\`⬅️ ZONE EST ⬅️\`*
 
 > *🌲 Forêt de Sylvara :* (X: 10, Y: 0)  
 > Vaste forêt magique, abritant les mystérieux Druides Sylvariens, les Lynx Ombrefeu et les Elfes Nocturnes.  
@@ -317,7 +317,7 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-       *`➡️ ZONE OUEST ➡️`*
+       *\`➡️ ZONE OUEST ➡️\`*
 
 > *⛰️ Chaîne des Brisecimes :* (X: -15, Y: 0)  
 > À l’ouest d’Astoria, ces montagnes escarpées regorgent de créatures féroces telles que les Griffons Sombres et les Trolls des Cavernes. Vous y trouverez des herbes médicinales (🌿) et des pierres (🪨).
