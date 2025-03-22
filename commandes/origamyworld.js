@@ -489,8 +489,9 @@ zokou(
         ];
 
         // Boucle pour envoyer chaque image
-        for (const lien of liens) {
-            await zk.sendMessage(dest, zk, ms, lien);
+            for (const lien of liens) {
+                await zk.sendMessage(dest, { image: { url: lien }, caption: "" }, { quoted: ms });
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
         }
-    }
 );
