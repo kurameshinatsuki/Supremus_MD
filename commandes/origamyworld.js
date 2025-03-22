@@ -490,7 +490,7 @@ zokou(
 
         // Boucle pour envoyer chaque image
         for (const lien of liens) {
-            await envoyerImage(dest, zk, ms, lien);
+            await zk.sendMessage(dest, zk, ms, lien);
         }
     }
 );
