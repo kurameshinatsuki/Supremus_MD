@@ -342,3 +342,101 @@ zokou(
         }
     }
 );
+
+zokou(
+    {
+        nomCom: 'character',
+        categorie: 'ORIGAMY'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            // const lien = '';
+            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+*RANG : C | Normal*
+
+> *NOM :* 
+> *DESCRIPTION :* 
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*POTENTIELS*
+
+> *FORCE :* Brown
+> *VITESSE (V.D) :* 5m/s🎯
+> *VITESSE (V.R) :* 500ms⚡
+> *RÉSISTANCE :* Brown
+> *DURABILITÉ :* Brown
+> *SENSORIALITÉ :* 2,5m🎯 de rayon.
+═══════════════════
+*COMPÉTENCES*
+
+> *NIV B :* [Nom + Description de la technique]
+
+> *NIV A :* [Nom + Description de la technique]
+
+> *NIV S :* [Nom + Description de la technique]
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+           // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   repondre(msg);
+        }
+    }
+);
+
+zokou(
+    {
+        nomCom: 'origamy_world',
+        categorie: 'ORIGAMY'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
+            const msg = `▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+      *🌐 ORIGAMY WORLD 🌐*
+▁▁▁▁▁▁▁ *SRPN*  ▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+
+  *▷ DIVINITÉS & ARTEFACTS ◁*
+
+> Dans l'univers fascinant d'Origamy World, les légendes racontent l'existence de puissantes divinités anciennes, gardiennes d'artefacts aux pouvoirs uniques et redoutables. Ces artefacts, disséminés dans des temples mystérieux, recèlent des capacités capables de renverser le destin d'un royaume ou d'octroyer à leur porteur une puissance divine.
+
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▷ Les Temples Mystérieux :*
+
+> Chaque temple est un chef-d'œuvre d'architecture ancienne, dissimulé dans des lieux où la nature reprend ses droits. Montagnes escarpées, jungles luxuriantes, cavernes profondes et îles perdues en mer abritent ces édifices, chacun dédié à une divinité spécifique. Les épreuves à l'intérieur sont autant de défis que d'énigmes, conçues pour tester la valeur, la force ou la sagesse de ceux qui osent s'y aventurer. Seuls les élus parviendront à surmonter les dangers et à arracher l'artefact sacré de son socle.
+
+> Ces épreuves peuvent inclure des énigmes millénaires, des combats contre des créatures mythiques ou des parcours semés de pièges mortels. Une fois l'artefact obtenu, son porteur devient la cible de quiconque convoite son pouvoir.
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*▷ Les Différentes Catégories :* 
+
+> Au cœur d'Origamy World, les habitants et combattants se divisent en trois grandes catégories, chacune dotée d'un potentiel unique et distinct.
+
+1. *Les Profanes : Ces créatures sont incapables d'utiliser la magie, mais leur restriction compensent cette carence par un potentiel physique hors norme. Leur corps est une arme vivante, capable de performances surpassant l'entendement humain. Il peuvent possédé jusqu'à 2 potentiel exceptionnel, utiliser l'overdrive sans restriction, Par exemple : Se déplacer à une vitesse fulgurante, esquivant les attaques en un éclair. Briser la roche d’un coup de poing et soulever des poids titanesques. Endurer des coups mortels sans faiblir. Effectuer des acrobaties impossibles avec précision et fluidité. Répondre aux attaques adverses avant même qu'elles ne soient pleinement déclenchées. 
+
+> Ces combattants sont souvent des mercenaires, des gladiateurs ou des protecteurs de villages, usant de leur force brute pour dominer le champ de bataille.
+
+2. *Les Mononature :* Ces individus sont capables d'utiliser une seule nature magique, mais peuvent la décliner sous différentes formes de techniques. Ils exploitent leur affinité avec une nature spécifique pour façonner des stratégies complexes. Par exemple : Feu : Créer des flammes tourbillonnantes, des murs de feu ou des explosions ardentes. Eau : Générer des vagues destructrices, des lames d'eau ou de la vapeur brûlante. Gravité : Manipuler la pesanteur pour écraser ou alléger des objets. Téléportation : Se déplacer instantanément d'un point à un autre ou échanger de place.
+
+> Les magiciens mononature sont des experts de leur élément, développant des techniques raffinées et variées pour exploiter au mieux leur potentiel. Leur diversité tactique les rend imprévisibles en combat.
+
+3. *Les Arcanistes :* Ces êtres rares possèdent la capacité de manipuler plusieurs natures magiques, mais avec une contrainte majeure : une seule technique par nature. Par exemple : Téléportation Rapide : Se déplacer d'un point A à un point B. Bouclier de Feu : Former une barrière enflammée pour se protéger. Griffe de Glace : Créer une griffe tranchante en glace pure. Et Orbe de Gravité : Condenser la pesanteur en une sphère pour attirer les ennemis.
+
+> Bien que moins polyvalents dans chaque élément, leur capacité à puiser dans plusieurs arts magiques fait d'eux des stratèges redoutables, capables de surprendre leurs adversaires avec des combinaisons inattendues.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+▷ *La Quête des Artefacts :* 
+
+> Peu importe leur catégorie, les aventuriers d'Origamy World cherchent à obtenir les artefacts pour devenir des légendes vivantes. Pourtant, posséder un artefact n'est que le début, car sa maîtrise nécessite de l'entraînement, de la force d'âme et de la volonté pour ne pas se laisser consumer par son pouvoir.
+
+> Alors que les rumeurs sur de nouveaux temples et d'anciens artefacts refont surface, les aventuriers affluent des quatre coins du monde, prêts à affronter les divinités elles-mêmes pour saisir leur destin. Le monde est en effervescence, et seuls les plus dignes pourront espérer laisser leur nom dans l'histoire d'Origamy World.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+           zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+        }
+    }
+);
