@@ -481,7 +481,7 @@ main();
 
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000; // Assurez-vous d'ajouter cette ligne pour définir le port
+const port = process.env.PORT || 10000; // Assurez-vous d'ajouter cette ligne pour définir le port
 
 app.get('/', (req, res) => {
   res.send(`
