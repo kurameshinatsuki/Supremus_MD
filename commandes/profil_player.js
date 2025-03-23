@@ -28,7 +28,7 @@ function trouverJoueur(nomCom) {
 
 zokou(
   {
-    nomCom: nomCom,   // Commande générique
+    nomCom: 'profil',   // Commande générique
     categorie: 'PLAYER-PROFIL'
   },
   async (dest, zk, commandeOptions) => {
