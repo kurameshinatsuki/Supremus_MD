@@ -3,7 +3,7 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
 
 
 
-zokou(
+/*zokou(
   {
     nomCom: 'john',
     categorie: 'PLAYER-PROFIL'
@@ -98,7 +98,7 @@ zokou(
             const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
 
             if (oldValue !== newValue) {
-              changes.push(`- *${field}* : ${oldValue} ➡️ ${newValue}`);
+              changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
               updates[field] = newValue;
             }
           }
@@ -119,7 +119,7 @@ zokou(
       repondre('Une erreur est survenue. Veuillez réessayer.');
     }
   }
-);
+);*/
 
 
 zokou(
@@ -186,12 +186,10 @@ zokou(
     }
 
     try {
-      const playerName = 'Tęnnõ Sũpręmũs';  // Par défaut, "John Supremus"
+      const playerName = 'Tęnnõ Sũpręmũs';
 
-      // Récupération des données du joueur
       let data = await getPlayerProfile(playerName);
 
-      // Si les données du joueur n'existent pas, créer un nouveau profil
       if (!data) {
         await insertPlayerProfile(playerName);
         data = await getPlayerProfile(playerName);
@@ -199,35 +197,36 @@ zokou(
       }
 
       if (!arg || arg.length === 0) {
-        // Si aucun argument n'est fourni, afficher le profil du joueur
         const imageUrl = 'https://i.ibb.co/yMQbMrn/image.jpg';
         try {
-          await fetch(imageUrl); // Vérifier que l'image est accessible
+          await fetch(imageUrl);
           zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
         } catch (error) {
           console.error("Erreur lors de la récupération de l'image :", error);
-          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms }); // Envoyer uniquement le texte
+          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
         }
       } else if (superUser) {
-        // Logique de mise à jour multiple
         let updates = {};
-        let fields = arg.join(' ').split(';'); // Séparer par points-virgules
+        let fields = arg.join(' ').split(';');
+        let changes = [];
 
         fields.forEach(fieldPair => {
-          let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
+          let [field, value] = fieldPair.split('=').map(item => item.trim());
           if (field && value) {
-            updates[field] = !isNaN(parseFloat(value)) && isFinite(value) ? Number(value) : value; // Convertir en nombre si possible
+            const newValue = isNaN(value) ? value : Number(value);
+            const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
+
+            if (oldValue !== newValue) {
+              changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
+              updates[field] = newValue;
+            }
           }
         });
 
         if (Object.keys(updates).length > 0) {
-          try {
-            await updatePlayerProfile(playerName, updates); // Mise à jour multiple
-            repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
-          } catch (error) {
-            console.error("Erreur lors de la mise à jour du profil :", error);
-            repondre("Une erreur est survenue lors de la mise à jour du profil.");
-          }
+          await updatePlayerProfile(playerName, updates);
+          let changeMessage = `La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
+          repondre(changeMessage);
         } else {
           repondre("Aucun champ valide trouvé pour la mise à jour.");
         }
@@ -305,12 +304,10 @@ zokou(
     }
 
     try {
-      const playerName = 'Nelliel Volfir';  // Par défaut, "John Supremus"
+      const playerName = 'Nelliel Volfir';
 
-      // Récupération des données du joueur
       let data = await getPlayerProfile(playerName);
 
-      // Si les données du joueur n'existent pas, créer un nouveau profil
       if (!data) {
         await insertPlayerProfile(playerName);
         data = await getPlayerProfile(playerName);
@@ -318,35 +315,36 @@ zokou(
       }
 
       if (!arg || arg.length === 0) {
-        // Si aucun argument n'est fourni, afficher le profil du joueur
         const imageUrl = 'https://i.ibb.co/MkKtgK58/image.jpg';
         try {
-          await fetch(imageUrl); // Vérifier que l'image est accessible
+          await fetch(imageUrl);
           zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
         } catch (error) {
           console.error("Erreur lors de la récupération de l'image :", error);
-          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms }); // Envoyer uniquement le texte
+          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
         }
       } else if (superUser) {
-        // Logique de mise à jour multiple
         let updates = {};
-        let fields = arg.join(' ').split(';'); // Séparer par points-virgules
+        let fields = arg.join(' ').split(';');
+        let changes = [];
 
         fields.forEach(fieldPair => {
-          let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
+          let [field, value] = fieldPair.split('=').map(item => item.trim());
           if (field && value) {
-            updates[field] = !isNaN(parseFloat(value)) && isFinite(value) ? Number(value) : value; // Convertir en nombre si possible
+            const newValue = isNaN(value) ? value : Number(value);
+            const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
+
+            if (oldValue !== newValue) {
+              changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
+              updates[field] = newValue;
+            }
           }
         });
 
         if (Object.keys(updates).length > 0) {
-          try {
-            await updatePlayerProfile(playerName, updates); // Mise à jour multiple
-            repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
-          } catch (error) {
-            console.error("Erreur lors de la mise à jour du profil :", error);
-            repondre("Une erreur est survenue lors de la mise à jour du profil.");
-          }
+          await updatePlayerProfile(playerName, updates);
+          let changeMessage = `La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
+          repondre(changeMessage);
         } else {
           repondre("Aucun champ valide trouvé pour la mise à jour.");
         }
@@ -362,7 +360,7 @@ zokou(
 
 zokou(
   {
-    nomCom: 'louise',
+    nomCom: 'louis',
     categorie: 'PLAYER-PROFIL'
   },
   async (dest, zk, commandeOptions) => {
@@ -424,12 +422,10 @@ zokou(
     }
 
     try {
-      const playerName = 'Lone Ink Louis';  // Par défaut, "John Supremus"
+      const playerName = 'Lone Ink Louis';
 
-      // Récupération des données du joueur
       let data = await getPlayerProfile(playerName);
 
-      // Si les données du joueur n'existent pas, créer un nouveau profil
       if (!data) {
         await insertPlayerProfile(playerName);
         data = await getPlayerProfile(playerName);
@@ -437,35 +433,36 @@ zokou(
       }
 
       if (!arg || arg.length === 0) {
-        // Si aucun argument n'est fourni, afficher le profil du joueur
         const imageUrl = 'https://i.ibb.co/xt637n06/image.jpg';
         try {
-          await fetch(imageUrl); // Vérifier que l'image est accessible
+          await fetch(imageUrl);
           zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
         } catch (error) {
           console.error("Erreur lors de la récupération de l'image :", error);
-          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms }); // Envoyer uniquement le texte
+          zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
         }
       } else if (superUser) {
-        // Logique de mise à jour multiple
         let updates = {};
-        let fields = arg.join(' ').split(';'); // Séparer par points-virgules
+        let fields = arg.join(' ').split(';');
+        let changes = [];
 
         fields.forEach(fieldPair => {
-          let [field, value] = fieldPair.split('=').map(item => item.trim()); // Séparer par `=` et retirer les espaces
+          let [field, value] = fieldPair.split('=').map(item => item.trim());
           if (field && value) {
-            updates[field] = !isNaN(parseFloat(value)) && isFinite(value) ? Number(value) : value; // Convertir en nombre si possible
+            const newValue = isNaN(value) ? value : Number(value);
+            const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
+
+            if (oldValue !== newValue) {
+              changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
+              updates[field] = newValue;
+            }
           }
         });
 
         if (Object.keys(updates).length > 0) {
-          try {
-            await updatePlayerProfile(playerName, updates); // Mise à jour multiple
-            repondre(`La fiche du joueur ${playerName} a été mise à jour avec succès.`);
-          } catch (error) {
-            console.error("Erreur lors de la mise à jour du profil :", error);
-            repondre("Une erreur est survenue lors de la mise à jour du profil.");
-          }
+          await updatePlayerProfile(playerName, updates);
+          let changeMessage = `La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
+          repondre(changeMessage);
         } else {
           repondre("Aucun champ valide trouvé pour la mise à jour.");
         }
@@ -478,9 +475,3 @@ zokou(
     }
   }
 );
-
-module.exports = {
-  insertPlayerProfile,
-  getPlayerProfile,
-  updatePlayerProfile
-};
