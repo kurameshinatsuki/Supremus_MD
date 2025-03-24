@@ -210,7 +210,7 @@ zokou({
 > *💎 $ Gemmes*: ${response.supremus_gemmes}
 ▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟`;
 
-        const imageUrl = "https://i.ibb.co/16p6w2D/image.jpg"; // URL de l'image
+        const imageUrl = "https://i.ibb.co/xNZVw6g/image.jpg"; // URL de l'image
 
         await zk.sendMessage(dest, {
             image: { url: imageUrl },
