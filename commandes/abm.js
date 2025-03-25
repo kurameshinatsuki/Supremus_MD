@@ -126,8 +126,8 @@ zokou(
     (dest, zk, { repondre, arg, ms }) => {
         if (arg.length < 1) return repondre(
             'Format: \n' +
-            '- Pour ajuster une stat : @Joueur stat +/- valeur\n' +
-            '  Ex: duel_abm Sukuna heart - 30\n' +
+            '- Pour ajuster des stats : @Joueur stat +/- valeur [@Joueur stat +/- valeur ...]\n' +
+            '  Ex: duel_abm Sukuna heart - 30 energie + 20\n' +
             '- Pour réinitialiser un joueur : reset @Joueur\n' +
             '- Pour réinitialiser tous les joueurs : reset all\n' +
             '- Pour supprimer tous les duels : delete'
@@ -135,37 +135,33 @@ zokou(
 
         const action = arg[0].trim().toLowerCase();
 
-        // Gestion de la suppression de tous les duels
+        // Suppression de tous les duels
         if (action === 'delete') {
-            for (const duelKey in duelsABM) {
-                delete duelsABM[duelKey];
-            }
+            duelsABM = {}; // Réinitialisation complète
             return repondre('Tous les duels en cours ont été supprimés.');
         }
 
-        // Gestion de la réinitialisation des statistiques
+        // Réinitialisation des statistiques
         if (action === 'reset') {
             if (arg.length < 2) return repondre('Format: reset @Joueur ou reset all');
 
             const joueurId = arg[1].trim().toLowerCase();
-            const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
 
             if (joueurId === 'all') {
-                // Réinitialisation de tous les joueurs dans tous les duels
                 for (const key in duelsABM) {
-                    const duel = duelsABM[key];
-                    duel.equipe1.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
-                    duel.equipe2.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
+                    duelsABM[key].equipe1.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
+                    duelsABM[key].equipe2.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
                 }
                 return repondre('Les statistiques de tous les joueurs ont été réinitialisées.');
             }
 
-            if (!duelKey) return repondre('Joueur non trouvé ou aucun duel en cours.');
+            const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
+            if (!duelKey) return repondre('Joueur non trouvé.');
 
             const duel = duelsABM[duelKey];
             const joueur = duel.equipe1.find(j => j.nom.toLowerCase() === joueurId) || duel.equipe2.find(j => j.nom.toLowerCase() === joueurId);
-
             if (!joueur) return repondre('Joueur non trouvé.');
+
             joueur.stats = { heart: 100, energie: 100, vie: 100 };
             repondre(`Les statistiques de ${joueur.nom} ont été réinitialisées.`);
 
@@ -173,27 +169,43 @@ zokou(
             return zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
         }
 
-        // Gestion de l'ajustement des statistiques
-        if (arg.length < 4) return repondre('Format: @Joueur stat +/- valeur');
+        // Gestion de l'ajustement des stats pour plusieurs joueurs
+        if (arg.length < 4) return repondre('Format: @Joueur stat +/- valeur [@Joueur stat +/- valeur ...]');
 
-        const [joueurId, stat, signe, valeurStr] = arg;
-        const valeur = parseInt(valeurStr);
-        if (isNaN(valeur)) return repondre('Valeur invalide.');
+        let i = 0;
+        let modifsEffectuées = false;
+        while (i < arg.length) {
+            const joueurId = arg[i];
+            const stat = arg[i + 1];
+            const signe = arg[i + 2];
+            const valeurStr = arg[i + 3];
 
-        const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
-        if (!duelKey) return repondre('Joueur non trouvé.');
+            if (!joueurId || !stat || !signe || !valeurStr) break; // Arrêter si format incorrect
 
-        const duel = duelsABM[duelKey];
-        const joueur = duel.equipe1.find(j => j.nom === joueurId) || duel.equipe2.find(j => j.nom === joueurId);
-        if (!joueur || !['heart', 'energie', 'vie'].includes(stat)) return repondre('Stat invalide.');
+            const valeur = parseInt(valeurStr);
+            if (isNaN(valeur)) return repondre(`Valeur invalide pour ${joueurId}.`);
 
-        const { stats, message } = limiterStatsABM(joueur.stats, stat, (signe === '-' ? -valeur : valeur));
-        joueur.stats = stats;
+            const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
+            if (!duelKey) return repondre(`Joueur ${joueurId} non trouvé.`);
 
-        if (message) repondre(message);
+            const duel = duelsABM[duelKey];
+            const joueur = duel.equipe1.find(j => j.nom === joueurId) || duel.equipe2.find(j => j.nom === joueurId);
+            if (!joueur || !['heart', 'energie', 'vie'].includes(stat)) return repondre(`Stat invalide pour ${joueurId}.`);
 
-        const ficheDuel = generateFicheDuelABM(duel);
-        zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
+            const { stats, message } = limiterStatsABM(joueur.stats, stat, (signe === '-' ? -valeur : valeur));
+            joueur.stats = stats;
+            if (message) repondre(message);
+
+            modifsEffectuées = true;
+            i += 4; // Passer au prochain joueur/stat
+        }
+
+        if (modifsEffectuées) {
+            const duelKey = Object.keys(duelsABM)[0]; // On prend un duel quelconque pour renvoyer une fiche mise à jour
+            const duel = duelsABM[duelKey];
+            const ficheDuel = generateFicheDuelABM(duel);
+            return zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
+        }
     }
 );
 
@@ -325,47 +337,50 @@ zokou(
     switch (action) {
       case 'stats':
         if (arg.length < 5) {
-          return repondre('*Usage:* -sr stats @Pilote stat +/- valeur. Ex: -sr_admin stats @Pilote1 voiture - 20');
+          return repondre('*Usage:* -sr stats @Pilote stat +/- valeur [@Pilote stat +/- valeur ...]\n' +
+            'Ex: -sr stats @Pilote1 voiture - 20 essence + 15 @Pilote2 turbo - 10');
         }
 
-        const [_, piloteId, stat, signe, valeurStr] = arg;
-        const valeur = parseInt(valeurStr);
+        let i = 1;
+        let modificationsEffectuées = false;
 
-        if (isNaN(valeur)) {
-          return repondre('Valeur invalide.');
+        while (i < arg.length) {
+          const piloteId = arg[i];
+          const stat = arg[i + 1];
+          const signe = arg[i + 2];
+          const valeurStr = arg[i + 3];
+
+          if (!piloteId || !stat || !signe || !valeurStr) break; // Arrêter si format incorrect
+
+          const valeur = parseInt(valeurStr);
+          if (isNaN(valeur)) return repondre(`Valeur invalide pour ${piloteId}.`);
+
+          if (!['voiture', 'essence', 'turbo'].includes(stat)) {
+            return repondre(`Stat invalide pour ${piloteId}. Les stats valides sont : voiture, essence, turbo.`);
+          }
+
+          const courseKey = Object.keys(coursesSpeedRush).find(key => key.includes(piloteId));
+          if (!courseKey) return repondre(`Pilote ${piloteId} non trouvé dans une course en cours.`);
+
+          const course = coursesSpeedRush[courseKey];
+          let pilote = [course.pilote1, course.pilote2, course.pilote3].find(p => p?.nom === piloteId);
+
+          if (!pilote) return repondre(`Pilote ${piloteId} non trouvé dans cette course.`);
+
+          const { stats, message } = limiterStatsSpeedRush(pilote.stats, stat, (signe === '-' ? -valeur : valeur));
+          pilote.stats = stats;
+          if (message) repondre(message);
+
+          modificationsEffectuées = true;
+          i += 4; // Passer au prochain bloc de stats
         }
 
-        if (!['voiture', 'essence', 'turbo'].includes(stat)) {
-          return repondre('Stat invalide. Les stats valides sont : voiture, essence, turbo.');
+        if (modificationsEffectuées) {
+          const courseKey = Object.keys(coursesSpeedRush)[0]; // On prend une course quelconque pour renvoyer une fiche mise à jour
+          const course = coursesSpeedRush[courseKey];
+          const ficheCourse = generateFicheCourseSpeedRush(course);
+          return zk.sendMessage(dest, { image: { url: course.circuit.image }, caption: ficheCourse }, { quoted: ms });
         }
-
-        const courseKey = Object.keys(coursesSpeedRush).find(key => key.includes(piloteId));
-        if (!courseKey) {
-          return repondre('Pilote non trouvé dans une course en cours.');
-        }
-
-        const course = coursesSpeedRush[courseKey];
-        let pilote;
-
-        if (course.pilote1.nom === piloteId) {
-          pilote = course.pilote1;
-        } else if (course.pilote2.nom === piloteId) {
-          pilote = course.pilote2;
-        } else if (course.pilote3 && course.pilote3.nom === piloteId) {
-          pilote = course.pilote3;
-        } else {
-          return repondre('Pilote non trouvé dans cette course.');
-        }
-
-        const { stats, message } = limiterStatsSpeedRush(pilote.stats, stat, (signe === '-' ? -valeur : valeur));
-        pilote.stats = stats;
-
-        if (message) {
-          repondre(message);
-        }
-
-        const ficheCourse = generateFicheCourseSpeedRush(course);
-        zk.sendMessage(dest, { image: { url: course.circuit.image }, caption: ficheCourse }, { quoted: ms });
         break;
 
       case 'delete':
