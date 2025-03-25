@@ -17,7 +17,7 @@ const arenesABM = [
     { nom: 'Forêt Dense', image: 'https://i.ibb.co/XxzW23W7/Image-2025-03-21-14-41-20-0.jpg' }
 ];
 
-const duelsABM = {};
+let duelsABM = {};
 let lastArenaIndex = -1;
 
 function tirerArABM() {
@@ -218,7 +218,7 @@ const circuitsSpeedRush = [
 ];
 
 // Stockage des courses en cours
-const coursesSpeedRush = {};
+let coursesSpeedRush = {};
 
 // Fonction pour tirer un circuit aléatoire
 function tirerCircuitSpeedRush() {
