@@ -114,13 +114,43 @@ zokou(
           repondre(`⛔ Champs invalides détectés : ${invalidFields.join(', ')}.\nVeuillez vérifier la syntaxe et réessayer.`);
         }
 
-        if (Object.keys(updates).length > 0) {
-          await updatePlayerProfile(playerName, updates);
-          let changeMessage = `✅ La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
-          repondre(changeMessage);
-        } else if (invalidFields.length === 0) {
-          repondre("⚠️ Aucun champ valide n'a été trouvé pour la mise à jour.");
+if (Object.keys(updates).length > 0) {
+  let updateQueries = {};
+  let changes = [];
+
+  fields.forEach(fieldPair => {
+    let [field, value] = fieldPair.split('=').map(item => item.trim());
+    if (field && value) {
+      let oldValue = data[field] !== undefined ? data[field] : 0;
+      let newValue = oldValue;
+
+      if (!isNaN(value)) {
+        // Vérifier si l'utilisateur a ajouté un préfixe (+ ou -)
+        if (value.startsWith('+')) {
+          newValue = oldValue + Number(value.substring(1));
+        } else if (value.startsWith('-')) {
+          newValue = oldValue - Number(value.substring(1));
+        } else {
+          newValue = Number(value);
         }
+
+        changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
+        updateQueries[field] = newValue;
+      } else {
+        // Si ce n'est pas un nombre, on remplace directement
+        changes.push(`- *${field}* : ${oldValue} -> ${value}`);
+        updateQueries[field] = value;
+      }
+    }
+  });
+
+  if (Object.keys(updateQueries).length > 0) {
+    await updatePlayerProfile(playerName, updateQueries);
+    let changeMessage = `La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
+    repondre(changeMessage);
+  } else {
+    repondre("Aucun champ valide trouvé pour la mise à jour.");
+  }
       } else {
         repondre("⛔ Vous n'avez pas les permissions pour modifier cette fiche.");
       }
