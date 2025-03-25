@@ -154,6 +154,7 @@ if (Object.keys(updates).length > 0) {
       } else {
         repondre("⛔ Vous n'avez pas les permissions pour modifier cette fiche.");
       }
+     }
     } catch (error) {
       console.error("Erreur:", error);
       repondre('❌ Une erreur est survenue. Veuillez réessayer.');
