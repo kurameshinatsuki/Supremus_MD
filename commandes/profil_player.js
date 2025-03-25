@@ -3,7 +3,7 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
 
 
 
-/*zokou(
+zokou(
   {
     nomCom: 'john',
     categorie: 'PLAYER-PROFIL'
@@ -11,7 +11,6 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, superUser } = commandeOptions;
 
-    // Fonction pour formater le message de profil du joueur
     function formatProfileMessage(data) {
       return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓[SRPN PROFIL]▓▓▓▓▓▓*
@@ -90,36 +89,47 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
         let updates = {};
         let fields = arg.join(' ').split(';');
         let changes = [];
+        let invalidFields = [];
 
         fields.forEach(fieldPair => {
           let [field, value] = fieldPair.split('=').map(item => item.trim());
           if (field && value) {
             const newValue = isNaN(value) ? value : Number(value);
-            const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
 
-            if (oldValue !== newValue) {
-              changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
-              updates[field] = newValue;
+            // Vérification si le champ existe dans la fiche actuelle
+            if (Object.keys(data).includes(field)) {
+              const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
+
+              if (oldValue !== newValue) {
+                changes.push(`- *${field}* : ${oldValue} -> ${newValue}`);
+                updates[field] = newValue;
+              }
+            } else {
+              invalidFields.push(field);
             }
           }
         });
 
+        if (invalidFields.length > 0) {
+          repondre(`⛔ Champs invalides détectés : ${invalidFields.join(', ')}.\nVeuillez vérifier la syntaxe et réessayer.`);
+        }
+
         if (Object.keys(updates).length > 0) {
           await updatePlayerProfile(playerName, updates);
-          let changeMessage = `La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
+          let changeMessage = `✅ La fiche du joueur *${playerName}* a été mise à jour avec succès :\n\n${changes.join('\n')}`;
           repondre(changeMessage);
-        } else {
-          repondre("Aucun champ valide trouvé pour la mise à jour.");
+        } else if (invalidFields.length === 0) {
+          repondre("⚠️ Aucun champ valide n'a été trouvé pour la mise à jour.");
         }
       } else {
-        repondre("Vous n'avez pas les permissions pour modifier cette fiche.");
+        repondre("⛔ Vous n'avez pas les permissions pour modifier cette fiche.");
       }
     } catch (error) {
       console.error("Erreur:", error);
-      repondre('Une erreur est survenue. Veuillez réessayer.');
+      repondre('❌ Une erreur est survenue. Veuillez réessayer.');
     }
   }
-);*/
+);
 
 
 zokou(
