@@ -240,8 +240,7 @@ zokou(
       if (!arg || arg.length === 0) {
         const imageUrl = 'https://i.ibb.co/yMQbMrn/image.jpg';
         try {
-          await fetch(imageUrl);
-          zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
+          await zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
         } catch (error) {
           console.error("Erreur lors de la récupération de l'image :", error);
           zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
@@ -358,8 +357,7 @@ zokou(
       if (!arg || arg.length === 0) {
         const imageUrl = 'https://i.ibb.co/MkKtgK58/image.jpg';
         try {
-          await fetch(imageUrl);
-          zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
+          await zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
         } catch (error) {
           console.error("Erreur lors de la récupération de l'image :", error);
           zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
@@ -476,8 +474,7 @@ zokou(
       if (!arg || arg.length === 0) {
         const imageUrl = 'https://i.ibb.co/xt637n06/image.jpg';
         try {
-          await fetch(imageUrl);
-          zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
+          await zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
         } catch (error) {
           console.error("Erreur lors de la récupération de l'image :", error);
           zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
