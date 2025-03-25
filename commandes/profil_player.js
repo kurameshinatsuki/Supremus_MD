@@ -3,7 +3,7 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
 
 
 
-zokou(
+/*zokou(
   {
     nomCom: 'john',
     categorie: 'PLAYER-PROFIL'
@@ -160,7 +160,7 @@ if (Object.keys(updates).length > 0) {
       repondre('❌ Une erreur est survenue. Veuillez réessayer.');
     }
   }
-);
+);*/
 
 
 zokou(
