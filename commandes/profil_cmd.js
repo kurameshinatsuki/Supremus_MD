@@ -56,3 +56,31 @@ zokou(
         }
     }
 );
+
+
+zokou(
+    {
+        nomCom: 'update',
+        categorie: 'CENTRAL',
+    }, async (dest, zk, commandeOptions) => {
+        const { arg, repondre, superUser } = commandeOptions;
+
+        if (!superUser) {
+            return repondre("Commande réservée aux *⚖️SPEED MASTER🪀*.");
+        }
+
+        try {
+            const [motCle, verdict, imageUrl, etat] = arg.join(' ').split(';');
+
+            if (motCle && verdict && etat) {
+                await updateVerdict(motCle, verdict, imageUrl, etat);
+                repondre(`Verdict pour '${motCle}' mis à jour avec succès.`);
+            } else {
+                repondre("Format incorrect. Utilisez: -${nomCom} motCle;verdict;imageUrl;normal");
+            }
+        } catch (error) {
+            console.log("Erreur lors de la mise à jour du verdict : " + error);
+            repondre("Une erreur est survenue. Veuillez réessayer.");
+        }
+    }
+);
