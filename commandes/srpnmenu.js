@@ -71,8 +71,8 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/37qwKLP/Picsart-24-09-15-07-54-02-342.jpg',
-            'https://i.ibb.co/y55kDpL/Picsart-24-09-15-08-00-10-160.jpg'
+            'https://i.ibb.co/1YQvT04g/Image-2025-03-27-01-56-16-1.jpg',
+            'https://i.ibb.co/PpFzC4C/Image-2025-03-27-01-56-16-0.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
@@ -117,8 +117,8 @@ zokou(
     { nomCom: 'yugioh', categorie: 'YU-GI-OH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
-        const lien = 'https://i.ibb.co/Y3wTs4X/Picsart-24-09-15-08-45-38-072.jpg';
-        const msg = '*🎴 C\'est l\'heure du duel !';
+        const lien = 'https://i.ibb.co/gbYPs2CL/Image-2025-03-27-01-57-49.jpg';
+        const msg = '*🎴 C\'est l\'heure du duel !*';
         await envoyerImage(dest, zk, ms, lien, msg);
     }
 );
