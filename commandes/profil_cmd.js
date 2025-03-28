@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { getVerdictByKeyword, updateVerdict } = require('../bdd/profil_bdd');
 
 zokou(
@@ -77,4 +77,4 @@ zokou(
             repondre("Une erreur est survenue. Veuillez réessayer.");
         }
     }
-);
+);*/
