@@ -7,7 +7,7 @@
 //               liées à l'économie du bot Supremus.
 //
 // Date de création : 06/03/2025
-// Dernière modification : 20/03/2025
+// Dernière modification : 28/03/2025
 //
 // ============================================================
 
@@ -28,7 +28,7 @@ const supremusApi = 'https://supremus-api.vercel.app/api';
  * @type {string}
  * @description Le token d'authentification pour l'API Supremus Necessaire pour s'authentifier a l'API.
  */
-const supremusToken = 'free_token_for_test';
+const supremusToken = '64b71f3b-f718-44a6-9a6a-af63601cf073';
 
 
 /**
