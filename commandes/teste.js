@@ -129,4 +129,4 @@ for (const nomCom in playerProfiles) {
       }
     }
   );
-});
+};
