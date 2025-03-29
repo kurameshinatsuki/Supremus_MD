@@ -258,15 +258,15 @@ zokou(
 > 💢 Difficult:
 > 🎤 Comment:
 
-*👤[Perdant] :
+*👤[Perdant] :*
 > 🧠 Maîtrise:
 > 💯 Score:
 > 💢 Difficult:
 > 🎤 Comment:
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 *👾 GAME :* 
-*🌐 SERVEUR :
-*🛂 MASTER :
+*🌐 SERVEUR :* 
+*🛂 MASTER :* 
 
 *_✒️ Signature : ⟮ ✓ ⟯_*
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
@@ -274,5 +274,23 @@ zokou(
            // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
    repondre(msg);
         }
+    }
+);
+
+// Commande de classement
+zokou(
+    { nomCom: 'challenge', categorie: 'CENTRAL' },
+    async (dest, zk, commandeOptions) => {
+        const { ms } = commandeOptions;
+        const lien = 'https://i.ibb.co/C3h9Bkt6/Image-2025-03-29-08-45-37.jpg';
+        const msg = '🕹️🪀 𝗦𝗨𝗣𝗥𝗘𝗠𝗨𝗦 𝗥𝗢𝗟𝗘 
+                       𝗣𝗟𝗔𝗬 𝗡𝗔𝗧𝗜𝗢𝗡 🔝🏆
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*Découvrez où vous en êtes dans la compétition en consultant le classement ici :* https://challenge.place/c/67da00da1ae03084306ecb5e?utm_source=android_app&utm_medium=share
+
+*N'oubliez pas de follow la page pour rester à jour sur les prochains défis et compétitions ! 🏆🔝*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+              📱𝗦𝗨𝗣𝗥𝗘𝗠𝗨𝗦 𝗣𝗥𝗢𝗗 🪀';
+        await envoyerImage(dest, zk, ms, lien, msg);
     }
 );
