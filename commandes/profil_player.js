@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
 
@@ -824,4 +824,4 @@ zokou(
       repondre('Une erreur est survenue. Veuillez réessayer.');
     }
   }
-);
+);*/
