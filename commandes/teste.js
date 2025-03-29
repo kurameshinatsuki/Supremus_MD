@@ -2,17 +2,43 @@ const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
 const playerProfiles = {
-  'tenno2': {
-    nomCom: 'tenno2',
+  'tenno': {
+    nomCom: 'tenno',
     playerName: 'Tęnnõ Sũpręmũs',
     imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
   },
-  'nelliel2': { 
-    nomCom: 'nelliel2',
+  'nelliel': { 
+    nomCom: 'nelliel',
     playerName: 'Nelliel Volfir',
     imageUrl: 'https://i.ibb.co/20hx4jVR/Image-2025-03-24-07-41-59-1.jpg'
+  },
+  'louis': { 
+    nomCom: 'louis',
+    playerName: 'Lone Ink Louis',
+    imageUrl: 'https://i.ibb.co/XrYFM8sR/Image-2025-03-27-02-14-52.jpg'
+  },
+  'aizen': { 
+    nomCom: 'aizen',
+    playerName: 'Aizen',
+    imageUrl: 'https://i.ibb.co/JFSqdVSm/Image-2025-03-25-18-43-08.jpg'
+  },
+  'yu': { 
+    nomCom: 'yu',
+    playerName: 'DĒVIL Yû',
+    imageUrl: 'https://i.ibb.co/CKJZvb5p/Image-2025-03-28-13-43-31-2.jpg'
+  },
+  'inferno': { 
+    nomCom: 'inferno',
+    playerName: 'Inferno',
+    imageUrl: 'https://i.ibb.co/RTv16qdh/Image-2025-03-28-13-43-31-0.jpg'
+  },
+  'shadow': { 
+    nomCom: 'shadow',
+    playerName: 'Lloyd Shadow T.',
+    imageUrl: 'https://i.ibb.co/4Z8r4mgn/Image-2025-03-28-13-43-31-1.jpg'
   }
 };
+
 
 function formatProfileMessage(data) {
   return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
