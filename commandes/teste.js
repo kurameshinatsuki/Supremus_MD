@@ -36,6 +36,11 @@ const playerProfiles = {
     nomCom: 'shadow',
     playerName: 'Lloyd Shadow T.',
     imageUrl: 'https://i.ibb.co/4Z8r4mgn/Image-2025-03-28-13-43-31-1.jpg'
+  },
+  'vecta': { 
+    nomCom: 'vecta',
+    playerName: 'Vecta Uchiwa.',
+    imageUrl: 'https://i.ibb.co/cXy8YsLq/Image-2025-03-30-00-24-06.jpg'
   }
 };
 
