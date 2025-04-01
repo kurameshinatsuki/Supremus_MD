@@ -1,3 +1,6 @@
+const { zokou } = require('../framework/zokou');
+const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
+
 const DISCUSSION_AUTORISEE = "120363334477094721@g.us";
 
 zokou({ nomCom: "setplayer", reaction: "👤", categorie: "ECONOMY", }, async (dest, zk, commandOptions) => { if (dest !== DISCUSSION_AUTORISEE) return commandOptions.repondre("Cette commande ne peut être utilisée que dans une discussion spécifique.");
