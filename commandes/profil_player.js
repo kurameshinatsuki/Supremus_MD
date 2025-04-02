@@ -41,6 +41,16 @@ const playerProfiles = {
     nomCom: 'vecta',
     playerName: 'Vecta Uchiwa.',
     imageUrl: 'https://i.ibb.co/cXy8YsLq/Image-2025-03-30-00-24-06.jpg'
+  },
+  'sophie': { 
+    nomCom: 'sophie',
+    playerName: 'Sophie Scarlet Louis',
+    imageUrl: 'https://i.ibb.co/PZwGRjNL/Image-2025-04-02-13-55-06-0.jpg'
+  },
+  'lord': { 
+    nomCom: 'lord',
+    playerName: 'Lord',
+    imageUrl: 'https://i.ibb.co/5hPBn1j3/Image-2025-04-02-13-55-06-1.jpg'
   }
 };
 
