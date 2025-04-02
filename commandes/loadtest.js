@@ -1,136 +1,33 @@
-/*const { zokou } = require('../framework/zokou');
+const { zokou } = require('../framework/zokou');
 
-async function simulateLoading(zk, origineMessage, ms) {
-const frames = [
-    "*`⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ [0%]`*",
-    "*`🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ [10%]`*",
-    "*`🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ [20%]`*",
-    "*`🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ [30%]`*",
-    "*`🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ [40%]`*",
-    "*`🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ [50%]`*",
-    "*`🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ [60%]`*",
-    "*`🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜ [70%]`*",
-    "*`🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜ [80%]`*",
-    "*`🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜ [90%]`*",
-    "*`🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 [100%]`*",
-];
+async function countdown(zk, origineMessage, minutes) { const delay = minutes * 60 * 1000; // Convertir minutes en millisecondes const startMessage = ⏳ Décompte lancé pour ${minutes} minute(s)...;
 
-    try {
-        let loadingMessage = await zk.sendMessage(origineMessage, { text: frames[0] });
-
-        for (let i = 1; i < frames.length; i++) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-            await zk.sendMessage(origineMessage, {
-                text: frames[i],
-                edit: loadingMessage.key,
-            });
-        }
-
-    } catch (error) {
-        console.error("Erreur lors de la simulation du chargement :", error);
-        await zk.sendMessage(origineMessage, { text: "Une erreur s'est produite lors du chargement. 😢" });
-    }
+try {
+    await zk.sendMessage(origineMessage, { text: startMessage });
+    
+    await new Promise(resolve => setTimeout(resolve, delay));
+    
+    await zk.sendMessage(origineMessage, { text: `🚨 Temps écoulé ! ${minutes} minute(s) sont passées.` });
+} catch (error) {
+    console.error("Erreur dans le compte à rebours :", error);
+    await zk.sendMessage(origineMessage, { text: "❌ Une erreur est survenue dans le décompte." });
 }
 
+}
 
-zokou(
-    { nomCom: 'load', categorie: 'MON-BOT' }, 
-    async (dest, zk, commandeOptions) => {
-        const { ms, repondre, verifGroupe } = commandeOptions;
+zokou( { nomCom: 'latence', categorie: 'DRPN' }, async (dest, zk, commandeOptions) => { const { args, repondre } = commandeOptions;
 
-        // Suppression de la ligne qui empêche l'exécution dans les groupes
-        // if (verifGroupe) return;
-
-        await simulateLoading(zk, dest, ms);
+if (!args[0] || isNaN(args[0])) {
+        return await repondre("❌ Veuillez spécifier un délai en minutes. Exemple : -latence 5");
     }
+    
+    const minutes = parseInt(args[0]);
+    if (minutes <= 0) {
+        return await repondre("❌ Le délai doit être supérieur à 0 minute.");
+    }
+    
+    await countdown(zk, dest, minutes);
+}
+
 );
 
-
-zokou(
-    {
-        nomCom: 'load2',
-        categorie: 'MON-BOT'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0) {
-            const lienImage = 'https://files.catbox.moe/ol0i4m.jpg';
-            const lienGif = 'https://files.catbox.moe/0ua28c.mp4';
-
-            const frames = [
-                "▱▱▱▱▱▱▱▱▱▱ 🔷0%",
-                "▰▱▱▱▱▱▱▱▱▱ 🔷10%",
-                "▰▰▱▱▱▱▱▱▱▱ 🔷20%",
-                "▰▰▰▱▱▱▱▱▱▱ 🔷30%",
-                "▰▰▰▰▱▱▱▱▱▱ 🔷40%",
-                "▰▰▰▰▰▱▱▱▱▱ 🔷50%",
-                "▰▰▰▰▰▰▱▱▱▱ 🔷60%",
-                "▰▰▰▰▰▰▰▱▱▱ 🔷70%",
-                "▰▰▰▰▰▰▰▰▱▱ 🔷80%",
-                "▰▰▰▰▰▰▰▰▰▱ 🔷90%",
-                "▰▰▰▰▰▰▰▰▰▰ 🔷100%",
-            ];
-
-            try {
-                let imageMessage = await zk.sendMessage(dest, { text: frames[0] });
-
-                for (let i = 1; i < frames.length; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    await zk.sendMessage(dest, {
-                        text: frames[i],
-                        edit: imageMessage.key,
-                    });
-                }
-
-                // On attend un petit moment pour que l'effet soit visible
-                await new Promise(resolve => setTimeout(resolve, 500));
-
-                // On envoie maintenant le GIF et l'image
-                await zk.sendMessage(dest, {
-                    video: { url: lienGif },
-                    gifPlayback: true,
-                    caption: ""
-                });
-
-                await zk.sendMessage(dest, {
-                    image: { url: lienImage },
-                    caption: ""
-                });
-
-            } catch (error) {
-                console.error("Erreur lors de l'animation :", error);
-                await zk.sendMessage(dest, { text: "Une erreur s'est produite. 😢" });
-            }
-        }
-    }
-);
-
-
-
-zokou(
-    {
-        nomCom: 'load3',
-        categorie: 'MON-BOT'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0) {
-            const liens = [
-                'https://files.catbox.moe/1nvz4f.jpg', 
-                'https://files.catbox.moe/qihh25.jpg',
-                'https://files.catbox.moe/55skbu.jpg', 
-                'https://files.catbox.moe/69eev8.jpg', 
-                'https://files.catbox.moe/6ckd48.jpg', 
-                'https://files.catbox.moe/qnjv5p.jpg', 
-                'https://files.catbox.moe/y90lsj.jpg'
-            ];
-
-            for (const lien of liens) {
-                await zk.sendMessage(dest, { image: { url: lien }, caption: "" }, { quoted: ms });
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-        }
-    }
-);*/
