@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
 const DISCUSSION_AUTORISEE = "120363334477094721@g.us";
@@ -40,5 +40,5 @@ try {
     return repondre(error.message);
 }
 
-});
+});*/
 
