@@ -1,33 +1,31 @@
 const { zokou } = require('../framework/zokou');
 
-async function countdown(zk, origineMessage, minutes) { const delay = minutes * 60 * 1000; // Convertir minutes en millisecondes const startMessage = ⏳ Décompte lancé pour ${minutes} minute(s)...;
+zokou({ nomCom: "latence", categorie: "Gestion" }, async (dest, zk, commandeOptions) => {
+  const { ms, repondre, args } = commandeOptions;
 
-try {
-    await zk.sendMessage(origineMessage, { text: startMessage });
-    
-    await new Promise(resolve => setTimeout(resolve, delay));
-    
-    await zk.sendMessage(origineMessage, { text: `🚨 Temps écoulé ! ${minutes} minute(s) sont passées.` });
-} catch (error) {
-    console.error("Erreur dans le compte à rebours :", error);
-    await zk.sendMessage(origineMessage, { text: "❌ Une erreur est survenue dans le décompte." });
-}
+  // Vérifie si un temps est spécifié
+  if (!args[0] || isNaN(args[0])) {
+    return repondre("⏳ Veuillez entrer un temps en minutes, exemple : -latence 5");
+  }
 
-}
+  const tempsMinutes = parseInt(args[0]);
+  const tempsMillisecondes = tempsMinutes * 60 * 1000;
 
-zokou( { nomCom: 'latence', categorie: 'DRPN' }, async (dest, zk, commandeOptions) => { const { args, repondre } = commandeOptions;
+  await zk.sendMessage(dest, {
+    text: `⏳ Le joueur a ${tempsMinutes} minutes pour écrire son pavé.`,
+  }, { quoted: ms });
 
-if (!args[0] || isNaN(args[0])) {
-        return await repondre("❌ Veuillez spécifier un délai en minutes. Exemple : -latence 5");
-    }
-    
-    const minutes = parseInt(args[0]);
-    if (minutes <= 0) {
-        return await repondre("❌ Le délai doit être supérieur à 0 minute.");
-    }
-    
-    await countdown(zk, dest, minutes);
-}
+  // Envoie un rappel à mi-temps
+  setTimeout(async () => {
+    await zk.sendMessage(dest, {
+      text: `⌛ Il reste ${Math.ceil(tempsMinutes / 2)} minutes pour terminer.`,
+    }, { quoted: ms });
+  }, tempsMillisecondes / 2);
 
-);
-
+  // Temps écoulé
+  setTimeout(async () => {
+    await zk.sendMessage(dest, {
+      text: `🚨 Temps écoulé ! Le joueur n'a pas rendu son pavé à temps.`,
+    }, { quoted: ms });
+  }, tempsMillisecondes);
+});
