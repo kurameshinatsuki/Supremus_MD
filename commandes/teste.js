@@ -1,10 +1,10 @@
 const { zokou } = require('../framework/zokou');
 
 // Configuration des JIDs autorisés (remplacez par vos IDs de groupe)
-const authorizedJIDs = [
+/*const authorizedJIDs = [
   '22554191184@s.whatsapp.net', // ID du groupe 1
   '120363334477094721@g.us'  // ID du groupe 2
-];
+];*/
 
 let gameInProgress = {}; // Objet pour suivre les jeux en cours par JID
 
@@ -23,9 +23,9 @@ zokou(
     }
 
     // Vérification si un jeu est déjà en cours pour cet utilisateur dans ce JID
-    if (gameInProgress[from] && gameInProgress[from][auteurMessage]) {
+    /*if (gameInProgress[from] && gameInProgress[from][auteurMessage]) {
       return repondre("⏳ Vous avez déjà un jeu en cours. Veuillez le terminer avant d'en lancer un autre.");
-    }
+    }*/
 
     const game = arg[0]; // Le type de jeu à lancer
     const mise = parseInt(arg[1]); // La mise du joueur
