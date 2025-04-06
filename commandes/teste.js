@@ -10,7 +10,7 @@ let gameInProgress = {}; // Objet pour suivre les jeux en cours par JID
 
 zokou(
   {
-    nomCom: 'casino1',
+    nomCom: 'casino',
     reaction: '🎰',
     categorie: 'ECONOMY'
   },
