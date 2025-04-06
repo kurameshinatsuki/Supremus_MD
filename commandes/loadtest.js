@@ -1,31 +1,30 @@
 const { zokou } = require('../framework/zokou');
 
+// Commande : -latence 0.5
+// Pour test rapide
 zokou({ nomCom: "latence", categorie: "Gestion" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, args } = commandeOptions;
 
-  // Vérifie si un temps est spécifié
   if (!args[0] || isNaN(args[0])) {
     return repondre("⏳ Veuillez entrer un temps en minutes, exemple : -latence 5");
   }
 
-  const tempsMinutes = parseInt(args[0]);
-  const tempsMillisecondes = tempsMinutes * 60 * 1000;
+  const minutes = parseFloat(args[0]);
+  const msTotal = minutes * 60 * 1000;
 
   await zk.sendMessage(dest, {
-    text: `⏳ Le joueur a ${tempsMinutes} minutes pour écrire son pavé.`,
+    text: `⏳ Tu as ${minutes} minute(s) pour écrire ton pavé.`,
   }, { quoted: ms });
 
-  // Envoie un rappel à mi-temps
-  setTimeout(async () => {
-    await zk.sendMessage(dest, {
-      text: `⌛ Il reste ${Math.ceil(tempsMinutes / 2)} minutes pour terminer.`,
+  setTimeout(() => {
+    zk.sendMessage(dest, {
+      text: `⌛ Il reste ${Math.ceil(minutes / 2)} minute(s) !`,
     }, { quoted: ms });
-  }, tempsMillisecondes / 2);
+  }, msTotal / 2);
 
-  // Temps écoulé
-  setTimeout(async () => {
-    await zk.sendMessage(dest, {
-      text: `🚨 Temps écoulé ! Le joueur n'a pas rendu son pavé à temps.`,
+  setTimeout(() => {
+    zk.sendMessage(dest, {
+      text: `🚨 Temps écoulé !`,
     }, { quoted: ms });
-  }, tempsMillisecondes);
+  }, msTotal);
 });
