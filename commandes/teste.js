@@ -1,10 +1,10 @@
 const { zokou } = require('../framework/zokou');
 
 // Configuration des JIDs autorisés (remplacez par vos IDs de groupe)
-/*const authorizedJIDs = [
-  '1234567890@g.us', // ID du groupe 1
-  '0987654321@g.us'  // ID du groupe 2
-];*/
+const authorizedJIDs = [
+  '22554191184@s.whatsapp.net', // ID du groupe 1
+  '120363334477094721@g.us'  // ID du groupe 2
+];
 
 let gameInProgress = {}; // Objet pour suivre les jeux en cours par JID
 
@@ -18,9 +18,9 @@ zokou(
     const { repondre, auteurMessage, arg, from } = commandeOptions;
 
     // Vérification si la commande est exécutée dans un JID autorisé
-    /*if (!authorizedJIDs.includes(from)) {
+    if (!authorizedJIDs.includes(from)) {
       return repondre("🚫 Cette commande n'est pas autorisée dans cette discussion.");
-    }*/
+    }
 
     // Vérification si un jeu est déjà en cours pour cet utilisateur dans ce JID
     if (gameInProgress[from] && gameInProgress[from][auteurMessage]) {
@@ -31,7 +31,7 @@ zokou(
     const mise = parseInt(arg[1]); // La mise du joueur
 
     if (!game) {
-      return repondre("*🎰 Bienvenue au Mini-Casino SRPN !*\nVoici les jeux disponibles :\n\n1. `casino roulette <mise>` - Roulette\n2. `casino des <mise>` - Lance les dés contre le croupier\n3. `casino slot <mise>` - Machine à sous");
+      return repondre("*🎰 Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :\n\n1. `casino roulette <mise>` - Roulette\n2. `casino des <mise>` - Lance les dés contre le croupier\n3. `casino slot <mise>` - Machine à sous.");
     }
 
     if (isNaN(mise) || mise <= 0) {
@@ -66,7 +66,7 @@ zokou(
           await new Promise(resolve => setTimeout(resolve, 2000));
 
           repondre(`
-🎰 Roulette Résultat : ${resultatRoulette}
+*🎰 Roulette Résultat :* ${resultatRoulette}
 ${gain > mise ? `🎉 Vous avez gagné ${gain} !` : 'Dommage, vous avez perdu votre mise.'}`);
           break;
 
@@ -87,7 +87,7 @@ ${gain > mise ? `🎉 Vous avez gagné ${gain} !` : 'Dommage, vous avez perdu vo
           break;
 
         case 'slot':
-          const fruits = ['🍒', '🍋', '🍇', '🍊', '🔔'];
+          const fruits = ['🍒', '🍋', '🍇', '🍊', '🔔', '⭐', '💎', '🃏', '🧸', '💠'];
           const spin = () => fruits[Math.floor(Math.random() * fruits.length)];
           const r1 = spin(), r2 = spin(), r3 = spin();
           const result = `${r1} | ${r2} | ${r3}`;
