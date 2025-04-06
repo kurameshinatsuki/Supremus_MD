@@ -20,7 +20,11 @@ zokou(
     const mise = parseInt(arg[1]); // La mise du joueur
 
     if (!game) {
-      return repondre(`▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n*🎰 Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :\n\n1. `casino roulette <mise>` - Roulette\n2. `casino des <mise>` - Lance les dés contre le croupier\n3. `casino slot <mise>` - Machine à sous.\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`);
+      return repondre(`▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+*🎰 Bienvenue au Mini-Casino SRPN !*\n\n*Voici les jeux disponibles :*\n\n1. `casino roulette <mise>` - Roulette\n2. `casino des <mise>` - Lance les dés contre le croupier\n3. `casino slot <mise>` - Machine à sous.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`);
     }
 
     if (isNaN(mise) || mise > 1000) {
@@ -54,8 +58,9 @@ zokou(
           // Simuler un délai pour plus de suspense
           await new Promise(resolve => setTimeout(resolve, 2000));
 
-          repondre(`┏━━━━━━━━━━━━━━━━━━━┓\n🎰 *Roulette Résultat :* ${resultatRoulette}
-\n${gain > mise ? `🎉 Vous avez gagné ${gain} !` : 'Dommage, vous avez perdu votre mise.'}\n┗━━━━━━━━━━━━━━━━━━━┛`);
+          repondre(`
+🎰 *Roulette Résultat :* ${resultatRoulette}
+\n${gain > mise ? `🎉 Vous avez gagné ${gain} !` : 'Dommage, vous avez perdu votre mise.'}`);
           break;
 
         case 'des':
@@ -66,11 +71,11 @@ zokou(
           await new Promise(resolve => setTimeout(resolve, 2000));
 
           if (joueurDe > croupierDe) {
-            repondre(`┏━━━━━━━━━━━━━━━━━━━┓\n🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n🎉 Vous avez gagné ${mise * 2} !\n┗━━━━━━━━━━━━━━━━━━━┛`);
+            repondre(`🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n🎉 Vous avez gagné ${mise * 2} !`);
           } else if (joueurDe === croupierDe) {
-            repondre(`┏━━━━━━━━━━━━━━━━━━━┓\n🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n🤝 Égalité ! Vous récupérez votre mise.\n┗━━━━━━━━━━━━━━━━━━━┛`);
+            repondre(`🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n🤝 Égalité ! Vous récupérez votre mise.`);
           } else {
-            repondre(`┏━━━━━━━━━━━━━━━━━━━┓\n🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n😞 Vous avez perdu votre mise.\n┗━━━━━━━━━━━━━━━━━━━┛`);
+            repondre(`🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n😞 Vous avez perdu votre mise.`);
           }
           break;
 
@@ -86,11 +91,13 @@ zokou(
 
           if (r1 === r2 && r2 === r3) {
             winMessage = '*🎉 JACKPOT ! Vous gagnez ' + (mise * 5) + ' !*';
-          } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-  winMessage = '*😉 Presque ! Vous gagnez ' + (mise * 2) + ' !*';
-}
+          } else if (r1 === r2 || r2 === r3 ||
 
-          repondre(`┏━━━━━━━━━━━━━━━━━━━┓\n🎰 *Résultat :* ${result}\n\n${winMessage}\n┗━━━━━━━━━━━━━━━━━━━┛`);
+r1 === r3) {
+            winMessage = '*😉 Presque ! Vous gagnez ' + (mise * 2) + ' !*';
+          }
+
+          repondre(`🎰 *Résultat :* ${result}\n${winMessage}`);
           break;
 
         default:
