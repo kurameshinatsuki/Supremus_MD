@@ -2,8 +2,8 @@ const { zokou } = require('../framework/zokou');
 
 // IDs des discussions autorisées (remplacez par les vrais JIDs)
 const jidsAutorises = [
-    '22554191184@s.whatsapp.net', // Exemple de JID de groupe
-    '120363334477094721@g.us' // Exemple de JID individuel
+    '120363334477094721@g.us', // Exemple de JID de groupe
+    '22554191184@s.whatsapp.net' // Exemple de JID individuel
 ];
 
 let jeuEnCours = {}; // Objet pour suivre les jeux en cours par utilisateur
