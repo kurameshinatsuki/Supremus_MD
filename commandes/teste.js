@@ -23,7 +23,7 @@ zokou(
       const imageUrl = "https://i.ibb.co/dsLs6wn4/image.jpg"; // Image de bienvenue avec instructions
       const messageIntro = `🎰 *Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :\n\n1. *casino roulette <mise>* - Roulette\n2. *casino des <mise>* - Lance les dés contre le croupier\n3. *casino slot <mise>* - Machine à sous`;
       try {
-        await zk.sendMessage(from, {
+        await zk.sendMessage(dest, {
           image: { url: imageUrl },
           caption: messageIntro
         });
@@ -68,7 +68,7 @@ zokou(
           const message = `🎰 *Roulette Résultat* : ${resultatRoulette}\n${gain > mise ? `🎉 Vous avez gagné *${gain}* !` : '😢 Dommage, vous avez perdu votre mise.'}`;
 
           try {
-            await zk.sendMessage(from, {
+            await zk.sendMessage(dest, {
               image: { url: imageRoulette },
               caption: message
             });
@@ -97,7 +97,7 @@ zokou(
           }
 
           try {
-            await zk.sendMessage(from, {
+            await zk.sendMessage(dest, {
               image: { url: imageDes },
               caption: message
             });
@@ -127,7 +127,7 @@ zokou(
           const message = `🎰 *Résultat* : ${result}\n\n${winMessage}`;
 
           try {
-            await zk.sendMessage(from, {
+            await zk.sendMessage(dest, {
               image: { url: imageSlot },
               caption: message
             });
