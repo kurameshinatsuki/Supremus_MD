@@ -24,11 +24,13 @@ zokou(
     // Menu d'aide
     if (!game) {
       return repondre(
+        "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
         "*🎰 Bienvenue au Mini-Casino SRPN !*\n\n" +
         "*Voici les jeux disponibles :*\n\n" +
         "1. *casino roulette <mise>* - Roulette\n" +
         "2. *casino des <mise>* - Lance les dés contre le croupier\n" +
-        "3. *casino slot <mise>* - Machine à sous."
+        "3. *casino slot <mise>* - Machine à sous." +
+        "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
       );
     }
 
@@ -62,8 +64,10 @@ zokou(
           await wait(2000);
 
           repondre(
+            "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
             `🎰 *Roulette Résultat :* ${resultatRoulette}\n\n` +
-            (gain > mise ? `*🎉 Vous avez gagné ${gain} !*` : '*🥲 Dommage, vous avez perdu votre mise.*')
+            (gain > mise ? `*🎉 Vous avez gagné ${gain} !*` : '*🥲 Dommage, vous avez perdu votre mise.*') +
+            "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
           );
           break;
         }
@@ -74,13 +78,20 @@ zokou(
 
           await wait(2000);
 
+          let message = '';
           if (joueurDe > croupierDe) {
-            repondre(`🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n*🎉 Vous avez gagné ${mise * 2} !*`);
+            message = `*🎉 Vous avez gagné ${mise * 2} !*`;
           } else if (joueurDe === croupierDe) {
-            repondre(`🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n*🤝 Égalité ! Vous récupérez votre mise.*`);
+            message = "*🤝 Égalité ! Vous récupérez votre mise.*";
           } else {
-            repondre(`🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n*😞 Vous avez perdu votre mise.*`);
+            message = "*😞 Vous avez perdu votre mise.*";
           }
+
+          repondre(
+            "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
+            `🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n${message}` +
+            "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
+          );
           break;
         }
 
@@ -99,7 +110,11 @@ zokou(
             winMessage = `*😉 Presque ! Vous gagnez ${mise * 2} !*`;
           }
 
-          repondre(`🎰 *Résultat :* ${result}\n\n${winMessage}`);
+          repondre(
+            "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
+            `🎰 *Résultat :* ${result}\n\n${winMessage}` +
+            "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
+          );
           break;
         }
 
