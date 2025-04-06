@@ -86,11 +86,9 @@ zokou(
 
           if (r1 === r2 && r2 === r3) {
             winMessage = '*🎉 JACKPOT ! Vous gagnez ' + (mise * 5) + ' !*';
-          } else if (r1 === r2 || r2 === r3 ||
-
-r1 === r3) {
-            winMessage = '*😉 Presque ! Vous gagnez ' + (mise * 2) + ' !*';
-          }
+          } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+  winMessage = '*😉 Presque ! Vous gagnez ' + (mise * 2) + ' !*';
+}
 
           repondre(`┏━━━━━━━━━━━━━━━━━━━┓\n🎰 *Résultat :* ${result}\n\n${winMessage}\n┗━━━━━━━━━━━━━━━━━━━┛`);
           break;
