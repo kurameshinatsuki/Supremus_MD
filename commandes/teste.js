@@ -21,15 +21,16 @@ zokou(
 
     if (!game) {
       const imageUrl = "https://i.ibb.co/dsLs6wn4/image.jpg"; // Image de bienvenue avec instructions
-      const messageIntro = `*🎰 Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :
-
-1. *casino roulette <mise>* - Roulette
-2. *casino des <mise>* - Lance les dés contre le croupier
-3. *casino slot <mise>* - Machine à sous`;
-      await zk.sendMessage(from, {
-        image: { url: imageUrl },
-        caption: messageIntro
-      });
+      const messageIntro = `🎰 *Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :\n\n1. *casino roulette <mise>* - Roulette\n2. *casino des <mise>* - Lance les dés contre le croupier\n3. *casino slot <mise>* - Machine à sous`;
+      try {
+        await zk.sendMessage(from, {
+          image: { url: imageUrl },
+          caption: messageIntro
+        });
+      } catch (error) {
+        console.error("Erreur lors de l'envoi du message d'intro :", error);
+        return repondre("❌ Erreur lors de l'affichage du menu.");
+      }
       return;
     }
 
@@ -64,13 +65,17 @@ zokou(
 
           await new Promise(resolve => setTimeout(resolve, 2000));
 
-          const message = `🎰 *Roulette Résultat* : ${resultatRoulette}
-${gain > mise ? `🎉 Vous avez gagné *${gain}* !` : '😢 Dommage, vous avez perdu votre mise.'}`;
+          const message = `🎰 *Roulette Résultat* : ${resultatRoulette}\n${gain > mise ? `🎉 Vous avez gagné *${gain}* !` : '😢 Dommage, vous avez perdu votre mise.'}`;
 
-          await zk.sendMessage(from, {
-            image: { url: imageRoulette },
-            caption: message
-          });
+          try {
+            await zk.sendMessage(from, {
+              image: { url: imageRoulette },
+              caption: message
+            });
+          } catch (error) {
+            console.error("Erreur lors de l'envoi du message de roulette :", error);
+            repondre("❌ Erreur lors de l'affichage du résultat de la roulette.");
+          }
           break;
         }
 
@@ -91,10 +96,15 @@ ${gain > mise ? `🎉 Vous avez gagné *${gain}* !` : '😢 Dommage, vous avez p
             message += `😞 Vous avez perdu votre mise.`;
           }
 
-          await zk.sendMessage(from, {
-            image: { url: imageDes },
-            caption: message
-          });
+          try {
+            await zk.sendMessage(from, {
+              image: { url: imageDes },
+              caption: message
+            });
+          } catch (error) {
+            console.error("Erreur lors de l'envoi du message des dés :", error);
+            repondre("❌ Erreur lors de l'affichage du résultat des dés.");
+          }
           break;
         }
 
@@ -116,16 +126,24 @@ ${gain > mise ? `🎉 Vous avez gagné *${gain}* !` : '😢 Dommage, vous avez p
 
           const message = `🎰 *Résultat* : ${result}\n\n${winMessage}`;
 
-          await zk.sendMessage(from, {
-            image: { url: imageSlot },
-            caption: message
-          });
+          try {
+            await zk.sendMessage(from, {
+              image: { url: imageSlot },
+              caption: message
+            });
+          } catch (error) {
+            console.error("Erreur lors de l'envoi du message du slot :", error);
+            repondre("❌ Erreur lors de l'affichage du résultat du slot.");
+          }
           break;
         }
 
         default:
           repondre('🎮 Jeu non reconnu. Utilisez *roulette*, *des* ou *slot*.');
       }
+    } catch (error) {
+      console.error("Erreur lors de l'exécution du jeu :", error);
+      repondre("❌ Une erreur est survenue lors du jeu.");
     } finally {
       // Fin du jeu
       delete gameInProgress[from][auteurMessage];
