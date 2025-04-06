@@ -2,8 +2,8 @@ const { zokou } = require('../framework/zokou');
 
 // Configuration des JIDs autorisés (remplacez par vos IDs de groupe)
 /*const authorizedJIDs = [
-  '22554191184@s.whatsapp.net', // ID du groupe 1
-  '120363334477094721@g.us'  // ID du groupe 2
+  '1234567890@g.us', // ID du groupe 1
+  '0987654321@g.us'  // ID du groupe 2
 ];*/
 
 let gameInProgress = {}; // Objet pour suivre les jeux en cours par JID
@@ -18,20 +18,20 @@ zokou(
     const { repondre, auteurMessage, arg, from } = commandeOptions;
 
     // Vérification si la commande est exécutée dans un JID autorisé
-    if (!authorizedJIDs.includes(from)) {
+    /*if (!authorizedJIDs.includes(from)) {
       return repondre("🚫 Cette commande n'est pas autorisée dans cette discussion.");
-    }
+    }*/
 
     // Vérification si un jeu est déjà en cours pour cet utilisateur dans ce JID
-    /*if (gameInProgress[from] && gameInProgress[from][auteurMessage]) {
+    if (gameInProgress[from] && gameInProgress[from][auteurMessage]) {
       return repondre("⏳ Vous avez déjà un jeu en cours. Veuillez le terminer avant d'en lancer un autre.");
-    }*/
+    }
 
     const game = arg[0]; // Le type de jeu à lancer
     const mise = parseInt(arg[1]); // La mise du joueur
 
     if (!game) {
-      return repondre("*🎰 Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :\n\n1. `casino roulette <mise>` - Roulette\n2. `casino des <mise>` - Lance les dés contre le croupier\n3. `casino slot <mise>` - Machine à sous.");
+      return repondre("*🎰 Bienvenue au Mini-Casino SRPN !*\nVoici les jeux disponibles :\n\n1. `casino roulette <mise>` - Roulette\n2. `casino des <mise>` - Lance les dés contre le croupier\n3. `casino slot <mise>` - Machine à sous");
     }
 
     if (isNaN(mise) || mise <= 0) {
@@ -66,7 +66,7 @@ zokou(
           await new Promise(resolve => setTimeout(resolve, 2000));
 
           repondre(`
-*🎰 Roulette Résultat :* ${resultatRoulette}
+🎰 Roulette Résultat : ${resultatRoulette}
 ${gain > mise ? `🎉 Vous avez gagné ${gain} !` : 'Dommage, vous avez perdu votre mise.'}`);
           break;
 
