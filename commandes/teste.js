@@ -23,10 +23,7 @@ zokou(
       const imageUrl = "https://i.ibb.co/dsLs6wn4/image.jpg"; // Image de bienvenue avec instructions
       const messageIntro = `🎰 *Bienvenue au Mini-Casino SRPN !*\n\nVoici les jeux disponibles :\n\n1. *casino roulette <mise>* - Roulette\n2. *casino des <mise>* - Lance les dés contre le croupier\n3. *casino slot <mise>* - Machine à sous`;
       try {
-        await zk.sendMessage(dest, {
-          image: { url: imageUrl },
-          caption: messageIntro
-        });
+           await envoyerImage(dest, zk, ms, imageUrl, messageIntro);
       } catch (error) {
         console.error("Erreur lors de l'envoi du message d'intro :", error);
         return repondre("❌ Erreur lors de l'affichage du menu.");
