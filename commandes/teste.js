@@ -43,9 +43,9 @@ zokou(
     repondre(`Tu veux miser ${mise} pour jouer à ${game} ? Réponds avec 'oui' pour confirmer.`);
 
     // Mise en place de l'attente de la confirmation sans fonction externe
-    const attenteConfirmation = async () => {
+    /*const attenteConfirmation = async () => {
       const filter = (message) => message.author === joueur && (message.content.toLowerCase() === 'oui' || message.content.toLowerCase() === 'non');
-      const collector = zk.createMessageCollector(origineMessage.channel, { filter, time: 30000 }); // Attente de 30 secondes
+      const collector = zk.createMessageCollector(origineMessage.channel, { filter, time: 30000 });*/ // Attente de 30 secondes
 
       collector.on('collect', async (message) => {
         if (message.content.toLowerCase() === 'oui') {
