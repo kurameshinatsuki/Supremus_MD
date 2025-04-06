@@ -3,8 +3,8 @@ const { zokou } = require('../framework/zokou');
 zokou(
   {
     nomCom: 'casino',
-    reaction: '🎲',
-    categorie: 'NEO_GAMES🎰'
+    reaction: '🎰',
+    categorie: 'ECONOMY'
   },
   async (origineMessage, zk, commandeOptions) => {
     const { repondre, auteurMessage, arg } = commandeOptions;
