@@ -1,10 +1,10 @@
 const { zokou } = require('../framework/zokou');
 
 // IDs des discussions autorisées (remplacez par les vrais JIDs)
-const jidsAutorises = [
+/*const jidsAutorises = [
     '120363334477094721@g.us', // Exemple de JID de groupe
     '22554191184@s.whatsapp.net' // Exemple de JID individuel
-];
+];*/
 
 let jeuEnCours = {}; // Objet pour suivre les jeux en cours par utilisateur
 
@@ -17,12 +17,12 @@ zokou(
   async (origineMessage, zk, commandeOptions) => {
     const { repondre, auteurMessage, arg, from } = commandeOptions;
     const joueur = auteurMessage; // Identifiant unique du joueur
-    const jid = from; // JID de la discussion
+    // const jid = from; // JID de la discussion
 
     // 1. Vérification du JID
-    if (!jidsAutorises.includes(jid)) {
+    /*if (!jidsAutorises.includes(jid)) {
       return repondre("Désolé, cette commande n'est pas autorisée dans cette discussion.");
-    }
+    }*/
 
     const game = arg[0]; // Le type de jeu à lancer
     const mise = parseInt(arg[1]); // La mise du joueur
