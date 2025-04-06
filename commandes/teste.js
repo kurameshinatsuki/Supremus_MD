@@ -10,7 +10,7 @@ let jeuEnCours = {}; // Objet pour suivre les jeux en cours par utilisateur
 
 zokou(
   {
-    nomCom: 'casino',
+    nomCom: 'casino1',
     reaction: '🎰',
     categorie: 'ECONOMY'
   },
