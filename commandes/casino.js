@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 
 zokou(
   {
@@ -37,4 +37,4 @@ zokou(
         return repondre('Jeu non reconnu. Utilise `casino`, `casino pile`, `casino de` ou `casino slot`.');
     }
   }
-);
+);*/
