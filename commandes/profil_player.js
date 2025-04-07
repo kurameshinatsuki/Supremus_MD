@@ -143,15 +143,55 @@ for (const nomCom in playerProfiles) {
           let changes = [];
 
           fields.forEach(fieldPair => {
-            let [field, value] = fieldPair.split('=').map(item => item.trim());
-            if (field && value) {
-              const newValue = isNaN(value) ? value : Number(value);
-              const oldValue = data[field] !== undefined ? data[field] : 'Non défini';
+            let operator = null;
+            let field = null;
+            let rawValue = null;
 
-              if (oldValue !== newValue) {
-                changes.push(`*${field}* : ${oldValue} -> ${newValue}`);
-                updates[field] = newValue;
+            // Détection correcte de l'opérateur
+            if (fieldPair.includes('+=')) {
+              [field, rawValue] = fieldPair.split('+=').map(item => item.trim());
+              operator = 'add';
+            } else if (fieldPair.includes('-=')) {
+              [field, rawValue] = fieldPair.split('-=').map(item => item.trim());
+              operator = 'remove';
+            } else if (fieldPair.includes('=')) {
+              [field, rawValue] = fieldPair.split('=').map(item => item.trim());
+              operator = 'set';
+            }
+
+            if (!field || rawValue === undefined) return;
+
+            const oldValue = data[field];
+            if (oldValue === undefined) return;
+
+            let newValue = oldValue;
+
+            if (!isNaN(oldValue)) {
+              // Champs numériques
+              const numericVal = Number(rawValue);
+              if (operator === 'add') {
+                newValue = oldValue + numericVal;
+              } else if (operator === 'remove') {
+                newValue = oldValue - numericVal;
+              } else {
+                newValue = numericVal;
               }
+            } else {
+              // Champs texte
+              const list = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
+              if (operator === 'add') {
+                if (!list.includes(rawValue)) list.push(rawValue);
+                newValue = list.join(', ');
+              } else if (operator === 'remove') {
+                newValue = list.filter(item => item !== rawValue).join(', ');
+              } else {
+                newValue = rawValue;
+              }
+            }
+
+            if (newValue !== oldValue) {
+              updates[field] = newValue;
+              changes.push(`*${field}* : ${oldValue} -> ${newValue}`);
             }
           });
 
