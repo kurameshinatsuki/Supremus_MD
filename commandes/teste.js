@@ -24,13 +24,15 @@ zokou(
     // Menu d'aide
     if (!game) {
       return repondre(
-        "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
+        "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n" +
         "*🎰 Bienvenue au Mini-Casino SRPN !*\n\n" +
         "*Voici les jeux disponibles :*\n\n" +
         "1. *casino roulette <mise>* - Roulette\n" +
         "2. *casino des <mise>* - Lance les dés contre le croupier\n" +
         "3. *casino slot <mise>* - Machine à sous." +
-        "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
+        "\n ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
       );
     }
 
@@ -51,23 +53,25 @@ zokou(
           let resultatRoulette = '';
 
           if (rouletteResult < 0.2) {
-            gain = mise + 1000;
-            resultatRoulette = '1000🧭';
-          } else if (rouletteResult < 0.4) {
-            gain = mise + 5000;
-            resultatRoulette = '5000🧭';
+            gain = mise * 10;
+            resultatRoulette = 'Mise × 10';
+          } else if (rouletteResult < 0.5) {
+            gain = mise * 5;
+            resultatRoulette = 'Mise × 5';
           } else {
             gain = 0;
-            resultatRoulette = '0';
+            resultatRoulette = '0 (Perdu)';
           }
 
           await wait(2000);
 
           repondre(
-            "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
+            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n" +
             `🎰 *Roulette Résultat :* ${resultatRoulette}\n\n` +
             (gain > mise ? `*🎉 Vous avez gagné ${gain} !*` : '*🥲 Dommage, vous avez perdu votre mise.*') +
-            "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
+            "\n ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
           );
           break;
         }
@@ -80,7 +84,7 @@ zokou(
 
           let message = '';
           if (joueurDe > croupierDe) {
-            message = `*🎉 Vous avez gagné ${mise * 2} !*`;
+            message = `*🎉 Vous avez gagné ${mise * 5} !*`;
           } else if (joueurDe === croupierDe) {
             message = "*🤝 Égalité ! Vous récupérez votre mise.*";
           } else {
@@ -88,9 +92,11 @@ zokou(
           }
 
           repondre(
-            "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
+            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n" +
             `🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n${message}` +
-            "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
+            "\n ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
           );
           break;
         }
@@ -105,21 +111,23 @@ zokou(
           await wait(2000);
 
           if (r1 === r2 && r2 === r3) {
-            winMessage = `*🎉 JACKPOT ! Vous gagnez ${mise * 5} !*`;
+            winMessage = `*🎉 JACKPOT ! Vous gagnez ${mise * 10} !*`;
           } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-            winMessage = `*😉 Presque ! Vous gagnez ${mise * 2} !*`;
+            winMessage = `*😉 Presque ! Vous gagnez ${mise * 5} !*`;
           }
 
           repondre(
-            "▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▜\n" +
+            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n" +
             `🎰 *Résultat :* ${result}\n\n${winMessage}` +
-            "\n▙▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▟"
+            "\n ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
           );
           break;
         }
 
         default:
-          repondre('🎮 Jeu non reconnu. Utilisez `roulette`, `des` ou `slot`.');
+          repondre('🎮 Jeu non reconnu. Utilisez *roulette*, *des* ou *slot*.');
       }
     } catch (err) {
       console.error('Erreur dans le casino :', err);
