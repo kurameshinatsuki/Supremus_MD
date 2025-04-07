@@ -97,32 +97,50 @@ for (const nomCom in playerProfiles) {
           let fields = arg.join(' ').split(';');
           let changes = [];
 
-fields.forEach(fieldPair => {
-  let [field, rawValue] = fieldPair.split('=').map(item => item.trim());
-  if (!field || !rawValue) return;
+          fields.forEach(fieldPair => {
+            let [field, rawValue] = fieldPair.split('=').map(item => item.trim());
+            if (!field || rawValue === undefined) return;
 
-  const oldValue = data[field];
-  let newValue;
+            const oldValue = data[field];
+            let newValue = oldValue;
 
-  if (!isNaN(oldValue)) { // champ numérique
-    if (rawValue.startsWith('+')) {
-      newValue = oldValue + Number(rawValue.slice(1));
-    } else if (rawValue.startsWith('-')) {
-      newValue = oldValue - Number(rawValue.slice(1));
-    } else if (rawValue.startsWith('=')) {
-      newValue = Number(rawValue.slice(1));
-    } else {
-      newValue = Number(rawValue);
-    }
-  } else { // champ texte
-    newValue = rawValue.startsWith('=') ? rawValue.slice(1) : rawValue;
-  }
+            if (!isNaN(oldValue)) {
+              // Gestion des champs numériques
+              if (rawValue.startsWith('+')) {
+                newValue = oldValue + Number(rawValue.slice(1));
+              } else if (rawValue.startsWith('-')) {
+                newValue = oldValue - Number(rawValue.slice(1));
+              } else if (rawValue.startsWith('=')) {
+                newValue = Number(rawValue.slice(1));
+              } else {
+                newValue = Number(rawValue);
+              }
+            } else {
+              // Gestion des champs texte
+              if (rawValue.startsWith('+')) {
+                const addText = rawValue.slice(1).trim();
+                const existingList = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
+                if (!existingList.includes(addText)) {
+                  existingList.push(addText);
+                  newValue = existingList.join(', ');
+                }
+              } else if (rawValue.startsWith('-')) {
+                const removeText = rawValue.slice(1).trim();
+                const existingList = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
+                const filteredList = existingList.filter(item => item !== removeText);
+                newValue = filteredList.join(', ');
+              } else if (rawValue.startsWith('=')) {
+                newValue = rawValue.slice(1).trim();
+              } else {
+                newValue = rawValue.trim();
+              }
+            }
 
-  if (oldValue !== newValue) {
-    updates[field] = newValue;
-    changes.push(`*${field}* : ${oldValue} -> ${newValue}`);
-  }
-});
+            if (newValue !== oldValue) {
+              updates[field] = newValue;
+              changes.push(`*${field}* : ${oldValue} -> ${newValue}`);
+            }
+          });
 
           if (Object.keys(updates).length > 0) {
             await updatePlayerProfile(playerName, updates);
