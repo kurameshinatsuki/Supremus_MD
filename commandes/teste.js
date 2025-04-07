@@ -98,41 +98,49 @@ for (const nomCom in playerProfiles) {
           let changes = [];
 
           fields.forEach(fieldPair => {
-            let [field, rawValue] = fieldPair.split('=').map(item => item.trim());
+            let operator = null;
+            let field = null;
+            let rawValue = null;
+
+            // Détection correcte de l'opérateur
+            if (fieldPair.includes('+=')) {
+              [field, rawValue] = fieldPair.split('+=').map(item => item.trim());
+              operator = 'add';
+            } else if (fieldPair.includes('-=')) {
+              [field, rawValue] = fieldPair.split('-=').map(item => item.trim());
+              operator = 'remove';
+            } else if (fieldPair.includes('=')) {
+              [field, rawValue] = fieldPair.split('=').map(item => item.trim());
+              operator = 'set';
+            }
+
             if (!field || rawValue === undefined) return;
 
             const oldValue = data[field];
+            if (oldValue === undefined) return;
+
             let newValue = oldValue;
 
             if (!isNaN(oldValue)) {
-              // Gestion des champs numériques
-              if (rawValue.startsWith('+')) {
-                newValue = oldValue + Number(rawValue.slice(1));
-              } else if (rawValue.startsWith('-')) {
-                newValue = oldValue - Number(rawValue.slice(1));
-              } else if (rawValue.startsWith('=')) {
-                newValue = Number(rawValue.slice(1));
+              // Champs numériques
+              const numericVal = Number(rawValue);
+              if (operator === 'add') {
+                newValue = oldValue + numericVal;
+              } else if (operator === 'remove') {
+                newValue = oldValue - numericVal;
               } else {
-                newValue = Number(rawValue);
+                newValue = numericVal;
               }
             } else {
-              // Gestion des champs texte
-              if (rawValue.startsWith('+')) {
-                const addText = rawValue.slice(1).trim();
-                const existingList = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
-                if (!existingList.includes(addText)) {
-                  existingList.push(addText);
-                  newValue = existingList.join(', ');
-                }
-              } else if (rawValue.startsWith('-')) {
-                const removeText = rawValue.slice(1).trim();
-                const existingList = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
-                const filteredList = existingList.filter(item => item !== removeText);
-                newValue = filteredList.join(', ');
-              } else if (rawValue.startsWith('=')) {
-                newValue = rawValue.slice(1).trim();
+              // Champs texte
+              const list = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
+              if (operator === 'add') {
+                if (!list.includes(rawValue)) list.push(rawValue);
+                newValue = list.join(', ');
+              } else if (operator === 'remove') {
+                newValue = list.filter(item => item !== rawValue).join(', ');
               } else {
-                newValue = rawValue.trim();
+                newValue = rawValue;
               }
             }
 
