@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+/*const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
 const playerProfiles = {
@@ -165,4 +165,4 @@ for (const nomCom in playerProfiles) {
       }
     }
   );
-};
+};*/
