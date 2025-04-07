@@ -1,131 +1,142 @@
 const { zokou } = require('../framework/zokou');
+const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
-let gameInProgress = {}; // Suivi des jeux en cours par JID
-
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Fonction de délai
-
-zokou(
-  {
-    nomCom: 'casino',
-    reaction: '🎰',
-    categorie: 'ECONOMY'
-  },
-  async (origineMessage, zk, commandeOptions) => {
-    const { repondre, auteurMessage, arg, from } = commandeOptions;
-
-    // Vérification de jeu en cours
-    if (gameInProgress[from]?.[auteurMessage]) {
-      return repondre("⏳ Vous avez déjà un jeu en cours. Veuillez le terminer avant d'en lancer un autre.");
-    }
-
-    const game = arg[0];
-    const mise = parseInt(arg[1]);
-
-    // Menu d'aide
-    if (!game) {
-      return repondre(
-        "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n" +
-        "*🎰 Bienvenue au Mini-Casino SRPN !*\n\n" +
-        "*Voici les jeux disponibles :*\n\n" +
-        "1. *casino roulette <mise>* - Roulette\n" +
-        "2. *casino des <mise>* - Lance les dés contre le croupier\n" +
-        "3. *casino slot <mise>* - Machine à sous." +
-        "\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
-      );
-    }
-
-    // Vérification de la mise minimale
-    if (isNaN(mise) || mise < 1000) {
-      return repondre("💰 Veuillez spécifier une mise valide (minimum 1000🧭).");
-    }
-
-    // Initialisation de l'état du jeu
-    gameInProgress[from] = gameInProgress[from] || {};
-    gameInProgress[from][auteurMessage] = true;
-
-    try {
-      switch (game.toLowerCase()) {
-        case 'roulette': {
-          const rouletteResult = Math.random();
-          let gain = 0;
-          let resultatRoulette = '';
-
-          if (rouletteResult < 0.2) {
-            gain = mise * 10;
-            resultatRoulette = 'Mise × 10';
-          } else if (rouletteResult < 0.5) {
-            gain = mise * 5;
-            resultatRoulette = 'Mise × 5';
-          } else {
-            gain = 0;
-            resultatRoulette = '0 (Perdu)';
-          }
-
-          await wait(2000);
-
-          repondre(
-            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n" +
-            `🎰 *Roulette Résultat :* ${resultatRoulette}\n\n` +
-            (gain > mise ? `*🎉 Vous avez gagné ${gain} !*` : '*🥲 Dommage, vous avez perdu votre mise.*') +
-            "\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
-          );
-          break;
-        }
-
-        case 'des': {
-          const joueurDe = Math.floor(Math.random() * 6) + 1;
-          const croupierDe = Math.floor(Math.random() * 6) + 1;
-
-          await wait(2000);
-
-          let message = '';
-          if (joueurDe > croupierDe) {
-            message = `*🎉 Vous avez gagné ${mise * 5} !*`;
-          } else if (joueurDe === croupierDe) {
-            message = "*🤝 Égalité ! Vous récupérez votre mise.*";
-          } else {
-            message = "*😞 Vous avez perdu votre mise.*";
-          }
-
-          repondre(
-            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n" +
-            `🎲 *Votre dé :* ${joueurDe}\n*Dé du croupier :* ${croupierDe}\n\n${message}` +
-            "\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
-          );
-          break;
-        }
-
-        case 'slot': {
-          const fruits = ['🍒', '🍋', '🍇', '🍊', '🔔', '⭐', '💎', '🃏', '🧸', '💠'];
-          const spin = () => fruits[Math.floor(Math.random() * fruits.length)];
-          const r1 = spin(), r2 = spin(), r3 = spin();
-          const result = `*${r1} | ${r2} | ${r3}*`;
-          let winMessage = '*Pas de chance cette fois...*';
-
-          await wait(2000);
-
-          if (r1 === r2 && r2 === r3) {
-            winMessage = `*🎉 JACKPOT ! Vous gagnez ${mise * 10} !*`;
-          } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-            winMessage = `*😉 Presque ! Vous gagnez ${mise * 5} !*`;
-          }
-
-          repondre(
-            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n" +
-            `🎰 *Résultat :* ${result}\n\n${winMessage}` +
-            "\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
-          );
-          break;
-        }
-
-        default:
-          repondre('🎮 Jeu non reconnu. Utilisez *roulette*, *des* ou *slot*.');
-      }
-    } catch (err) {
-      console.error('Erreur dans le casino :', err);
-      repondre("❌ Une erreur s'est produite pendant le jeu.");
-    } finally {
-      delete gameInProgress[from][auteurMessage];
-    }
+const playerProfiles = {
+  'john': { 
+    nomCom: 'john',
+    playerName: 'John Supremus',
+    imageUrl: 'https://i.ibb.co/5hPBn1j3/Image-2025-04-02-13-55-06-1.jpg'
   }
-);
+};
+
+
+function formatProfileMessage(data) {
+  return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓[SRPN PROFIL]▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *👤 Nom :* ${data.name}  
+> *♨️ Statut :* ${data.statut}  
+> *🪀 Mode :* ${data.mode}  
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓[EXPLOITS]▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ 
+> *🧑‍🧑‍🧒‍🧒 DIVISION :* ${data.division}
+> *🧘‍♂️ RANG :*  
+> - *ABM :* ${data.rang_abm}  
+> - *SPEED RUSH :* ${data.rang_speed_rush}  
+> - *YU-GI-OH :* ${data.rang_yugioh}  
+> *🏆 Champion :* ${data.champion}  
+> *😎 Spécialité :* ${data.specialite}  
+> *👑 Leader :* ${data.leader}  
+> *🤼‍♂️ Challenge :* ${data.defis_remportes}  
+> *💯 Légende :* ${data.legende}  
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓▓[STATS]▓▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *👊 Battles :* V : 00${data.victoires} | D : 00${data.defaites} | L : 00${data.forfaits}   
+> *🏅 TOP 3 :* 00${data.top3}  
+> *🎭 Story Mode :* 
+> M.W : 00${data.missions_reussies} / M.L : 00${data.missions_echouees}  
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓▓[GAMES]▓▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *🀄 Cards ABM :* ${data.abm_cards}  
+> *🚗 Vehicles :* ${data.vehicles} 
+> *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
+> *🪐 Origamy Skins :*  
+> - *🚻 Skins :* ${data.skins}  
+> - *🎒 Items :* ${data.items}  
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓▓[MONEY]▓▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *🧭 S Tokens :* ${data.s_tokens}🧭  
+> *💎 S Gemmes :* ${data.s_gemmes}💎  
+> *🎟️ Coupons :* ${data.coupons}🎟️  
+> *🎁 Box VIP :* 0${data.box_vip}🎁
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓[ACCOUNT]▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> *💰 Dépenses :* ${data.depenses}FCFA  
+> *💵 Profits :* ${data.profits}FCFA  
+> *🏧 Retraits :* ${data.retraits}FCFA  
+> *💳 Solde :* ${data.solde}FCFA
+*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+}
+
+for (const nomCom in playerProfiles) {
+  zokou(
+    {
+      nomCom: nomCom,
+      categorie: 'PLAYER-PROFIL'
+    },
+    async (dest, zk, commandeOptions) => {
+      const { ms, repondre, arg, superUser } = commandeOptions;
+      const profile = playerProfiles[nomCom];
+      const playerName = profile.playerName;
+      const imageUrl = profile.imageUrl;
+
+      try {
+        let data = await getPlayerProfile(playerName);
+
+        if (!data) {
+          await insertPlayerProfile(playerName);
+          data = await getPlayerProfile(playerName);
+          repondre(`Le profil du joueur ${playerName} a été créé.`);
+        }
+
+        if (!arg || arg.length === 0) {
+          try {
+            await zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
+          } catch (error) {
+            console.error("Erreur lors de la récupération de l'image :", error);
+            zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
+          }
+        } else if (superUser) {
+          let updates = {};
+          let fields = arg.join(' ').split(';');
+          let changes = [];
+
+fields.forEach(fieldPair => {
+  let [field, rawValue] = fieldPair.split('=').map(item => item.trim());
+  if (!field || !rawValue) return;
+
+  const oldValue = data[field];
+  let newValue;
+
+  if (!isNaN(oldValue)) { // champ numérique
+    if (rawValue.startsWith('+')) {
+      newValue = oldValue + Number(rawValue.slice(1));
+    } else if (rawValue.startsWith('-')) {
+      newValue = oldValue - Number(rawValue.slice(1));
+    } else if (rawValue.startsWith('=')) {
+      newValue = Number(rawValue.slice(1));
+    } else {
+      newValue = Number(rawValue);
+    }
+  } else { // champ texte
+    newValue = rawValue.startsWith('=') ? rawValue.slice(1) : rawValue;
+  }
+
+  if (oldValue !== newValue) {
+    updates[field] = newValue;
+    changes.push(`*${field}* : ${oldValue} -> ${newValue}`);
+  }
+});
+
+          if (Object.keys(updates).length > 0) {
+            await updatePlayerProfile(playerName, updates);
+            data = await getPlayerProfile(playerName);
+            let confirmationMessage = `Mise à jour du profil de ${playerName}:\n${changes.join('\n')}`;
+            repondre(confirmationMessage);
+          } else {
+            repondre('Aucune modification détectée.');
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors du traitement de la commande :", error);
+        repondre('Une erreur est survenue lors du traitement de la commande.');
+      }
+    }
+  );
+};
