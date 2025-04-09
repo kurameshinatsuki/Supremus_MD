@@ -3,7 +3,7 @@ const { Pool } = require("pg");
 const s = require("../set");
 
 // Configuration de la base de données
-const dbUrl = s.SPDB;
+const dbUrl = s.DATABASE_URL;
 const proConfig = {
   connectionString: dbUrl,
   ssl: {
