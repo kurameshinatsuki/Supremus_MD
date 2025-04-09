@@ -3,23 +3,23 @@ const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('
 
 const playerProfiles = {
   'tenno': {
-    nomCom: 'tenno',
-    playerName: 'Tęnnõ Sũpręmũs',
+    nomCom: 'a_tenno',
+    playerName: 'Agent Tęnnõ',
     imageUrl: 'https://i.ibb.co/wNvNq8bD/image.jpg'
   },
   /*'nelliel': { 
-    nomCom: 'nelliel',
-    playerName: 'Nelliel Volfir',
+    nomCom: 'a_nelliel',
+    playerName: 'Agent Nelliel',
     imageUrl: 'https://i.ibb.co/wNvNq8bD/image.jpg'
   },*/
   'louis': { 
-    nomCom: 'louis',
-    playerName: 'Lone Ink Louis',
+    nomCom: 'a_louis',
+    playerName: 'Agent Louis',
     imageUrl: 'https://i.ibb.co/wNvNq8bD/image.jpg'
   },
   'lord': { 
-    nomCom: 'lord',
-    playerName: 'Lord',
+    nomCom: 'a_lord',
+    playerName: 'Agent Lord',
     imageUrl: 'https://i.ibb.co/wNvNq8bD/image.jpg'
   }
 };
