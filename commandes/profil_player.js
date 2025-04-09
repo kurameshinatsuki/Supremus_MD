@@ -56,6 +56,11 @@ const playerProfiles = {
     nomCom: 'boyle',
     playerName: 'Arthur Boyle',
     imageUrl: 'https://i.ibb.co/bMsPvMzn/Image-2025-04-08-23-10-16.jpg'
+  },
+ 'nezuko': { 
+    nomCom: 'nezuko',
+    playerName: 'Nezuko',
+    imageUrl: 'https://i.ibb.co/PdKp7GJ/Image-2025-04-09-00-34-23.jpg'
   }
 };
 
