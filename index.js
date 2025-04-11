@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 10000; // Assurez-vous d'ajouter cette ligne pour définir le port
 
 app.get('/', (req, res) => {
   res.send(`
@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Supremus MD</title>
         <style>
+            /* Styles pour centrer le texte */
             body {
                 display: flex;
                 justify-content: center;
@@ -30,17 +31,10 @@ app.get('/', (req, res) => {
                 box-shadow: 0 0 10px rgba(0,0,0,0.1);
             }
         </style>
-        <script>
-          // Actualise la page toutes les 5 secondes
-          setInterval(() => {
-            location.reload();
-          }, 5000);
-        </script>
     </head>
     <body>
         <div class="content">
             <h1>Salut je suis Supremus MD</h1>
-            <p>Cette page se recharge toutes les 5 secondes</p>
         </div>
     </body>
     </html>
