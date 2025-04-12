@@ -189,9 +189,9 @@ zokou({ nomCom: "pingweb", categorie: "MON-BOT", reaction: "⚡" }, async (origi
             console.error(`[PING] Erreur : ${err.message}`);
             await zk.sendMessage(origineMessage, { text: `Erreur : ${err.message}` });
         }
-    }, 5000);
+    }, 10000);
 
-    repondre("Ping démarré. Vérification toutes les 5 secondes.");
+    repondre("Ping démarré. Vérification toutes les 10 secondes.");
 });
 
 
