@@ -61,6 +61,21 @@ const playerProfiles = {
     nomCom: 'nezuko',
     playerName: 'Nezuko',
     imageUrl: 'https://i.ibb.co/PdKp7GJ/Image-2025-04-09-00-34-23.jpg'
+  },
+ 'yuki': { 
+    nomCom: 'yuki',
+    playerName: 'Yuki Shigoku',
+    imageUrl: 'https://i.ibb.co/8nKBsgY2/Image-2025-04-10-22-15-34-1.jpg'
+  },
+ 'rudeus': { 
+    nomCom: 'rudeus',
+    playerName: 'Rudeus Hells',
+    imageUrl: 'https://i.ibb.co/FLnjFQ5X/Image-2025-04-10-22-15-34-2.jpg'
+  },
+ 'no_name': { 
+    nomCom: 'no_name',
+    playerName: 'No Name',
+    imageUrl: 'https://i.ibb.co/yn4zWDK4/Image-2025-04-10-22-15-34-0.jpg'
   }
 };
 
