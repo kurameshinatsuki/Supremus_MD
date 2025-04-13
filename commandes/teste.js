@@ -1,212 +1,3 @@
-let latenceTimeout = null;
-
-zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏳" }, async (origineMessage, zk, commandeOptions) => {
-    const { repondre, args } = commandeOptions;
-
-    if (latenceTimeout) {
-        repondre("Un timer est déjà en cours. Utilise la commande `stoplatence` pour l'annuler.");
-        return;
-    }
-
-    // Durée par défaut : 3 minutes (180 secondes)
-    let duree = parseInt(args[0]) || 180;
-
-    if (isNaN(duree) || duree <= 0) {
-        repondre("Durée invalide. Ex : `latence 120` pour 2 minutes.");
-        return;
-    }
-
-    repondre(`Temps de rédaction lancé pour ${duree} secondes.`);
-
-    latenceTimeout = setTimeout(async () => {
-        latenceTimeout = null;
-        await zk.sendMessage(origineMessage, {
-            text: `⏰ Temps écoulé ! Le joueur n'a pas répondu à temps.`,
-        });
-    }, duree * 1000);
-});
-
-zokou({ nomCom: "stoplatence", categorie: "MON-BOT", reaction: "✋" }, async (origineMessage, zk, commandeOptions) => {
-    const { repondre } = commandeOptions;
-
-    if (latenceTimeout) {
-        clearTimeout(latenceTimeout);
-        latenceTimeout = null;
-        repondre("Le timer de latence a été annulé.");
-    } else {
-        repondre("Aucun timer de latence en cours.");
-    }
-});
-
-/*const { zokou } = require('../framework/zokou');
-const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
-
-const playerProfiles = {
-  'john': { 
-    nomCom: 'john',
-    playerName: 'John Supremus',
-    imageUrl: 'https://i.ibb.co/5hPBn1j3/Image-2025-04-02-13-55-06-1.jpg'
-  }
-};
-
-
-function formatProfileMessage(data) {
-  return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓[SRPN PROFIL]▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *👤 Nom :* ${data.name}  
-> *♨️ Statut :* ${data.statut}  
-> *🪀 Mode :* ${data.mode}  
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓[EXPLOITS]▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ 
-> *🧑‍🧑‍🧒‍🧒 DIVISION :* ${data.division}
-> *🧘‍♂️ RANG :*  
-> - *ABM :* ${data.rang_abm}  
-> - *SPEED RUSH :* ${data.rang_speed_rush}  
-> - *YU-GI-OH :* ${data.rang_yugioh}  
-> *🏆 Champion :* ${data.champion}  
-> *😎 Spécialité :* ${data.specialite}  
-> *👑 Leader :* ${data.leader}  
-> *🤼‍♂️ Challenge :* ${data.defis_remportes}  
-> *💯 Légende :* ${data.legende}  
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓▓[STATS]▓▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *👊 Battles :* V : 00${data.victoires} | D : 00${data.defaites} | L : 00${data.forfaits}   
-> *🏅 TOP 3 :* 00${data.top3}  
-> *🎭 Story Mode :* 
-> M.W : 00${data.missions_reussies} / M.L : 00${data.missions_echouees}  
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓▓[GAMES]▓▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *🀄 Cards ABM :* ${data.abm_cards}  
-> *🚗 Vehicles :* ${data.vehicles} 
-> *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
-> *🪐 Origamy Skins :*  
-> - *🚻 Skins :* ${data.skins}  
-> - *🎒 Items :* ${data.items}  
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓▓[MONEY]▓▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *🧭 S Tokens :* ${data.s_tokens}🧭  
-> *💎 S Gemmes :* ${data.s_gemmes}💎  
-> *🎟️ Coupons :* ${data.coupons}🎟️  
-> *🎁 Box VIP :* 0${data.box_vip}🎁
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓[ACCOUNT]▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *💰 Dépenses :* ${data.depenses}FCFA  
-> *💵 Profits :* ${data.profits}FCFA  
-> *🏧 Retraits :* ${data.retraits}FCFA  
-> *💳 Solde :* ${data.solde}FCFA
-*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-}
-
-for (const nomCom in playerProfiles) {
-  zokou(
-    {
-      nomCom: nomCom,
-      categorie: 'PLAYER-PROFIL'
-    },
-    async (dest, zk, commandeOptions) => {
-      const { ms, repondre, arg, superUser } = commandeOptions;
-      const profile = playerProfiles[nomCom];
-      const playerName = profile.playerName;
-      const imageUrl = profile.imageUrl;
-
-      try {
-        let data = await getPlayerProfile(playerName);
-
-        if (!data) {
-          await insertPlayerProfile(playerName);
-          data = await getPlayerProfile(playerName);
-          repondre(`Le profil du joueur ${playerName} a été créé.`);
-        }
-
-        if (!arg || arg.length === 0) {
-          try {
-            await zk.sendMessage(dest, { image: { url: imageUrl }, caption: formatProfileMessage(data) }, { quoted: ms });
-          } catch (error) {
-            console.error("Erreur lors de la récupération de l'image :", error);
-            zk.sendMessage(dest, { text: formatProfileMessage(data) }, { quoted: ms });
-          }
-        } else if (superUser) {
-          let updates = {};
-          let fields = arg.join(' ').split(';');
-          let changes = [];
-
-          fields.forEach(fieldPair => {
-            let operator = null;
-            let field = null;
-            let rawValue = null;
-
-            // Détection correcte de l'opérateur
-            if (fieldPair.includes('+=')) {
-              [field, rawValue] = fieldPair.split('+=').map(item => item.trim());
-              operator = 'add';
-            } else if (fieldPair.includes('-=')) {
-              [field, rawValue] = fieldPair.split('-=').map(item => item.trim());
-              operator = 'remove';
-            } else if (fieldPair.includes('=')) {
-              [field, rawValue] = fieldPair.split('=').map(item => item.trim());
-              operator = 'set';
-            }
-
-            if (!field || rawValue === undefined) return;
-
-            const oldValue = data[field];
-            if (oldValue === undefined) return;
-
-            let newValue = oldValue;
-
-            if (!isNaN(oldValue)) {
-              // Champs numériques
-              const numericVal = Number(rawValue);
-              if (operator === 'add') {
-                newValue = oldValue + numericVal;
-              } else if (operator === 'remove') {
-                newValue = oldValue - numericVal;
-              } else {
-                newValue = numericVal;
-              }
-            } else {
-              // Champs texte
-              const list = oldValue ? oldValue.split(',').map(s => s.trim()) : [];
-              if (operator === 'add') {
-                if (!list.includes(rawValue)) list.push(rawValue);
-                newValue = list.join(', ');
-              } else if (operator === 'remove') {
-                newValue = list.filter(item => item !== rawValue).join(', ');
-              } else {
-                newValue = rawValue;
-              }
-            }
-
-            if (newValue !== oldValue) {
-              updates[field] = newValue;
-              changes.push(`*${field}* : ${oldValue} -> ${newValue}`);
-            }
-          });
-
-          if (Object.keys(updates).length > 0) {
-            await updatePlayerProfile(playerName, updates);
-            data = await getPlayerProfile(playerName);
-            let confirmationMessage = `Mise à jour du profil de ${playerName}:\n${changes.join('\n')}`;
-            repondre(confirmationMessage);
-          } else {
-            repondre('Aucune modification détectée.');
-          }
-        }
-      } catch (error) {
-        console.error("Erreur lors du traitement de la commande :", error);
-        repondre('Une erreur est survenue lors du traitement de la commande.');
-      }
-    }
-  );
-};*/
-
 const { zokou } = require("../framework/zokou");
 const axios = require("axios");
 
@@ -244,5 +35,45 @@ zokou({ nomCom: "stopping", categorie: "MON-BOT", reaction: "🛑" }, async (ori
         repondre("Ping arrêté.");
     } else {
         repondre("Aucun ping en cours.");
+    }
+});
+
+
+zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏳" }, async (origineMessage, zk, commandeOptions) => {
+    const { repondre, args } = commandeOptions;
+
+    if (latenceTimeout) {
+        repondre("Un timer est déjà en cours. Utilise la commande `stoplatence` pour l'annuler.");
+        return;
+    }
+
+    // Durée par défaut : 3 minutes (180 secondes)
+    let duree = parseInt(args[0]) || 180;
+    let latenceTimeout = null;
+
+    if (isNaN(duree) || duree <= 0) {
+        repondre("Durée invalide. Ex : `latence 120` pour 2 minutes.");
+        return;
+    }
+
+    repondre(`Temps de rédaction lancé pour ${duree} secondes.`);
+
+    latenceTimeout = setTimeout(async () => {
+        latenceTimeout = null;
+        await zk.sendMessage(origineMessage, {
+            text: `⏰ Temps écoulé ! Le joueur n'a pas répondu à temps.`,
+        });
+    }, duree * 1000);
+});
+
+zokou({ nomCom: "stop", categorie: "MON-BOT", reaction: "⌛" }, async (origineMessage, zk, commandeOptions) => {
+    const { repondre } = commandeOptions;
+
+    if (latenceTimeout) {
+        clearTimeout(latenceTimeout);
+        latenceTimeout = null;
+        repondre("Le timer de latence a été annulé.");
+    } else {
+        repondre("Aucun timer de latence en cours.");
     }
 });
