@@ -1,3 +1,43 @@
+let latenceTimeout = null;
+
+zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏳" }, async (origineMessage, zk, commandeOptions) => {
+    const { repondre, args } = commandeOptions;
+
+    if (latenceTimeout) {
+        repondre("Un timer est déjà en cours. Utilise la commande `stoplatence` pour l'annuler.");
+        return;
+    }
+
+    // Durée par défaut : 3 minutes (180 secondes)
+    let duree = parseInt(args[0]) || 180;
+
+    if (isNaN(duree) || duree <= 0) {
+        repondre("Durée invalide. Ex : `latence 120` pour 2 minutes.");
+        return;
+    }
+
+    repondre(`Temps de rédaction lancé pour ${duree} secondes.`);
+
+    latenceTimeout = setTimeout(async () => {
+        latenceTimeout = null;
+        await zk.sendMessage(origineMessage, {
+            text: `⏰ Temps écoulé ! Le joueur n'a pas répondu à temps.`,
+        });
+    }, duree * 1000);
+});
+
+zokou({ nomCom: "stoplatence", categorie: "MON-BOT", reaction: "✋" }, async (origineMessage, zk, commandeOptions) => {
+    const { repondre } = commandeOptions;
+
+    if (latenceTimeout) {
+        clearTimeout(latenceTimeout);
+        latenceTimeout = null;
+        repondre("Le timer de latence a été annulé.");
+    } else {
+        repondre("Aucun timer de latence en cours.");
+    }
+});
+
 /*const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
