@@ -2,6 +2,7 @@ const { zokou } = require("../framework/zokou");
 const axios = require("axios");
 
 let intervalPing = null;
+let latenceTimeout = null;
 
 zokou({ nomCom: "pingweb", categorie: "MON-BOT", reaction: "⚡" }, async (origineMessage, zk, commandeOptions) => {
     const { repondre } = commandeOptions;
@@ -49,7 +50,6 @@ zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏳" }, async (origi
 
     // Durée par défaut : 3 minutes (180 secondes)
     let duree = parseInt(args[0]) || 180;
-    let latenceTimeout = null;
 
     if (isNaN(duree) || duree <= 0) {
         repondre("Durée invalide. Ex : `latence 120` pour 2 minutes.");
