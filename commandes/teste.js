@@ -21,9 +21,9 @@ zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏱️" }, async (or
             console.error(`[PING] Erreur : ${err.message}`);
             await zk.sendMessage(origineMessage, { text: `Erreur : ${err.message}` });
         }
-    }, 480000);
+    }, 900000);
 
-    repondre("*_⏱️ Latence démarré. Fin de la latence dans 8 minutes._*");
+    repondre("*_⏱️ Latence démarré. Fin de la latence dans 15 minutes._*");
 });
 
 
@@ -33,7 +33,7 @@ zokou({ nomCom: "stop", categorie: "MON-BOT", reaction: "🛑" }, async (origine
     if (intervalPing) {
         clearInterval(intervalPing);
         intervalPing = null;
-        repondre("*⏱️ Latence arrêté._*");
+        repondre("*_⏱️ Latence arrêté._*");
     } else {
         repondre("*_⏱️ Aucune latence en cours._*");
     }
