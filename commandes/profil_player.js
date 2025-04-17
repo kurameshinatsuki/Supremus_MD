@@ -76,6 +76,11 @@ const playerProfiles = {
     nomCom: 'no_name',
     playerName: 'No Name',
     imageUrl: 'https://i.ibb.co/yn4zWDK4/Image-2025-04-10-22-15-34-0.jpg'
+  },
+ 'arthur': { 
+    nomCom: 'arthur',
+    playerName: 'Arthur Kamado',
+    imageUrl: 'https://i.ibb.co/HpKGM9yc/Image-2025-04-17-01-44-19.jpg'
   }
 };
 
@@ -122,7 +127,7 @@ function formatProfileMessage(data) {
 > *🧭 S Tokens :* ${data.s_tokens}🧭  
 > *💎 S Gemmes :* ${data.s_gemmes}💎  
 > *🎟️ Coupons :* ${data.coupons}🎟️  
-> *🎁 Box VIP :* 0${data.box_vip}🎁
+> *🎁 Box VIP :* 00${data.box_vip}🎁
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓[ACCOUNT]▓▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
