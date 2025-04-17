@@ -21,9 +21,9 @@ zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏱️" }, async (or
             console.error(`[PING] Erreur : ${err.message}`);
             await zk.sendMessage(origineMessage, { text: `Erreur : ${err.message}` });
         }
-    }, 900000);
+    }, 600000);
 
-    repondre("*_⏱️ Latence démarré. Fin de la latence dans 15 minutes._*");
+    repondre("*_⏱️ Latence démarré. Fin de la latence dans 10 minutes._*");
 });
 
 
