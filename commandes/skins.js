@@ -82,7 +82,7 @@ async function skinAleatoire(dest, zk, ms, rang = null, rarete = null) {
 zokou(
     {
         nomCom: 'skins',
-        categorie: 'ORIGAMY-WORLD'
+        categorie: 'ORIGAMY'
     },
     async (dest, zk, commandeOptions) => {
         const { arg, ms } = commandeOptions;
