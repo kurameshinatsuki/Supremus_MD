@@ -22,31 +22,31 @@ const playerProfiles = {
     playerName: 'Aizen',
     imageUrl: 'https://i.ibb.co/JFSqdVSm/Image-2025-03-25-18-43-08.jpg'
   },
-  'yu': { 
+  /*'yu': { 
     nomCom: 'yu',
     playerName: 'DĒVIL Yû',
     imageUrl: 'https://i.ibb.co/CKJZvb5p/Image-2025-03-28-13-43-31-2.jpg'
-  },
+  },*/
   'inferno': { 
     nomCom: 'inferno',
     playerName: 'Inferno',
     imageUrl: 'https://i.ibb.co/RTv16qdh/Image-2025-03-28-13-43-31-0.jpg'
   },
-  'shadow': { 
+  /*'shadow': { 
     nomCom: 'shadow',
     playerName: 'Lloyd Shadow T.',
     imageUrl: 'https://i.ibb.co/4Z8r4mgn/Image-2025-03-28-13-43-31-1.jpg'
-  },
+  },*/
   'vecta': { 
     nomCom: 'vecta',
     playerName: 'Vecta Uchiwa.',
     imageUrl: 'https://i.ibb.co/cXy8YsLq/Image-2025-03-30-00-24-06.jpg'
   },
-  'sophie': { 
+  /*'sophie': { 
     nomCom: 'sophie',
     playerName: 'Sophie Scarlet Louis',
     imageUrl: 'https://i.ibb.co/PZwGRjNL/Image-2025-04-02-13-55-06-0.jpg'
-  },
+  },*/
   'lord': { 
     nomCom: 'lord',
     playerName: 'Lord',
