@@ -2,16 +2,16 @@ const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/drpn_bdd');
 
 const playerProfiles = {
-  'a_tenno': {
-    nomCom: 'a_tenno',
-    playerName: 'Agent Tęnnõ',
+  'a_nezuko': {
+    nomCom: 'a_nezuko',
+    playerName: 'Agent Nezuko',
     imageUrl: 'https://i.ibb.co/wNvNq8bD/image.jpg'
   },
-  /*'a_nelliel': { 
+  'a_nelliel': { 
     nomCom: 'a_nelliel',
     playerName: 'Agent Nelliel',
     imageUrl: 'https://i.ibb.co/wNvNq8bD/image.jpg'
-  },*/
+  },
   'a_louis': { 
     nomCom: 'a_louis',
     playerName: 'Agent Louis',
