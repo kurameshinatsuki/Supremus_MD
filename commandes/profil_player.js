@@ -20,7 +20,7 @@ const playerProfiles = {
   'aizen': { 
     nomCom: 'aizen',
     playerName: 'Aizen',
-    imageUrl: 'https://i.ibb.co/JFSqdVSm/Image-2025-03-25-18-43-08.jpg'
+    imageUrl: 'https://i.ibb.co/XrjPt3cY/Image-2025-04-20-22-39-40.jpg'
   },
   /*'yu': { 
     nomCom: 'yu',
