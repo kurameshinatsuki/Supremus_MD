@@ -22,11 +22,11 @@ const playerProfiles = {
     playerName: 'Aizen',
     imageUrl: 'https://i.ibb.co/XrjPt3cY/Image-2025-04-20-22-39-40.jpg'
   },
-  /*'yu': { 
-    nomCom: 'yu',
-    playerName: 'DĒVIL Yû',
-    imageUrl: 'https://i.ibb.co/CKJZvb5p/Image-2025-03-28-13-43-31-2.jpg'
-  },*/
+  'tina': { 
+    nomCom: 'tina',
+    playerName: 'Tina Yuzuriha',
+    imageUrl: 'https://i.ibb.co/4wRc0k2m/Image-2025-04-21-23-35-23.jpg'
+  },
   'inferno': { 
     nomCom: 'inferno',
     playerName: 'Inferno',
