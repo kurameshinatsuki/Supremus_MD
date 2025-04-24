@@ -1,6 +1,5 @@
 const { zokou } = require("../framework/zokou");
 const axios = require("axios");
-const { zokou } = require('../framework/zokou');
 const { characters } = require('../commandes/catalogue');
 const { writeFileSync, readFileSync, unlinkSync } = require('fs');
 const { randomInt } = require('crypto');
