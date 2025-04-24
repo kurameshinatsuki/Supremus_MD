@@ -1,5 +1,163 @@
 const { zokou } = require("../framework/zokou");
 const axios = require("axios");
+const { zokou } = require('../framework/zokou');
+const { characters } = require('../commandes/catalogue');
+const { writeFileSync, readFileSync, unlinkSync } = require('fs');
+const { randomInt } = require('crypto');
+
+/**
+ * Fonction pour envoyer l'image et les informations d'un personnage spécifique.
+ */
+async function envoyerCarte(dest, zk, ms, personnage) {
+    let personnageTrouve = false;
+    const personnageUpper = personnage.toUpperCase();
+
+    for (const [rang, univers] of Object.entries(characters)) {
+        for (const [verse, personnages] of Object.entries(univers)) {
+            if (personnages[personnageUpper]) {
+                personnageTrouve = true;
+                const { lien } = personnages[personnageUpper];
+
+                zk.sendMessage(dest, { 
+                    image: { url: lien }, 
+                    caption: `*${personnageUpper} | ${verse} | RANG ${rang}*` 
+                }, { quoted: ms });
+
+                return;
+            }
+        }
+    }
+
+    if (!personnageTrouve) {
+        zk.sendMessage(dest, { text: `*❌ Personnage ${personnage} indisponible.*` }, { quoted: ms });
+    }
+}
+
+/**
+ * Fonction pour envoyer la liste complète des personnages disponibles en document HTML.
+ */
+async function envoyerListe(dest, zk, ms) {
+    let html = `
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Catalogue SRPN</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 20px;
+            }
+            h1 {
+                text-align: center;
+                color: #2c3e50;
+            }
+            h2 {
+                color: #16a085;
+                border-bottom: 2px solid #ccc;
+                margin-top: 30px;
+            }
+            h3 {
+                color: #2980b9;
+                margin-top: 20px;
+            }
+            ul {
+                list-style: none;
+                padding-left: 10px;
+            }
+            li {
+                margin-bottom: 5px;
+                padding-left: 10px;
+                position: relative;
+            }
+            li::before {
+                content: "•";
+                position: absolute;
+                left: 0;
+                color: #e67e22;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Catalogue des Héros SRPN</h1>
+    `;
+
+    for (const [rang, univers] of Object.entries(characters)) {
+        html += `<h2>🏅 RANG ${rang}</h2>`;
+        for (const [verse, personnages] of Object.entries(univers)) {
+            html += `<h3>🌐 ${verse}</h3><ul>`;
+            for (const nom of Object.keys(personnages)) {
+                html += `<li>${nom}</li>`;
+            }
+            html += `</ul>`;
+        }
+    }
+
+    html += `</body></html>`;
+
+    const filename = `catalogue_${randomInt(10000)}.html`;
+    writeFileSync(filename, html);
+
+    await zk.sendMessage(dest, {
+        document: readFileSync(filename),
+        mimetype: 'text/html',
+        filename: 'catalogue.html',
+        caption: '*📘 Catalogue des Héros ABM*'
+    }, { quoted: ms });
+
+    unlinkSync(filename);
+}
+
+/**
+ * Fonction pour sélectionner un personnage aléatoire.
+ */
+async function personnageAleatoire(dest, zk, ms, rang = null, verse = null) {
+    let personnagesFiltres = [];
+
+    for (const [r, univers] of Object.entries(characters)) {
+        if (rang && r !== rang.toUpperCase()) continue;
+        for (const [v, personnages] of Object.entries(univers)) {
+            if (verse && v !== verse.toUpperCase()) continue;
+            for (const [nom, data] of Object.entries(personnages)) {
+                personnagesFiltres.push({ nom, verse: v, rang: r, lien: data.lien });
+            }
+        }
+    }
+
+    if (personnagesFiltres.length === 0) {
+        zk.sendMessage(dest, { text: 'Aucun personnage trouvé avec ces critères.' }, { quoted: ms });
+        return;
+    }
+
+    const randomPerso = personnagesFiltres[Math.floor(Math.random() * personnagesFiltres.length)];
+
+    zk.sendMessage(dest, { 
+        image: { url: randomPerso.lien }, 
+        caption: `*${randomPerso.nom} | ${randomPerso.verse} | RANG ${randomPerso.rang}*` 
+    }, { quoted: ms });
+}
+
+// Commande principale
+zokou(
+    {
+        nomCom: 'perso',
+        categorie: 'ABM'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0) {
+            await envoyerListe(dest, zk, ms);
+        } else if (arg[0].toUpperCase() === 'RANDOM') {
+            const rang = arg[1] ? arg[1].toUpperCase() : null;
+            const verse = arg[2] ? arg[2].toUpperCase() : null;
+            await personnageAleatoire(dest, zk, ms, rang, verse);
+        } else {
+            await envoyerCarte(dest, zk, ms, arg[0]);
+        }
+    }
+);
 
 let intervalPing = null;
 let latenceTimeout = null;
