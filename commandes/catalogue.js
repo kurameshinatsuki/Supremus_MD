@@ -2,6 +2,18 @@
 
 const characters = {
     'C': {
+         'HUNTER_X_HUNTER': {
+           'SILVA': {'lien': 'https://i.ibb.co/ns12wpMg/Image-2025-04-27-21-46-47-4.jpg'},
+           'KURAPIKA': {'lien': 'https://i.ibb.co/YBBfNJ7h/Image-2025-04-27-21-46-47-2.jpg'},
+           'HISOKA': {'lien': 'https://i.ibb.co/ymHYbFmZ/Image-2025-04-27-21-46-47-3.jpg'}
+    },
+          'ONE_PIECE': {
+           'NAMI': {'lien': 'https://i.ibb.co/N6YgjsfM/Image-2025-04-27-21-46-47-7.jpg'},
+           'SANJI': {'lien': 'https://i.ibb.co/p6SjB2QV/Image-2025-04-27-21-46-47-8.jpg'},
+           'ROBIN': {'lien': 'https://i.ibb.co/ds6kyhPG/Image-2025-04-27-21-46-47-9.jpg'},
+           'BROOKS': {'lien': 'https://i.ibb.co/Cssw7Fs6/Image-2025-04-27-21-46-47-10.jpg'},
+           'LAW': {'lien': 'https://i.ibb.co/DHjtmp02/Image-2025-04-27-21-46-47-11.jpg'}
+    },
           'ONE_PUNCH_MAN': {
             'GENOS': { lien: 'https://i.ibb.co/VW4XRWwg/Image-2025-03-03-15-12-14-0.jpg' },
             'BANG': { lien: 'https://i.ibb.co/LdqTLWgP/Image-2025-03-03-15-12-14-1.jpg' },
@@ -94,6 +106,20 @@ const characters = {
         'FAIRYTAIL': {
             'NATSU': { lien: 'https://i.ibb.co/1GjBFZBY/Image-2025-02-12-16-42-49-0.jpg' },
             'ERZA': { lien: 'https://i.ibb.co/DNr8tTK/Image-2025-02-12-16-42-49-1.jpg' }
+        },
+        'ONE_PIECE': {
+            'LUFFY': { lien: 'https://i.ibb.co/pvMzqq0K/Image-2025-04-27-21-46-47-5.jpg' },
+            'ZORO': { lien: 'https://i.ibb.co/35BPKMnX/Image-2025-04-27-21-46-47-6.jpg' }
+        },
+        'HUNTER_X_HUNTER': {
+            'GON': { lien: 'https://i.ibb.co/5Wsh5q32/Image-2025-04-27-21-46-47-0.jpg' },
+            'KILUA': { lien: 'https://i.ibb.co/bwgmPkJ/Image-2025-04-27-21-46-47-1.jpg' }
+        }
+    },
+    'A': {
+        'JUJUTSU_KAISEN': {
+            'GOJO_CG': { lien: 'https://i.ibb.co/vCqcZzqN/Image-2025-03-09-15-40-36-0.jpg' },
+            'SUKUNA_CG': { lien: 'https://i.ibb.co/hJzZXCzf/Image-2025-03-09-15-40-36-1.jpg' }
         }
     }
 };
