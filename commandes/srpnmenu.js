@@ -86,9 +86,9 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
         const liens = [
-            'https://i.ibb.co/QFY5HnG0/Image-2025-03-17-06-59-48-2.jpg',
-            'https://i.ibb.co/4qRr9b4/Image-2025-03-17-06-59-48-1.jpg',
-            'https://i.ibb.co/qMVzB1Jt/Image-2025-03-17-06-59-48-0.jpg'
+            'https://i.ibb.co/23rqYJWK/Image-2025-04-27-21-46-47-12.jpg',
+            'https://i.ibb.co/sv8pD73f/Image-2025-04-27-21-46-47-13.jpg',
+            'https://i.ibb.co/B58TNcxV/Image-2025-04-27-21-46-47-14.jpg'
         ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
@@ -123,7 +123,7 @@ zokou(
     }
 );
 
-zokou(
+/*zokou(
     {
         nomCom: 'activites',
         categorie: 'CENTRAL'
@@ -166,9 +166,9 @@ zokou(
 🏆 *Supremus Cup :* La *Supremus Cup* est une compétition indirectement lié à la *Supremus Ligue*, lorsque vous atteigné la "Division Émeraude" et finissez "🥇Golden Star" vous obtenez la "Supremus Cup" ce qui vous fait gagner un "🌟Star Awards".
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
     *▷ SUPREMUS AWARDS ◁*
-> - "🥇Golden Star" obtient "1🎁🏅 & 20.000🧭 & 2.000💎 & 600🎟️"
-> - "🥈Silver Star" obtient "1🎁🥇 & 15.000🧭 & 1.500💎 & 400🎟️"
-> - "🥉Brown Star" obtient "2🎁🥈 & 10.000🧭 & 1.000💎 & 200🎟️"
+> - "🥇Golden Star" obtient "3🎁🏅 & 100.000🧭 & 10.000💎 & 1000🎟️"
+> - "🥈Silver Star" obtient "2🎁🏅 & 50.000🧭 & 5.000💎 & 600🎟️"
+> - "🥉Brown Star" obtient "1🎁🏅 & 25.000🧭 & 2.500💎 & 300🎟️"
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 🎖️ *Supremus Ligue :* Lancement de la *Supremus Ligue*, compte tout les activités de jeu. La *Supremus Ligue* est divisé en 5 divisions "Bronze, Argent, Or, Diamant et Émeraude" vous devez accumuler un maximum de points pour atteindre le *🔝TOP5* afin de passé en division supérieure à la fin de la ligue.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
@@ -178,7 +178,7 @@ zokou(
 > - "🥇Golden Star" obtient "1🎁🥉 & 600💎 & 60🎟️"
 > - "🥈Silver Star" obtient "400💎 & 40🎟️"
 > - "🥉Brown Star" obtient "200💎 & 20🎟️"
-> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "100💎".
+> - "🧑‍🧑‍🧒‍🧒Concurrents" obtiennent "1🎁🥉 & 100💎".
 
 *▶ Division Argent :* 
 > - "🥇Golden Star" obtient "2🎁🥉 & 800💎 & 80🎟️"
@@ -234,7 +234,7 @@ zokou(
 
         }
     }
-);
+);*/
 
 zokou(
     {
@@ -278,7 +278,7 @@ zokou(
 );
 
 // Commande de classement
-zokou(
+/*zokou(
     { nomCom: 'challenge', categorie: 'CENTRAL' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
@@ -293,4 +293,4 @@ zokou(
               📱𝗦𝗨𝗣𝗥𝗘𝗠𝗨𝗦 𝗣𝗥𝗢𝗗 🪀`;
         await envoyerImage(dest, zk, ms, lien, msg);
     }
-);
+);*/
