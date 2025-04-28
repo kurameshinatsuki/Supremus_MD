@@ -1,111 +1,154 @@
 const { zokou } = require('../framework/zokou');
 const { characters } = require('../commandes/catalogue');
+const { writeFileSync, readFileSync, unlinkSync } = require('fs');
+const { randomInt } = require('crypto');
 
 /**
  * Fonction pour envoyer l'image et les informations d'un personnage spécifique.
- * @param {string} dest - L'identifiant du destinataire.
- * @param {object} zk - Instance du bot.
- * @param {object} ms - Message source pour la citation.
- * @param {string} personnage - Nom du personnage recherché.
  */
 async function envoyerCarte(dest, zk, ms, personnage) {
     let personnageTrouve = false;
-    const personnageUpper = personnage.toUpperCase(); // Transformation en majuscules pour éviter les erreurs de casse.
+    const personnageUpper = personnage.toUpperCase();
 
-    // Parcourir tous les rangs et univers pour trouver le personnage
     for (const [rang, univers] of Object.entries(characters)) {
         for (const [verse, personnages] of Object.entries(univers)) {
             if (personnages[personnageUpper]) {
                 personnageTrouve = true;
                 const { lien } = personnages[personnageUpper];
 
-                // Envoi de l'image avec une légende contenant le nom du personnage, son univers et son rang.
                 zk.sendMessage(dest, { 
                     image: { url: lien }, 
                     caption: `*${personnageUpper} | ${verse} | RANG ${rang}*` 
                 }, { quoted: ms });
 
-                return; // On arrête la recherche dès qu'on trouve un personnage correspondant.
+                return;
             }
         }
     }
 
-    // Message d'erreur si le personnage n'est pas trouvé.
     if (!personnageTrouve) {
         zk.sendMessage(dest, { text: `*❌ Personnage ${personnage} indisponible.*` }, { quoted: ms });
     }
 }
 
 /**
- * Fonction pour envoyer la liste complète des personnages disponibles, triés par rang et univers.
- * @param {string} dest - L'identifiant du destinataire.
- * @param {object} zk - Instance du bot.
- * @param {object} ms - Message source pour la citation.
+ * Fonction pour envoyer la liste complète des personnages disponibles en document HTML.
  */
 async function envoyerListe(dest, zk, ms) {
-    let message = '*Liste des personnages disponibles:*\n\n';
+    let html = `
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Catalogue ABM - SRPN</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: 'Bebas Neue', Arial, sans-serif;
+                background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+                color: #f1f1f1;
+                padding: 10px;
+                text-shadow: 1px 1px 2px black;
+                margin: 0;
+            }
+            h1 {
+                text-align: center;
+                font-size: 32px;
+                color: #f39c12;
+                margin: 20px 0;
+            }
+            h2 {
+                font-size: 24px;
+                color: #3498db;
+                border-bottom: 2px solid #f39c12;
+                padding-bottom: 5px;
+                margin-top: 30px;
+            }
+            h3 {
+                font-size: 20px;
+                color: #e74c3c;
+                margin-top: 20px;
+            }
+            ul {
+                list-style: none;
+                padding-left: 10px;
+            }
+            li {
+                margin-bottom: 6px;
+                padding-left: 15px;
+                position: relative;
+                font-size: 16px;
+                line-height: 1.4;
+            }
+            li::before {
+                content: "-";
+                position: absolute;
+                left: 0;
+                color: #f1c40f;
+                font-size: 14px;
+            }
+        </style>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <h1>🆚 CATALOGUE DES HÉROS ABM 🆚</h1>
+    `;
 
-    // Parcours des rangs et des univers pour construire la liste
     for (const [rang, univers] of Object.entries(characters)) {
-        message += `*🏅 RANG ${rang} : 🏅*\n`;
+        html += `<h2>🏅 RANG ${rang}</h2>`;
         for (const [verse, personnages] of Object.entries(univers)) {
-            message += `\n*🌐 ${verse} :*\n\n`;
-            message += Object.keys(personnages).join('\n') + '\n'; // Ajout des noms des personnages séparés par des virgules.
+            html += `<h3>🌐 ${verse}</h3><ul>`;
+            for (const nom of Object.keys(personnages)) {
+                html += `<li>${nom}</li>`;
+            }
+            html += `</ul>`;
         }
-        message += '\n'; // Ajout d'un espace entre chaque rang pour une meilleure lisibilité.
     }
 
-    // Envoi de la liste complète au joueur
-const imageUrl = 'https://i.ibb.co/0ysns1QM/image.jpg';
+    html += `</body></html>`;
 
-// Envoi du message avec l'image et le texte
-zk.sendMessage(dest, { 
-    image: { url: imageUrl }, 
-    caption: message }, { quoted: ms });
+    const filename = `catalogue_${randomInt(10000)}.html`;
+    writeFileSync(filename, html);
+
+    await zk.sendMessage(dest, {
+        document: readFileSync(filename),
+        mimetype: 'text/html',
+        filename: 'catalogue.html',
+        caption: '*CATALOGUE ABM DES HÉROS*'
+    }, { quoted: ms });
+
+    unlinkSync(filename);
 }
 
 /**
- * Fonction pour sélectionner un personnage aléatoire en fonction des critères donnés.
- * @param {string} dest - L'identifiant du destinataire.
- * @param {object} zk - Instance du bot.
- * @param {object} ms - Message source pour la citation.
- * @param {string|null} rang - Rang du personnage (optionnel).
- * @param {string|null} verse - Univers du personnage (optionnel).
+ * Fonction pour sélectionner un personnage aléatoire.
  */
 async function personnageAleatoire(dest, zk, ms, rang = null, verse = null) {
     let personnagesFiltres = [];
 
-    // Filtrage des personnages selon les critères (rang et univers)
     for (const [r, univers] of Object.entries(characters)) {
-        if (rang && r !== rang.toUpperCase()) continue; // Vérifie si un rang spécifique est demandé.
-
+        if (rang && r !== rang.toUpperCase()) continue;
         for (const [v, personnages] of Object.entries(univers)) {
-            if (verse && v !== verse.toUpperCase()) continue; // Vérifie si un univers spécifique est demandé.
-
-            // Ajout des personnages correspondant aux critères dans la liste.
+            if (verse && v !== verse.toUpperCase()) continue;
             for (const [nom, data] of Object.entries(personnages)) {
                 personnagesFiltres.push({ nom, verse: v, rang: r, lien: data.lien });
             }
         }
     }
 
-    // Si aucun personnage ne correspond aux critères, on envoie un message d'erreur.
     if (personnagesFiltres.length === 0) {
         zk.sendMessage(dest, { text: 'Aucun personnage trouvé avec ces critères.' }, { quoted: ms });
         return;
     }
 
-    // Sélection d'un personnage au hasard dans la liste filtrée.
     const randomPerso = personnagesFiltres[Math.floor(Math.random() * personnagesFiltres.length)];
 
-    // Envoi du personnage sélectionné aléatoirement avec son image et sa description.
     zk.sendMessage(dest, { 
         image: { url: randomPerso.lien }, 
         caption: `*${randomPerso.nom} | ${randomPerso.verse} | RANG ${randomPerso.rang}*` 
     }, { quoted: ms });
 }
 
-// Commande principale pour la gestion des personnages
+// Commande principale
 zokou(
     {
         nomCom: 'heroes',
@@ -114,18 +157,13 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { arg, ms } = commandeOptions;
 
-        // Si aucune argument n'est donné, afficher la liste des personnages.
         if (!arg || arg.length === 0) {
             await envoyerListe(dest, zk, ms);
-        } 
-        // Si l'argument "RANDOM" est donné, sélectionner un personnage aléatoire.
-        else if (arg[0].toUpperCase() === 'RANDOM') {
+        } else if (arg[0].toUpperCase() === 'RANDOM') {
             const rang = arg[1] ? arg[1].toUpperCase() : null;
             const verse = arg[2] ? arg[2].toUpperCase() : null;
             await personnageAleatoire(dest, zk, ms, rang, verse);
-        } 
-        // Sinon, chercher directement le personnage donné en argument.
-        else {
+        } else {
             await envoyerCarte(dest, zk, ms, arg[0]);
         }
     }
