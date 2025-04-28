@@ -41,48 +41,51 @@ async function envoyerListe(dest, zk, ms) {
     <head>
         <meta charset="UTF-8">
         <title>Catalogue ABM - SRPN</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             body {
                 font-family: 'Bebas Neue', Arial, sans-serif;
                 background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
                 color: #f1f1f1;
-                padding: 20px;
+                padding: 10px;
                 text-shadow: 1px 1px 2px black;
+                margin: 0;
             }
             h1 {
                 text-align: center;
-                font-size: 48px;
+                font-size: 32px;
                 color: #f39c12;
-                margin-bottom: 40px;
+                margin: 20px 0;
             }
             h2 {
-                font-size: 32px;
+                font-size: 24px;
                 color: #3498db;
-                border-bottom: 3px solid #f39c12;
+                border-bottom: 2px solid #f39c12;
                 padding-bottom: 5px;
-                margin-top: 40px;
+                margin-top: 30px;
             }
             h3 {
-                font-size: 24px;
+                font-size: 20px;
                 color: #e74c3c;
-                margin-top: 25px;
+                margin-top: 20px;
             }
             ul {
                 list-style: none;
-                padding-left: 15px;
+                padding-left: 10px;
             }
             li {
-                margin-bottom: 8px;
+                margin-bottom: 6px;
                 padding-left: 15px;
                 position: relative;
-                font-size: 18px;
+                font-size: 16px;
+                line-height: 1.4;
             }
             li::before {
                 content: "-";
                 position: absolute;
                 left: 0;
                 color: #f1c40f;
-                font-size: 16px;
+                font-size: 14px;
             }
         </style>
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -94,7 +97,7 @@ async function envoyerListe(dest, zk, ms) {
     for (const [rang, univers] of Object.entries(characters)) {
         html += `<h2>🏅 RANG ${rang}</h2>`;
         for (const [verse, personnages] of Object.entries(univers)) {
-            html += `<h3>🌐 Univers : ${verse}</h3><ul>`;
+            html += `<h3>🌐 ${verse}</h3><ul>`;
             for (const nom of Object.keys(personnages)) {
                 html += `<li>${nom}</li>`;
             }
@@ -111,7 +114,7 @@ async function envoyerListe(dest, zk, ms) {
         document: readFileSync(filename),
         mimetype: 'text/html',
         filename: 'catalogue.html',
-        caption: '*📘 Catalogue ABM des Héros - SRPN*'
+        caption: '*CATALOGUE ABM DES HÉROS*'
     }, { quoted: ms });
 
     unlinkSync(filename);
@@ -149,7 +152,7 @@ async function personnageAleatoire(dest, zk, ms, rang = null, verse = null) {
 // Commande principale
 zokou(
     {
-        nomCom: 'perso',
+        nomCom: 'heroes',
         categorie: 'ABM'
     },
     async (dest, zk, commandeOptions) => {
@@ -167,49 +170,11 @@ zokou(
     }
 );
 
-/*let intervalPing = null;
-let latenceTimeout = null;
-
-zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏱️" }, async (origineMessage, zk, commandeOptions) => {
-    const { repondre } = commandeOptions;
-
-    if (intervalPing) {
-        repondre("*_⏳ La latence est déjà en cours..._*");
-        return;
-    }
-
-    intervalPing = setInterval(async () => {
-        try {
-            const response = await axios.get("https://zokouscan-din3.onrender.com");
-            console.log(`[PING] ${new Date().toLocaleTimeString()} - Statut : ${response.status}`);
-            await zk.sendMessage(origineMessage, { text: `*_⌛ Latence écoulé._*` });
-        } catch (err) {
-            console.error(`[PING] Erreur : ${err.message}`);
-            await zk.sendMessage(origineMessage, { text: `Erreur : ${err.message}` });
-        }
-    }, 600000);
-
-    repondre("*_⏱️ Latence démarré. Fin de la latence dans 10 minutes._*");
-});
-
-
-zokou({ nomCom: "stop", categorie: "MON-BOT", reaction: "🛑" }, async (origineMessage, zk, commandeOptions) => {
-    const { repondre } = commandeOptions;
-
-    if (intervalPing) {
-        clearInterval(intervalPing);
-        intervalPing = null;
-        repondre("*_⏱️ Latence arrêté._*");
-    } else {
-        repondre("*_⏱️ Aucune latence en cours._*");
-    }
-});*/
-
 let intervalPing = null;
 let latenceTimeout = null;
 let dernierDelaiMinutes = null; // <= On mémorise le dernier délai utilisé
 
-zokou({ nomCom: "time", categorie: "MON-BOT", reaction: "⏱️" }, async (origineMessage, zk, commandeOptions) => {
+zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏱️" }, async (origineMessage, zk, commandeOptions) => {
     const { repondre, arg } = commandeOptions;
 
     if (intervalPing) {
@@ -220,7 +185,7 @@ zokou({ nomCom: "time", categorie: "MON-BOT", reaction: "⏱️" }, async (origi
     // Déterminer le délai demandé par l'utilisateur
     let minutes = parseInt(arg[0]);
     if (isNaN(minutes) || minutes <= 0) {
-        minutes = 10; // Valeur par défaut = 10 minutes
+        minutes = 8; // Valeur par défaut = 8 minutes
     }
 
     dernierDelaiMinutes = minutes; // On mémorise le délai
@@ -229,18 +194,18 @@ zokou({ nomCom: "time", categorie: "MON-BOT", reaction: "⏱️" }, async (origi
         try {
             const response = await axios.get("https://zokouscan-din3.onrender.com");
             console.log(`[PING] ${new Date().toLocaleTimeString()} - Statut : ${response.status}`);
-            await zk.sendMessage(origineMessage, { text: `*_⌛ Intervalle écoulé (${dernierDelaiMinutes} min)._ *` });
+            await zk.sendMessage(origineMessage, { text: `*_⌛ Intervalle écoulé ${dernierDelaiMinutes} min._*` });
         } catch (err) {
             console.error(`[PING] Erreur : ${err.message}`);
             await zk.sendMessage(origineMessage, { text: `Erreur : ${err.message}` });
         }
     }, minutes * 60 * 1000); // Conversion minutes -> millisecondes
 
-    repondre(`*_⏱️ Latence démarré. Fin de la latence dans ${minutes} minute(s)._ *`);
+    repondre(`*_⏱️ Latence démarré. Fin de la latence dans ${minutes} minute(s)._*`);
 });
 
 
-zokou({ nomCom: "stopping", categorie: "MON-BOT", reaction: "🛑" }, async (origineMessage, zk, commandeOptions) => {
+zokou({ nomCom: "stop", categorie: "MON-BOT", reaction: "🛑" }, async (origineMessage, zk, commandeOptions) => {
     const { repondre } = commandeOptions;
 
     if (intervalPing) {
