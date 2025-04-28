@@ -90,7 +90,7 @@ async function envoyerListe(dest, zk, ms) {
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     </head>
     <body>
-        <h1>🆚 CATALOGUE DES HÉROS ABM 🆚</h1>
+        <h1>🆚 CATALOGUE ABM 🆚</h1>
     `;
 
     for (const [rang, univers] of Object.entries(characters)) {
