@@ -90,13 +90,13 @@ async function envoyerListe(dest, zk, ms) {
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     </head>
     <body>
-        <h1>🆚 CATALOGUE ABM 🆚</h1>
+        <h3>🆚 CATALOGUE ABM 🆚</h3>
     `;
 
     for (const [rang, univers] of Object.entries(characters)) {
-        html += `<h2>🏅 RANG ${rang}</h2>`;
+        html += `<h4>🏅 RANG ${rang}</h4>`;
         for (const [verse, personnages] of Object.entries(univers)) {
-            html += `<h3>🌐 ${verse}</h3><ul>`;
+            html += `<h5>🌐 ${verse}</h5><ul>`;
             for (const nom of Object.keys(personnages)) {
                 html += `<li>${nom}</li>`;
             }
