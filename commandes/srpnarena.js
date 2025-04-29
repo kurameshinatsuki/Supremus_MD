@@ -14,14 +14,14 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓[PAVE ABM]▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*\`[NAME] :\`*
+*[NAME] :*
 
 > .
 
 > .
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*\`💠 TECHNIQUES\` :* 
-*\`📌 DISTANCE\` :* 
+*💠 TECHNIQUES :* 
+*📌 DISTANCE :* 
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
@@ -48,7 +48,7 @@ zokou(
     🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
              🎴 𝐒𝐩𝐞𝐞𝐝 𝐃𝐮𝐞𝐥 🎴
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*\`👤 DUELLISTE 1 :\`* 
+*👤 DUELLISTE 1 :* 
 > *LP❤️:* 4000 | *CM🀄:* 4
 
 > *Deck Principal :* (20 à 30 cartes)
@@ -60,7 +60,7 @@ zokou(
 
                       *𝙑𝙎*
 
-*\`👤 DUELLISTE 2 :\`* 
+*👤 DUELLISTE 2 :* 
 > *LP❤️:* 4000 | *CM🀄:* 4
 
 > *Deck Principal :* (20 à 30 cartes)
@@ -155,13 +155,13 @@ zokou(
 *.......| 🚘 SPEED RUSH 🚘 |......*
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-             *\`🚏POSITION\` :* 
+             *🚏POSITION :* 
 
-*\`[PILOTE] :\`*
+*[PILOTE] :*
 
 > .
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                *\`💠 GADGET\` :* 
+                *💠 GADGET :* 
 > .
 > .
 > .
@@ -189,7 +189,7 @@ zokou(
 *.......| 🏁 SPEED RUSH 🏁 |......*
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *\`[SECTION] :\`*
+> *[SECTION] :*
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
    *\`🚘RACING GADGETS🚘\`*
 
@@ -217,14 +217,14 @@ zokou(
             const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓[ORIGAMY  STORY]▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*\`[PLAYER NAME] :\`*
+*[PLAYER NAME] :*
 
 > *Section 1:* 
 
 > *Section 2:* 
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*\`💠 POUVOIR :\`* Aucun
-*\`🌐 POSITION :\`* 
+*💠 POUVOIR :* Aucun
+*🌐 POSITION :* 
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
