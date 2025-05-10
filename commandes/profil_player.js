@@ -89,37 +89,42 @@ function formatProfileMessage(data) {
   return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓[SRPN PROFIL]▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *👤 Nom :* ${data.name}  
+> *🆔 Nom :* ${data.name}  
 > *♨️ Statut :* ${data.statut}  
 > *🪀 Mode :* ${data.mode}  
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓[EXPLOITS]▓▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ 
+> *🏆 Supremus Cup :* ${data.supremus_cup}  
 > *🧑‍🧑‍🧒‍🧒 DIVISION :* ${data.division}
-> *🧘‍♂️ RANG :*  
-> - *ABM :* ${data.rang_abm}  
-> - *SPEED RUSH :* ${data.rang_speed_rush}  
-> - *YU-GI-OH :* ${data.rang_yugioh}  
-> *🏆 Champion :* ${data.champion}  
-> *😎 Spécialité :* ${data.specialite}  
-> *👑 Leader :* ${data.leader}  
-> *🤼‍♂️ Challenge :* ${data.defis_remportes}  
-> *💯 Légende :* ${data.legende}  
+> *🎮 STATUT :*  
+> - *ABM :* ${data.statut_abm}  
+> - *SPEED RUSH :* ${data.statut_speed_rush}  
+> - *YU-GI-OH :* ${data.statut_yugioh}  
+> - *ORIGAMY WORLD :* ${statut_origamy_world}
+> *🌟 Best Game :* ${data.best_game}
+> *💯 Défi Hebdo :* ${data.defi_hebdo}
+> *👥 Challenge :* ${data.challenge}  
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓▓[STATS]▓▓▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 > *👊 Battles :* V : 00${data.victoires} | D : 00${data.defaites} | L : 00${data.forfaits}   
-> *🏅 TOP 3 :* 00${data.top3}  
-> *🎭 Story Mode :* 
-> M.W : 00${data.missions_reussies} / M.L : 00${data.missions_echouees}  
+> *🏅TOP 3 :* 00${data.top3}  
+> *🔹S Points :* ${data.supremus_points}
+> *🎁 Box VIP :* ${data.box_vip}
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓▓[GAMES]▓▓▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> *🀄 Cards ABM :* ${data.abm_cards}  
+> *🎴 Heroes :* ${data.heroes}  
 > *🚗 Vehicles :* ${data.vehicles} 
 > *🃏 Yu-Gi-Oh :* ${data.yugioh_deck}  
-> *🪐 Origamy Skins :*  
+> *🌐 Origamy World Story :*  
 > - *🚻 Skins :* ${data.skins}  
+> - *🎚️ Rank :* ${data.rank}
+> - *⭐ XP :* ${data.xp}
+> - *👾 Stats :* ${data.sante}❤️ | ${data.energie}🌀
+> ${data.heart}🫀 | ${data.faim}🍽️
+> ${data.soif}🍶 | ${data.reputation}🎭
 > - *🎒 Items :* ${data.items}  
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓▓[MONEY]▓▓▓▓▓▓▓▓*
@@ -127,7 +132,16 @@ function formatProfileMessage(data) {
 > *🧭 S Tokens :* ${data.s_tokens}🧭  
 > *💎 S Gemmes :* ${data.s_gemmes}💎  
 > *🎟️ Coupons :* ${data.coupons}🎟️  
-> *🎁 Box VIP :* 00${data.box_vip}🎁
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓[COMPTEUR]▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> - *🫂 Acceuil :* ${data.acceuil}  
+> - *⚖️ Arbitrage :* ${data.arbitrage}  
+> - *🤝 Transaction :* ${data.transaction}  
+> - *📣 Diffusion :* ${data.diffusion}  
+> - *🎨 Designs :* ${data.designs}  
+> - *🌐 Story :* ${data.story}  
+> *📟 BALANCE :* ${data.balance}🧭  
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓[ACCOUNT]▓▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
