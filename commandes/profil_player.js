@@ -101,7 +101,7 @@ function formatProfileMessage(data) {
 > - *ABM :* ${data.statut_abm}  
 > - *SPEED RUSH :* ${data.statut_speed_rush}  
 > - *YU-GI-OH :* ${data.statut_yugioh}  
-> - *ORIGAMY WORLD :* ${statut_origamy_world}
+> - *ORIGAMY WORLD :* ${data.statut_origamy_world}
 > *🌟 Best Game :* ${data.best_game}
 > *💯 Défi Hebdo :* ${data.defi_hebdo}
 > *👥 Challenge :* ${data.challenge}  
