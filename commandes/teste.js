@@ -48,3 +48,28 @@ zokou({ nomCom: "stop", categorie: "MON-BOT", reaction: "🛑" }, async (origine
         repondre("*_⏱️ Aucune latence en cours._*");
     }
 });
+
+zokou({ nomCom: "groupes", categorie: "MON-BOT", reaction: "📄" }, async (origineMessage, zk, { repondre }) => {
+    const groupes = await zk.groupFetchAllParticipating();
+    const liste = Object.values(groupes).map(g => `• ${g.subject} (${g.id})`).join("\n");
+    repondre(`*📦 Groupes visibles :*\n${liste}`);
+});
+
+zokou({ nomCom: "resync", categorie: "MON-BOT", reaction: "🔄" }, async (origineMessage, zk, { repondre }) => {
+    const groupes = await zk.groupFetchAllParticipating();
+    const failed = [];
+
+    for (let g of Object.values(groupes)) {
+        try {
+            await zk.groupMetadata(g.id); // Forcer la mise à jour
+        } catch (e) {
+            failed.push(g.id);
+        }
+    }
+
+    if (failed.length > 0) {
+        repondre(`❗ Groupes échoués :\n${failed.join("\n")}`);
+    } else {
+        repondre("✅ Tous les groupes ont été resynchronisés !");
+    }
+});
