@@ -1,6 +1,6 @@
 // 📁 commandes/pioche.js
 const { zokou } = require('../framework/zokou');
-const { decks } = require('../commande/deck_manager');
+const { decks } = require('../commandes/deck_manager');
 
 // Pour stocker les decks actifs des joueurs (en mémoire vive)
 const sessions = {};
