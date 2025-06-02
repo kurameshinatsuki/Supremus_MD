@@ -187,4 +187,39 @@ zokou(
   }
 );
 
+// commande : .cartes
+const fs = require('fs');
+const path = require('path');
+
+const pathFichierCartes = path.join(__dirname, '../card_images.json');
+
+function getAllCards() {
+  try {
+    const data = fs.readFileSync(pathFichierCartes, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return {};
+  }
+}
+
+zokou({ nomCom: 'cartes', categorie: 'YUGIOH' }, async (dest, zk, commandeOptions) => {
+  const cartes = getAllCards();
+  if (!cartes || Object.keys(cartes).length === 0) {
+    await zk.sendMessage(dest, { text: '⚠️ Aucun carte enregistrée.' });
+    return;
+  }
+
+  // Pour limiter, on peut envoyer par batch de 5 cartes max (à adapter)
+  const nomsCartes = Object.keys(cartes);
+  for (const nom of nomsCartes) {
+    const urlImage = cartes[nom];
+    await zk.sendMessage(dest, {
+      image: { url: urlImage },
+      caption: `🃏 ${nom}`
+    });
+    // Optionnel: un petit délai pour éviter flood, genre 500ms
+    await new Promise(r => setTimeout(r, 500));
+  }
+});
+
 module.exports = { sessions };
