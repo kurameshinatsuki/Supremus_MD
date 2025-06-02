@@ -87,7 +87,10 @@ zokou(
 
 // Commande : .melanger
 zokou(
-  { nomCom: 'melanger', categorie: 'YUGIOH' },
+  {
+    nomCom: 'melanger',
+    categorie: 'YUGIOH'
+  },
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
 
@@ -98,14 +101,62 @@ zokou(
       return;
     }
 
-    const deckOriginal = decks[sessions[dest].nom];
-    const nouvellePioche = [...deckOriginal.main].sort(() => Math.random() - 0.5);
-    sessions[dest].deck = nouvellePioche;
+    const nomDeck = sessions[dest].nom;
+    const deckOriginal = decks[nomDeck];
+    const cartesRestantes = sessions[dest].deck;
 
-    const contenu = `🧠 *Compétence :*\n• ${deckOriginal.competence}\n\n🃏 *Deck Principal (${nouvellePioche.length}) :*\n• ${nouvellePioche.join('\n• ')}\n\n🧩 *Extra Deck (${deckOriginal.extra.length}) :*\n• ${deckOriginal.extra.join('\n• ')}`;
+    // Mélange uniquement les cartes non piochées
+    const deckMelange = [...cartesRestantes].sort(() => Math.random() - 0.5);
+    sessions[dest].deck = deckMelange;
+
+    const contenu = `🧠 *Compétence :*\n• ${deckOriginal.competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n• ${deckMelange.join('\n• ')}\n\n🧩 *Extra Deck (${deckOriginal.extra.length}) :*\n• ${deckOriginal.extra.join('\n• ')}`;
 
     await zk.sendMessage(dest, {
       image: { url: deckOriginal.image },
+      caption: contenu
+    }, { quoted: ms });
+  }
+);
+
+// commande : .resetdeck
+zokou(
+  {
+    nomCom: 'resetdeck',
+    categorie: 'YUGIOH'
+  },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    if (!sessions[dest] || !sessions[dest].nom) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif. Utilisez *.deck <nom>* avant de réinitialiser.`
+      }, { quoted: ms });
+      return;
+    }
+
+    const nomDeck = sessions[dest].nom;
+    const deckData = decks[nomDeck];
+
+    if (!deckData) {
+      await zk.sendMessage(dest, {
+        text: `❌ Le deck "${nomDeck}" n'existe pas ou a été supprimé.`
+      }, { quoted: ms });
+      return;
+    }
+
+    const deckRemelange = [...deckData.main].sort(() => Math.random() - 0.5);
+
+    // Mise à jour de la session
+    sessions[dest] = {
+      nom: nomDeck,
+      deck: deckRemelange,
+      pioches: [] // Reset aussi les cartes piochées
+    };
+
+    const contenu = `🧠 *Compétence :*\n• ${deckData.competence}\n\n🃏 *Deck Principal (${deckRemelange.length}) :*\n• ${deckRemelange.join('\n• ')}\n\n🧩 *Extra Deck (${deckData.extra.length}) :*\n• ${deckData.extra.join('\n• ')}`;
+
+    await zk.sendMessage(dest, {
+      image: { url: deckData.image },
       caption: contenu
     }, { quoted: ms });
   }
