@@ -163,62 +163,43 @@ zokou(
   }
 );
 
-// commande : .namer
-zokou(
-  { nomCom: 'namer', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
+const { deck_cards } = require("../commandes/deck_cards");
 
-    if (arg.length < 2) {
-      await zk.sendMessage(dest, { text: `❌ Format incorrect. Exemple : *.namer "Nom de la carte" https://lien*` }, { quoted: ms });
-      return;
-    }
-
-    const nom = arg.slice(0, arg.length - 1).join(' ');
-    const lien = arg[arg.length - 1];
-
-    if (!lien.startsWith('http')) {
-      await zk.sendMessage(dest, { text: `❌ Lien invalide.` }, { quoted: ms });
-      return;
-    }
-
-    ajouterLienCarte(nom, lien);
-    await zk.sendMessage(dest, { text: `✅ Lien enregistré pour : *${nom}*` }, { quoted: ms });
-  }
-);
-
-// commande : .cartes
-const fs = require('fs');
-const path = require('path');
-
-const pathFichierCartes = path.join(__dirname, '../card_images.json');
-
-function getAllCards() {
-  try {
-    const data = fs.readFileSync(pathFichierCartes, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return {};
-  }
+// Fonction utilitaire : normalise les noms (sans majuscules ni accents)
+function normalize(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-zokou({ nomCom: 'cartes', categorie: 'YUGIOH' }, async (dest, zk, commandeOptions) => {
-  const cartes = getAllCards();
-  if (!cartes || Object.keys(cartes).length === 0) {
-    await zk.sendMessage(dest, { text: '⚠️ Aucun carte enregistrée.' });
+// commande : .carte
+zokou({
+  nom: "carte",
+  categorie: "Yu-Gi-Oh",
+  react: "🃏",
+},
+async ({ dest, zk, commandeOptions }) => {
+  const { arg, ms } = commandeOptions;
+
+  if (!arg || arg.length === 0) {
+    await zk.sendMessage(dest, {
+      text: `❌ Veuillez fournir le nom d'une carte. Exemple : .carte Dragon Blanc aux Yeux Bleus`,
+    }, { quoted: ms });
     return;
   }
 
-  // Pour limiter, on peut envoyer par batch de 5 cartes max (à adapter)
-  const nomsCartes = Object.keys(cartes);
-  for (const nom of nomsCartes) {
-    const urlImage = cartes[nom];
+  const nomRecherche = normalize(arg.join(" "));
+  const nomTrouve = Object.keys(deck_cards).find(
+    nom => normalize(nom) === nomRecherche
+  );
+
+  if (nomTrouve) {
     await zk.sendMessage(dest, {
-      image: { url: urlImage },
-      caption: `🃏 ${nom}`
-    });
-    // Optionnel: un petit délai pour éviter flood, genre 500ms
-    await new Promise(r => setTimeout(r, 500));
+      image: { url: deck_cards[nomTrouve] },
+      caption: `🃏 *${nomTrouve}*`,
+    }, { quoted: ms });
+  } else {
+    await zk.sendMessage(dest, {
+      text: `❌ Carte introuvable : "${arg.join(" ")}"\n\n🧠 Vérifie l'orthographe ou utilise un nom plus précis.`,
+    }, { quoted: ms });
   }
 });
 
