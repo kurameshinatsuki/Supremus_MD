@@ -7,7 +7,7 @@ const sessions = {};
 
 // Commande : .deck <nom>
 zokou(
-  { nomCom: 'deck', categorie: 'YUGIOH' },
+  { nomCom: 'deck', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
@@ -48,7 +48,7 @@ zokou(
 
 // Commande : .pioche <numéro>
 zokou(
-  { nomCom: 'pioche', categorie: 'YUGIOH' },
+  { nomCom: 'pioche', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
@@ -89,7 +89,7 @@ zokou(
 zokou(
   {
     nomCom: 'melanger',
-    categorie: 'YUGIOH'
+    categorie: 'YU-GI-OH'
   },
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
@@ -122,7 +122,7 @@ zokou(
 zokou(
   {
     nomCom: 'resetdeck',
-    categorie: 'YUGIOH'
+    categorie: 'YU-GI-OH'
   },
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
