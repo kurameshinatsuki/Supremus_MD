@@ -692,8 +692,6 @@
                     }} ;
                 //fin exécution commandes
                   
-                 
-                });
             //fin événement message
     
     /******** evenement groupe update ****************/
