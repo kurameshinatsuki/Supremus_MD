@@ -1,6 +1,7 @@
 // 📁 commandes/pioche.js
 const { zokou } = require('../framework/zokou');
 const { decks } = require('../commandes/deck_manager');
+const { ajouterLienCarte } = require('../commande/card_image_manager');
 
 // Pour stocker les decks actifs des joueurs (en mémoire vive)
 const sessions = {};
@@ -159,6 +160,30 @@ zokou(
       image: { url: deckData.image },
       caption: contenu
     }, { quoted: ms });
+  }
+);
+
+// commande : .namer
+zokou(
+  { nomCom: 'namer', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { arg, ms } = commandeOptions;
+
+    if (arg.length < 2) {
+      await zk.sendMessage(dest, { text: `❌ Format incorrect. Exemple : *.namer "Nom de la carte" https://lien*` }, { quoted: ms });
+      return;
+    }
+
+    const nom = arg.slice(0, arg.length - 1).join(' ');
+    const lien = arg[arg.length - 1];
+
+    if (!lien.startsWith('http')) {
+      await zk.sendMessage(dest, { text: `❌ Lien invalide.` }, { quoted: ms });
+      return;
+    }
+
+    ajouterLienCarte(nom, lien);
+    await zk.sendMessage(dest, { text: `✅ Lien enregistré pour : *${nom}*` }, { quoted: ms });
   }
 );
 
