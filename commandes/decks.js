@@ -1,7 +1,12 @@
 // 📁 commandes/pioche.js
 const { zokou } = require('../framework/zokou');
 const { decks } = require('../commandes/deck_manager');
-const { ajouterLienCarte } = require('../card_image_manager');
+const { deck_cards } = require("../commandes/deck_cards");
+
+// Fonction utilitaire : normalise les noms (sans majuscules ni accents)
+function normalize(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
 // Pour stocker les decks actifs des joueurs (en mémoire vive)
 const sessions = {};
@@ -163,18 +168,10 @@ zokou(
   }
 );
 
-const { deck_cards } = require("../commandes/deck_cards");
-
-// Fonction utilitaire : normalise les noms (sans majuscules ni accents)
-function normalize(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
-
 // commande : .carte
 zokou({
   nom: "carte",
-  categorie: "Yu-Gi-Oh",
-  react: "🃏",
+  categorie: "YU-GI-OH"
 },
 async ({ dest, zk, commandeOptions }) => {
   const { arg, ms } = commandeOptions;
