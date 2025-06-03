@@ -169,12 +169,13 @@ zokou(
 );
 
 // commande : .carte
-zokou({
-  nom: "carte",
-  categorie: "YU-GI-OH"
-},
-async ({ dest, zk, commandeOptions }) => {
-  const { arg, ms } = commandeOptions;
+zokou(
+  {
+    nomCom: 'carte',
+    categorie: 'YU-GI-OH'
+  },
+  async (dest, zk, commandeOptions) => {
+    const { arg, ms } = commandeOptions;
 
   if (!arg || arg.length === 0) {
     await zk.sendMessage(dest, {
