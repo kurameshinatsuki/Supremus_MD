@@ -14,7 +14,7 @@ const {generatepp} = require('../framework/mesfonctions')
 
 
 
-zokou({ nomCom: "tagall", categorie: 'GROUP', reaction: "📣" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "call", categorie: 'GROUP', reaction: "☎️" }, async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions;
 
     // Vérification si la commande est utilisée dans un groupe
@@ -58,7 +58,7 @@ zokou({ nomCom: "tagall", categorie: 'GROUP', reaction: "📣" }, async (dest, z
 });
 
 
-zokou({ nomCom: "link", categorie: 'GROUP', reaction: "🙋" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "lien", categorie: 'GROUP', reaction: "🔗" }, async (dest, zk, commandeOptions) => {
   const { repondre, nomGroupe, nomAuteurMessage, verifGroupe } = commandeOptions;
   if (!verifGroupe) { repondre("✨ attends mec, tu veux le lien vers mon dm ?"); return; };
 
@@ -75,7 +75,7 @@ Lien :${lien}`
 });
 
 /** *nommer un membre comme admin */
-zokou({ nomCom: "promote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "nommer", categorie: 'GROUP', reaction: "🔺" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("For groups only"); }
@@ -137,7 +137,7 @@ zokou({ nomCom: "promote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, as
 //fin nommer
 /** ***demettre */
 
-zokou({ nomCom: "demote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "denommer", categorie: 'GROUP', reaction: "🔻" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("For groups only"); }
@@ -203,7 +203,7 @@ zokou({ nomCom: "demote", categorie: 'GROUP', reaction: "👨🏿‍💼" }, asy
 
 /** ***fin démettre****  **/
 /** **retirer** */
-zokou({ nomCom: "remove", categorie: 'GROUP', reaction: "👨🏿‍💼" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "retirer", categorie: 'GROUP', reaction: "👋" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, nomAuteurMessage, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("for groups only"); }
@@ -248,7 +248,7 @@ zokou({ nomCom: "remove", categorie: 'GROUP', reaction: "👨🏿‍💼" }, asy
             if (admin == false) {
               const gifLink = "https://raw.githubusercontent.com/djalega8000/Zokou-MD/main/media/remover.gif"
               var sticker = new Sticker(gifLink, {
-                pack: 'Zokou-Md', // The pack name
+                pack: 'Supremus-Md', // The pack name
                 author: nomAuteurMessage, // The author name
                 type: StickerTypes.FULL, // The sticker type
                 categories: ['🤩', '🎉'], // The sticker category
@@ -279,7 +279,7 @@ zokou({ nomCom: "remove", categorie: 'GROUP', reaction: "👨🏿‍💼" }, asy
 /** *****fin retirer */
 
 
-zokou({ nomCom: "del", categorie: 'GROUP',reaction:"🧹" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "supprimer", categorie: 'GROUP',reaction:"🧹" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, verifGroupe,auteurMsgRepondu,idBot, msgRepondu, verifAdmin, superUser} = commandeOptions;
   
@@ -351,7 +351,7 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
  //------------------------------------antilien-------------------------------
 
- zokou({ nomCom: "antilink", categorie: 'GROUP', reaction: "🔗" }, async (dest, zk, commandeOptions) => {
+ zokou({ nomCom: "anti_lien", categorie: 'GROUP', reaction: "⛓️‍💥" }, async (dest, zk, commandeOptions) => {
 
 
   var { repondre, arg, verifGroupe, superUser, verifAdmin } = commandeOptions;
@@ -419,7 +419,7 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
  //------------------------------------antibot-------------------------------
 
- zokou({ nomCom: "antibot", categorie: 'GROUP', reaction: "🔗" }, async (dest, zk, commandeOptions) => {
+ zokou({ nomCom: "anti_bot", categorie: 'GROUP', reaction: "🚫" }, async (dest, zk, commandeOptions) => {
 
 
   var { repondre, arg, verifGroupe, superUser, verifAdmin } = commandeOptions;
@@ -485,7 +485,7 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
 //----------------------------------------------------------------------------
 
-zokou({ nomCom: "group", categorie: 'GROUP' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "groupe", categorie: 'GROUP' }, async (dest, zk, commandeOptions) => {
 
   const { repondre, verifGroupe, verifAdmin, superUser, arg } = commandeOptions;
 
@@ -515,7 +515,7 @@ zokou({ nomCom: "group", categorie: 'GROUP' }, async (dest, zk, commandeOptions)
 
 });
 
-zokou({ nomCom: "left", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "ciao", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { repondre, verifGroupe, superUser } = commandeOptions;
   if (!verifGroupe) { repondre("order reserved for group only"); return };
@@ -528,7 +528,7 @@ zokou({ nomCom: "left", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
   zk.groupLeave(dest)
 });
 
-zokou({ nomCom: "gname", categorie: 'GROUP' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "gnom", categorie: 'GROUP' }, async (dest, zk, commandeOptions) => {
 
   const { arg, repondre, verifAdmin } = commandeOptions;
 
@@ -606,7 +606,7 @@ zokou({ nomCom: "gpp", categorie: 'GROUP' }, async (dest, zk, commandeOptions) =
 });
 
 /////////////
-zokou({nomCom:"hidetag",categorie:'GROUP',reaction:"🎤"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"annonce",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commandeOptions)=>{
 
   const {repondre,msgRepondu,verifGroupe,arg ,verifAdmin , superUser}=commandeOptions;
 
@@ -713,7 +713,7 @@ zokou({nomCom:"hidetag",categorie:'GROUP',reaction:"🎤"},async(dest,zk,command
 });
 
 
-zokou({ nomCom: "apk", reaction: "✨", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "apk", reaction: "📥", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
 
   try {
@@ -783,7 +783,7 @@ const cron = require(`../bdd/cron`) ;
 
 
 zokou({
-      nomCom : 'automute',
+      nomCom : 'fermeture',
       categorie : 'GROUP'
   } , async (dest,zk,commandeOptions) => {
 
@@ -855,7 +855,7 @@ zokou({
 
 
   zokou({
-    nomCom : 'autounmute',
+    nomCom : 'ouverture',
     categorie : 'GROUP'
 } , async (dest,zk,commandeOptions) => {
 
