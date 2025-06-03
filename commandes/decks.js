@@ -1,4 +1,4 @@
-// 📁 commandes/pioche.js
+// 📁 fichier/decks.js
 const { zokou } = require('../framework/zokou');
 const { decks } = require('../commandes/deck_manager');
 const { deck_cards } = require("../commandes/deck_cards");
@@ -11,16 +11,22 @@ function normalize(str) {
 // Pour stocker les decks actifs des joueurs (en mémoire vive)
 const sessions = {};
 
-// Commande : .deck <nom>
+// commande : .deck <nom>
 zokou(
   { nomCom: 'deck', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
+    // Si aucun nom de deck n’est fourni, lister les decks disponibles
     if (!arg[0]) {
+      const nomsDisponibles = Object.keys(decks)
+        .map(n => `• ${n.charAt(0).toUpperCase() + n.slice(1)}`)
+        .join('\n');
+
       await zk.sendMessage(dest, {
-        text: "❌ Veuillez spécifier un nom de deck. Exemple : *.deck chevaliers*"
+        text: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\n🔁 Tape la commande avec un nom de deck. Exemple : *.deck yami*`
       }, { quoted: ms });
+
       return;
     }
 
@@ -43,7 +49,10 @@ zokou(
       nom: nomDeck
     };
 
-    const contenu = `🧠 *Compétence :*\n• ${competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n• ${deckMelange.join('\n• ')}\n\n🧩 *Extra Deck (${extra.length}) :*\n• ${extra.join('\n• ')}`;
+    const contenu = `🧠 *Compétence :*\n• ${competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n• ${deckMelange.join('\n• ')}` +
+      (extra?.length
+        ? `\n\n🧩 *Extra Deck (${extra.length}) :*\n• ${extra.join('\n• ')}`
+        : '');
 
     await zk.sendMessage(dest, {
       image: { url: image },
@@ -177,28 +186,35 @@ zokou(
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
-  if (!arg || arg.length === 0) {
-    await zk.sendMessage(dest, {
-      text: `❌ Veuillez fournir le nom d'une carte. Exemple : .carte Dragon Blanc aux Yeux Bleus`,
-    }, { quoted: ms });
-    return;
-  }
+    // Si aucun argument, afficher la liste des cartes disponibles
+    if (!arg || arg.length === 0) {
+      const nomsCartes = Object.keys(deck_cards)
+        .sort((a, b) => a.localeCompare(b))
+        .map(nom => `• ${nom}`)
+        .join('\n');
 
-  const nomRecherche = normalize(arg.join(" "));
-  const nomTrouve = Object.keys(deck_cards).find(
-    nom => normalize(nom) === nomRecherche
-  );
+      await zk.sendMessage(dest, {
+        text: `📋 *Cartes disponibles (${Object.keys(deck_cards).length}) :*\n${nomsCartes}\n\n🔍 Pour voir une carte : *.carte NomDeLaCarte*`,
+      }, { quoted: ms });
+      return;
+    }
 
-  if (nomTrouve) {
-    await zk.sendMessage(dest, {
-      image: { url: deck_cards[nomTrouve] },
-      caption: `🃏 *${nomTrouve}*`,
-    }, { quoted: ms });
-  } else {
-    await zk.sendMessage(dest, {
-      text: `❌ Carte introuvable : "${arg.join(" ")}"\n\n🧠 Vérifie l'orthographe ou utilise un nom plus précis.`,
-    }, { quoted: ms });
+    const nomRecherche = normalize(arg.join(" "));
+    const nomTrouve = Object.keys(deck_cards).find(
+      nom => normalize(nom) === nomRecherche
+    );
+
+    if (nomTrouve) {
+      await zk.sendMessage(dest, {
+        image: { url: deck_cards[nomTrouve] },
+        caption: `🃏 *${nomTrouve}*`,
+      }, { quoted: ms });
+    } else {
+      await zk.sendMessage(dest, {
+        text: `❌ Carte introuvable : "${arg.join(" ")}"\n\n🧠 Vérifie l'orthographe ou utilise un nom plus précis.`,
+      }, { quoted: ms });
+    }
   }
-});
+);
 
 module.exports = { sessions };
