@@ -4,13 +4,14 @@ const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion,
 const pino = require('pino');
 const fs = require('fs-extra');
 const path = require('path');
-const qrcode = require('qrcode-terminal');
+const qrcode = require('qrcode');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
 // Auth path
 const authFolder = './auth';
+let latestQR = null; // 🔄 Stocke le QR code actuel (base64)
 
 // Initialisation principale
 async function startBot() {
@@ -31,7 +32,15 @@ async function startBot() {
   sock.ev.on('creds.update', saveCreds);
 
   // Connexion
-  sock.ev.on('connection.update', ({ connection, lastDisconnect }) => {
+  sock.ev.on('connection.update', async ({ connection, lastDisconnect, qr }) => {
+    if (qr) {
+      try {
+        latestQR = await qrcode.toDataURL(qr);
+        console.log("🔑 QR Code généré (accessible via /qr)");
+      } catch (e) {
+        console.error("❌ Erreur génération QR:", e);
+      }
+    }
     if (connection === 'open') {
       console.log('✅ Connexion établie à WhatsApp. Le bot est prêt !');
     } else if (connection === 'close') {
@@ -62,6 +71,23 @@ async function startBot() {
 // API pour Render/KeepAlive
 app.get('/', (_, res) => {
   res.send('🔄 Supremus-MD tourne parfaitement.');
+});
+
+// Affiche le QR code en HTML
+app.get('/qr', (_, res) => {
+  if (!latestQR) {
+    return res.send('<h2>QR code en attente...</h2>');
+  }
+  res.send(`
+    <html>
+      <head><title>QR Code Supremus-MD</title></head>
+      <body style="text-align: center; font-family: sans-serif;">
+        <h1>📱 Scannez pour connecter Supremus-MD</h1>
+        <img src="${latestQR}" alt="QR Code" />
+        <p style="color: gray;">Laissez cette page ouverte jusqu'à connexion automatique.</p>
+      </body>
+    </html>
+  `);
 });
 
 app.listen(PORT, () => console.log('🌐 Serveur Express actif sur le port', PORT));
