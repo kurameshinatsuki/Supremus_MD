@@ -1,53 +1,90 @@
-# Supremus-MD
+# SUPREMUS-MD
 
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=EB+Garamond&weight=800&size=28&duration=4000&pause=1000&random=false&width=435&lines=WELCOME+TO+SUPREMUS-MD;MULTI-DEVICE+WHATSAPP+BOT;DEVELOPED+BY;JOHN+SUPREMUS,+MONKEE+D+LUFFY." alt="Typing SVG" /></a>
+<p align="center">
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.demolab.com?font=EB+Garamond&weight=800&size=28&duration=4000&pause=1000&random=false&width=600&lines=SUPREMUS+MD+-+R%C3%94LEPLAY+BOT;POWERED+BY+SUPREMUS+PROD.;SUPPORT+FOR+SRPN+%26+TEXTUAL+RPGS" alt="Typing SVG" />
+  </a>
+</p>
 
-![Supremus-MD](https://telegra.ph/file/318d7d04b613ba554ddee.jpg)
+<p align="center">
+  <img src="https://telegra.ph/file/318d7d04b613ba554ddee.jpg" alt="Supremus-MD Banner" width="100%" />
+</p>
 
-Supremus-MD est un bot multi-appareil conçu pour enrichir vos conversations WhatsApp avec des fonctionnalités utiles et amusantes. Basé sur Zokou-MD, il offre les mêmes capacités tout en ajoutant des fonctions RP spécifiques pour gérer des fiches et des contenus.
+---
 
-## Fonctionnalités Clés
+## 🧩 À propos
 
-- **Téléchargement de Fichiers :** Supremus-MD peut télécharger des fichiers audio et vidéo à partir des liens que vous envoyez, facilitant ainsi leur partage avec vos contacts.
-- **Exportation de Stickers :** Vous pouvez exporter des stickers de Telegram et les utiliser dans vos conversations WhatsApp en les envoyant simplement à Supremus-MD.
-- **Gestion de Groupes :** Supremus-MD propose des fonctionnalités de gestion de groupe, telles que l'ajout ou la suppression de membres, la configuration de règles et d'autres paramètres.
-- **Texte en Image :** Les meilleurs logos ont été sélectionnés pour votre convenance.
+**SUPREMUS-MD** est un **bot WhatsApp multi-device** développé par **SUPREMUS PROD**, spécialement conçu pour **les jeux de rôle textuels** comme **SRPN**. Il s’appuie sur le projet open source **Zokou-MD**, créé par **Monkey D. Luffy**, pour offrir une infrastructure stable et extensible.
 
-## Fonctionnalités RP
+**SUPREMUS-MD** n'est pas un bot ordinaire : il centralise **outils RP**, **gestion de données**, **animation de communautés** et **automatisation WhatsApp**, le tout dans une seule instance.
 
-- **Gestion de Fiches :** Créez, gérez et mettez à jour des fiches de personnage pour vos jeux de rôle directement via WhatsApp.
-- **Contenus RP :** Partagez et organisez des contenus spécifiques aux jeux de rôle, tels que des scénarios, des cartes et des règles.
+---
 
-## Fonctionnalités Amusantes
+## 🛠️ Fonctionnalités Principales
 
-- **Blagues et Devinettes :** Supremus-MD est équipé d'une collection de blagues et de devinettes pour animer vos conversations.
-- **Citations Inspirantes :** Recevez des citations inspirantes pour vous motiver quotidiennement.
+### 🎮 Fonctionnalités Rôleplay (RP)
 
-## Obtenir Supremus-MD
+- 📇 **Gestion de Fiches Personnages**
+- 📜 **Stockage de Contenus (Scénarios, Règles, Cartes, etc.)**
+- 🧾 **Profils Joueurs automatisées**
+- 🗂️ **Organisation de contenus RP** par catégorie
+- 🛍️ **Gestion de boutique RP**
 
-1. Cliquez sur **[Fork](https://github.com/johnsupremus1/Supremus-MD)** pour copier le dépôt sur votre compte GitHub. N'oubliez pas d'ajouter une étoile 🌟 pour encourager les développeurs.
-2. Obtenez une session bot :
-   - [Session](https://zokoupairingcode-ykvl.onrender.com/) ;
-3. Déploiement :
-   - **Déploiement sur Heroku :**
-     1. Si vous n'avez pas de compte **Heroku**, cliquez [**ici**](https://id.heroku.com/login) pour en créer un.
-     2. Cliquez [**ici**](https://dashboard.heroku.com/new?template=https://github.com/johnsupremus1/Supremus-MD) pour déployer le bot sur **Heroku**.
+### 🧰 Outils Supplémentaires
 
-## Contributions
+- 🖼️ **Génération & exportation de stickers**
+- 👥 **Administration de Groupes WhatsApp** (ajout, suppression, configurations)
+- 🎰 **Gestion de Casino RP**
 
-Les contributions à Supremus-MD sont les bienvenues ! Si vous avez des idées pour de nouvelles fonctionnalités, des améliorations ou des corrections de bugs, n'hésitez pas à ouvrir une issue ou à soumettre une pull request.
+---
 
-Remerciements à ces personnes :
-- **Fatao** qui participe par moment à la résolution des erreurs (bdd, cmd player) ;
-- **Monkey D Luffy** qui a créé ce bot et les principaux codes favorisant son bon fonctionnement.
+## 🚀 Déploiement & Utilisation
 
-## Licence
+### 🔧 Étape 1 – Fork du dépôt
 
-Le bot WhatsApp Supremus-MD est distribué sous la [Licence MIT](https://opensource.org/licenses/MIT).
+> 🔗 [Fork sur GitHub](https://github.com/SupremusJohn/Supremus_MD)  
+Vous pouvez ajouter une étoile ⭐ si vous aimer le projet !
 
-Profitez des diverses fonctionnalités de Supremus-MD pour enrichir vos conversations et rendre votre expérience WhatsApp plus intéressante !
+### 🔑 Étape 2 – Obtenez votre session WhatsApp
 
-## Développeurs
+> 🎯 [Générer ma session](https://zkscan.onrender.com)
 
-- [**John Supremus**](https://github.com/johnsupremus1)
-- [**M๏nkeℽ D Lบffy**](https://github.com/Faouz995)
+### ☁️ Étape 3 – Déploiement sur Heroku
+
+1. Créez un compte : [Créer un compte Heroku](https://id.heroku.com/login)
+2. Déployez instantanément :
+   > 🔽 [Déployer Supremus-MD sur Heroku](https://dashboard.heroku.com/new?template=https://github.com/kurameshinatsuki/Supremus-MD)
+
+---
+
+## 👨‍💻 Développement
+
+### 📚 Basé sur :  
+**Zokou-MD** – Script WhatsApp Multi-Device développé par [Monkey D. Luffy](https://github.com/luffy8979)
+
+> Ce script a servi de base solide pour SUPREMUS-MD, adapté ensuite pour intégrer les logiques SRPN et fonctionnalités RP avancées.
+
+### 🧠 Développé par :
+
+- 🧑‍💼 [**John Supremus**](https://github.com/kurameshinatsuki) – Fondateur de Supremus Prod., concepteur SRPN
+- 🦁 [**M๏nkeℽ D Lบffy**](https://github.com/luffy8979) – Architecte original de Zokou-MD
+
+---
+
+## 🤝 Contributions
+
+Les suggestions, issues et pull requests sont **les bienvenues**.
+
+Merci à :
+- 💡 **Fatao & White** – Contributions technique.
+- 💡 Toute la **communauté SRPN** pour les retours et tests.
+
+---
+
+## 📜 Licence
+
+**SUPREMUS-MD** est publié sous licence [MIT](https://opensource.org/licenses/MIT).  
+
+---
+
+> _Supremus-MD est plus qu’un bot, c’est un compagnon pour vos aventures RP textuelles. Que vos récits soient longs, épiques ou tragiques... il est là pour les encadrer._ 🕯️
