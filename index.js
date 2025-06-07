@@ -91,85 +91,80 @@ const {
 const { recupevents } = require("./bdd/welcome");
 //const //{loadCmd}=require("/framework/mesfonctions")
 let { reagir } = require(__dirname + "/framework/app");
-// var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, "");
+var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, "");
 const prefixe = conf.PREFIXE;
 
-const {
-  default: makeWASocket,
-  useMultiFileAuthState,
-  makeCacheableSignalKeyStore,
-  fetchLatestBaileysVersion,
-  generatePairingCode,
-  jidDecode,
-} = require('@whiskeysockets/baileys');
-
-// const pino = require('pino');
-const { makeInMemoryStore } = require('@whiskeysockets/baileys');
-const store = makeInMemoryStore({});
-
-async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState('./auth');
-  const { version } = await fetchLatestBaileysVersion();
-
-  const sock = makeWASocket({
-    version,
-    logger: pino({ level: 'silent' }),
-    printQRInTerminal: true,
-    browser: ['Zokou-MD', 'Safari', '1.0.0'],
-    auth: {
-      creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' })),
-    },
-    getMessage: async (key) => {
-      if (store) {
-        const msg = await store.loadMessage(key.remoteJid, key.id);
-        return msg?.message || undefined;
-      }
-      return { conversation: 'An Error Occurred, Repeat Command!' };
-    },
-  });
-
-  store.bind(sock.ev);
-
-  setInterval(() => {
-    store.writeToFile(__dirname + '/store.json');
-  }, 3000);
-
-  sock.ev.on('creds.update', saveCreds);
-
-  sock.ev.on('connection.update', async (update) => {
-    const { connection, isNewLogin, lastDisconnect } = update;
-
-    if (connection === 'open') {
-      console.log('✅ Connecté à WhatsApp avec succès !');
+async function authentification() {
+  try {
+    //console.log("le data "+data)
+    if (!fs.existsSync(__dirname + "/auth/creds.json")) {
+      console.log("connexion en cour ...");
+      await fs.writeFileSync(
+        __dirname + "/auth/creds.json",
+        atob(session),
+        "utf8"
+      );
+      //console.log(session)
+    } else if (
+      fs.existsSync(__dirname + "/auth/creds.json") &&
+      session != "zokk"
+    ) {
+      await fs.writeFileSync(
+        __dirname + "/auth/creds.json",
+        atob(session),
+        "utf8"
+      );
     }
-
-    if (connection === 'close') {
-      const code = lastDisconnect?.error?.output?.statusCode;
-      console.log('❌ Déconnecté', code);
-      if (code !== 401) startBot();
-    }
-
-    if (isNewLogin) {
-      const phone = '2250554191184';
-      const pairingCode = await generatePairingCode(sock, phone);
-      console.log('🔗 Pairing Code : ' + pairingCode);
-    }
-  });
-
-  sock.ev.on('messages.upsert', async (m) => {
-    const ms = m.messages[0];
-    if (!ms.message) return;
-
-    const from = ms.key.remoteJid;
-    console.log('📩 Nouveau message de :', from);
-
-    // Traite le message ici
-  });
+  } catch (e) {
+    console.log("Session Invalide " + e);
+    return;
+  }
 }
+authentification();
+setTimeout(() => {
+  async function main() {
+    const { version, isLatest } = await (0,
+    baileys_1.fetchLatestBaileysVersion)();
+    const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(
+      __dirname + "/auth"
+    );
+    const sockOptions = {
+      version,
+      logger: pino({ level: "silent" }),
+      browser: ["Zokou-Md", "safari", "1.0.0"],
+      printQRInTerminal: true,
+      fireInitQueries: false,
+      shouldSyncHistoryMessage: true,
+      downloadHistory: true,
+      syncFullHistory: true,
+      generateHighQualityLinkPreview: true,
+      markOnlineOnConnect: false,
+      keepAliveIntervalMs: 30_000,
+      /* auth: state*/ auth: {
+        creds: state.creds,
+        /** caching makes the store faster to send/recv messages */
+        keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
+      }
+    };
+    let zk = (0, baileys_1.default)(sockOptions);
 
-startBot();
-
+    zk.ev.on("messages.upsert", async (m) => {
+      const { messages } = m;
+      const ms = messages[0];
+      //  console.log(ms) ;
+      if (!ms.message) return;
+      const decodeJid = (jid) => {
+        if (!jid) return jid;
+        if (/:\d+@/gi.test(jid)) {
+          let decode = (0, baileys_1.jidDecode)(jid) || {};
+          return (
+            (decode.user &&
+              decode.server &&
+              decode.user + "@" + decode.server) ||
+            jid
+          );
+        } else return jid;
+      };
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
         mtype == "conversation"
