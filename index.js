@@ -148,6 +148,18 @@ async function startBot() {
     }
   });
 
+zk.ev.on("messages.upsert", async (m) => {
+    const ms = m.messages[0];
+    if (!ms.message) return;
+
+    const from = ms.key.remoteJid;
+    console.log("📩 Nouveau message de :", from);
+
+    // → Ton code de traitement ici
+  });
+}
+startBot();
+
                  //////////
                 getMessage: async (key) => {
                     if (store) {
@@ -180,8 +192,6 @@ async function startBot() {
                     else
                         return jid;
                 };
-
-startBot();
 
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
