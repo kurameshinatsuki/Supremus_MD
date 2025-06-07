@@ -103,95 +103,72 @@ const {
   jidDecode,
 } = require('@whiskeysockets/baileys');
 
-// const fs = require('fs');
-// const pino = require('pino');
+const pino = require('pino');
+const { makeInMemoryStore } = require('@whiskeysockets/baileys');
+const store = makeInMemoryStore({});
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState('./auth');
-
   const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({
     version,
-    logger: pino({ level: "silent" }),
+    logger: pino({ level: 'silent' }),
     printQRInTerminal: true,
-    browser: ["Zokou-MD", "Safari", "1.0.0"],
+    browser: ['Zokou-MD', 'Safari', '1.0.0'],
     auth: {
       creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
-    }
+      keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' })),
+    },
+    getMessage: async (key) => {
+      if (store) {
+        const msg = await store.loadMessage(key.remoteJid, key.id);
+        return msg?.message || undefined;
+      }
+      return { conversation: 'An Error Occurred, Repeat Command!' };
+    },
   });
 
-  sock.ev.on("creds.update", saveCreds);
+  store.bind(sock.ev);
 
-  sock.ev.on("connection.update", async (update) => {
+  setInterval(() => {
+    store.writeToFile(__dirname + '/store.json');
+  }, 3000);
+
+  sock.ev.on('creds.update', saveCreds);
+
+  sock.ev.on('connection.update', async (update) => {
     const { connection, isNewLogin, lastDisconnect } = update;
 
-    if (connection === "open") {
-      console.log("✅ Connecté à WhatsApp avec succès !");
+    if (connection === 'open') {
+      console.log('✅ Connecté à WhatsApp avec succès !');
     }
 
-    if (connection === "close") {
+    if (connection === 'close') {
       const code = lastDisconnect?.error?.output?.statusCode;
-      console.log("❌ Déconnecté", code);
-
-      if (code !== 401) {
-        startBot(); // Reconnexion auto sauf logout
-      }
+      console.log('❌ Déconnecté', code);
+      if (code !== 401) startBot();
     }
 
     if (isNewLogin) {
-      const phone = '2250554191184'; // ← Ton numéro ici
+      const phone = '2250554191184';
       const pairingCode = await generatePairingCode(sock, phone);
-      console.log("🔗 Pairing Code : " + pairingCode);
-      console.log("📱 Entre ce code sur WhatsApp Web pour connecter le bot.");
+      console.log('🔗 Pairing Code : ' + pairingCode);
     }
   });
 
-zk.ev.on("messages.upsert", async (m) => {
+  sock.ev.on('messages.upsert', async (m) => {
     const ms = m.messages[0];
     if (!ms.message) return;
 
     const from = ms.key.remoteJid;
-    console.log("📩 Nouveau message de :", from);
+    console.log('📩 Nouveau message de :', from);
 
-    // → Ton code de traitement ici
+    // Traite le message ici
   });
 }
+
 startBot();
-
-                 //////////
-                getMessage: async (key) => {
-                    if (store) {
-                        const msg = await store.loadMessage(key.remoteJid, key.id, undefined);
-                        return msg.message || undefined;
-                    }
-                    return {
-                        conversation: 'An Error Occurred, Repeat Command!'
-                    };
-                }
-                ///////
-            };
-            let zk = (0, baileys_1.default)(sockOptions);
-            store.bind(zk.ev);
-            setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
-
-            zk.ev.on("messages.upsert", async (m) => {
-                const { messages } = m;
-                const ms = messages[0];
-              //  console.log(ms) ;
-                if (!ms.message)
-                    return;
-                const decodeJid = (jid) => {
-                    if (!jid)
-                        return jid;
-                    if (/:\d+@/gi.test(jid)) {
-                        let decode = (0, baileys_1.jidDecode)(jid) || {};
-                        return decode.user && decode.server && decode.user + '@' + decode.server || jid;
-                    }
-                    else
-                        return jid;
-                };
 
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
