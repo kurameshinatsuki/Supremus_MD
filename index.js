@@ -148,16 +148,38 @@ async function startBot() {
     }
   });
 
-  sock.ev.on("messages.upsert", async (m) => {
-    const msg = m.messages[0];
-    if (!msg.message) return;
+                 //////////
+                getMessage: async (key) => {
+                    if (store) {
+                        const msg = await store.loadMessage(key.remoteJid, key.id, undefined);
+                        return msg.message || undefined;
+                    }
+                    return {
+                        conversation: 'An Error Occurred, Repeat Command!'
+                    };
+                }
+                ///////
+            };
+            let zk = (0, baileys_1.default)(sockOptions);
+            store.bind(zk.ev);
+            setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
 
-    const from = msg.key.remoteJid;
-    console.log("📩 Message reçu de :", from);
-
-    // Ton traitement de message ici (commandes, réponses, etc.)
-  });
-}
+            zk.ev.on("messages.upsert", async (m) => {
+                const { messages } = m;
+                const ms = messages[0];
+              //  console.log(ms) ;
+                if (!ms.message)
+                    return;
+                const decodeJid = (jid) => {
+                    if (!jid)
+                        return jid;
+                    if (/:\d+@/gi.test(jid)) {
+                        let decode = (0, baileys_1.jidDecode)(jid) || {};
+                        return decode.user && decode.server && decode.user + '@' + decode.server || jid;
+                    }
+                    else
+                        return jid;
+                };
 
 startBot();
 
