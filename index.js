@@ -103,7 +103,7 @@ const {
   jidDecode,
 } = require('@whiskeysockets/baileys');
 
-const pino = require('pino');
+// const pino = require('pino');
 const { makeInMemoryStore } = require('@whiskeysockets/baileys');
 const store = makeInMemoryStore({});
 
