@@ -91,6 +91,7 @@ const {
 const { recupevents } = require("./bdd/welcome");
 //const //{loadCmd}=require("/framework/mesfonctions")
 let { reagir } = require(__dirname + "/framework/app");
+const qrcode = require("qrcode-terminal");
 var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, "");
 const prefixe = conf.PREFIXE;
 
@@ -144,28 +145,9 @@ setTimeout(() => {
         creds: state.creds,
         /** caching makes the store faster to send/recv messages */
         keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
-      }
+      },
     };
-    let zk = (0, baileys_1.default)(sockOptions);
-const QRCode = require("qrcode");
-
-zk.ev.on("connection.update", async (update) => {
-  const { connection, qr } = update;
-
-  if (qr) {
-    console.log("📲 Veuillez scanner ce QR Code :");
-    QRCode.toString(qr, { type: 'terminal' }, function (err, url) {
-      if (err) return console.error("❌ Erreur QR:", err);
-      console.log(url);
-    });
-  }
-
-  if (connection === "open") {
-    console.log("✅ Connecté avec succès !");
-  } else if (connection === "close") {
-    console.log("❌ Connexion fermée !");
-  }
-});
+    const zk = makeWASocket(sockOptions);
 
     zk.ev.on("messages.upsert", async (m) => {
       const { messages } = m;
@@ -351,42 +333,54 @@ zk.ev.on("connection.update", async (update) => {
         //await await zk.readMessages(ms.key);
         const cd = evt.cm.find((zokou) => zokou.nomCom === com);
         if (cd) {
-          if (conf.MODE != 'oui' && !superUser) {
-          return;
+          if (conf.MODE != "oui" && !superUser) {
+            return;
           }
 
           if (origineMessage == "120363158701337904@g.us") {
-           return;
-           }
+            return;
+          }
 
           /******************* PM_PERMT***************/
 
-        if (!superUser && origineMessage === auteurMessage && conf.PM_PERMIT === "oui" ) {
-            repondre("Vous avez pas acces aux commandes en privé") ; return 
-        }
+          if (
+            !superUser &&
+            origineMessage === auteurMessage &&
+            conf.PM_PERMIT === "oui"
+          ) {
+            repondre("Vous avez pas acces aux commandes en privé");
+            return;
+          }
 
           /*****************************banGroup  */
-           if (verifCom && !superUser) {
+          if (verifCom && !superUser) {
+            let req = await isGroupBanned(origineMessage);
 
-          let req = await isGroupBanned(origineMessage);
-
-          if (req) { return }
+            if (req) {
+              return;
+            }
           }
 
           /***************************  ONLY-ADMIN  */
 
-          if(!verifAdmin && verifGroupe) {
-           let req = await isGroupOnlyAdmin(origineMessage);
+          if (!verifAdmin && verifGroupe) {
+            let req = await isGroupOnlyAdmin(origineMessage);
 
-          if (req) {  return }}
+            if (req) {
+              return;
+            }
+          }
 
           /**********************banuser */
 
-          if(!superUser) {
-          let req = await isUserBanned(auteurMessage);
+          if (!superUser) {
+            let req = await isUserBanned(auteurMessage);
 
-          if (req) {repondre("Vous n'avez plus acces au commandes du bots"); return}
-           } ;
+            if (req) {
+              repondre("Vous n'avez plus acces au commandes du bots");
+              return;
+            }
+          }
 
           try {
             reagir(origineMessage, zk, ms, cd.reaction);
@@ -401,7 +395,6 @@ zk.ev.on("connection.update", async (update) => {
           }
         }
       }
-
 
       /** ****** gestion auto-status  */
       if (
@@ -1043,7 +1036,14 @@ zk.ev.on("connection.update", async (update) => {
     //fin événement contact
     //événement connexion
     zk.ev.on("connection.update", async (con) => {
-      const { lastDisconnect, connection, receivedPendingNotifications } = con;
+      const { lastDisconnect, connection, qr } = con;
+
+      if (qr) {
+        qrcode.generate(qr, { small: true }, (qrcode) => {
+          console.log(qrcode);
+        });
+      }
+
       if (connection === "connecting") {
         console.log("ℹ️ Connexion en cours...");
       } else if (connection === "open") {
@@ -1263,6 +1263,7 @@ zk.ev.on("connection.update", async (update) => {
 }, 5000);
 
 const express = require("express");
+const { default: makeWASocket } = require("@whiskeysockets/baileys");
 const app = express();
 const port = process.env.PORT || 10000; // Assurez-vous d'ajouter cette ligne pour définir le port
 
