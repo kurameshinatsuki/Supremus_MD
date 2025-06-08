@@ -132,7 +132,7 @@ setTimeout(() => {
       version,
       logger: pino({ level: "silent" }),
       browser: ["Zokou-Md", "safari", "1.0.0"],
-      printQRInTerminal: true,
+      printQRInTerminal: false,
       fireInitQueries: false,
       shouldSyncHistoryMessage: true,
       downloadHistory: true,
@@ -147,6 +147,25 @@ setTimeout(() => {
       }
     };
     let zk = (0, baileys_1.default)(sockOptions);
+const QRCode = require("qrcode");
+
+zk.ev.on("connection.update", async (update) => {
+  const { connection, qr } = update;
+
+  if (qr) {
+    console.log("📲 Veuillez scanner ce QR Code :");
+    QRCode.toString(qr, { type: 'terminal' }, function (err, url) {
+      if (err) return console.error("❌ Erreur QR:", err);
+      console.log(url);
+    });
+  }
+
+  if (connection === "open") {
+    console.log("✅ Connecté avec succès !");
+  } else if (connection === "close") {
+    console.log("❌ Connexion fermée !");
+  }
+});
 
     zk.ev.on("messages.upsert", async (m) => {
       const { messages } = m;
