@@ -1,37 +1,171 @@
-"use strict"; 
-const express = require("express"); const http = require("http"); const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys"); const Pino = require("pino"); const fs = require("fs-extra"); const path = require("path"); const QRCode = require("qrcode"); const conf = require("./set"); const session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, ""); const numeroParrainage = conf.NUMERO_PARRAINAGE;
+"use strict";
+var __createBinding =
+  (this && this.__createBinding) ||
+  (Object.create
+    ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        var desc = Object.getOwnPropertyDescriptor(m, k);
+        if (
+          !desc ||
+          ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)
+        ) {
+          desc = {
+            enumerable: true,
+            get: function () {
+              return m[k];
+            },
+          };
+        }
+        Object.defineProperty(o, k2, desc);
+      }
+    : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+var __setModuleDefault =
+  (this && this.__setModuleDefault) ||
+  (Object.create
+    ? function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+      }
+    : function (o, v) {
+        o["default"] = v;
+      });
+var __importStar =
+  (this && this.__importStar) ||
+  function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null)
+      for (var k in mod)
+        if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
+          __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, "__esModule", { value: true });
+const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
+const logger_1 = __importDefault(
+  require("@whiskeysockets/baileys/lib/Utils/logger")
+);
+const logger = logger_1.default.child({});
+logger.level = "silent";
+const pino = require("pino");
+const boom_1 = require("@hapi/boom");
+const conf = require("./set");
+const axios = require("axios");
+let fs = require("fs-extra");
+let path = require("path");
+const FileType = require("file-type");
+const {
+  Sticker,
+  createSticker,
+  StickerTypes,
+} = require("wa-sticker-formatter");
+//import chalk from 'chalk'
+const { verifierEtatJid, recupererActionJid } = require("./bdd/antilien");
+const { atbverifierEtatJid, atbrecupererActionJid } = require("./bdd/antibot");
+let evt = require(__dirname + "/framework/zokou");
+const {
+  isUserBanned,
+  addUserToBanList,
+  removeUserFromBanList,
+} = require("./bdd/banUser");
+const {
+  addGroupToBanList,
+  isGroupBanned,
+  removeGroupFromBanList,
+} = require("./bdd/banGroup");
+const {
+  isGroupOnlyAdmin,
+  addGroupToOnlyAdminList,
+  removeGroupFromOnlyAdminList,
+} = require("./bdd/onlyAdmin");
+//const { constrainedMemory } = require("process");
+//const { co } = require("translatte/languages");
+const { recupevents } = require("./bdd/welcome");
+//const //{loadCmd}=require("/framework/mesfonctions")
+let { reagir } = require(__dirname + "/framework/app");
+const qrcode = require("qrcode-terminal");
+var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, "");
+const prefixe = conf.PREFIXE;
 
-const app = express(); const server = http.createServer(app); let latestQR = "";
-
-app.get("/qr", (req, res) => { if (!latestQR) return res.send("QR Code non disponible"); QRCode.toDataURL(latestQR, (err, url) => { if (err) return res.send("Erreur QR Code"); res.send(<html><body style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;"> <h2>Scannez le QR Code pour vous connecter</h2> <img src="${url}" /> </body></html>); }); });
-
-server.listen(8080, () => console.log("Serveur QR en ligne sur http://localhost:8080/qr"));
-
-async function authentification() { try { const credsPath = path.join(__dirname, "/auth/creds.json"); if (!fs.existsSync(credsPath)) { console.log("Connexion en cours ..."); await fs.writeFileSync(credsPath, atob(session), "utf8"); } else if (session != "zokk") { await fs.writeFileSync(credsPath, atob(session), "utf8"); } } catch (e) { console.log("Session Invalide " + e); } }
-
-async function startBot() { await authentification(); const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth"); const { version } = await fetchLatestBaileysVersion();
-
-const zk = makeWASocket({ version, logger: Pino({ level: "silent" }), printQRInTerminal: false, browser: ["Zokou-Md", "safari", "1.0.0"], auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "silent" })), }, });
-
-zk.ev.on("creds.update", saveCreds);
-
-zk.ev.on("connection.update", async (update) => { const { connection, qr } = update; if (qr) { latestQR = qr; console.log("QR Code mis à jour (voir http://localhost:8080/qr)"); } if (connection === "open") { console.log("✅ Connecté avec succès à WhatsApp");
-
-if (numeroParrainage) {
-    await zk.sendMessage(numeroParrainage + "@s.whatsapp.net", {
-      text: "🎉 Un nouveau membre vient de se connecter avec ton code de parrainage !",
-    });
+async function authentification() {
+  try {
+    //console.log("le data "+data)
+    if (!fs.existsSync(__dirname + "/auth/creds.json")) {
+      console.log("connexion en cour ...");
+      await fs.writeFileSync(
+        __dirname + "/auth/creds.json",
+        atob(session),
+        "utf8"
+      );
+      //console.log(session)
+    } else if (
+      fs.existsSync(__dirname + "/auth/creds.json") &&
+      session != "zokk"
+    ) {
+      await fs.writeFileSync(
+        __dirname + "/auth/creds.json",
+        atob(session),
+        "utf8"
+      );
+    }
+  } catch (e) {
+    console.log("Session Invalide " + e);
+    return;
   }
 }
-if (connection === "close") {
-  console.log("🔌 Déconnecté, tentative de reconnexion...");
-  startBot();
-}
+authentification();
+setTimeout(() => {
+  async function main() {
+    const { version, isLatest } = await (0,
+    baileys_1.fetchLatestBaileysVersion)();
+    const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(
+      __dirname + "/auth"
+    );
+    const sockOptions = {
+      version,
+      logger: pino({ level: "silent" }),
+      browser: ["Zokou-Md", "safari", "1.0.0"],
+      printQRInTerminal: false,
+      fireInitQueries: false,
+      shouldSyncHistoryMessage: true,
+      downloadHistory: true,
+      syncFullHistory: true,
+      generateHighQualityLinkPreview: true,
+      markOnlineOnConnect: false,
+      keepAliveIntervalMs: 30_000,
+      /* auth: state*/ auth: {
+        creds: state.creds,
+        /** caching makes the store faster to send/recv messages */
+        keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
+      },
+    };
+    const zk = makeWASocket(sockOptions);
 
-});
-
-zk.ev.on("messages.upsert", async ({ messages }) => { const ms = messages[0]; if (!ms.message) return; const decodeJid = (jid) => { if (!jid) return jid; if (/:\d+@/gi.test(jid)) { const decode = jidDecode(jid) || {}; return (decode.user && decode.server && decode.user + "@" + decode.server) || jid; } else return jid; }; // Tu peux traiter ici les messages entrants }); }
-
+    zk.ev.on("messages.upsert", async (m) => {
+      const { messages } = m;
+      const ms = messages[0];
+      //  console.log(ms) ;
+      if (!ms.message) return;
+      const decodeJid = (jid) => {
+        if (!jid) return jid;
+        if (/:\d+@/gi.test(jid)) {
+          let decode = (0, baileys_1.jidDecode)(jid) || {};
+          return (
+            (decode.user &&
+              decode.server &&
+              decode.user + "@" + decode.server) ||
+            jid
+          );
+        } else return jid;
+      };
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
         mtype == "conversation"
@@ -1173,5 +1307,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log("Listening on port: " + port);
 });
-
-startBot();
