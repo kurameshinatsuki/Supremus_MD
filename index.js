@@ -1,125 +1,98 @@
 "use strict";
 
-const baileys = require("@whiskeysockets/baileys");
-const pino = require("pino");
 const express = require("express");
-const qrcode = require("qrcode");
 const fs = require("fs-extra");
+const http = require("http");
+const qrcode = require("qrcode");
 const path = require("path");
-const conf = require("./set");
-const { boom } = require("@hapi/boom");
+const pino = require("pino");
+const { Boom } = require("@hapi/boom");
 const FileType = require("file-type");
-const { Sticker, createSticker, StickerTypes } = require("wa-sticker-formatter");
-
-const { verifierEtatJid, recupererActionJid } = require("./bdd/antilien");
-const { atbverifierEtatJid, atbrecupererActionJid } = require("./bdd/antibot");
-const evt = require(__dirname + "/framework/zokou");
-const { isUserBanned, addUserToBanList, removeUserFromBanList } = require("./bdd/banUser");
-const { addGroupToBanList, isGroupBanned, removeGroupFromBanList } = require("./bdd/banGroup");
-const { isGroupOnlyAdmin, addGroupToOnlyAdminList, removeGroupFromOnlyAdminList } = require("./bdd/onlyAdmin");
-const { recupevents } = require("./bdd/welcome");
-let { reagir } = require(__dirname + "/framework/app");
+const axios = require("axios");
+const conf = require("./set");
+const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys");
 
 const app = express();
-const webPort = 10000;
-let latestQR = null;
-let pairingCode = null;
+const server = http.createServer(app);
+const PORT = process.env.PORT || 8080;
+const numeroParrain = conf.NUMERO_PARRAINAGE || null;
 
-app.get("/", async (req, res) => {
-  let html = `<html><head><title>Connexion WhatsApp</title><meta http-equiv="refresh" content="10" /></head><body style="font-family:sans-serif;background:#111;color:white;display:flex;align-items:center;justify-content:center;height:100vh;">`;
-
-  if (latestQR) {
-    const qrImage = await qrcode.toDataURL(latestQR);
-    html += `<div><h2>Scanne le QR Code</h2><img src="${qrImage}" style="width:300px;" /><p>Code mis à jour automatiquement</p></div>`;
-  } else if (pairingCode) {
-    html += `<div><h2>Connexion avec Code</h2><p>Entre ce code sur ton téléphone :</p><h1>${pairingCode}</h1></div>`;
-  } else {
-    html += `<h2>En attente de code...</h2>`;
-  }
-
-  html += `</body></html>`;
-  res.send(html);
+// Interface QR Code simple
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "qr.html"));
 });
 
-app.listen(webPort, () => {
-  console.log("🟢 Interface Web : http://localhost:" + webPort);
+let currentQR = null;
+app.get("/qr", async (req, res) => {
+  if (!currentQR) return res.status(404).send("QR non généré");
+  res.type("png");
+  qrcode.toFileStream(res, currentQR);
 });
 
-async function startBot() {
-  const { state, saveCreds } = await baileys.useMultiFileAuthState(__dirname + "/auth");
-  const { version } = await baileys.fetchLatestBaileysVersion();
+server.listen(PORT, () => console.log(`Interface QR dispo sur http://localhost:${PORT}`));
 
-  const sock = baileys.makeWASocket({
+async function launchBot() {
+  const { version, isLatest } = await fetchLatestBaileysVersion();
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth");
+
+  const sock = makeWASocket({
     version,
     logger: pino({ level: "silent" }),
-    browser: ["Zokou-MD", "Safari", "1.0.0"],
     printQRInTerminal: false,
+    browser: ["Zokou-MD", "Chrome", "1.0.0"],
     auth: {
       creds: state.creds,
-      keys: baileys.makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
-    },
-    generateHighQualityLinkPreview: true,
+      keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" }))
+    }
   });
 
   sock.ev.on("creds.update", saveCreds);
 
-  sock.ev.on("connection.update", async (update) => {
-    const { qr, pairingCode: code, connection, lastDisconnect } = update;
-
+  sock.ev.on("connection.update", async ({ connection, qr, pairingCode, lastDisconnect }) => {
     if (qr) {
-      latestQR = qr;
-      pairingCode = null;
-    }
-
-    if (code) {
-      pairingCode = code;
-      latestQR = null;
-      console.log("🔗 Pairing code (à entrer sur l'app WhatsApp):", code);
+      currentQR = qr;
+      console.log("QR Code généré. Scanner sur /qr");
     }
 
     if (connection === "close") {
-      const reason = new boom(lastDisconnect?.error)?.output?.statusCode;
-      console.log("🔴 Déconnecté:", reason);
-      setTimeout(startBot, 5000);
+      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== Boom.notFound().output.statusCode;
+      if (shouldReconnect) {
+        console.log("Reconnexion...");
+        launchBot();
+      } else {
+        console.log("Déconnexion propre.");
+      }
     }
 
     if (connection === "open") {
-      latestQR = null;
-      pairingCode = null;
-      console.log("✅ Connecté à WhatsApp");
+      console.log("✅ Connecté à WhatsApp !");
+      if (numeroParrain) {
+        try {
+          await sock.sendMessage(numeroParrain + "@s.whatsapp.net", {
+            text: "✅ Un nouveau compte vient d'être connecté avec succès !"
+          });
+        } catch (e) {
+          console.error("Erreur d'envoi au parrain:", e);
+        }
+      }
     }
   });
 
   sock.ev.on("messages.upsert", async ({ messages }) => {
     const ms = messages[0];
     if (!ms.message) return;
+    const from = ms.key.remoteJid;
+    const msg = ms.message.conversation || ms.message.extendedTextMessage?.text;
+    console.log("📥 Reçu de", from, ":", msg);
 
-    const decodeJid = (jid) => {
-      if (!jid) return jid;
-      if (/:\d+@/gi.test(jid)) {
-        let decode = baileys.jidDecode(jid) || {};
-        return decode.user && decode.server ? `${decode.user}@${decode.server}` : jid;
-      } else return jid;
-    };
-
-    // Traitement des messages ici
-     evt.analyseCom(ms, sock); // à activer si tu utilises ton framework zokou
-  });
-
-  // Démarrer la connexion par code (optionnel, dépend de la version WhatsApp)
-  if (!fs.existsSync(__dirname + "/auth/creds.json")) {
-    try {
-      const number = conf.NUMERO_PARRAINAGE || "2250554191184"; // Remplace par ton numéro
-      const code = await baileys.usePairingCode(sock, number);
-      pairingCode = code;
-      console.log("🔑 Pairing Code pour", number, ":", code);
-    } catch (err) {
-      console.log("❌ Erreur lors de la génération du pairing code:", err);
+    // Exemple de réponse simple
+    if (msg === ".ping") {
+      await sock.sendMessage(from, { text: "pong" });
     }
-  }
+  });
 }
 
-startBot();
+launchBot();
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
         mtype == "conversation"
