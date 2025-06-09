@@ -1,4 +1,5 @@
-"use strict"; const express = require("express"); const http = require("http"); const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys"); const Pino = require("pino"); const fs = require("fs-extra"); const path = require("path"); const QRCode = require("qrcode"); const conf = require("./set"); const session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, ""); const numeroParrainage = conf.NUMERO_PARRAINAGE;
+"use strict"; 
+const express = require("express"); const http = require("http"); const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys"); const Pino = require("pino"); const fs = require("fs-extra"); const path = require("path"); const QRCode = require("qrcode"); const conf = require("./set"); const session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, ""); const numeroParrainage = conf.NUMERO_PARRAINAGE;
 
 const app = express(); const server = http.createServer(app); let latestQR = "";
 
