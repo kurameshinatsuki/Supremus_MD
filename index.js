@@ -11,7 +11,7 @@ const FileType = require("file-type");
 const axios = require("axios");
 const conf = require("./set");
 const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys");
-
+const zk = makeWASocket(sockOptions);
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8080;
