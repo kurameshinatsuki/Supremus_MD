@@ -1,171 +1,125 @@
 "use strict";
-var __createBinding =
-  (this && this.__createBinding) ||
-  (Object.create
-    ? function (o, m, k, k2) {
-        if (k2 === undefined) k2 = k;
-        var desc = Object.getOwnPropertyDescriptor(m, k);
-        if (
-          !desc ||
-          ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)
-        ) {
-          desc = {
-            enumerable: true,
-            get: function () {
-              return m[k];
-            },
-          };
-        }
-        Object.defineProperty(o, k2, desc);
-      }
-    : function (o, m, k, k2) {
-        if (k2 === undefined) k2 = k;
-        o[k2] = m[k];
-      });
-var __setModuleDefault =
-  (this && this.__setModuleDefault) ||
-  (Object.create
-    ? function (o, v) {
-        Object.defineProperty(o, "default", { enumerable: true, value: v });
-      }
-    : function (o, v) {
-        o["default"] = v;
-      });
-var __importStar =
-  (this && this.__importStar) ||
-  function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null)
-      for (var k in mod)
-        if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
-          __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-  };
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
-Object.defineProperty(exports, "__esModule", { value: true });
-const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
-const logger_1 = __importDefault(
-  require("@whiskeysockets/baileys/lib/Utils/logger")
-);
-const logger = logger_1.default.child({});
-logger.level = "silent";
+
+const baileys = require("@whiskeysockets/baileys");
 const pino = require("pino");
-const boom_1 = require("@hapi/boom");
+const express = require("express");
+const qrcode = require("qrcode");
+const fs = require("fs-extra");
+const path = require("path");
 const conf = require("./set");
-const axios = require("axios");
-let fs = require("fs-extra");
-let path = require("path");
+const { boom } = require("@hapi/boom");
 const FileType = require("file-type");
-const {
-  Sticker,
-  createSticker,
-  StickerTypes,
-} = require("wa-sticker-formatter");
-//import chalk from 'chalk'
+const { Sticker, createSticker, StickerTypes } = require("wa-sticker-formatter");
+
 const { verifierEtatJid, recupererActionJid } = require("./bdd/antilien");
 const { atbverifierEtatJid, atbrecupererActionJid } = require("./bdd/antibot");
-let evt = require(__dirname + "/framework/zokou");
-const {
-  isUserBanned,
-  addUserToBanList,
-  removeUserFromBanList,
-} = require("./bdd/banUser");
-const {
-  addGroupToBanList,
-  isGroupBanned,
-  removeGroupFromBanList,
-} = require("./bdd/banGroup");
-const {
-  isGroupOnlyAdmin,
-  addGroupToOnlyAdminList,
-  removeGroupFromOnlyAdminList,
-} = require("./bdd/onlyAdmin");
-//const { constrainedMemory } = require("process");
-//const { co } = require("translatte/languages");
+const evt = require(__dirname + "/framework/zokou");
+const { isUserBanned, addUserToBanList, removeUserFromBanList } = require("./bdd/banUser");
+const { addGroupToBanList, isGroupBanned, removeGroupFromBanList } = require("./bdd/banGroup");
+const { isGroupOnlyAdmin, addGroupToOnlyAdminList, removeGroupFromOnlyAdminList } = require("./bdd/onlyAdmin");
 const { recupevents } = require("./bdd/welcome");
-//const //{loadCmd}=require("/framework/mesfonctions")
 let { reagir } = require(__dirname + "/framework/app");
-const qrcode = require("qrcode-terminal");
-var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, "");
-const prefixe = conf.PREFIXE;
 
-async function authentification() {
-  try {
-    //console.log("le data "+data)
-    if (!fs.existsSync(__dirname + "/auth/creds.json")) {
-      console.log("connexion en cour ...");
-      await fs.writeFileSync(
-        __dirname + "/auth/creds.json",
-        atob(session),
-        "utf8"
-      );
-      //console.log(session)
-    } else if (
-      fs.existsSync(__dirname + "/auth/creds.json") &&
-      session != "zokk"
-    ) {
-      await fs.writeFileSync(
-        __dirname + "/auth/creds.json",
-        atob(session),
-        "utf8"
-      );
+const app = express();
+const webPort = 10000;
+let latestQR = null;
+let pairingCode = null;
+
+app.get("/", async (req, res) => {
+  let html = `<html><head><title>Connexion WhatsApp</title><meta http-equiv="refresh" content="10" /></head><body style="font-family:sans-serif;background:#111;color:white;display:flex;align-items:center;justify-content:center;height:100vh;">`;
+
+  if (latestQR) {
+    const qrImage = await qrcode.toDataURL(latestQR);
+    html += `<div><h2>Scanne le QR Code</h2><img src="${qrImage}" style="width:300px;" /><p>Code mis à jour automatiquement</p></div>`;
+  } else if (pairingCode) {
+    html += `<div><h2>Connexion avec Code</h2><p>Entre ce code sur ton téléphone :</p><h1>${pairingCode}</h1></div>`;
+  } else {
+    html += `<h2>En attente de code...</h2>`;
+  }
+
+  html += `</body></html>`;
+  res.send(html);
+});
+
+app.listen(webPort, () => {
+  console.log("🟢 Interface Web : http://localhost:" + webPort);
+});
+
+async function startBot() {
+  const { state, saveCreds } = await baileys.useMultiFileAuthState(__dirname + "/auth");
+  const { version } = await baileys.fetchLatestBaileysVersion();
+
+  const sock = baileys.makeWASocket({
+    version,
+    logger: pino({ level: "silent" }),
+    browser: ["Zokou-MD", "Safari", "1.0.0"],
+    printQRInTerminal: false,
+    auth: {
+      creds: state.creds,
+      keys: baileys.makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
+    },
+    generateHighQualityLinkPreview: true,
+  });
+
+  sock.ev.on("creds.update", saveCreds);
+
+  sock.ev.on("connection.update", async (update) => {
+    const { qr, pairingCode: code, connection, lastDisconnect } = update;
+
+    if (qr) {
+      latestQR = qr;
+      pairingCode = null;
     }
-  } catch (e) {
-    console.log("Session Invalide " + e);
-    return;
+
+    if (code) {
+      pairingCode = code;
+      latestQR = null;
+      console.log("🔗 Pairing code (à entrer sur l'app WhatsApp):", code);
+    }
+
+    if (connection === "close") {
+      const reason = new boom(lastDisconnect?.error)?.output?.statusCode;
+      console.log("🔴 Déconnecté:", reason);
+      setTimeout(startBot, 5000);
+    }
+
+    if (connection === "open") {
+      latestQR = null;
+      pairingCode = null;
+      console.log("✅ Connecté à WhatsApp");
+    }
+  });
+
+  sock.ev.on("messages.upsert", async ({ messages }) => {
+    const ms = messages[0];
+    if (!ms.message) return;
+
+    const decodeJid = (jid) => {
+      if (!jid) return jid;
+      if (/:\d+@/gi.test(jid)) {
+        let decode = baileys.jidDecode(jid) || {};
+        return decode.user && decode.server ? `${decode.user}@${decode.server}` : jid;
+      } else return jid;
+    };
+
+    // Traitement des messages ici
+     evt.analyseCom(ms, sock); // à activer si tu utilises ton framework zokou
+  });
+
+  // Démarrer la connexion par code (optionnel, dépend de la version WhatsApp)
+  if (!fs.existsSync(__dirname + "/auth/creds.json")) {
+    try {
+      const number = conf.NUMERO_PARRAINAGE || "2250554191184"; // Remplace par ton numéro
+      const code = await baileys.usePairingCode(sock, number);
+      pairingCode = code;
+      console.log("🔑 Pairing Code pour", number, ":", code);
+    } catch (err) {
+      console.log("❌ Erreur lors de la génération du pairing code:", err);
+    }
   }
 }
-authentification();
-setTimeout(() => {
-  async function main() {
-    const { version, isLatest } = await (0,
-    baileys_1.fetchLatestBaileysVersion)();
-    const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(
-      __dirname + "/auth"
-    );
-    const sockOptions = {
-      version,
-      logger: pino({ level: "silent" }),
-      browser: ["Zokou-Md", "safari", "1.0.0"],
-      printQRInTerminal: false,
-      fireInitQueries: false,
-      shouldSyncHistoryMessage: true,
-      downloadHistory: true,
-      syncFullHistory: true,
-      generateHighQualityLinkPreview: true,
-      markOnlineOnConnect: false,
-      keepAliveIntervalMs: 30_000,
-      /* auth: state*/ auth: {
-        creds: state.creds,
-        /** caching makes the store faster to send/recv messages */
-        keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
-      },
-    };
-    const zk = makeWASocket(sockOptions);
 
-    zk.ev.on("messages.upsert", async (m) => {
-      const { messages } = m;
-      const ms = messages[0];
-      //  console.log(ms) ;
-      if (!ms.message) return;
-      const decodeJid = (jid) => {
-        if (!jid) return jid;
-        if (/:\d+@/gi.test(jid)) {
-          let decode = (0, baileys_1.jidDecode)(jid) || {};
-          return (
-            (decode.user &&
-              decode.server &&
-              decode.user + "@" + decode.server) ||
-            jid
-          );
-        } else return jid;
-      };
+startBot();
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
         mtype == "conversation"
