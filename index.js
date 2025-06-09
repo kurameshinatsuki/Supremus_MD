@@ -1,98 +1,36 @@
-"use strict";
+"use strict"; const express = require("express"); const http = require("http"); const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys"); const Pino = require("pino"); const fs = require("fs-extra"); const path = require("path"); const QRCode = require("qrcode"); const conf = require("./set"); const session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, ""); const numeroParrainage = conf.NUMERO_PARRAINAGE;
 
-const express = require("express");
-const fs = require("fs-extra");
-const http = require("http");
-const qrcode = require("qrcode");
-const path = require("path");
-const pino = require("pino");
-const { Boom } = require("@hapi/boom");
-const FileType = require("file-type");
-const axios = require("axios");
-const conf = require("./set");
-const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidDecode } = require("@whiskeysockets/baileys");
-const zk = makeWASocket(sockOptions);
-const app = express();
-const server = http.createServer(app);
-const PORT = process.env.PORT || 8080;
-const numeroParrain = conf.NUMERO_PARRAINAGE || null;
+const app = express(); const server = http.createServer(app); let latestQR = "";
 
-// Interface QR Code simple
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "qr.html"));
-});
+app.get("/qr", (req, res) => { if (!latestQR) return res.send("QR Code non disponible"); QRCode.toDataURL(latestQR, (err, url) => { if (err) return res.send("Erreur QR Code"); res.send(<html><body style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;"> <h2>Scannez le QR Code pour vous connecter</h2> <img src="${url}" /> </body></html>); }); });
 
-let currentQR = null;
-app.get("/qr", async (req, res) => {
-  if (!currentQR) return res.status(404).send("QR non généré");
-  res.type("png");
-  qrcode.toFileStream(res, currentQR);
-});
+server.listen(8080, () => console.log("Serveur QR en ligne sur http://localhost:8080/qr"));
 
-server.listen(PORT, () => console.log(`Interface QR dispo sur http://localhost:${PORT}`));
+async function authentification() { try { const credsPath = path.join(__dirname, "/auth/creds.json"); if (!fs.existsSync(credsPath)) { console.log("Connexion en cours ..."); await fs.writeFileSync(credsPath, atob(session), "utf8"); } else if (session != "zokk") { await fs.writeFileSync(credsPath, atob(session), "utf8"); } } catch (e) { console.log("Session Invalide " + e); } }
 
-async function launchBot() {
-  const { version, isLatest } = await fetchLatestBaileysVersion();
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth");
+async function startBot() { await authentification(); const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth"); const { version } = await fetchLatestBaileysVersion();
 
-  const sock = makeWASocket({
-    version,
-    logger: pino({ level: "silent" }),
-    printQRInTerminal: false,
-    browser: ["Zokou-MD", "Chrome", "1.0.0"],
-    auth: {
-      creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" }))
-    }
-  });
+const zk = makeWASocket({ version, logger: Pino({ level: "silent" }), printQRInTerminal: false, browser: ["Zokou-Md", "safari", "1.0.0"], auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "silent" })), }, });
 
-  sock.ev.on("creds.update", saveCreds);
+zk.ev.on("creds.update", saveCreds);
 
-  sock.ev.on("connection.update", async ({ connection, qr, pairingCode, lastDisconnect }) => {
-    if (qr) {
-      currentQR = qr;
-      console.log("QR Code généré. Scanner sur /qr");
-    }
+zk.ev.on("connection.update", async (update) => { const { connection, qr } = update; if (qr) { latestQR = qr; console.log("QR Code mis à jour (voir http://localhost:8080/qr)"); } if (connection === "open") { console.log("✅ Connecté avec succès à WhatsApp");
 
-    if (connection === "close") {
-      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== Boom.notFound().output.statusCode;
-      if (shouldReconnect) {
-        console.log("Reconnexion...");
-        launchBot();
-      } else {
-        console.log("Déconnexion propre.");
-      }
-    }
-
-    if (connection === "open") {
-      console.log("✅ Connecté à WhatsApp !");
-      if (numeroParrain) {
-        try {
-          await sock.sendMessage(numeroParrain + "@s.whatsapp.net", {
-            text: "✅ Un nouveau compte vient d'être connecté avec succès !"
-          });
-        } catch (e) {
-          console.error("Erreur d'envoi au parrain:", e);
-        }
-      }
-    }
-  });
-
-  sock.ev.on("messages.upsert", async ({ messages }) => {
-    const ms = messages[0];
-    if (!ms.message) return;
-    const from = ms.key.remoteJid;
-    const msg = ms.message.conversation || ms.message.extendedTextMessage?.text;
-    console.log("📥 Reçu de", from, ":", msg);
-
-    // Exemple de réponse simple
-    if (msg === ".ping") {
-      await sock.sendMessage(from, { text: "pong" });
-    }
-  });
+if (numeroParrainage) {
+    await zk.sendMessage(numeroParrainage + "@s.whatsapp.net", {
+      text: "🎉 Un nouveau membre vient de se connecter avec ton code de parrainage !",
+    });
+  }
+}
+if (connection === "close") {
+  console.log("🔌 Déconnecté, tentative de reconnexion...");
+  startBot();
 }
 
-launchBot();
+});
+
+zk.ev.on("messages.upsert", async ({ messages }) => { const ms = messages[0]; if (!ms.message) return; const decodeJid = (jid) => { if (!jid) return jid; if (/:\d+@/gi.test(jid)) { const decode = jidDecode(jid) || {}; return (decode.user && decode.server && decode.user + "@" + decode.server) || jid; } else return jid; }; // Tu peux traiter ici les messages entrants }); }
+
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
         mtype == "conversation"
@@ -1234,3 +1172,5 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log("Listening on port: " + port);
 });
+
+startBot();
