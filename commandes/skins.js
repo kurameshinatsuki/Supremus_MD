@@ -1,5 +1,7 @@
 const { zokou } = require('../framework/zokou');
 const { select_skins } = require('../commandes/origamy_skins');
+const { writeFileSync, readFileSync, unlinkSync } = require('fs');
+const { randomInt } = require('crypto');
 
 /**
  * Envoie l'image d'un skin spécifique avec ses infos.
@@ -30,21 +32,95 @@ async function envoyerSkin(dest, zk, ms, nomSkin) {
 }
 
 /**
- * Envoie la liste de tous les skins disponibles.
+ * Envoie la liste de tous les skins disponibles au format HTML.
  */
-async function envoyerListeSkins(dest, zk, ms) {
-    let message = '*🎭 Liste des skins Origamy World :*\n\n';
+async function envoyerListeSkinsHTML(dest, zk, ms) {
+    let html = `
+    <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Catalogue Skins - Origamy World</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <style>
+        body {
+          font-family: 'Bebas Neue', Arial, sans-serif;
+          background: url('https://i.ibb.co/ycJLcFn6/Image-2025-03-17-00-21-51-2.jpg') no-repeat center center fixed;
+          background-size: cover;
+          color: #ffffff;
+          padding: 10px;
+          margin: 0 auto;
+          max-width: 900px;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        h1, h2 {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        h1 {
+          font-size: 36px;
+          color: #e67e22;
+        }
+        h2 {
+          font-size: 28px;
+          color: #9b59b6;
+          border-bottom: 2px solid #e67e22;
+          padding-bottom: 5px;
+          margin-top: 30px;
+        }
+        h3 {
+          font-size: 22px;
+          color: #1abc9c;
+          margin-top: 20px;
+        }
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+        li {
+          margin-bottom: 6px;
+          font-size: 16px;
+          line-height: 1.4;
+          position: relative;
+          padding-left: 15px;
+        }
+        li::before {
+          content: "🎭 ";
+          position: absolute;
+          left: 0;
+          color: #f39c12;
+          font-size: 16px;
+        }
+      </style>
+      <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+      <h1>🎭 CATALOGUE DES SKINS - ORIGAMY WORLD 🎭</h1>
+    `;
 
     for (const [rang, raretes] of Object.entries(select_skins)) {
-        message += `*RANG ${rang} :*\n`;
+        html += `<h2>RANG ${rang}</h2>`;
         for (const [rarete, skins] of Object.entries(raretes)) {
-            message += `\n🔹 *${rarete} :*\n`;
-            message += Object.keys(skins).join(', ') + '\n';
+            html += `<h3>${rarete}</h3><ul>`;
+            for (const nom of Object.keys(skins)) {
+                html += `<li>${nom}</li>`;
+            }
+            html += `</ul>`;
         }
-        message += '\n';
     }
 
-    await zk.sendMessage(dest, { text: message }, { quoted: ms });
+    html += `</body></html>`;
+
+    const filename = `catalogue_skins_${randomInt(10000)}.html`;
+    writeFileSync(filename, html);
+
+    await zk.sendMessage(dest, {
+        document: readFileSync(filename),
+        mimetype: 'text/html',
+        filename: 'catalogue_skins.html',
+        caption: '*🎭 CATALOGUE DES SKINS ORIGAMY WORLD 🎭*'
+    }, { quoted: ms });
+
+    unlinkSync(filename);
 }
 
 /**
@@ -88,7 +164,7 @@ zokou(
         const { arg, ms } = commandeOptions;
 
         if (!arg || arg.length === 0) {
-            await envoyerListeSkins(dest, zk, ms);
+            await envoyerListeSkinsHTML(dest, zk, ms);
         } else if (arg[0].toUpperCase() === 'RANDOM') {
             const rang = arg[1] || null;
             const rarete = arg[2] || null;
