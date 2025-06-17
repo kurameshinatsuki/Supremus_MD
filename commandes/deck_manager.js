@@ -150,6 +150,51 @@ const decks = {
     extra: []
   },
 
+ishizu: {
+  competence: "Sort des Protecteurs du Tombeau",
+  image: "https://i.ibb.co/DgLpprxJ/t-l-chargement-1.jpg", 
+  main: [
+    // Monstres (18)
+    "Shaman des Protecteurs du Tombeau",
+    "Assaillant des Protecteurs du Tombeau",
+    "Commandant des Protecteurs du Tombeau",
+    "Spiritualiste des Protecteurs du Tombeau",
+    "Héritier des Protecteurs du Tombeau",
+    "Zolga",
+    "Zolga le Prophète",
+    "Kelbek",
+    "Kelbek l'Ancienne Avant-Garde",
+    "Mudora",
+    "Mudora l'Oracle de l'Épée",
+    "Agido",
+    "Agido l'Ancienne Sentinelle",
+    "Keldo",
+    "Keldo la Protectrice Sacrée",
+    "Prêtresse des Protecteurs du Tombeau",
+    "Boss des Protecteurs du Tombeau",
+    "Elfe Mystique",
+
+    // Magies (8)
+    "Trône de la Vallée Mortuaire",
+    "Trône de la Vallée Mortuaire",
+    "Trône de la Vallée Mortuaire",
+    "Stèle des Protecteurs du Tombeau",
+    "Vallée Mortuaire",
+    "Épées de Révélation de la Lumière",
+    "Hommage aux Damnés",
+    "Cestus de Dagla",
+
+    // Pièges (3)
+    "Piège des Protecteurs du Tombeau",
+    "Temple de la Vallée Mortuaire",
+    "Tombes Impériales de la Vallée Mortuaire"
+  ],
+  extra: [
+    "Supernaturaliste des Protecteurs du Tombeau",
+    "Supernaturaliste des Protecteurs du Tombeau"
+  ]
+},
+
   mai: {
     competence: "Synergie Tribale",
     image: "https://i.ibb.co/9mLnsZQ7/t-l-chargement.jpg",
