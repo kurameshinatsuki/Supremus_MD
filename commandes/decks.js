@@ -23,9 +23,10 @@ zokou(
         .map(n => `• ${n.charAt(0).toUpperCase() + n.slice(1)}`)
         .join('\n');
 
-      await zk.sendMessage(dest, {
-        text: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\n🔁 Tape la commande avec un nom de deck. Exemple : *.deck yami*`
-      }, { quoted: ms });
+     await zk.sendMessage(dest, {
+      image: { url: 'https://i.ibb.co/T907ppk/Whats-App-Image-2025-06-17-at-19-20-20-1.jpg' },
+      caption: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\n🔁 Tape la commande avec un nom de deck. Exemple : *.deck yami*`
+       }, { quoted: ms });
 
       return;
     }
