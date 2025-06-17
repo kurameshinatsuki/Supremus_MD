@@ -2,6 +2,8 @@
 const { zokou } = require('../framework/zokou');
 const { decks } = require('../commandes/deck_manager');
 const { deck_cards } = require("../commandes/deck_cards");
+const { writeFileSync, readFileSync, unlinkSync } = require('fs');
+const { randomInt } = require('crypto');
 
 // Fonction utilitaire : normalise les noms (sans majuscules ni accents)
 function normalize(str) {
@@ -178,7 +180,7 @@ zokou(
   }
 );
 
-// commande : .carte
+// Commande : .carte
 zokou(
   {
     nomCom: 'carte',
@@ -187,19 +189,76 @@ zokou(
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
-    // Si aucun argument, afficher la liste des cartes disponibles
+    // 📘 Si aucun argument, envoyer un HTML catalogue
     if (!arg || arg.length === 0) {
-      const nomsCartes = Object.keys(deck_cards)
-        .sort((a, b) => a.localeCompare(b))
-        .map(nom => `• ${nom}`)
-        .join('\n');
+      const sortedCartes = Object.keys(deck_cards).sort((a, b) => a.localeCompare(b));
+      const html = `
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Catalogue Yu-Gi-Oh Cards</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <style>
+            body {
+              font-family: 'Segoe UI', sans-serif;
+              background: url('https://i.ibb.co/GnDBVQj/yugi-bg.jpg') no-repeat center center fixed;
+              background-size: cover;
+              color: #f0f0f0;
+              padding: 20px;
+              max-width: 900px;
+              margin: auto;
+              text-shadow: 2px 2px 5px #000;
+            }
+            h1 {
+              text-align: center;
+              font-size: 36px;
+              color: #f1c40f;
+              margin-bottom: 30px;
+            }
+            ul {
+              list-style: none;
+              padding-left: 0;
+              columns: 2;
+            }
+            li {
+              margin-bottom: 8px;
+              font-size: 16px;
+              line-height: 1.5;
+              position: relative;
+              padding-left: 20px;
+            }
+            li::before {
+              content: "🃏";
+              position: absolute;
+              left: 0;
+              color: #e67e22;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>🃏 Cartes Yu-Gi-Oh Disponibles</h1>
+          <ul>
+            ${sortedCartes.map(carte => `<li>${carte}</li>`).join('\n')}
+          </ul>
+        </body>
+        </html>
+      `;
+
+      const fileName = `deck_list_${randomInt(10000)}.html`;
+      writeFileSync(fileName, html);
 
       await zk.sendMessage(dest, {
-        text: `📋 *Cartes disponibles (${Object.keys(deck_cards).length}) :*\n${nomsCartes}\n\n🔍 Pour voir une carte : *.carte NomDeLaCarte*`,
+        document: readFileSync(fileName),
+        mimetype: 'text/html',
+        filename: 'deck_cards.html',
+        caption: `📘 *Liste des cartes Yu-Gi-Oh!* (${sortedCartes.length} disponibles)`,
       }, { quoted: ms });
+
+      unlinkSync(fileName);
       return;
     }
 
+    // 🔍 Rechercher une carte spécifique
     const nomRecherche = normalize(arg.join(" "));
     const nomTrouve = Object.keys(deck_cards).find(
       nom => normalize(nom) === nomRecherche
