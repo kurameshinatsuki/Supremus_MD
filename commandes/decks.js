@@ -201,7 +201,7 @@ zokou(
           <style>
             body {
               font-family: 'Segoe UI', sans-serif;
-              background: url('https://i.ibb.co/GnDBVQj/yugi-bg.jpg') no-repeat center center fixed;
+              background: url('https://i.ibb.co/ycJLcFn6/Image-2025-03-17-00-21-51-2.jpg') no-repeat center center fixed;
               background-size: cover;
               color: #f0f0f0;
               padding: 20px;
