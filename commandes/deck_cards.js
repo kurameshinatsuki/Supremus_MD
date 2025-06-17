@@ -1,6 +1,38 @@
 // 📁 commande/deck_cards.js
 
 const deck_cards = {
+  // ISHIZU
+  'Zolga le Prophète': 'https://i.ibb.co/1fpQ5m3F/KICO-12.jpg',
+  'Vallée Mortuaire': 'https://i.ibb.co/qFRSJTXZ/Vall-e-Mortuaire-DUSA-FR-UR-1-E.webp',
+  'Prêtresse des Protecteurs du Tombeau': 'https://i.ibb.co/BKr5ZGqv/STP1-17.jpg',
+  'Épées de Révélation de la Lumière': 'https://i.ibb.co/TDy8tTqZ/STAS-9.jpg',
+  'Stèle des Protecteurs du Tombeau': 'https://i.ibb.co/3yXQjncr/St-ledes-Protecteursdu-Tombeau-SS01-FR-C-1-E.webp',
+  'Hommage aux Damnés': 'https://i.ibb.co/5Wysfdvt/SS05-51.jpg',
+  'Sort des Protecteurs du Tombeau': 'https://i.ibb.co/wh51Kb7H/SS01-40.jpg',
+  'Shaman des Protecteurs du Tombeau': 'https://i.ibb.co/HfHLyWVG/SS01-30.jpg',
+  'Assaillant des Protecteurs du Tombeau': 'https://i.ibb.co/Zp2SG7c2/SS01-27.jpg',
+  'Cestus de Dagla': 'https://i.ibb.co/S7MJNPXw/SBCB-140.jpg',
+  'Kelbek': 'https://i.ibb.co/XkL2z06C/SBCB-130.jpg',
+  'Zolga': 'https://i.ibb.co/X6RVLkN/SBCB-129.jpg',
+  'Mudora': 'https://i.ibb.co/KcCpFXSk/SBCB-128.jpg',
+  'Keldo': 'https://i.ibb.co/gMspwQ7B/SBCB-127.jpg',
+  'Elfe Mystique': 'https://i.ibb.co/XkbQYz2M/SBAD-3.jpg',
+  'Temple de la Vallée Mortuaire': 'https://i.ibb.co/p6HxwRWz/MP19-205.jpg',
+  'Supernaturaliste des Protecteurs du Tombeau': 'https://i.ibb.co/xSMdVcNr/MP19-181.jpg',
+  'Spiritualiste des Protecteurs du Tombeau': 'https://i.ibb.co/cKhG1HdS/MP19-164.jpg',
+  'Boss des Protecteurs du Tombeau': 'https://i.ibb.co/j9Pn08yX/MP19-163.jpg',
+  'Piège des Protecteurs du Tombeau': 'https://i.ibb.co/j95ysd8m/MAMA-29p.jpg',
+  'Agido l\'Ancienne Sentinelle': 'https://i.ibb.co/4gDP2rc8/MAMA-28.jpg',
+  'Kelbek l\'Ancienne Avant-Garde': 'https://i.ibb.co/7tYLPZGf/MAMA-27.jpg',
+  'Mudora l\'Oracle de l\'Épée': 'https://i.ibb.co/JWrfQRg8/MAMA-26.jpg',
+  'Keldo la Protectrice Sacrée': 'https://i.ibb.co/dwys8KvY/MAMA-25.jpg',
+  'Tombes Impériales de Vallée Mortuaire': 'https://i.ibb.co/d0jw05Vj/MAGO-89.jpg',
+  'Trône de la Vallée Mortuaire': 'https://i.ibb.co/s8wN67P/MAGO-88.jpg',
+  'Héritier des Protecteurs du Tombeau': 'https://i.ibb.co/SwX9VdQf/LCYW-192.jpg',
+  'Commandant des Protecteurs du Tombeau': 'https://i.ibb.co/1Yshk9QX/LCYW-191.jpg',
+  'Agido': 'https://i.ibb.co/ymn1VNXF/DR1-242.jpg',
+
+
   // PEGASUS
   'Défense Toon': 'https://i.ibb.co/JjYT02ck/LDS1-70.jpg',
   'Table Des Matières Toon': 'https://i.ibb.co/ZR7HYL33/LDS1-69P.jpg',
