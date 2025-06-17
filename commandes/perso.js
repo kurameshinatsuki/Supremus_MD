@@ -52,8 +52,11 @@ async function envoyerListe(dest, zk, ms) {
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     }
     h1, h2, h3, h4 {
-      text-align: center;
-    }
+  text-align: center;
+   }
+    h5, ul, li {
+  text-align: left;
+   }
     h1 {
       font-size: 36px;
       color: #f39c12;
