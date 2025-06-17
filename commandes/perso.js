@@ -36,65 +36,76 @@ async function envoyerCarte(dest, zk, ms, personnage) {
  */
 async function envoyerListe(dest, zk, ms) {
     let html = `
-    <html>
-    <head>
-        <meta charset="UTF-8">
+   <html>
+     <head>
+      <meta charset="UTF-8">
         <title>Catalogue ABM - SRPN</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            body {
-                font-family: 'Bebas Neue', Arial, sans-serif;
-                background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
-                color: #f1f1f1;
-                padding: 10px;
-                text-shadow: 1px 1px 2px black;
-                margin: 0;
-            }
-            h1 {
-                text-align: center;
-                font-size: 32px;
-                color: #f39c12;
-                margin: 20px 0;
-            }
-            h2 {
-                font-size: 24px;
-                color: #3498db;
-                border-bottom: 2px solid #f39c12;
-                padding-bottom: 5px;
-                margin-top: 30px;
-            }
-            h3 {
-                font-size: 20px;
-                color: #e74c3c;
-                margin-top: 20px;
-            }
-            ul {
-                list-style: none;
-                padding-left: 10px;
-            }
-            li {
-                margin-bottom: 6px;
-                padding-left: 15px;
-                position: relative;
-                font-size: 16px;
-                line-height: 1.4;
-            }
-            li::before {
-                content: "-";
-                position: absolute;
-                left: 0;
-                color: #f1c40f;
-                font-size: 14px;
-            }
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Bebas Neue', Arial, sans-serif;
+      background: url('https://i.ibb.co/ycJLcFn6/Image-2025-03-17-00-21-51-2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #f1f1f1;
+      padding: 10px;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    h1, h2, h3, h4, h5 {
+      text-align: center;
+    }
+    h1 {
+      font-size: 36px;
+      color: #f39c12;
+      margin: 20px 0;
+    }
+    h2 {
+      font-size: 28px;
+      color: #3498db;
+      border-bottom: 2px solid #f39c12;
+      padding-bottom: 5px;
+      margin-top: 30px;
+    }
+    h3 {
+      font-size: 24px;
+      color: #e74c3c;
+      margin-top: 20px;
+    }
+    h4 {
+      font-size: 22px;
+      color: #1abc9c;
+      margin-top: 20px;
+    }
+    h5 {
+      font-size: 20px;
+      color: #9b59b6;
+      margin-top: 10px;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+      text-align: center;
+    }
+    li {
+      margin-bottom: 6px;
+      font-size: 16px;
+      line-height: 1.4;
+      position: relative;
+    }
+    li::before {
+      content: "- ";
+      color: #f1c40f;
+      font-size: 14px;
+    }
         </style>
-        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <h3>🆚 CATALOGUE ABM 🆚</h3>
+  <body>
+  <h1>🆚 CATALOGUE ABM 🆚</h1>
     `;
 
     for (const [rang, univers] of Object.entries(characters)) {
-        html += `<h4>🏅 RANG ${rang}</h4>`;
+        html += `<h4>🏅 RANG ${rang} 🏅</h4>`;
         for (const [verse, personnages] of Object.entries(univers)) {
             html += `<h5>🌐 ${verse}</h5><ul>`;
             for (const nom of Object.keys(personnages)) {
@@ -113,7 +124,7 @@ async function envoyerListe(dest, zk, ms) {
         document: readFileSync(filename),
         mimetype: 'text/html',
         filename: 'catalogue.html',
-        caption: '*CATALOGUE ABM DES HÉROS*'
+        caption: '*🆚 ABM : CATALOGUE DES HÉROS 🆚*'
     }, { quoted: ms });
 
     unlinkSync(filename);
