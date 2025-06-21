@@ -1,74 +1,144 @@
 const { zokou } = require('../framework/zokou');
 const { select_cars } = require('../commandes/select_cars');
+const { writeFileSync, readFileSync, unlinkSync } = require('fs');
+const { randomInt } = require('crypto');
 
 /**
  * Fonction pour envoyer l'image et les informations d'un véhicule spécifique.
- * @param {string} dest - L'identifiant du destinataire.
- * @param {object} zk - Instance du bot.
- * @param {object} ms - Message source pour la citation.
- * @param {string} vehicule - Nom du véhicule recherché.
  */
 async function envoyerVehicule(dest, zk, ms, vehicule) {
     let vehiculeTrouve = false;
     const vehiculeUpper = vehicule.toUpperCase();
 
-    // Parcourir toutes les catégories et types pour trouver le véhicule
     for (const [categorie, types] of Object.entries(select_cars)) {
         for (const [type, vehicules] of Object.entries(types)) {
             if (vehicules[vehiculeUpper]) {
                 vehiculeTrouve = true;
                 const { lien } = vehicules[vehiculeUpper];
 
-                // Envoi de l'image avec une légende contenant le nom, la catégorie et le type du véhicule.
                 zk.sendMessage(dest, { 
                     image: { url: lien }, 
                     caption: `*${vehiculeUpper} | ${categorie} | ${type}*`
                 }, { quoted: ms });
 
-                return; // On arrête la recherche dès qu'on trouve un véhicule correspondant.
+                return;
             }
         }
     }
 
-    // Message d'erreur si le véhicule n'est pas trouvé.
     if (!vehiculeTrouve) {
         zk.sendMessage(dest, { text: `*❌ Véhicule ${vehicule} indisponible.*` }, { quoted: ms });
     }
 }
 
 /**
- * Fonction pour envoyer la liste complète des véhicules disponibles.
- * @param {string} dest - L'identifiant du destinataire.
- * @param {object} zk - Instance du bot.
- * @param {object} ms - Message source pour la citation.
+ * Fonction pour envoyer la liste complète des véhicules disponibles en HTML.
  */
 async function envoyerListeVehicules(dest, zk, ms) {
-    let message = '*🚗 Liste des véhicules disponibles:*\n\n';
+    let html = `
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Catalogue SPEED RUSH - SRPN</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body {
+            font-family: 'Bebas Neue', Arial, sans-serif;
+            background: url('https://i.ibb.co/zhnRbzV/rush-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #f1f1f1;
+            padding: 10px;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+          }
+          h1, h2, h3, h4 {
+            text-align: center;
+          }
+          h5, ul, li {
+            text-align: left;
+          }
+          h1 {
+            font-size: 36px;
+            color: #f39c12;
+            margin: 20px 0;
+          }
+          h2 {
+            font-size: 28px;
+            color: #3498db;
+            border-bottom: 2px solid #f39c12;
+            padding-bottom: 5px;
+            margin-top: 30px;
+          }
+          h3 {
+            font-size: 24px;
+            color: #e74c3c;
+            margin-top: 20px;
+          }
+          h4 {
+            font-size: 22px;
+            color: #1abc9c;
+            margin-top: 20px;
+          }
+          h5 {
+            font-size: 20px;
+            color: #9b59b6;
+            margin-top: 10px;
+          }
+          ul {
+            list-style: none;
+            padding-left: 0;
+            text-align: center;
+          }
+          li {
+            margin-bottom: 6px;
+            font-size: 16px;
+            line-height: 1.4;
+            position: relative;
+          }
+          li::before {
+            content: "- ";
+            color: #f1c40f;
+            font-size: 14px;
+          }
+        </style>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+      </head>
+    <body>
+      <h1>🏁 CATALOGUE SPEED RUSH 🏁</h1>
+    `;
 
     for (const [categorie, types] of Object.entries(select_cars)) {
-        message += `*🚀 ${categorie} :*\n`;
+        html += `<h4>🚗 ${categorie}</h4>`;
         for (const [type, vehicules] of Object.entries(types)) {
-            message += `\n🔹 *${type} :*\n`;
-            message += Object.keys(vehicules).join('\n') + '\n';
+            html += `<h5>🔹 ${type}</h5><ul>`;
+            for (const nom of Object.keys(vehicules)) {
+                html += `<li>${nom}</li>`;
+            }
+            html += `</ul>`;
         }
-        message += '\n';
     }
 
-    zk.sendMessage(dest, { text: message }, { quoted: ms });
+    html += `</body></html>`;
+
+    const filename = `catalogue_speedrush_${randomInt(10000)}.html`;
+    writeFileSync(filename, html);
+
+    await zk.sendMessage(dest, {
+        document: readFileSync(filename),
+        mimetype: 'text/html',
+        filename: 'speedrush_catalogue.html',
+        caption: '*🏁 SPEED RUSH : CATALOGUE DES VÉHICULES 🏁*'
+    }, { quoted: ms });
+
+    unlinkSync(filename);
 }
 
 /**
  * Fonction pour sélectionner un véhicule aléatoire selon les critères donnés.
- * @param {string} dest - L'identifiant du destinataire.
- * @param {object} zk - Instance du bot.
- * @param {object} ms - Message source pour la citation.
- * @param {string|null} categorie - Catégorie du véhicule (optionnel).
- * @param {string|null} type - Type du véhicule (optionnel).
  */
 async function vehiculeAleatoire(dest, zk, ms, categorie = null, type = null) {
     let vehiculesFiltres = [];
 
-    // Filtrage des véhicules selon les critères
     for (const [c, types] of Object.entries(select_cars)) {
         if (categorie && c !== categorie.toUpperCase()) continue;
 
@@ -86,17 +156,15 @@ async function vehiculeAleatoire(dest, zk, ms, categorie = null, type = null) {
         return;
     }
 
-    // Sélection aléatoire
     const randomVehicule = vehiculesFiltres[Math.floor(Math.random() * vehiculesFiltres.length)];
 
-    // Envoi du véhicule sélectionné
     zk.sendMessage(dest, { 
         image: { url: randomVehicule.lien }, 
         caption: `*${randomVehicule.nom} | ${randomVehicule.categorie} | ${randomVehicule.type}*`
     }, { quoted: ms });
 }
 
-// Commande principale pour la gestion des véhicules
+// Commande principale
 zokou(
     {
         nomCom: 'vehicles',
