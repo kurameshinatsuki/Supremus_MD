@@ -63,7 +63,7 @@ zokou(
         const lien = 'https://i.ibb.co/hKyphPC/Picsart-24-09-17-22-41-09-565-1.jpg';
         await envoyerImage(dest, zk, ms, lien);
     }
-);*/
+);
 
 // Commande speedrush_system
 zokou(
@@ -124,7 +124,7 @@ zokou(
     }
 );
 
-/*zokou(
+zokou(
     {
         nomCom: 'activites',
         categorie: 'CENTRAL'
