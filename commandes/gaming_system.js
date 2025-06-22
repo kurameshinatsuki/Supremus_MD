@@ -10,7 +10,7 @@ zokou(
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>ABM Système de Combat - SRPN</title>
+    <title>ABM SYSTEM – SRPN</title>
     <style>
         body {
             background-color: #1e1e1e;
@@ -39,88 +39,113 @@ zokou(
     </style>
 </head>
 <body>
-    <h1>⚔️ ABM - SYSTÈME DE COMBAT ⚔️</h1>
-<div class="section"><h3>BASIC RULE</h3><pre>
-PAVÉ : Divisé en sections, 1 action max par section (ou simultanées si cohérentes).
-Décrivez précisément l&#x27;action : membre, mouvement, zone ciblée, intention.
-Les techniques doivent mentionner le niveau et la distance.
+    <h1>🆚 ABM - SYSTÈME DE COMBAT 🌐</h1>
+<div class="section"><h3>BASIC RULE</h3><strong>PAV&Eacute; :</strong> Le pav&eacute; est divis&eacute; en sections et vous pouvez ex&eacute;cuter que (1) action max par section ou simultan&eacute;es si coh&eacute;rentes (une action qui se d&eacute;roule durant une autre action sans d&eacute;fier la physique, ex: d&eacute;gainer une arme durant son d&eacute;placement / donner un coup de pied durant un saut / etc.) d&eacute;crire l&#39;action avec pr&eacute;cision (le membre utilis&eacute;, le mouvement d&#39;ex&eacute;cution, la zone cibl&eacute;e et l&#39;intention).<br><br>
 
-ARMES : Dégâts classiques : 20💥. Coup critique ou membre : 30💥.
-Portée projectile : 20m⭕ / Vitesse : 5m/s🎯.
+Les techniques peuvent &ecirc;tre ex&eacute;cut&eacute;es en une section et doivent respecter leur description. Vous devez pr&eacute;ciser la technique utilis&eacute;e, son niveau et la distance entre vous et l&#39;adversit&eacute;.<br><br>
 
-ALTÉRATIONS D’ÉTAT :
-- Saignement léger : -20❤️/section.
-- Saignement grave : -40❤️/section.
-- Étourdissement : +200ms⚡.
-- Douleur intense : -50% vitesse et force.
-- Paralysie, Brûlure, Empoisonnement, Froid intense : Effets variés.
+<strong>ARMES :</strong> Les armes classiques causent 20💥 de d&eacute;g&acirc;ts. La section d&#39;un membre ou un coup critique cause 30💥 de d&eacute;g&acirc;ts, avec risque de saignement. Une attaque vitale peut &ecirc;tre mortelle. La vitesse normale d&#39;un projectile est de 5 m&egrave;tres par section (5m/s🎯) pour une port&eacute;e de 20 m&egrave;tres (20m⭕).<br><br>
 
-RÉGÉNÉRATION : 
-- Instantanée : seule la décapitation ou 0❤️ tue.
-- +20🌀 si immobile une section / +10🫀 au repos.
-</pre></div><div class="section"><h3>CLOSE COMBAT</h3><pre>
-FORCE PHYSIQUE :
-Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green.
-- Brown : 10💥 / Gray : 20💥 / Yellow+ : 30💥+
-- Dégâts augmentés sur zone sensible, fractures ou impacts violents.
-- Se libérer d&#x27;une saisie : -10🫀 sauf si force supérieure.
+<strong>ALT&Eacute;RATIONS D&#39;&Eacute;TAT :</strong> un Saignement l&eacute;ger : -20❤️ par section. un Saignement grave : -40❤️ par section. un &Eacute;tourdissement : r&eacute;action ralentie de +200ms⚡. une Douleur Intense : vitesse et force physique r&eacute;duites de 50%. la Paralysie : immobilit&eacute; temporaire. les Br&ucirc;lures : effets saignement + douleur intense. l&#39;Empoisonnement : Effet variable selon le poison. Froid Intense : -20❤️ par tour.<br><br>
 
-VITESSE :
-- Réaction (V.R) en ms⚡ / Déplacement (V.D) en m/s🎯.
-- Déplacement max = -10🫀.
+<strong>R&Eacute;G&Eacute;N&Eacute;RATION :</strong> Les personnages pouvant se r&eacute;g&eacute;n&eacute;rer instantan&eacute;ment (ex: d&eacute;mon, attribut...) ne peuvent &ecirc;tre tu&eacute;s que par d&eacute;capitation ou r&eacute;duction de la sant&eacute; &agrave; 0❤️. Ils ne restaurent pas la sant&eacute; sauf si la comp&eacute;tence mentionne le contraire. Vous r&eacute;cup&eacute;rez +20🌀 une section immobile &agrave; accumuler de l&#39;&eacute;nergie et +10🫀 au repos.</div><div class="section"><h3>CLOSE COMBAT</h3><strong>FORCE PHYSIQUE :</strong> 🟤Brown &lt; ⚪Gray &lt; 🟡Yellow &lt; 🔵Blue &lt; 🟢Green. Les coups de personnage de force Brown causent 10💥 de d&eacute;g&acirc;ts et peuvent repousser un adversaire &eacute;gal jusqu&#39;&agrave; 5m mais chaque niveau suppl&eacute;mentaire ajoute plus 10💥 de d&eacute;g&acirc;ts.<br>
+Briser un membre ou frapper une zone sensible (c&ocirc;te, colonne vert&eacute;brale, etc...) cause plus 10💥 de d&eacute;g&acirc;ts suppl&eacute;mentaires. Les coups de personnage de force Gray peuvent envoyer un adversaire &eacute;gal ou inf&eacute;rieur valser &agrave; 10m et sup&eacute;rieur &agrave; 5m, mais ceux de force Yellow ou plus peuvent litt&eacute;ralement envoyer l&#39;adversaire voler dans le d&eacute;cor et m&ecirc;me briser des membres ou perforer le corps humain.<br>
+Se lib&eacute;rer d&#39;une saisie vous co&ucirc;te 10🫀 mais les personnages plus forts ne perdent rien.<br><br>
 
-Réaction retardée :
-- ≥500ms : aucune réaction
-- 400ms : bloquer seulement
-- 300ms : esquive ou blocage
-- 100-200ms : riposte possible
+<strong>VITESSE :</strong> R&eacute;action (V.R) : mesur&eacute;e en millisecondes (ms ou ⚡). D&eacute;placement (V.D) : mesur&eacute; en m&egrave;tres par section (m/s ou 🎯). Se d&eacute;placer &agrave; vitesse maximale vous co&ucirc;te 10🫀.<br><br>
 
-TEMPO :
-- Défensive normale : 200ms⚡
-- Attaque rapprochée : +100ms⚡
-- Hors vision / perception sensorielle : +100ms⚡
+- Le personnage r&eacute;agissant avec 500ms⚡ de retard ou plus ne peut pas r&eacute;agir.<br>
+- Le personnage r&eacute;agissant avec 400ms⚡ de retard ne peut que mettre sa garde (bloquer), ce qui l&#39;expose.<br>
+- Le personnage r&eacute;agissant avec 300ms⚡ de retard peut bloquer ou esquiver.<br>
+- Le personnage r&eacute;agissant avec 100ms⚡ ou 200ms⚡ de retard peut riposter (attaquer simultan&eacute;ment, mais peut s&#39;exposer &agrave; l&#39;attaque adverse.)<br>
+- Si le personnage n&#39;est pas affect&eacute; par le retard de r&eacute;action, il peut attaquer avant m&ecirc;me que l&#39;adversaire puisse ex&eacute;cuter son action.<br><br>
 
-- Combo = 3 coups max par tour.
-- Combo exclut action simultanée.
-- Personnage plus rapide peut enchaîner.
+<strong>TEMPO :</strong> Le retard de r&eacute;action normal en position d&eacute;fensive est de 200ms⚡. R&eacute;agir au lancement d&#39;un coup &agrave; close distance augmente le temps de r&eacute;action de +100ms⚡ : vous devez donc r&eacute;agir &agrave; la pr&eacute;pa du coup (mouvement) afin de contrer normalement.<br>
+Vous ne pouvez pas r&eacute;agir &agrave; une attaque que vous ne voyez pas (de profil ou de dos), vous devez donc r&eacute;agir &agrave; ce que vous ressentez (perception sensorielle). Cela aussi augmente le temps de r&eacute;action de +100ms⚡.<br>
+Vous ne pouvez pas annuler une action en cours, mais la modifier pour 10🫀 ou ex&eacute;cuter une action simultan&eacute;e. Idem pour les techniques. Les personnages capables d&#39;anticiper ou avec un potentiel de vitesse sup&eacute;rieure peuvent r&eacute;agir normalement.<br><br>
 
-- Angle mort : +300ms⚡ pour l’adversaire.
-- Anticipation ou VR supérieure réduit le retard.
+Le personnage en position d&eacute;fensive doit r&eacute;agir section par section aux attaques adverses. S&#39;il esquive, l&#39;attaquant le suit automatiquement pour placer son attaque suivante, mais seulement si la cible reste dans son champ de vision et sa port&eacute;e sensorielle.<br>
+Si le personnage d&eacute;fensif quitte la zone de perception adverse, il peut riposter sans &ecirc;tre suivi.<br>
+Un contre ne signifie pas une annulation totale de l&#39;offensive adverse, mais juste une r&eacute;ponse &agrave; la section en cours.<br>
+Vous pouvez encha&icirc;ner un combo de 3 coups max en 1 section. Le personnage d&eacute;fensif peut aussi contrer avec un combo.<br>
+Vous ne pouvez ex&eacute;cuter un combo qu&#39;une fois par tour et il ne peut pas &ecirc;tre ex&eacute;cut&eacute; dans la m&ecirc;me section qu&#39;une action simultan&eacute;e.<br>
+Seul un personnage plus rapide en (V.D🎯) peut encha&icirc;ner d&eacute;placement et coup sans casser l&#39;encha&icirc;nement.<br><br>
 
-OVERDRIVE :
-- Utilisable défensivement 1 fois/2 sections.
-- Coût : -20🫀
-- Contre une technique :
-  - Niv B : -20🫀
-  - Niv A : -30🫀
-  - Niv S : -40🫀
-</pre></div><div class="section"><h3>FULL POWER</h3><pre>
-Rangs définissent V.R, V.D, potentiel :
+Si un personnage se d&eacute;place plus vite que l&#39;adversaire, celui-ci r&eacute;agit avec +100ms⚡ de retard.<br>
+Dans le cas o&ugrave; le personnage plus rapide se repositionne dans l&#39;angle mort de l&#39;adversaire (hors du champ de vision : 180&deg; pour les deux yeux et 90&deg; pour un &oelig;il), l&#39;adversaire r&eacute;agit avec +300ms⚡ de retard.<br>
+Les personnages plus r&eacute;actifs verront leur retard r&eacute;duit selon la diff&eacute;rence de r&eacute;action entre eux et leur adversaire.<br><br>
 
-- Rang C : 5m/s🎯 | 500ms⚡
-- Rang B : 6m/s🎯 | 400ms⚡
-- Rang A : 7m/s🎯 | 300ms⚡
-- Rang S : 8m/s🎯 | 200ms⚡
-- Rang Z : 10m/s🎯 | 100ms⚡
+<strong>OVERDRIVE :</strong> L&#39;Overdrive, utilisable seulement en position d&eacute;fensive et 1 fois toutes les 2 sections, permet de r&eacute;agir face &agrave; une attaque impossible &agrave; r&eacute;agir normalement.<br>
+Mais cela co&ucirc;te -20🫀 de hearts et aussi la possibilit&eacute; de contrer une technique, variable selon le niveau de la technique :<br><br>
 
-Potentiel physique :
-- Défini force, résistance ou durabilité.
-- Brown = de base / Gray+ = avantage spécifique.
-</pre></div><div class="section"><h3>CLASSEMENT DES TECHNIQUES</h3><pre>
---------------------------------------------------------------
-| Niveau | Portée | Dégâts | Vitesse | Effet |
-|--------|--------|--------|---------|--------|
-|  Niv B |  5m⭕   |  30💥  |   6m🎯  |   1/2  |
-|  Niv A |  8m⭕   |  50💥  |   8m🎯  |   2    |
-|  Niv S | 10m⭕   |  80💥  |  10m🎯 |   3    |
---------------------------------------------------------------
+Niv B = -20🫀 &nbsp;|&nbsp; Niv A = -30🫀 &nbsp;|&nbsp; Niv S = -40🫀</div><div class="section"><h3>FULL POWER</h3><strong>CLASSIFICATION DES PERSONNAGES :</strong><br>
+Les personnages sont class&eacute;s par rang d&eacute;finissant leur capacit&eacute; physique comme : vitesse de r&eacute;action (V.R), vitesse de d&eacute;placement (V.D) et potentiels (Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green)<br><br>
 
-- Attaque sup. brise défense inf. (-50% puissance).
-- Écart de 2 niveaux ou + = puissance intacte.
-- Certaines techniques échappent aux règles (ex : dématérialisation).
-- Techniques à grande échelle : portée en km.
-- Combinaisons possibles (ex : 2x A &gt; 1x S).
-</pre></div>
+<strong>D&eacute;finition des valeurs par rang :</strong><br>
+- Rang C : V.D = 05m/s🎯 | V.R = 500ms⚡<br>
+- Rang B : V.D = 06m/s🎯 | V.R = 400ms⚡<br>
+- Rang A : V.D = 07m/s🎯 | V.R = 300ms⚡<br>
+- Rang S : V.D = 08m/s🎯 | V.R = 200ms⚡<br>
+- Rang Z : V.D = 10m/s🎯 | V.R = 100ms⚡<br><br>
+
+Le potentiel est un syst&egrave;me hi&eacute;rarchique variable. Un personnage de Rang C pourrait avoir une grande force physique, une grande r&eacute;sistance ou une grande durabilit&eacute; (Gray) ou sup&eacute;rieure (peu probable), ce qui le rend unique et lui offre un atout propre.<br><br>
+
+Par exemple :<br>
+- Un personnage avec une force brute Gray causera 20💥 de d&eacute;g&acirc;ts alors qu&#39;un Brown causera 10💥 de d&eacute;g&acirc;ts.<br>
+- Un personnage de durabilit&eacute; Gray pourrait continuer &agrave; se battre normalement malgr&eacute; une douleur intense.<br>
+- Un personnage de r&eacute;sistance Yellow pourrait r&eacute;duire les d&eacute;g&acirc;ts des coups de niveau inf&eacute;rieur de 50%.<br><br>
+
+Le potentiel normal des personnages est Brown sauf si sa description indique le contraire.<br><br>
+
+<strong>CLASSEMENT DES TECHNIQUES :</strong><br>
+Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon leur efficacit&eacute; gr&acirc;ce au nombre d&#39;effets qu&#39;elles peuvent avoir.<br><br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Niveau</th>
+      <th>Port&eacute;e</th>
+      <th>D&eacute;g&acirc;ts</th>
+      <th>Vitesse</th>
+      <th>Effet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Niv B</td>
+      <td>5m⭕</td>
+      <td>30💥</td>
+      <td>6m🎯</td>
+      <td>1 / 2</td>
+    </tr>
+    <tr>
+      <td>Niv A</td>
+      <td>8m⭕</td>
+      <td>50💥</td>
+      <td>8m🎯</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Niv S</td>
+      <td>10m⭕</td>
+      <td>80💥</td>
+      <td>10m🎯</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table><br>
+
+<strong>R&egrave;gles de sup&eacute;riorit&eacute; :</strong><br>
+- Une attaque de niveau sup&eacute;rieur brise la d&eacute;fense de niveau inf&eacute;rieur mais voit sa puissance r&eacute;duite de 50%.<br>
+- Si l&#39;&eacute;cart est de 2 niveaux ou plus, l&#39;attaque garde sa puissance initiale.<br>
+- Certaines techniques peuvent &ecirc;tre efficaces en raison de leur nature (ex : d&eacute;mat&eacute;rialisation, distorsion spatiale, etc.).<br>
+- Les techniques de grande port&eacute;e (t&eacute;l&eacute;portation, invocations...) affectent toute la zone de combat. Une technique &agrave; grande &eacute;chelle verra sa port&eacute;e convertie en kilom&egrave;tres (X m = X km).<br>
+- Combinaison de techniques possible pour cr&eacute;er des attaques ou d&eacute;fenses avanc&eacute;es, par exemple : combiner deux attaques de niveau A pourrait contrer une attaque de niveau S.<br><br>
+
+<strong>Exemples de hi&eacute;rarchie (plus petit que &lt;) :</strong><br>
+- Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green<br>
+- Rang C &lt; Rang B &lt; Rang A &lt; Rang S &lt; Rang Z<br>
+- Niveau B &lt; Niveau A &lt; Niveau S</div>
     <h2>SRPN - ABM v1</h2>
 </body>
 </html>`;
@@ -132,7 +157,7 @@ Potentiel physique :
       document: readFileSync(filename),
       mimetype: 'text/html',
       filename: 'systeme_abm.html',
-      caption: '*📜 ABM SYSTEM – COMBAT SRPN*'
+      caption: '*🆚 ABM SYSTEM – RP COMBAT*'
     }, { quoted: ms });
 
     unlinkSync(filename);
@@ -147,7 +172,7 @@ zokou(
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Système Origamy World</title>
+  <title>ORIGAMY SYSTEM – SRPN</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -193,97 +218,277 @@ zokou(
   </style>
 </head>
 <body>
-  <h1>📜 ORIGAMY WORLD - SYSTÈME D’AVENTURE RP TEXTUEL SRPN</h1>
+  <h1>🌐 ORIGAMY WORLD – SYSTEM SRPN 🌐</h1>
 
   <section>
     <h2>🔹 STRUCTURE DU PAVÉ RP STORY</h2>
-    <pre><code>▓▓▓▓[ORIGAMY STORY]▓▓▓▓
-[PLAYER NAME] :
+    <code><br>
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
+*▓▓▓▓[ORIGAMY  STORY]▓▓▓▓*<br>
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br>
+*[PLAYER NAME] :*<br><br>
 
-> Section 1: [Première description...]
-> Section 2: [Seconde description...]
+&gt; *Section 1:* [Premi&egrave;re description d&#39;actions du joueur respectant les r&egrave;gles du jeu].<br><br>
 
-💠 POUVOIR : [Techniques Actifs]
-🌐 POSITION : [Localisation du joueur]
-❤️: 100 | 🌀: 100 | 🫀: 100
-🍽️: 100 | 🍶: 100 | 🎭: 000
-📦 INVENTAIRE : 0/2
-💰 Bourse : 0
-▓▓▓▓[CHARGEMENT...]▓▓▓▓</code></pre>
-  </section>
+&gt; *Section 2:* [Seconde description d&#39;actions du joueur respectant les r&egrave;gles du jeu].<br>
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
+*💠 POUVOIR :* [Techniques Actifs]<br>
+*🌐 POSITION :* [Localisation/Destination du joueur]<br>
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br>
+❤️: 100 | 🌀: 100 | 🫀: 100<br>
+🍽️: 100 | 🍶: 100 | 🎭: 000<br><br>
+
+*📦 INVENTAIRE :* 0/2<br>
+&gt; *💰 Bourse :* 0<br>
+&gt; *<br>
+&gt; *<br>
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
+*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*<br>
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br><br></code><strong>R&Egrave;GLES DE JEU RP STORY</strong><br><br>
+
+<strong>ORIGAMY SERVEURS :</strong> Origamy World est divis&eacute; en plusieurs serveurs repr&eacute;sentant une zone chacune. Il est important de respecter les r&egrave;gles suivantes : pas de spam [message, stickers, etc.], juste vos pav&eacute;s et questions ; apr&egrave;s 3⚠️ avertissements c&#39;est -30 XP et -3 000🧭. Vous ne pouvez pas &ecirc;tre dans plusieurs serveurs &agrave; la fois ; si vous changez de zone vous devez rejoindre le serveur de cette zone et quitter le pr&eacute;c&eacute;dent, sous peine de sanction. Veuillez rester r&eacute;aliste, respecter le syst&egrave;me de jeu et les lois de la physique.<br><br></section>
 
   <section>
     <h2>🔹 EXPLORATION ET DÉPLACEMENTS</h2>
     <div class="highlight">
-      <p>🚶‍♂️ À PIED : 0.5 km (marche), 1 km (-10🫀), 2 km en overdrive (-20🫀)<br>
-      🐎 MONTURES : 1.5 à 3 km selon la vitesse, affectée par l’environnement et la stamina 🐾.<br>
-      🏃‍♂️ POURSUITE : Bonus de vitesse selon différence en m/s 🎯.</p>
+      <p>Les d&eacute;placements sont bas&eacute;s sur des unit&eacute;s de distance et des consommations d’&eacute;nergie adapt&eacute;es.<br><br>
+
+<strong>&Agrave; PIED :</strong> Vous parcourez 0.5 km par section en marche, et 1 km par section (-10🫀 Heart) en course. En Overdrive vous parcourez 2 km par section (-20🫀 Heart). 🫀 HEART : la jauge va de 100🫀 à 0🫀 ; vous perdez connaissance durant 3 tours, au repos vous r&eacute;couvrez +20🫀 par section.<br><br>
+
+<strong>MONTURES :</strong><br>
+• Terrestres : vitesse normale 1,5 km🎯 | mod&eacute;r&eacute;e 2 km🎯 (-10🐾) | max 3 km🎯 (-20🐾).<br>
+• Volantes : vitesse normale 2 km🎯 | mod&eacute;r&eacute;e 2,5 km🎯 (-10🐾) | max 4 km🎯 (-20🐾).<br>
+🐾 STAMINA : la jauge va de 100🐾 à 0🐾 ; la cr&eacute;ature succombe à la fatigue. Immobile : +20🐾 ; &agrave; vitesse normale : +10🐾 par section.<br><br>
+
+<strong>POURSUITE :</strong> La vitesse de d&eacute;placement durant une poursuite diff&egrave;re du d&eacute;placement normal. &Agrave; &eacute;chelle r&eacute;duite vous vous d&eacute;placez en m/s🎯, et en km/s🎯 à grande &eacute;chelle. Lorsqu’une poursuite est engag&eacute;e, le plus rapide obtient un bonus de +0.5 km🎯 pour chaque 1 m/s🎯 de diff&eacute;rence. Ex : un perso avec V.D = 7 m/s🎯 aura un d&eacute;placement de 2 km🎯 au lieu de 1 km🎯.</p>
     </div>
   </section>
 
   <section>
     <h2>🔹 ENVIRONNEMENTS SPÉCIFIQUES</h2>
     <ul>
-      <li>🌊 SWIM : -10🫀, -20🌬️ sous l'eau</li>
-      <li>⛰️ MONTAGNE : double Heart à pied, -50% vitesse monture</li>
-      <li>❄️ NEIGE : Maladies, froid, besoin d’équipement</li>
+        </li><strong>SWIM :</strong> Nager vous co&ucirc;te -10🫀 par section et sous l&#39;eau vous perdez -20🌬️ d&#39;oxyg&egrave;ne par section. Sur une jauge de 100🌬️ &agrave; 0, que ce soit en 🫀 ou en 🌬️, c&#39;est la noyade. R&eacute;cup&eacute;rer votre souffle restaure votre jauge d&#39;oxyg&egrave;ne &agrave; &laquo;&nbsp;100%&nbsp;&raquo;.</li><br><br>
+
+</li><strong>MONTAGNE :</strong> Cet environnement double la perte de Heart🫀 si vous &ecirc;tes &agrave; pied, et r&eacute;duit de 50% la vitesse de d&eacute;placement des montures terrestres.</li><br><br>
+
+<li><strong>NEIGE :</strong> Risque de maladie en raison de l&#39;humidit&eacute; (ex : forte fi&egrave;vre, incapacit&eacute; &agrave; combattre, et double perte de 🫀), ainsi que l&#39;effet du froid intense. Vous devez poss&eacute;der un &eacute;quipement adapt&eacute;.</li>
     </ul>
   </section>
 
   <section>
     <h2>🔹 CLIMAT, SAISONS ET MÉTÉO</h2>
-    <p>Effets variables : 🌧️ pluie (sol glissant), ❄️ neige (-20❤️), 🌡️ canicule, 🌪️ tempêtes</p>
+    <p>Influencent la survie et l’acc&egrave;s aux ressources.<br>
+Par exemple : la surp&ecirc;che ou chasse excessive entra&icirc;ne des esp&egrave;ces en voie de disparition.<br>
+Des catastrophes (incendies, inondations, temp&ecirc;tes) peuvent modifier durablement une zone.<br>
+Chacun pouvant impacter le gameplay.<br><br></p>
   </section>
 
   <section>
     <h2>🔹 INTERACTIONS & PNJ</h2>
-    <p>Réputation : +20🙂 ou +20😈 selon vos actions<br>
-    PNJ dynamiques : routine, réactivité, trahison possible</p>
+    <p><strong>RELATIONS &amp; R&Eacute;PUTATION :</strong> Vos actions sociales influencent la mani&egrave;re dont les PNJ r&eacute;agissent.<br>
+Ex : un PNJ pourrait alerter les autorit&eacute;s locales si vous &ecirc;tes fugitif ou que vous chassez pour la prime.<br>
+Une bonne action vous rapporte +20🙂, une mauvaise action +20😈.<br>
+L&#39;interpr&eacute;tation d&#39;une action d&eacute;pend de la vision des PNJ &agrave; votre &eacute;gard.<br>
+Vous pouvez avoir une relation intime ou professionnelle avec un PNJ selon ses go&ucirc;ts et pr&eacute;f&eacute;rences.<br><br>
+
+<strong>FACTIONS &amp; COMMERCE :</strong> Cr&eacute;er ou rejoindre une faction permet d&rsquo;obtenir des avantages exclusifs.<br>
+Mais cela requiert diff&eacute;rentes &eacute;tapes ou &eacute;v&eacute;nements : gagner la confiance, passer des tests, faire des recrutements, etc.<br>
+Ceci est aussi influenc&eacute; par votre r&eacute;putation.<br>
+Les prix varient selon l&rsquo;offre et la demande, les guerres ou la raret&eacute; des ressources.<br>
+Les March&eacute;s Noirs proposent des objets ill&eacute;gaux, mais co&ucirc;teux et risqu&eacute;s (trahison, complot, etc.).<br><br>
+
+<strong>PNJ DYNAMIQUES :</strong> Chaque PNJ poss&egrave;de une routine et une personnalit&eacute; propre, avec des r&eacute;actions cr&eacute;dibles, le rendant unique.<br>
+Ils peuvent alerter les autorit&eacute;s, se d&eacute;fendre, ou faire preuve d&rsquo;intelligence et de combativit&eacute;.<br>
+Certains PNJ peuvent influencer l&rsquo;histoire, devenir leaders, trahir ou comploter.<br><br>
+
+<strong>QU&Ecirc;TES &amp; ENQU&Ecirc;TES :</strong> Certaines zones contiennent des myst&egrave;res et dangers n&eacute;cessitant :<br>
+- collecte d&rsquo;indices,<br>
+- interrogatoires,<br>
+- perspicacit&eacute;,<br>
+- ou comp&eacute;tences de combat.<br>
+Vous y trouverez des pi&egrave;ges et &eacute;v&eacute;nements impr&eacute;vus : sables mouvants, embuscades, hallucinations, ennemis vari&eacute;s avec niveaux, comp&eacute;tences cr&eacute;dibles et impressionnantes.<br><br>
+
+<strong>CYCLE TEMPOREL &amp; M&Eacute;T&Eacute;O :</strong> La journ&eacute;e dure 12 tours.<br>
+- <em>Matin</em> : visibilit&eacute; accrue, PNJ actifs.<br>
+- <em>Apr&egrave;s-midi</em> : activit&eacute; marchande, fort ensoleillement.<br>
+- <em>Soir&eacute;e</em> : plus dangereuse (monstres, embuscades).<br>
+- <em>Nuit</em> : visibilit&eacute; r&eacute;duite (-50% perception).<br>
+Chaque p&eacute;riode dure 3 tours.<br><br>
+
+<strong>EFFETS CLIMATIQUES :</strong><br>
+🌧️ <strong>Pluie</strong> : taux de coup critique &eacute;lev&eacute;, sol glissant, avantage aux comp&eacute;tences &eacute;lectriques, d&eacute;savantage aux comp&eacute;tences feu.<br>
+❄️ <strong>Neige</strong> (moins 30&deg;C) : -20❤️ par tour sans protection, risque de maladie.<br>
+🌡️ <strong>Canicule</strong> (plus 40&deg;C) : double perte en 🫀 et en Soif 🍶.<br>
+🌪️ <strong>Temp&ecirc;tes</strong> : malus vari&eacute;s (sable, glace, foudre).</p>
   </section>
 
   <section>
     <h2>🔹 CRAFTING ET POSSESSIONS</h2>
-    <p>📦 Construction coûte en ressources (2 unités / m²)<br>
-    ⚙️ Durabilité : 🥉 100, 🥈 200, 🥇 300, 🏅 infini</p>
+    <p><strong>CONSTRUCTION :</strong> Le crafting vous co&ucirc;te en unit&eacute;s de ressources.<br>
+Une surface minimale de 1m&sup2; &eacute;quivaut &agrave; 2 unit&eacute;s, donc 5m&sup2; = 10 unit&eacute;s.<br>
+Exemple :<br>
+&nbsp;&nbsp;- Sol en bois (5m&sup2;) = 10🪵.<br>
+&nbsp;&nbsp;- Mur en pierre (20m&sup2;) = 40🪨.<br><br>
+
+Collectez les ressources n&eacute;cessaires en explorant les lieux ou zones de la carte.<br><br>
+
+<strong>DURABILIT&Eacute; :</strong> Les objets sont class&eacute;s par niveau, ce qui d&eacute;finit leur efficacit&eacute; et durabilit&eacute;.<br>
+Toujours pr&eacute;ciser le niveau.<br><br>
+
+Niveau bronze (🥉) : objets classiques (ex : &eacute;p&eacute;e de fer, lance, hache, pioche, etc.), durabilit&eacute; de 100⚙️.<br>
+Niveau argent (🥈) : objets r&eacute;sistants faits &agrave; base de m&eacute;taux rares (ex : &eacute;p&eacute;e de mithril, outils dwarven, etc.), durabilit&eacute; de 200⚙️, efficacit&eacute; de 200% par rapport aux outils classiques.<br>
+Niveau or (🥇) : objets puissants faits &agrave; base de m&eacute;taux pr&eacute;cieux (ex : &eacute;p&eacute;e en diamant, outils en or, etc.), durabilit&eacute; de 300⚙️, efficacit&eacute; de 300% par rapport aux outils classiques.<br>
+Niveau sp&eacute;cial (🏅) : objets particuliers faits &agrave; base de magie, durabilit&eacute; ind&eacute;finie et efficacit&eacute; variable.<br><br>
+
+L&#39;utilisation d&#39;un outil durant une activit&eacute; (affrontement, r&eacute;colte, fuite, etc.) lui fait perdre 10⚙️ de durabilit&eacute; apr&egrave;s l&#39;activit&eacute;.<br>
+Lorsque sa durabilit&eacute; atteint 0⚙️, l&#39;outil est inutilisable ou d&eacute;truit.</p>
   </section>
 
   <section>
     <h2>🔹 STATS & SURVIE</h2>
-    <p>🍽️ Faim & 🍶 Soif : -30% tous les 3 tours<br>
-    ❤️ Santé : soins médicaux<br>
-    🌀 Énergie : +20🌀 / accumulation<br>
-    🫀 Endurance : +10🫀 / repos</p>
+    <p><strong>BESOINS VITAUX :</strong> La Faim (🍽️) et la Soif (🍶) baissent de -30% tous les 3 tours.<br>
+À 0%, la perte de Heart🫀 est doubl&eacute;e et vous risquez de perdre connaissance.<br>
+Elles peuvent &ecirc;tre restaur&eacute;es par la consommation d&#39;aliment ou de boisson.<br><br>
+
+<strong>R&Eacute;G&Eacute;N&Eacute;RATION :</strong> La Sant&eacute; (❤️) requiert des soins m&eacute;dicaux ou des techniques adapt&eacute;es.<br>
+L&#39;&Eacute;nergie (🌀) se restaure de +20🌀 apr&egrave;s une section d&#39;accumulation.<br>
+L&#39;Endurance (Heart) se restaure de +10🫀 apr&egrave;s une section de repos ou immobilit&eacute;.<br><br>
+
+<strong>NOTICE :</strong> Les comp&eacute;tences des joueurs peuvent influencer le syst&egrave;me de jeu.<br>
+Par exemple : un joueur avec une technique de r&eacute;g&eacute;n&eacute;ration pourrait soigner ses blessures ou r&eacute;cuperer des points de sant&eacute;.<br>
+Un joueur avec une technique de vitesse pourrait se d&eacute;placer plus vite sans overdrive (voir la description de la technique).</p>
   </section>
 
   <section>
     <h2>🔹 RESSOURCES</h2>
-    <ul>
-      <li>🌿 Médicinales, ☠️ Toxiques, ✨ Magiques</li>
-      <li>🪵 Bois, 🪨 Pierre, 💠 Précieux, ⚙️ Rares</li>
-      <li>🍎 Nourriture : Fruits, Viandes, Poissons...</li>
-      <li>🐺 Animaux : sauvages, bétail, magiques</li>
-    </ul>
+    <p>Les ressources sont class&eacute;es en diff&eacute;rentes cat&eacute;gories avec leurs caract&eacute;ristiques sp&eacute;cifiques, et chaque ressource a des particularit&eacute;s propres.<br>
+Vous r&eacute;coltez 1 unit&eacute; de ressource pour 1 tour de r&eacute;colte &agrave; main nue.<br>
+Equip&eacute; d&#39;un outil appropri&eacute; (pioche, hache, pelle, etc.), vous r&eacute;coltez 2 unit&eacute;s pour 1 section de r&eacute;colte.<br><br>
+
+<strong>COURANTES :</strong><br>
+- <strong>BOIS</strong> (🪵) : Utilis&eacute; pour le crafting de base (meubles, torches, etc.). &Eacute;quipez-vous d&#39;une hache.<br>
+- <strong>PIERRE</strong> (🪨) : Mat&eacute;riau de construction et pour fabriquer des outils de base. &Eacute;quipez-vous d&#39;une pioche.<br><br>
+
+<strong>NOURRITURE :</strong><br>
+- <strong>FRUITS</strong> (🍎, 🍇, 🍊, 🍓) : Faciles &agrave; r&eacute;colter dans des zones comme les vergers, for&ecirc;ts ou prairies.<br>
+Certaines vari&eacute;t&eacute;s peuvent avoir des effets b&eacute;n&eacute;fiques (ex : pomme dor&eacute;e pour r&eacute;g&eacute;n&eacute;rer la sant&eacute;).<br>
+- <strong>L&Eacute;GUMES</strong> (🥕, 🥔, 🌽) : Croissent dans des fermes ou champs cultiv&eacute;s.<br>
+Les l&eacute;gumes peuvent &ecirc;tre cuisin&eacute;s pour donner des plats plus puissants.<br>
+- <strong>VIANDES</strong> (🥩, 🍗) : Provenant d&#39;animaux chass&eacute;s ou d&#39;abattage.<br>
+La viande fournit une bonne quantit&eacute; de sant&eacute; mais peut provoquer des effets secondaires (empoisonnement si mal cuite).<br>
+- <strong>POISSON</strong> (🐟, 🦑) : Trouv&eacute; dans des zones aquatiques, les poissons ont des bienfaits vari&eacute;s selon les types.<br>
+Le poisson peut aussi servir dans des potions aquatiques.<br><br>
+
+<strong>M&Eacute;DICINALES :</strong><br>
+- <strong>PLANTES</strong> (🌿, 🌸, 🌻) : Trouv&eacute;es principalement dans les for&ecirc;ts, montagnes ou pr&egrave;s de ruisseaux.<br>
+Les plantes m&eacute;dicinales sont utilis&eacute;es dans les potions de gu&eacute;rison et d&#39;am&eacute;lioration.<br>
+- <strong>TOXIQUES</strong> (☠️) : Ces plantes peuvent &ecirc;tre utilis&eacute;es pour empoisonner les ennemis ou cr&eacute;er des potions puissantes mais risqu&eacute;es.<br>
+- <strong>MAGIQUES</strong> (✨) : Ces herbes poss&egrave;dent des propri&eacute;t&eacute;s magiques et sont utilis&eacute;es dans la cr&eacute;ation de potions ou pour la fabrication d&#39;objets enchant&eacute;s.<br><br>
+
+<strong>MINERAIS ET M&Eacute;TAUX :</strong><br>
+Ces ressources sont utilis&eacute;es principalement pour le crafting d&#39;outils, armes et armures.<br>
+- <strong>PR&Eacute;CIEUX</strong> (💠) : Tr&egrave;s rares et difficiles &agrave; extraire sans outils adapt&eacute;s (pioche, etc.).<br>
+Ces minerais servent &agrave; forger des armes et armures l&eacute;gendaires.<br>
+- <strong>RARES</strong> (⚙️) : M&eacute;taux plus r&eacute;sistants et plus l&eacute;gers que les m&eacute;taux ordinaires, recherch&eacute;s pour &eacute;quipements d&#39;&eacute;lite.<br>
+- <strong>FER</strong> (🗜️) : Facilement disponible dans les carri&egrave;res, utilis&eacute; pour fabriquer des objets communs (&eacute;p&eacute;es, haches, outils).<br><br>
+
+<strong>ANIMAUX :</strong><br>
+Les animaux sont une ressource importante, principalement pour leur viande, peau, fourrure, et parfois leurs capacit&eacute;s magiques.<br>
+Ils peuvent &ecirc;tre agressifs ou fuyants si menac&eacute;s.<br>
+- <strong>SAUVAGES</strong> (🐺, 🦌, 🦊) : Chass&eacute;s principalement pour leur viande et fourrure.<br>
+Certaines esp&egrave;ces peuvent fournir des mat&eacute;riaux magiques ou rares.<br>
+- <strong>B&Eacute;TAIL</strong> (🐄, 🐑, 🐔) : Animaux de ferme &eacute;lev&eacute;s pour leur lait, &oelig;ufs, laine et viande.<br>
+Essentiels pour les ressources r&eacute;guli&egrave;res.<br>
+- <strong>MAGIQUES</strong> (🐉, 🦄) : Cr&eacute;atures rares pouvant &ecirc;tre chass&eacute;es ou apprivois&eacute;es.<br>
+Elles fournissent des ressources magiques comme &eacute;cailles, plumes ou griffes, utilis&eacute;es dans des recettes magiques ou artisanat l&eacute;gendaire.</p>
   </section>
 
   <section>
     <h2>🔹 PROGRESSION & RANG</h2>
-    <table>
-      <thead>
-        <tr><th>Rang</th><th>Normal</th><th>Fort</th><th>Extrême</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>C</td><td>50-100</td><td>100-150</td><td>150-200</td></tr>
-        <tr><td>B</td><td>100-200</td><td>200-300</td><td>300-400</td></tr>
-        <tr><td>A</td><td>200-400</td><td>400-600</td><td>600-800</td></tr>
-        <tr><td>S</td><td>400-800</td><td>800-1200</td><td>1200-1600</td></tr>
-        <tr><td>Z</td><td>800-1600</td><td>1600-2400</td><td>2400-3200</td></tr>
-      </tbody>
-    </table>
-    <p><strong>LEVELUP :</strong> C ➜ B (1000 XP), B ➜ A (2500 XP), A ➜ S (5000 XP), S ➜ Z (10000+ XP)</p>
+    <p>La progression en rang (C, B, A, S, Z) est d&eacute;termin&eacute;e par l&#39;accumulation d&#39;XP.<br>
+Chaque rang n&eacute;cessite un nombre d&#39;XP cumul&eacute; sp&eacute;cifique.<br>
+La progression en rang permet d&#39;acc&eacute;der &agrave; des comp&eacute;tences et des &eacute;quipements plus puissants.</p><br><br>
+
+<strong>COMBATIVIT&Eacute; :</strong> L&#39;augmentation du niveau de combativit&eacute; au sein d&#39;un m&ecirc;me rang permet d&#39;affronter des PNJ plus puissants.<br><br>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+  <tr>
+    <th>Rang</th>
+    <th>Niveau</th>
+    <th>XP requis</th>
+    <th>→</th>
+    <th>Rang</th>
+    <th>Niveau</th>
+    <th>XP requis</th>
+    <th>→</th>
+    <th>Rang</th>
+    <th>Niveau</th>
+    <th>XP requis</th>
+  </tr>
+  <tr>
+    <td>C</td><td>Normal</td><td>50-100 XP</td><td>→</td><td>C</td><td>Fort</td><td>100-150 XP</td><td>→</td><td>C</td><td>Extrême</td><td>150-200 XP</td>
+  </tr>
+  <tr>
+    <td>B</td><td>Normal</td><td>100-200 XP</td><td>→</td><td>B</td><td>Fort</td><td>200-300 XP</td><td>→</td><td>B</td><td>Extrême</td><td>300-400 XP</td>
+  </tr>
+  <tr>
+    <td>A</td><td>Normal</td><td>200-400 XP</td><td>→</td><td>A</td><td>Fort</td><td>400-600 XP</td><td>→</td><td>A</td><td>Extrême</td><td>600-800 XP</td>
+  </tr>
+  <tr>
+    <td>S</td><td>Normal</td><td>400-800 XP</td><td>→</td><td>S</td><td>Fort</td><td>800-1200 XP</td><td>→</td><td>S</td><td>Extrême</td><td>1200-1600 XP</td>
+  </tr>
+  <tr>
+    <td>Z</td><td>Normal</td><td>800-1600 XP</td><td>→</td><td>Z</td><td>Fort</td><td>1600-2400 XP</td><td>→</td><td>Z</td><td>Extrême</td><td>2400-3200 XP</td>
+  </tr>
+</table><br>
+
+<strong>ENTRAÎNEMENT :</strong> L&#39;entra&icirc;nement journalier vous permet de cumuler des XP sans avoir besoin de faire des missions ou combats.<br><br>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+  <tr>
+    <th>Rang</th>
+    <th>Durée</th>
+    <th>XP</th>
+    <th>→</th>
+    <th>Rang</th>
+    <th>Durée</th>
+    <th>XP</th>
+    <th>→</th>
+    <th>Rang</th>
+    <th>Durée</th>
+    <th>XP</th>
+  </tr>
+  <tr>
+    <td>C</td><td>2 tours</td><td>100 XP</td><td>→</td><td>C</td><td>4 tours</td><td>200 XP</td><td>→</td><td>C</td><td>8 tours</td><td>300 XP</td>
+  </tr>
+  <tr>
+    <td>B</td><td>4 tours</td><td>200 XP</td><td>→</td><td>B</td><td>8 tours</td><td>400 XP</td><td>→</td><td>B</td><td>12 tours</td><td>600 XP</td>
+  </tr>
+  <tr>
+    <td>A</td><td>6 tours</td><td>400 XP</td><td>→</td><td>A</td><td>8 tours</td><td>800 XP</td><td>→</td><td>A</td><td>16 tours</td><td>1200 XP</td>
+  </tr>
+  <tr>
+    <td>S</td><td>8 tours</td><td>800 XP</td><td>→</td><td>S</td><td>16 tours</td><td>1600 XP</td><td>→</td><td>S</td><td>32 tours</td><td>2400 XP</td>
+  </tr>
+  <tr>
+    <td>Z</td><td>10 tours</td><td>1600 XP</td><td>→</td><td>Z</td><td>20 tours</td><td>3200 XP</td><td>→</td><td>Z</td><td>40 tours</td><td>4800 XP</td>
+  </tr>
+</table><br>
+
+<strong>LEVELUP :</strong> Lorsque vous atteignez le seuil de XP d&eacute;fini pour votre rang, vous passez au rang sup&eacute;rieur avec des stats am&eacute;lior&eacute;es.<br><br>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+  <tr>
+    <td>C</td><td>1000 XP</td><td>→</td><td>B</td><td>2500 XP</td><td>→</td><td>A</td><td>5000 XP</td>
+  </tr>
+  <tr>
+    <td>S</td><td>10000 XP</td><td>→</td><td>Z</td><td>20000 XP</td><td></td><td></td><td></td>
+  </tr>
+</table>
   </section>
 
   <section>
-    <h2>⚠️ COMBAT</h2>
+    <h2>⚠️ COMBAT :</h2>
     <p>Utilise le <strong>système ABM</strong> pour les affrontements dans Origamy World.</p>
   </section>
 </body>
@@ -296,7 +501,7 @@ zokou(
       document: readFileSync(filename),
       mimetype: 'text/html',
       filename: 'systeme_origamy.html',
-      caption: '*🌍 ORIGAMY WORLD – SYSTÈME RP*'
+      caption: '*🌍 ORIGAMY WORLD – RP AVENTURE*'
     }, { quoted: ms });
 
     unlinkSync(filename);
@@ -313,7 +518,7 @@ zokou(
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎴 Yu-Gi-Oh : Speed Duel 🎴 - Gameplay SRPN</title>
+  <title>YU-GI-OH! SPEED DUEL – GAMEPLAY SRPN</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -350,68 +555,165 @@ zokou(
   </style>
 </head>
 <body>
-  <h1>🎴 Yu-Gi-Oh! Speed Duel 🎴</h1>
+  <h1>🎴 YU-GI-OH! SPEED DUEL 🎴</h1>
   <h2>— GAMEPLAY SRPN —</h2>  <div class="section">
-    <h3>1. PRÉPARATION DU DUEL</h3>
+   <p>
+    Le Speed Duel est une version simplifi&eacute;e de Yu-Gi-Oh! avec les r&egrave;gles suivantes :
+  </p>
+
+  <h3>D&Eacute;BUT DU DUEL</h3>
+  <p>
+    Chaque joueur pioche 4 cartes pour sa main de d&eacute;part. Le premier joueur ne pioche pas lors de son premier tour.
+    Vous pouvez directement jou&eacute; vos cartes en mentionnant comment vous les utiliser (face cach&eacute;, pose, invocation, attaque, etc.).
+    Utiliser une carte face cach&eacute;e pour vos actions cach&eacute;es. Certaines cartes ou comp&eacute;tences peuvent &ecirc;tre activ&eacute;es durant le tour adverse
+    et les actions cach&eacute;es doivent &ecirc;tre divulgu&eacute;es &agrave; l&#39;arbitre avant leur lancement.
+  </p>
+
+  <h3>TERRAIN DE JEU</h3>
+  <p>
+    Votre terrain de jeu compte 6 sections qui sont :
+    le Deck Principal (20 &agrave; 30 cartes), l&#39;Extra Deck (0 &agrave; 5 cartes), le Cimeti&egrave;re,
+    la Zone Magie de Terrain, la Zone Monstre (3 max) et la Zone Magies et Pi&egrave;ges (3 max).
+  </p>
+
+  <h3>POINTS DE VIE (LP)</h3>
+  <p>
+    Chaque joueur commence avec 4000 LP. La d&eacute;faite survient si les LP tombent &agrave; z&eacute;ro ou si le joueur ne peut plus piocher de cartes.
+  </p>
+
+  <h3>EXTRA DECK</h3>
+  <p>
+    Contient les Monstres Fusion (cartes violettes, comme &quot;Dragon Mill&eacute;naire&quot;). Il peut contenir entre 0 et 5 cartes.
+  </p>
+
+  <h3>MAIN DECK</h3>
+  <p>
+    Doit contenir entre 20 et 30 cartes. Les cartes doivent &ecirc;tre m&eacute;lang&eacute;es avant le duel.
+    Maximum 3 exemplaires de la m&ecirc;me carte.
+  </p>
+
+  <h3>CARTE COMP&Eacute;TENCE</h3>
+  <p>
+    Chaque joueur choisit une carte comp&eacute;tence face cach&eacute;e avant le duel.
+  </p>
+
+  <h3>TOUR DE JEU</h3>
+  <p>
+    Piocher une carte, puis poser des Pi&egrave;ges, jouer des Magies et invoquer un monstre dans l&#39;ordre souhait&eacute;. Ensuite, le joueur peut attaquer.
+  </p>
+
+  <h3>INVOCATION ET POSE</h3>
+  <ul>
+    <li>Invoquer un monstre en Position d&#39;Attaque (verticale) ou le Poser face verso en Position de D&eacute;fense (horizontale).</li>
+    <li>Le nombre d&#39;&eacute;toiles indique le niveau :</li>
     <ul>
-      <li>Choisissez votre deck via la commande <code>~deck [nom]</code> (ex : <code>~deck yami</code>, <code>~deck kaiba</code>).</li>
-      <li>Le duel est supervisé par un arbitre (modo).</li>
-      <li>Chaque joueur commence avec <strong>4 cartes en main</strong>.</li>
+      <li>Niveau 1 &agrave; 4 : Pas de tribut.</li>
+      <li>Niveau 5 et 6 : 1 tribut.</li>
+      <li>Niveau 7 ou plus : 2 tributs.</li>
+      <li>Les Invocations Sp&eacute;ciales ne n&eacute;cessitent pas de tributs.</li>
     </ul>
+  </ul>
+
+  <h3>CARTES MAGIE ET PI&Egrave;GE</h3>
+  <p>
+    Les Magies peuvent &ecirc;tre jou&eacute;es directement depuis la main. Les Magies de Terrain sont plac&eacute;es dans la Zone Terrain.
+    Les Magies et Pi&egrave;ges d&#39;&Eacute;quipement restent en jeu. Les autres vont au cimeti&egrave;re.
+  </p>
+
+  <h3>CARTES PI&Egrave;GE</h3>
+  <p>
+    Doivent &ecirc;tre pos&eacute;es face verso et ne peuvent pas &ecirc;tre activ&eacute;es le tour o&ugrave; elles sont pos&eacute;es, sauf indication contraire.
+    Elles vont au cimeti&egrave;re apr&egrave;s usage.
+  </p>
+
+  <h3>PHASE DE COMBAT</h3>
+  <p>
+    Chaque monstre en Position d&#39;Attaque peut attaquer une fois par tour. Si l&#39;adversaire n&#39;a pas de monstre, les LP peuvent &ecirc;tre attaqu&eacute;s directement.<br>
+    Si un monstre face verso est attaqu&eacute;, il est retourn&eacute; face recto. Si le monstre attaqu&eacute; survit, il reste face recto en Position de D&eacute;fense.<br>
+    Aucun LP n&#39;est perdu si la DEF du monstre attaqu&eacute; est sup&eacute;rieure &agrave; l&#39;ATK du monstre attaquant.
+  </p>
   </div>  <div class="section">
-    <h3>2. DÉROULEMENT DU TOUR</h3>
-    <p>Le tour est divisé en 3 phases (pavés) :</p>
-    <ul>
-      <li><strong>Phase 1 : Pioche & Main Phase 1</strong><br>Ex: "Je pioche. J’invoque [monstre]. Je pose une carte face cachée."</li>
-      <li><strong>Phase 2 : Battle Phase</strong><br>Ex: "[Monstre] attaque [cible]. Dommages : ..."</li>
-      <li><strong>Phase 3 : Main Phase 2 & End Phase</strong><br>Ex: "Je pose une magie. Fin du tour."</li>
-    </ul>
-    <p><em>À chaque phase, attendre la validation de l’arbitre ou une réaction adverse.</em></p>
-  </div>  <div class="section">
-    <h3>3. CARTES FACE CACHÉE & EFFETS</h3>
-    <ul>
-      <li>Déclarez en privé toute carte posée face cachée à l’arbitre.</li>
-      <li>Ex: Carte posée : <code>Les 7 Outils du Bandit</code> | Effet : Annule une carte piège (-1000 LP)</li>
-      <li>Lors de l’activation : "J’active ma carte piège posée T1."</li>
-    </ul>
-  </div>  <div class="section">
-    <h3>4. INTERRUPTIONS & RÉACTIONS</h3>
-    <ul>
-      <li>L’adversaire peut réagir à chaque phase : piège, magie, effet.</li>
-      <li>Déclarez : "Je réagis avec une [carte/effet]" puis détaillez ou contactez l’arbitre.</li>
-    </ul>
-  </div>  <div class="section">
-    <h3>5. RÈGLES DE BASE</h3>
-    <ul>
-      <li>1 seule invocation normale par tour (hors effets).</li>
-      <li>3 actions majeures max par tour.</li>
-      <li>Les effets doivent être expliqués à l’arbitre.</li>
-      <li>Respecter les phases et leur ordre.</li>
-    </ul>
-  </div>  <div class="section">
-    <h3>6. COMMANDES UTILES</h3>
-    <ul>
-      <li><code>~deck</code> : Voir les decks disponibles</li>
-      <li><code>~deck [Nom]</code> : Choisir un deck</li>
-      <li><code>~carte</code> : Voir toutes les cartes</li>
-      <li><code>~carte [Nom]</code> : Afficher une carte</li>
-    </ul>
-  </div>  <div class="section">
-    <h3>RÈGLES DU SPEED DUEL</h3>
-    <ul>
-      <li><strong>LP :</strong> 4000 par joueur</li>
-      <li><strong>Deck :</strong> 20-30 cartes (max 3 exemplaires)</li>
-      <li><strong>Extra Deck :</strong> max 5 cartes (Fusion)</li>
-      <li><strong>Terrain :</strong> 6 zones (Deck, Extra Deck, Cimetière, Terrain, 3 Monstres, 3 Magies/Pièges)</li>
-      <li><strong>Tour :</strong> Piocher, poser/invoquer, attaquer</li>
-    </ul>
-    <p><strong>Position & Niveaux :</strong></p>
-    <ul>
-      <li>Niv 1-4 : Aucun tribut</li>
-      <li>Niv 5-6 : 1 tribut</li>
-      <li>Niv 7+ : 2 tributs</li>
-    </ul>
-    <p>Magies = jouables depuis la main. Pièges = posés, activables au tour suivant sauf exception.</p>
+  <h2>1. <strong>PR&Eacute;PARATION DU DUEL</strong></h2>
+  <ul>
+    <li>Chaque joueur choisit son deck via <code>.deck [nom]</code>. <em>Ex :</em> ~deck yami, ~deck kaiba, etc.</li>
+    <li>Le duel se joue sous la supervision d&rsquo;un arbitre (<em>modo</em>).</li>
+    <li>Chaque joueur commence avec <strong>4 cartes en main</strong>.</li>
+  </ul>
+
+  <h2>2. <strong>D&Eacute;ROULEMENT DU TOUR</strong></h2>
+  <ul>
+    <li>Le joueur divise ses actions en 3 pav&eacute;s, correspondant aux phases du tour.</li>
+    <li>Apr&egrave;s chaque pav&eacute;, il attend la validation de l&rsquo;arbitre et une &eacute;ventuelle r&eacute;action de l&rsquo;adversaire (cartes pi&egrave;ge, contre, etc.).</li>
+  </ul>
+
+  <h3>&#128221; Structure du Tour</h3>
+
+  <h4>Phase 1 : Pioche &amp; Main Phase 1</h4>
+  <p>Je pioche une carte.<br>
+  J&rsquo;invoque [Nom du monstre] en mode Attaque.<br>
+  Je pose 1 carte face cach&eacute;e.</p>
+  <p><em>➡️ Attendre la validation ou interruption avant de continuer.</em></p>
+
+  <h4>Phase 2 : Battle Phase</h4>
+  <p>[Monstre] attaque [Monstre adverse ou joueur].<br>
+  Dommages : [si calcul connu]</p>
+  <p><em>➡️ Attendre la validation ou interruption.</em></p>
+
+  <h4>Phase 3 : Main Phase 2 &amp; End Phase</h4>
+  <p>Je pose une carte magie face cach&eacute;e.<br>
+  Fin de mon tour.</p>
+
+  <h2>3. <strong>CARTES FACE CACH&Eacute;E &amp; EFFETS</strong></h2>
+  <ul>
+    <li>Toute carte pos&eacute;e face cach&eacute;e (magie/pi&egrave;ge) doit &ecirc;tre d&eacute;clar&eacute;e en priv&eacute; &agrave; l&rsquo;arbitre :</li>
+  </ul>
+  <p><code>Carte pos&eacute;e :</code> Les 7 Outils du Bandit<br>
+  <code>Effet :</code> Annule une carte pi&egrave;ge (co&ucirc;t 1000 LP)</p>
+  <p><strong>Lors de son activation :</strong><br>
+  &ldquo;J&rsquo;active ma carte pi&egrave;ge pos&eacute;e T1.&rdquo;<br>
+  <em>➡️ L&rsquo;arbitre confirme l&rsquo;effet.</em></p>
+
+  <h2>4. <strong>INTERRUPTIONS &amp; R&Eacute;ACTIONS</strong></h2>
+  <p>L&rsquo;adversaire peut r&eacute;agir entre chaque phase.<br>
+  <strong>Pour cela, il annonce :</strong><br>
+  &ldquo;Je r&eacute;agis avec une carte pi&egrave;ge/magie/effet.&rdquo;<br>
+  Ensuite, il d&eacute;crit l&rsquo;effet ou contacte l&rsquo;arbitre si c&rsquo;est une carte pos&eacute;e face cach&eacute;e.</p>
+
+  <h2>5. <strong>R&Egrave;GLES DE BASE</strong></h2>
+  <ul>
+    <li>1 seule invocation normale par tour (hors effets sp&eacute;ciaux).</li>
+    <li>Limite : 3 actions majeures par tour (ex : invocation + attaque + carte pos&eacute;e).</li>
+    <li>Tous les effets doivent &ecirc;tre clairement expliqu&eacute;s &agrave; l&rsquo;arbitre.</li>
+    <li>Respecter les phases, le rythme, et l&rsquo;arbitre.</li>
+  </ul>
+
+  <h2>6. <strong>COMMANDES UTILES</strong></h2>
+  <ul>
+    <li><code>~deck</code> : Voir les decks disponibles</li>
+    <li><code>~deck [Nom]</code> : Choisir un deck</li>
+    <li><code>~carte</code> : Voir toutes les cartes du jeu</li>
+    <li><code>~carte [Nom]</code> : Afficher la carte</li>
+  </ul>
+
+  <h3>&#128221; Mod&egrave;le de Tour</h3>
+
+  <strong>Phase 1 :</strong>
+  <p><strong>PLAYER :</strong><br>
+  Je pioche une carte.<br>
+  J&rsquo;invoque [Monstre].<br>
+  Je pose 1 carte face cach&eacute;e.</p>
+
+  <em>(Attente validation / r&eacute;action)</em>
+
+  <strong>Phase 2 :</strong>
+  <p>J&rsquo;attaque [Monstre/adversaire] avec [Monstre].<br>
+  <strong>Dommages :</strong> ...</p>
+
+  <em>(Attente validation / r&eacute;action)</em>
+
+  <strong>Phase 3 :</strong>
+  <p>Je pose 1 carte magie.<br>
+  Fin de mon tour.</p>
   </div></body>
 </html>`;
 
@@ -422,7 +724,7 @@ zokou(
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'yugioh_system.html',
-            caption: '*🎴 C\'est l\'heure du duel !*'
+            caption: '*🎴 C\'EST L\'HEURE DU DU...DU...DU...DUEL !*'
         }, { quoted: ms });
 
         unlinkSync(filename);
@@ -431,7 +733,7 @@ zokou(
 
 // Commande pour envoyer le système Speed Rush en HTML
 zokou(
-    { nomCom: 'speedrush_system', categorie: 'SPEED-RUSH' },
+    { nomCom: 'sr_system', categorie: 'SPEED-RUSH' },
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
 
@@ -439,7 +741,7 @@ zokou(
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>SPEED RUSH SYSTEM</title>
+    <title>SPEED RUSH SYSTEM – SRPN</title>
     <style>
         body {
             background-color: #1a1a1a;
@@ -566,7 +868,7 @@ Pièges, obstacles, explosions imprévisibles.
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'speedrush_system.html',
-            caption: '*🏎️ SPEED RUSH – SYSTÈME DE COURSE*'
+            caption: '*🏎️ SPEED RUSH – RP COURSE*'
         }, { quoted: ms });
 
         unlinkSync(filename);
