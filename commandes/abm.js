@@ -106,13 +106,39 @@ zokou(
 
             const equipe1 = equipe1Str.split(',').map(n => ({ nom: n.trim(), stats: { heart: 100, energie: 100, vie: 100 } }));
             const equipe2 = equipe2Str.split(',').map(n => ({ nom: n.trim(), stats: { heart: 100, energie: 100, vie: 100 } }));
-            const areneT = tirerArABM();
 
+            const areneT = tirerArABM();
             const duelKey = `${equipe1Str} vs ${equipe2Str}`;
-            duelsABM[duelKey] = { equipe1, equipe2, statsCustom: statsCustom || 'Aucune stat personnalisée', arene: areneT };
+            duelsABM[duelKey] = {
+                equipe1,
+                equipe2,
+                statsCustom: statsCustom || 'Aucune stat personnalisée',
+                arene: areneT
+            };
 
             const ficheDuel = generateFicheDuelABM(duelsABM[duelKey]);
-            await zk.sendMessage(dest, { image: { url: areneT.image }, caption: ficheDuel }, { quoted: ms });
+
+            // 1. Envoi de l'arène avec la fiche
+            await zk.sendMessage(dest, {
+                image: { url: areneT.image },
+                caption: ficheDuel
+            }, { quoted: ms });
+
+            // 2. Envoi d’un seul pavé vide pour le RP combat
+            const modelePave = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓[PAVE ABM]▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*[Perso] :*
+
+> ▪️ [Décris tes actions RP ici]
+
+*💠 TECHNIQUES :* 
+*📌 DISTANCE :* 
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+
+            await zk.sendMessage(dest, { text: modelePave }, { quoted: ms });
 
         } catch (error) {
             console.error('Erreur lors du duel ABM:', error);
@@ -285,28 +311,33 @@ ${course.pilote3 ? `*🏎️ ${course.pilote3.nom} :*\n> 🚘: ${course.pilote3.
 // Commande pour démarrer une course
 zokou(
   { nomCom: 'sr_rule', categorie: 'SPEED-RUSH' },
-  (dest, zk, { repondre, arg, ms }) => {
+  async (dest, zk, { repondre, arg, ms }) => {
     if (arg.length < 2) {
       return repondre('*Usage:* -sr_rule pilote1 pilote2 [pilote3] / <tourneur> <master> <conditions> <depart>');
     }
 
     try {
       const [pilotesStr, detailsCourse] = arg.join(' ').split('/').map(p => p.trim());
-      const pilotes = pilotesStr.split(' ').map(p => ({ nom: p.trim(), stats: { voiture: 100, essence: 100, turbo: 100 } }));
+      const pilotes = pilotesStr.split(' ').map(p => ({
+        nom: p.trim(),
+        stats: { voiture: 100, essence: 100, turbo: 100 }
+      }));
 
       if (pilotes.length < 2 || pilotes.length > 3) {
         return repondre('Il faut 2 ou 3 pilotes pour démarrer une course.');
       }
 
-      const [tourneur, master, conditions, depart] = detailsCourse ? detailsCourse.split(' ').map(p => p.trim()) : ['Auto', 'Auto', 'Sec', 'Ligne'];
+      const [tourneur, master, conditions, depart] = detailsCourse
+        ? detailsCourse.split(' ').map(p => p.trim())
+        : ['Auto', 'Auto', 'Sec', 'Ligne'];
 
       const circuit = tirerCircuitSpeedRush();
 
-      const courseKey = `${pilotes[0].nom} vs ${pilotes[1].nom}${pilotes.length === 3 ? ' vs ' + pilotes[2].nom : ''}`;
+      const courseKey = `${pilotes[0].nom} vs ${pilotes[1].nom}${pilotes[2] ? ' vs ' + pilotes[2].nom : ''}`;
       coursesSpeedRush[courseKey] = {
         pilote1: pilotes[0],
         pilote2: pilotes[1],
-        pilote3: pilotes.length === 3 ? pilotes[2] : null,
+        pilote3: pilotes[2] || null,
         tourneur,
         master,
         conditions,
@@ -315,7 +346,46 @@ zokou(
       };
 
       const ficheCourse = generateFicheCourseSpeedRush(coursesSpeedRush[courseKey]);
-      zk.sendMessage(dest, { image: { url: circuit.image }, caption: ficheCourse }, { quoted: ms });
+
+      // 1. Envoi de la fiche + image
+      await zk.sendMessage(dest, {
+        image: { url: circuit.image },
+        caption: ficheCourse
+      }, { quoted: ms });
+
+      // 2. Pavé pour les joueurs
+      const paveJoueur = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[PAVÉ PILOTE]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*🚗 Pilote :* [Ton nom ici]
+
+> ▪️ [Décris ta manœuvre RP ici (accélération, esquive, turbo...)]
+———————————————————
+*| ⛽ : 100 | 🛢️ : 100 | 🚘 : 100 |*
+
+*📦 Gadgets utilisés :* ...  
+*🎯 Position actuelle :* ...
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+
+      // 3. Pavé pour le superviseur
+      const paveSuperviseur = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+*.......| 🏁 SPEED RUSH 🏁 |......*
+
+> ▪️*[Pilote 1]*
+
+> ▪️*[Pilote 2]*
+
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+
+      // Envoi pavé joueur
+      await zk.sendMessage(dest, { text: paveJoueur }, { quoted: ms });
+
+      // Envoi pavé superviseur
+      await zk.sendMessage(dest, { text: paveSuperviseur }, { quoted: ms });
 
     } catch (error) {
       console.error('Erreur lors du démarrage de la course Speed Rush:', error);
