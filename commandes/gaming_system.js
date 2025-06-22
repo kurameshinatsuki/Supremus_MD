@@ -543,39 +543,56 @@ zokou(
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YU-GI-OH! SPEED DUEL – GAMEPLAY SRPN</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #f8f8f8;
-      padding: 2rem;
-      line-height: 1.6;
-    }
-    h1, h2, h3 {
-      color: #ffe600;
-      text-align: center;
-    }
-    .section {
-      margin: 2rem 0;
-      padding: 1rem;
-      background-color: #1f1f1f;
-      border-left: 5px solid #ffcc00;
-    }
-    code {
-      background: #333;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-size: 0.95em;
-    }
-    ul {
-      padding-left: 1.2rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    .highlight {
-      color: #00ffff;
-    }
-  </style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #121212;
+    color: #f8f8f8;
+    padding: 1rem;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  h1, h2, h3 {
+    color: #ffe600;
+    text-align: center;
+    margin: 0.5rem 0;
+    font-size: 18px;
+  }
+
+  .section {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    background-color: #1f1f1f;
+    border-left: 4px solid #ffcc00;
+    border-radius: 4px;
+  }
+
+  code {
+    background: #333;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  ul {
+    padding-left: 1.1rem;
+    margin: 0.5rem 0;
+  }
+
+  li {
+    margin-bottom: 0.3rem;
+  }
+
+  .highlight {
+    color: #00ffff;
+    font-weight: bold;
+  }
+
+  .small {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+</style>
 </head>
 <body>
   <h1>🎴 YU-GI-OH! SPEED DUEL 🎴</h1>
