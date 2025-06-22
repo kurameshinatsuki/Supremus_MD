@@ -1,6 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { writeFileSync, readFileSync, unlinkSync } = require('fs');
-const { randomInt } = require('crypto');
+const fs = require('fs');
 
 zokou( { nomCom: 'asura', categorie: 'ORIGAMY' }, async (dest, zk, commandeOptions) => { const { repondre, arg, ms } = commandeOptions;
 
@@ -366,7 +365,7 @@ zokou(
 const path = require('path');
 
 zokou(
-  { nomCom: 'origamy_visuel', categorie: 'CENTRAL' },
+  { nomCom: 'origamy_visuel', categorie: 'ORIGAMY' },
   async (dest, zk, commandeOptions) => {
     const { ms, superUser, repondre } = commandeOptions;
 
@@ -458,11 +457,11 @@ zokou(
 
     // Sauvegarde dans /mnt/data
     const chemin = '/mnt/data/origamy_galerie.html';
-    writeFileSync(chemin, htmlContent);
+    fs.writeFileSync(chemin, htmlContent);
 
     // Envoi du fichier
     await zk.sendMessage(dest, {
-      document: readFileSync(chemin),
+      document: fs.readFileSync(chemin),
       fileName: 'origamy_galerie.html',
       mimetype: 'text/html',
       caption: '*📸 ORIGAMY WORLD – GALERIE*'
