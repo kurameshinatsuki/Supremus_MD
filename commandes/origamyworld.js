@@ -1,17 +1,151 @@
 const { zokou } = require('../framework/zokou');
 
+zokou( { nomCom: 'asura', categorie: 'ORIGAMY' }, async (dest, zk, commandeOptions) => { const { repondre, arg, ms } = commandeOptions;
 
-zokou(
-    {
-        nomCom: 'map_astoria',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
+const cartes = {
+  centre: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*\`↔️ CENTRE DE LA RÉGION ↕️\`*
 
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+> *🏰 Astoria, Capitale :* (X: 0, Y: 0)  
+> Cœur politique et militaire d’Asura, ville cosmopolite abritant guildes de marchands, académies de magie et arènes de gladiateurs. Vous y pourriez y vivre paisiblement et trouver du travail.
+> 
+> *🌿 Plaine d’Eldoria :* (X: 0, Y: ±5)  
+> Champs fertiles et pâturages bordant la capitale, peuplés de cerfs d’argent et de faucons royaux dressés par les chasseurs locaux. Vous pourriez y rencontré des marchands voyageurs en déplacement où mêmes des créatures sauvages.
+> 
+> *🌊 Rivière d’Azurine :* (X: 3, Y: 0)  
+> Source de vie pour la région, où pêchent des pêcheurs spécialisés dans la capture des Carpes d’Azur, prisées pour leurs écailles scintillantes. Vous pourriez y péché 🎣 si vous possédez un appât.
+> - *🌉 Pont de l’Alliance :* (X: 3, Y: -1)  
+> Un pont monumental, symbole de paix entre les royaumes voisins. Vous devrez la traversé pour rejoindre Astoria ou la quitté.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  nord: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+          *\`⬆️ ZONE NORD ⬆️\`*
+
+> *🏞️ Vallée des Brumes :* (X: 0, Y: 12)  
+> Lieu mystique où le brouillard ne se lève jamais. Les esprits des anciens rois y apparaissent parfois aux voyageurs égarés.  
+> - *🔮 Autel des Échos :* (X: 1, Y: 13)  
+> Un site sacré où les oracles viennent écouter les voix du passé.
+> 
+> *⚔️ Forteresse de Durnholm :* (X: 10, Y: 15)  
+> Bastion imprenable, gardé par les Chevaliers de l’Ordre d’Argent.  
+> - *🏹 Garnison Nord :* (X: 11, Y: 15)  
+> Base de formation des archers d’élite, spécialisés dans les tirs à longue distance.
+> 
+> *🌊 Lac Céleste :* (X: -8, Y: 18)  
+> Un lac pur aux eaux cristallines, réputé pour ses propriétés guérisseuses et ses poissons aux reflets d’étoile. 
+> - *🎣 Village de Nymir :* (X: -8, Y: 17)  
+> Communauté de pêcheurs vivant en harmonie avec les Ondins, esprits aquatiques du lac. Vous y trouverez les meilleurs remèdes naturels de tout Asura.
+> 
+> *🏔️ Monts de Glacepierre :* (X: -12, Y: 20)
+> Une chaîne de montagnes glacées où règnent le froid et les créatures des neiges.
+> - *🛡️ Bastion de Frigelance :* (X: -11, Y: 21)
+> Gardé par les Guerriers du Givre, spécialistes en combat en milieu gelé.
+> - *🌨️ Toundra de Givrebrume :* (X: -15, Y: 25)
+> Une vaste plaine enneigée où les tempêtes de neige réduisent la visibilité à quelques mètres.
+> - *🏚️ Refuge de l’Ourse :* (X: -16, Y: 26)
+Un abri sommaire pour les voyageurs piégés par les blizzards.
+> 
+> *🏰 Fort de Givrecœur :* (X: -9, Y: 23)
+> Une forteresse austère où la garde veille contre les créatures de glace.
+> - *❄️ Garnison des Glaces :* (X: -8, Y: 24)
+> Unité de soldats portant des armures renforcées contre le froid mordant.
+> 
+> *🌲 Forêt Boréale :* (X: -10, Y: 18)
+> Une forêt dense d’arbres au tronc gelé, abritant des créatures mystiques et des esprits anciens.
+> - *🏡 Village d’Icethorn :* (X: -11, Y: 19)
+> Peuplé de chasseurs et de trappeurs vivant en symbiose avec la nature glaciale.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  sud: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+           *\`⬇️ ZONE SUD ⬇️\`*
+
+> *⛩️ Port de Vaeloria :* (X: 0, Y: -12)  
+> Situé au sud de la capitale, ce port florissant est le centre du commerce maritime et de la défense navale d’Asura.  
+> - *⚓ Chantier Naval :* (X: 1, Y: -12)  
+> Ici, charpentiers de marine et forgerons travaillent à la construction et réparation des navires de commerce et de guerre. Vous pourriez y trouvé du Fer (🗜️).
+> - *🏚️ Quartier des Dockers :* (X: -1, Y: -12)  
+> Ce district animé abrite marins, pêcheurs et marchands venus de contrées lointaines. Taverne des Vents Salés, repaire de contrebandiers, y prospère.
+> 
+> *🏞️ Marais de Sélène :* (X: 5, Y: -9)  
+> Zone marécageuse recouverte de brume, refuge d’alchimistes et de créatures telles que les Nagas des Brumes et les Grenouilles Luminescentes. Certains disent que les sorciers y pratiquent d’anciens rituels interdits. Vous pourriez y trouvé du poisson (🐟) et des herbes médicinales (🌿).
+> 
+> *🏡 Village de Loryn :* (X: -8, Y: -10)  
+> Au sud-ouest d’Astoria, ce village agricole nourrit la capitale. Ses habitants sont réputés pour leur pain de blé doré et leur cidre de pomme. 
+> - *🌾 Champs Dorés :* (X: -9, Y: -10)  
+> Immenses champs de blé où travaillent fermiers et bœufs mécaniques enchantés.  
+> - *🐄 Ferme d’Eldrin :* (X: -8, Y: -11)  
+> Élevage de bovins à la viande réputée. La traite des vaches célestes, aux propriétés curatives, est un rituel sacré.
+> Vous y trouverez toutes sortes de nourriture, fruits, légumes et viandes.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  est: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+           *\`⬅️ ZONE EST ⬅️\`*
+
+> *🌲 Forêt de Sylvara :* (X: 10, Y: 0)  
+> Vaste forêt magique, abritant les mystérieux Druides Sylvariens, les Lynx Ombrefeu et les Elfes Nocturnes.  
+> - *🏕️ Camp des Veilleurs :* (X: 11, Y: 2)  
+> Garnison de rôdeurs protégeant la forêt contre les braconniers et les pillards.  
+> - *🦉 Clairière des Anciens :* (X: 9, Y: -1)  
+> Sanctuaire naturel où d’anciens esprits murmurent des secrets aux élus.
+> Vous y trouverez une variété de ressources, fruits(🍇), légumes(🥕), plantes médicinales (🌱), plantes toxiques (☠️), bois (🪵), mousses (🌿), animaux sauvages (🐺), créatures magiques (🦄) et herbes magiques (🪷). 
+> 
+> *🎭 Cité de Velmira :* (X: 20, Y: 0)  
+> Berceau de la culture, connue pour ses festivals de masques et son art raffiné.  
+> - *🏟️ Théâtre d’Opaline :* (X: 21, Y: 1)  
+> Grand amphithéâtre où se jouent tragédies et épopées légendaires.  
+> - *🖌️ Atelier d’Auriel :* (X: 20, Y: -1)  
+> Lieu de création artistique où peintres et sculpteurs façonnent des œuvres enchantées.
+> 
+> *🏜️ Désert de Sablechant :* (X: 25, Y: -5)
+> Une mer de dunes dorées où le vent chante des mélodies anciennes. On dit que les esprits des nomades reposent sous les vagues de sable. L’effet de canicule influence grandement vos hearts et soif mais aussi la disponibilité des ressources.
+> - *🏯 Oasis de Kherem :* (X: 27, Y: -6)
+> Un havre de fraîcheur où les voyageurs se reposent et échangent des histoires autour du feu.
+> - *🐫 Camp des Sables Ardents :* (X: 26, Y: -4)
+> Base des tribus nomades spécialisées dans l’élevage de chameaux rapides et résistants. Vous pourriez y loué une monture mais attention aux conditions de location.
+> 
+> *🏰 Citadelle d’Al-Zahir :* (X: 30, Y: -10)
+> Une forteresse massive aux murs d’argile, défendant la région contre les bandits du désert.
+> - *⚔️ Garnison des Sables :* (X: 29, Y: -11)
+> Unité d’élite entraînée à la survie en milieu aride et aux combats sous la chaleur.
+> 
+> *🌅 Canyon de Feu :* (X: 23, Y: -3)
+> Formation rocheuse aux teintes rouges et orangées, réputée pour ses tempêtes de sable brûlant.
+> - *⛺ Camp des Prospecteurs :* (X: 22, Y: -2)
+> Explorateurs et mineurs cherchant des pierres précieuses enfouies dans le sable.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  ouest: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+       *\`➡️ ZONE OUEST ➡️\`*
+
+> *⛰️ Chaîne des Brisecimes :* (X: -15, Y: 0)  
+> À l’ouest d’Astoria, ces montagnes escarpées regorgent de créatures féroces telles que les Griffons Sombres et les Trolls des Cavernes. Vous y trouverez des herbes médicinales (🌿) et des pierres (🪨).
+> - *⛏️ Mine d’Onyx :* (X: -16, Y: -1)  
+> Exploitation de minerais rares comme l’Onyx du Crépuscule et l’Argent Mystique, indispensables aux forgerons runiques. Vous y trouverez toutes sortes de minerais et métaux, diamant (💎), or (🥇), dwarven (🔩), mithril (🪝) et fer (🗜️).
+> - *🏔️ Sommet du Titan :* (X: -15, Y: 3)  
+> Le plus haut sommet de la région. Des ermites et moines Sha’kar y méditent sous des vents glacés. Vous pourriez y rencontré des créatures des neiges ou peut-être même le Grand Dragon Blanc aux Yeux Bleus.
+> 
+> *🏘️ Hameau d’Alderon :* (X: -12, Y: -7)  
+> Village de bûcherons et d’artisans, réputé pour ses sculptures et ses arcs en bois d’if.  
+> - *🪓 Scierie de Garn :* (X: -13, Y: -7)  
+> Centre de transformation du bois, alimenté par des golems de pierre.  
+> - *🎭 Taverne du Voyageur :* (X: -12, Y: -6)  
+> Un lieu de halte où troubadours et mercenaires échangent nouvelles et secrets.
+> 
+> *🏚️ Ruines de Valmora :* (X: -15, Y: 5)  
+> Vestiges d’une cité ancienne engloutie par la forêt. On dit que les âmes des anciens rois y errent encore, veillant sur un trésor oublié. Vous y trouverez sûrement des trésors mais peut-être aussi la mort.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  capital: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASTORIA]▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
           *\`⬇️ ZONE SUD ⬇️\`*
@@ -114,234 +248,19 @@ zokou(
 > Dépôt secret renfermant les armes les plus précieuses du royaume.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
  *▓▓▓▓▓▓[À SUIVRE...]▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
+};
 
-        }
-    }
-);
+const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
+const key = (arg[0] || '').toLowerCase();
 
-zokou(
-    {
-        nomCom: 'centre_asura',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
+if (!cartes[key]) {
+  return repondre(`*Usage :* -asura centre | nord | sud | est | ouest | capital`);
+}
 
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*\`↔️ CENTRE DE LA RÉGION ↕️\`*
+zk.sendMessage(dest, { image: { url: lien }, caption: cartes[key] }, { quoted: ms });
 
-> *🏰 Astoria, Capitale :* (X: 0, Y: 0)  
-> Cœur politique et militaire d’Asura, ville cosmopolite abritant guildes de marchands, académies de magie et arènes de gladiateurs. Vous y pourriez y vivre paisiblement et trouver du travail.
-> 
-> *🌿 Plaine d’Eldoria :* (X: 0, Y: ±5)  
-> Champs fertiles et pâturages bordant la capitale, peuplés de cerfs d’argent et de faucons royaux dressés par les chasseurs locaux. Vous pourriez y rencontré des marchands voyageurs en déplacement où mêmes des créatures sauvages.
-> 
-> *🌊 Rivière d’Azurine :* (X: 3, Y: 0)  
-> Source de vie pour la région, où pêchent des pêcheurs spécialisés dans la capture des Carpes d’Azur, prisées pour leurs écailles scintillantes. Vous pourriez y péché 🎣 si vous possédez un appât.
-> - *🌉 Pont de l’Alliance :* (X: 3, Y: -1)  
-> Un pont monumental, symbole de paix entre les royaumes voisins. Vous devrez la traversé pour rejoindre Astoria ou la quitté.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-
-        }
-    }
-);
-
-zokou(
-    {
-        nomCom: 'nord_asura',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-          *\`⬆️ ZONE NORD ⬆️\`*
-
-> *🏞️ Vallée des Brumes :* (X: 0, Y: 12)  
-> Lieu mystique où le brouillard ne se lève jamais. Les esprits des anciens rois y apparaissent parfois aux voyageurs égarés.  
-> - *🔮 Autel des Échos :* (X: 1, Y: 13)  
-> Un site sacré où les oracles viennent écouter les voix du passé.
-> 
-> *⚔️ Forteresse de Durnholm :* (X: 10, Y: 15)  
-> Bastion imprenable, gardé par les Chevaliers de l’Ordre d’Argent.  
-> - *🏹 Garnison Nord :* (X: 11, Y: 15)  
-> Base de formation des archers d’élite, spécialisés dans les tirs à longue distance.
-> 
-> *🌊 Lac Céleste :* (X: -8, Y: 18)  
-> Un lac pur aux eaux cristallines, réputé pour ses propriétés guérisseuses et ses poissons aux reflets d’étoile. 
-> - *🎣 Village de Nymir :* (X: -8, Y: 17)  
-> Communauté de pêcheurs vivant en harmonie avec les Ondins, esprits aquatiques du lac. Vous y trouverez les meilleurs remèdes naturels de tout Asura.
-> 
-> *🏔️ Monts de Glacepierre :* (X: -12, Y: 20)
-> Une chaîne de montagnes glacées où règnent le froid et les créatures des neiges.
-> - *🛡️ Bastion de Frigelance :* (X: -11, Y: 21)
-> Gardé par les Guerriers du Givre, spécialistes en combat en milieu gelé.
-> - *🌨️ Toundra de Givrebrume :* (X: -15, Y: 25)
-> Une vaste plaine enneigée où les tempêtes de neige réduisent la visibilité à quelques mètres.
-> - *🏚️ Refuge de l’Ourse :* (X: -16, Y: 26)
-Un abri sommaire pour les voyageurs piégés par les blizzards.
-> 
-> *🏰 Fort de Givrecœur :* (X: -9, Y: 23)
-> Une forteresse austère où la garde veille contre les créatures de glace.
-> - *❄️ Garnison des Glaces :* (X: -8, Y: 24)
-> Unité de soldats portant des armures renforcées contre le froid mordant.
-> 
-> *🌲 Forêt Boréale :* (X: -10, Y: 18)
-> Une forêt dense d’arbres au tronc gelé, abritant des créatures mystiques et des esprits anciens.
-> - *🏡 Village d’Icethorn :* (X: -11, Y: 19)
-> Peuplé de chasseurs et de trappeurs vivant en symbiose avec la nature glaciale.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-
-        }
-    }
-);
-
-zokou(
-    {
-        nomCom: 'sud_asura',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *\`⬇️ ZONE SUD ⬇️\`*
-
-> *⛩️ Port de Vaeloria :* (X: 0, Y: -12)  
-> Situé au sud de la capitale, ce port florissant est le centre du commerce maritime et de la défense navale d’Asura.  
-> - *⚓ Chantier Naval :* (X: 1, Y: -12)  
-> Ici, charpentiers de marine et forgerons travaillent à la construction et réparation des navires de commerce et de guerre. Vous pourriez y trouvé du Fer (🗜️).
-> - *🏚️ Quartier des Dockers :* (X: -1, Y: -12)  
-> Ce district animé abrite marins, pêcheurs et marchands venus de contrées lointaines. Taverne des Vents Salés, repaire de contrebandiers, y prospère.
-> 
-> *🏞️ Marais de Sélène :* (X: 5, Y: -9)  
-> Zone marécageuse recouverte de brume, refuge d’alchimistes et de créatures telles que les Nagas des Brumes et les Grenouilles Luminescentes. Certains disent que les sorciers y pratiquent d’anciens rituels interdits. Vous pourriez y trouvé du poisson (🐟) et des herbes médicinales (🌿).
-> 
-> *🏡 Village de Loryn :* (X: -8, Y: -10)  
-> Au sud-ouest d’Astoria, ce village agricole nourrit la capitale. Ses habitants sont réputés pour leur pain de blé doré et leur cidre de pomme. 
-> - *🌾 Champs Dorés :* (X: -9, Y: -10)  
-> Immenses champs de blé où travaillent fermiers et bœufs mécaniques enchantés.  
-> - *🐄 Ferme d’Eldrin :* (X: -8, Y: -11)  
-> Élevage de bovins à la viande réputée. La traite des vaches célestes, aux propriétés curatives, est un rituel sacré.
-> Vous y trouverez toutes sortes de nourriture, fruits, légumes et viandes.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-
-        }
-    }
-);
-
-zokou(
-    {
-        nomCom: 'est_asura',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-           *\`⬅️ ZONE EST ⬅️\`*
-
-> *🌲 Forêt de Sylvara :* (X: 10, Y: 0)  
-> Vaste forêt magique, abritant les mystérieux Druides Sylvariens, les Lynx Ombrefeu et les Elfes Nocturnes.  
-> - *🏕️ Camp des Veilleurs :* (X: 11, Y: 2)  
-> Garnison de rôdeurs protégeant la forêt contre les braconniers et les pillards.  
-> - *🦉 Clairière des Anciens :* (X: 9, Y: -1)  
-> Sanctuaire naturel où d’anciens esprits murmurent des secrets aux élus.
-> Vous y trouverez une variété de ressources, fruits(🍇), légumes(🥕), plantes médicinales (🌱), plantes toxiques (☠️), bois (🪵), mousses (🌿), animaux sauvages (🐺), créatures magiques (🦄) et herbes magiques (🪷). 
-> 
-> *🎭 Cité de Velmira :* (X: 20, Y: 0)  
-> Berceau de la culture, connue pour ses festivals de masques et son art raffiné.  
-> - *🏟️ Théâtre d’Opaline :* (X: 21, Y: 1)  
-> Grand amphithéâtre où se jouent tragédies et épopées légendaires.  
-> - *🖌️ Atelier d’Auriel :* (X: 20, Y: -1)  
-> Lieu de création artistique où peintres et sculpteurs façonnent des œuvres enchantées.
-> 
-> *🏜️ Désert de Sablechant :* (X: 25, Y: -5)
-> Une mer de dunes dorées où le vent chante des mélodies anciennes. On dit que les esprits des nomades reposent sous les vagues de sable. L’effet de canicule influence grandement vos hearts et soif mais aussi la disponibilité des ressources.
-> - *🏯 Oasis de Kherem :* (X: 27, Y: -6)
-> Un havre de fraîcheur où les voyageurs se reposent et échangent des histoires autour du feu.
-> - *🐫 Camp des Sables Ardents :* (X: 26, Y: -4)
-> Base des tribus nomades spécialisées dans l’élevage de chameaux rapides et résistants. Vous pourriez y loué une monture mais attention aux conditions de location.
-> 
-> *🏰 Citadelle d’Al-Zahir :* (X: 30, Y: -10)
-> Une forteresse massive aux murs d’argile, défendant la région contre les bandits du désert.
-> - *⚔️ Garnison des Sables :* (X: 29, Y: -11)
-> Unité d’élite entraînée à la survie en milieu aride et aux combats sous la chaleur.
-> 
-> *🌅 Canyon de Feu :* (X: 23, Y: -3)
-> Formation rocheuse aux teintes rouges et orangées, réputée pour ses tempêtes de sable brûlant.
-> - *⛺ Camp des Prospecteurs :* (X: 22, Y: -2)
-> Explorateurs et mineurs cherchant des pierres précieuses enfouies dans le sable.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-
-        }
-    }
-);
-
-zokou(
-    {
-        nomCom: 'ouest_asura',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-       *\`➡️ ZONE OUEST ➡️\`*
-
-> *⛰️ Chaîne des Brisecimes :* (X: -15, Y: 0)  
-> À l’ouest d’Astoria, ces montagnes escarpées regorgent de créatures féroces telles que les Griffons Sombres et les Trolls des Cavernes. Vous y trouverez des herbes médicinales (🌿) et des pierres (🪨).
-> - *⛏️ Mine d’Onyx :* (X: -16, Y: -1)  
-> Exploitation de minerais rares comme l’Onyx du Crépuscule et l’Argent Mystique, indispensables aux forgerons runiques. Vous y trouverez toutes sortes de minerais et métaux, diamant (💎), or (🥇), dwarven (🔩), mithril (🪝) et fer (🗜️).
-> - *🏔️ Sommet du Titan :* (X: -15, Y: 3)  
-> Le plus haut sommet de la région. Des ermites et moines Sha’kar y méditent sous des vents glacés. Vous pourriez y rencontré des créatures des neiges ou peut-être même le Grand Dragon Blanc aux Yeux Bleus.
-> 
-> *🏘️ Hameau d’Alderon :* (X: -12, Y: -7)  
-> Village de bûcherons et d’artisans, réputé pour ses sculptures et ses arcs en bois d’if.  
-> - *🪓 Scierie de Garn :* (X: -13, Y: -7)  
-> Centre de transformation du bois, alimenté par des golems de pierre.  
-> - *🎭 Taverne du Voyageur :* (X: -12, Y: -6)  
-> Un lieu de halte où troubadours et mercenaires échangent nouvelles et secrets.
-> 
-> *🏚️ Ruines de Valmora :* (X: -15, Y: 5)  
-> Vestiges d’une cité ancienne engloutie par la forêt. On dit que les âmes des anciens rois y errent encore, veillant sur un trésor oublié. Vous y trouverez sûrement des trésors mais peut-être aussi la mort.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-            zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-
-        }
-    }
-);
+} );
 
 zokou(
     {
@@ -406,30 +325,30 @@ zokou(
 > Dans l'univers fascinant d'Origamy World, les légendes racontent l'existence de puissantes divinités anciennes, gardiennes d'artefacts aux pouvoirs uniques et redoutables. Ces artefacts, disséminés dans des temples mystérieux, recèlent des capacités capables de renverser le destin d'un royaume ou d'octroyer à leur porteur une puissance divine.
 
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▷ Les Temples Mystérieux :*
+*▷ LES TEMPLES MYSTÉRIEUX :*
 
 > Chaque temple est un chef-d'œuvre d'architecture ancienne, dissimulé dans des lieux où la nature reprend ses droits. Montagnes escarpées, jungles luxuriantes, cavernes profondes et îles perdues en mer abritent ces édifices, chacun dédié à une divinité spécifique. Les épreuves à l'intérieur sont autant de défis que d'énigmes, conçues pour tester la valeur, la force ou la sagesse de ceux qui osent s'y aventurer. Seuls les élus parviendront à surmonter les dangers et à arracher l'artefact sacré de son socle.
 
 > Ces épreuves peuvent inclure des énigmes millénaires, des combats contre des créatures mythiques ou des parcours semés de pièges mortels. Une fois l'artefact obtenu, son porteur devient la cible de quiconque convoite son pouvoir.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*▷ Les Différentes Catégories :* 
+*▷ LES DIFFÉRENTES CATÉGORIES :* 
 
 > Au cœur d'Origamy World, les habitants et combattants se divisent en trois grandes catégories, chacune dotée d'un potentiel unique et distinct.
 
-1. *Les Profanes : Ces créatures sont incapables d'utiliser la magie, mais leur restriction compensent cette carence par un potentiel physique hors norme. Leur corps est une arme vivante, capable de performances surpassant l'entendement humain. Il peuvent possédé jusqu'à 2 potentiel exceptionnel, utiliser l'overdrive sans restriction, Par exemple : Se déplacer à une vitesse fulgurante, esquivant les attaques en un éclair. Briser la roche d’un coup de poing et soulever des poids titanesques. Endurer des coups mortels sans faiblir. Effectuer des acrobaties impossibles avec précision et fluidité. Répondre aux attaques adverses avant même qu'elles ne soient pleinement déclenchées. 
+1. *🔻LES PROFANES :* Ces créatures sont incapables d'utiliser la magie, mais leur restriction compensent cette carence par un potentiel physique hors norme. Leur corps est une arme vivante, capable de performances surpassant l'entendement humain. Il peuvent possédé jusqu'à 2 potentiel exceptionnel, utiliser l'overdrive sans restriction, *Par exemple :* Se déplacer à une vitesse fulgurante, esquivant les attaques en un éclair. Briser la roche d’un coup de poing et soulever des poids titanesques. Endurer des coups mortels sans faiblir. Effectuer des acrobaties impossibles avec précision et fluidité. Répondre aux attaques adverses avant même qu'elles ne soient pleinement déclenchées. 
 
 > Ces combattants sont souvent des mercenaires, des gladiateurs ou des protecteurs de villages, usant de leur force brute pour dominer le champ de bataille.
 
-2. *Les Mononature :* Ces individus sont capables d'utiliser une seule nature magique, mais peuvent la décliner sous différentes formes de techniques. Ils exploitent leur affinité avec une nature spécifique pour façonner des stratégies complexes. Par exemple : Feu : Créer des flammes tourbillonnantes, des murs de feu ou des explosions ardentes. Eau : Générer des vagues destructrices, des lames d'eau ou de la vapeur brûlante. Gravité : Manipuler la pesanteur pour écraser ou alléger des objets. Téléportation : Se déplacer instantanément d'un point à un autre ou échanger de place.
+2. *🔹LES MONONATURE :* Ces individus sont capables d'utiliser une seule nature magique, mais peuvent la décliner sous différentes formes de techniques. Ils exploitent leur affinité avec une nature spécifique pour façonner des stratégies complexes. *Par exemple :* Feu : Créer des flammes tourbillonnantes, des murs de feu ou des explosions ardentes. Eau : Générer des vagues destructrices, des lames d'eau ou de la vapeur brûlante. Gravité : Manipuler la pesanteur pour écraser ou alléger des objets. Téléportation : Se déplacer instantanément d'un point à un autre ou échanger de place.
 
 > Les magiciens mononature sont des experts de leur élément, développant des techniques raffinées et variées pour exploiter au mieux leur potentiel. Leur diversité tactique les rend imprévisibles en combat.
 
-3. *Les Arcanistes :* Ces êtres rares possèdent la capacité de manipuler plusieurs natures magiques, mais avec une contrainte majeure : une seule technique par nature. Par exemple : Téléportation Rapide : Se déplacer d'un point A à un point B. Bouclier de Feu : Former une barrière enflammée pour se protéger. Griffe de Glace : Créer une griffe tranchante en glace pure. Et Orbe de Gravité : Condenser la pesanteur en une sphère pour attirer les ennemis.
+3. *🔺LES ARCANISTES :* Ces êtres rares possèdent la capacité de manipuler plusieurs natures magiques, mais avec une contrainte majeure : une seule technique par nature. *Par exemple :* Téléportation Rapide : Se déplacer d'un point A à un point B. Bouclier de Feu : Former une barrière enflammée pour se protéger. Griffe de Glace : Créer une griffe tranchante en glace pure. Et Orbe de Gravité : Condenser la pesanteur en une sphère pour attirer les ennemis.
 
 > Bien que moins polyvalents dans chaque élément, leur capacité à puiser dans plusieurs arts magiques fait d'eux des stratèges redoutables, capables de surprendre leurs adversaires avec des combinaisons inattendues.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 
-▷ *La Quête des Artefacts :* 
+▷ *LA QUÊTE DES ARTEFACTS :* 
 
 > Peu importe leur catégorie, les aventuriers d'Origamy World cherchent à obtenir les artefacts pour devenir des légendes vivantes. Pourtant, posséder un artefact n'est que le début, car sa maîtrise nécessite de l'entraînement, de la force d'âme et de la volonté pour ne pas se laisser consumer par son pouvoir.
 
@@ -441,19 +360,20 @@ zokou(
     }
 );
 
+const fs = require('fs');
+const path = require('path');
+
 zokou(
-    { nomCom: 'astoria_visuel', categorie: 'CENTRAL' },
-    async (dest, zk, commandeOptions) => {
-        const { ms, superUser, repondre } = commandeOptions;
+  { nomCom: 'origamy_visuel', categorie: 'CENTRAL' },
+  async (dest, zk, commandeOptions) => {
+    const { ms, superUser, repondre } = commandeOptions;
 
-        // Vérification si l'utilisateur est un super utilisateur
-        if (!superUser) {
-            return repondre("❌ Accès refusé : vous n'êtes pas autorisé à exécuter cette commande !");
-        }
+    if (!superUser) {
+      return repondre("❌ Accès refusé : vous n'êtes pas autorisé à exécuter cette commande !");
+    }
 
-        // Liste des liens d'images
-        const liens = [
-            'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg',
+    const liens = [ 
+          'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg',
             'https://i.ibb.co/G3ztCpW/20240927-230914.jpg',
             'https://i.ibb.co/vmN0SSr/20240927-231229.jpg',
             'https://i.ibb.co/mBqrG20/20240927-233225.jpg',
@@ -486,12 +406,63 @@ zokou(
             'https://i.ibb.co/thkwBjn/20240927-234927.jpg',
             'https://i.ibb.co/Kh3JdMK/20240927-221342.jpg',
             'https://i.ibb.co/tKQCYHb/20240927-223933.jpg'
-        ];
+ ];
 
-        // Boucle pour envoyer chaque image
-            for (const lien of liens) {
-                await zk.sendMessage(dest, { image: { url: lien }, caption: "" }, { quoted: ms });
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-        }
+    // Création du contenu HTML
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>ORIGAMY WORLD GALERIE</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+    .image {
+      margin: 10px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .image img {
+      max-width: 300px;
+      height: auto;
+      display: block;
+      transition: 0.3s;
+    }
+    .image img:hover {
+      transform: scale(1.05);
+      border: 2px solid #ffe600;
+    }
+  </style>
+</head>
+<body>
+  ${liens.map(lien => `
+    <div class="image">
+      <img src="${lien}" alt="Origamy World Visuels">
+    </div>
+  `).join('')}
+</body>
+</html>
+`;
+
+    // Enregistrement du fichier HTML temporairement
+    const chemin = '/mnt/data/origamy_galerie.html';
+    fs.writeFileSync(chemin, htmlContent);
+
+    // Envoi du fichier HTML
+    await zk.sendMessage(dest, {
+      document: fs.readFileSync(chemin),
+      fileName: 'origamy_galerie.html',
+      mimetype: 'text/html',
+      caption: '*🖼️ VISUELS ORIGAMY – SRPN*'
+    }, { quoted: ms });
+  }
 );
