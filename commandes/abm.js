@@ -473,7 +473,7 @@ function parseDeckDetails(text) {
 }
 
 zokou(
-    { nomCom: 'yugi_rule', categorie: 'YU-GI-OH' },
+    { nomCom: 'yugirule', categorie: 'YU-GI-OH' },
     async (dest, zk, { repondre, arg, ms }) => {
         if (!arg || arg.length < 1) return repondre('Ex : -yugi_rule Yugi vs Kaiba / Yugi main:26 extra:3; Kaiba main:28 extra:3');
 
