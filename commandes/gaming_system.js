@@ -26,7 +26,7 @@ zokou(
             color: #00aced;
             margin-top: 40px;
         }
-        pre {
+        p {
             background: #2e2e2e;
             padding: 15px;
             border-left: 4px solid #f39c12;
