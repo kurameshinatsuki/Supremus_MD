@@ -40,7 +40,7 @@ zokou(
 </head>
 <body>
     <h1>🆚 ABM - SYSTÈME DE COMBAT 🌐</h1>
-<div class="section"><h3>BASIC RULE</h3><strong>PAV&Eacute; :</strong> Le pav&eacute; est divis&eacute; en sections et vous pouvez ex&eacute;cuter que (1) action max par section ou simultan&eacute;es si coh&eacute;rentes (une action qui se d&eacute;roule durant une autre action sans d&eacute;fier la physique, ex: d&eacute;gainer une arme durant son d&eacute;placement / donner un coup de pied durant un saut / etc.) d&eacute;crire l&#39;action avec pr&eacute;cision (le membre utilis&eacute;, le mouvement d&#39;ex&eacute;cution, la zone cibl&eacute;e et l&#39;intention).<br><br>
+<div class="section"><h3>BASIC RULE</h3><p><strong>PAV&Eacute; :</strong> Le pav&eacute; est divis&eacute; en sections et vous pouvez ex&eacute;cuter que (1) action max par section ou simultan&eacute;es si coh&eacute;rentes (une action qui se d&eacute;roule durant une autre action sans d&eacute;fier la physique, ex: d&eacute;gainer une arme durant son d&eacute;placement / donner un coup de pied durant un saut / etc.) d&eacute;crire l&#39;action avec pr&eacute;cision (le membre utilis&eacute;, le mouvement d&#39;ex&eacute;cution, la zone cibl&eacute;e et l&#39;intention).<br><br>
 
 Les techniques peuvent &ecirc;tre ex&eacute;cut&eacute;es en une section et doivent respecter leur description. Vous devez pr&eacute;ciser la technique utilis&eacute;e, son niveau et la distance entre vous et l&#39;adversit&eacute;.<br><br>
 
@@ -48,7 +48,7 @@ Les techniques peuvent &ecirc;tre ex&eacute;cut&eacute;es en une section et doiv
 
 <strong>ALT&Eacute;RATIONS D&#39;&Eacute;TAT :</strong> un Saignement l&eacute;ger : -20❤️ par section. un Saignement grave : -40❤️ par section. un &Eacute;tourdissement : r&eacute;action ralentie de +200ms⚡. une Douleur Intense : vitesse et force physique r&eacute;duites de 50%. la Paralysie : immobilit&eacute; temporaire. les Br&ucirc;lures : effets saignement + douleur intense. l&#39;Empoisonnement : Effet variable selon le poison. Froid Intense : -20❤️ par tour.<br><br>
 
-<strong>R&Eacute;G&Eacute;N&Eacute;RATION :</strong> Les personnages pouvant se r&eacute;g&eacute;n&eacute;rer instantan&eacute;ment (ex: d&eacute;mon, attribut...) ne peuvent &ecirc;tre tu&eacute;s que par d&eacute;capitation ou r&eacute;duction de la sant&eacute; &agrave; 0❤️. Ils ne restaurent pas la sant&eacute; sauf si la comp&eacute;tence mentionne le contraire. Vous r&eacute;cup&eacute;rez +20🌀 une section immobile &agrave; accumuler de l&#39;&eacute;nergie et +10🫀 au repos.</div><div class="section"><h3>CLOSE COMBAT</h3><strong>FORCE PHYSIQUE :</strong> 🟤Brown &lt; ⚪Gray &lt; 🟡Yellow &lt; 🔵Blue &lt; 🟢Green. Les coups de personnage de force Brown causent 10💥 de d&eacute;g&acirc;ts et peuvent repousser un adversaire &eacute;gal jusqu&#39;&agrave; 5m mais chaque niveau suppl&eacute;mentaire ajoute plus 10💥 de d&eacute;g&acirc;ts.<br>
+<strong>R&Eacute;G&Eacute;N&Eacute;RATION :</strong> Les personnages pouvant se r&eacute;g&eacute;n&eacute;rer instantan&eacute;ment (ex: d&eacute;mon, attribut...) ne peuvent &ecirc;tre tu&eacute;s que par d&eacute;capitation ou r&eacute;duction de la sant&eacute; &agrave; 0❤️. Ils ne restaurent pas la sant&eacute; sauf si la comp&eacute;tence mentionne le contraire. Vous r&eacute;cup&eacute;rez +20🌀 une section immobile &agrave; accumuler de l&#39;&eacute;nergie et +10🫀 au repos.</p></div><div class="section"><h3>CLOSE COMBAT</h3><p><strong>FORCE PHYSIQUE :</strong> 🟤Brown &lt; ⚪Gray &lt; 🟡Yellow &lt; 🔵Blue &lt; 🟢Green. Les coups de personnage de force Brown causent 10💥 de d&eacute;g&acirc;ts et peuvent repousser un adversaire &eacute;gal jusqu&#39;&agrave; 5m mais chaque niveau suppl&eacute;mentaire ajoute plus 10💥 de d&eacute;g&acirc;ts.<br>
 Briser un membre ou frapper une zone sensible (c&ocirc;te, colonne vert&eacute;brale, etc...) cause plus 10💥 de d&eacute;g&acirc;ts suppl&eacute;mentaires. Les coups de personnage de force Gray peuvent envoyer un adversaire &eacute;gal ou inf&eacute;rieur valser &agrave; 10m et sup&eacute;rieur &agrave; 5m, mais ceux de force Yellow ou plus peuvent litt&eacute;ralement envoyer l&#39;adversaire voler dans le d&eacute;cor et m&ecirc;me briser des membres ou perforer le corps humain.<br>
 Se lib&eacute;rer d&#39;une saisie vous co&ucirc;te 10🫀 mais les personnages plus forts ne perdent rien.<br><br>
 
@@ -78,7 +78,7 @@ Les personnages plus r&eacute;actifs verront leur retard r&eacute;duit selon la 
 <strong>OVERDRIVE :</strong> L&#39;Overdrive, utilisable seulement en position d&eacute;fensive et 1 fois toutes les 2 sections, permet de r&eacute;agir face &agrave; une attaque impossible &agrave; r&eacute;agir normalement.<br>
 Mais cela co&ucirc;te -20🫀 de hearts et aussi la possibilit&eacute; de contrer une technique, variable selon le niveau de la technique :<br><br>
 
-Niv B = -20🫀 &nbsp;|&nbsp; Niv A = -30🫀 &nbsp;|&nbsp; Niv S = -40🫀</div><div class="section"><h3>FULL POWER</h3><strong>CLASSIFICATION DES PERSONNAGES :</strong><br>
+Niv B = -20🫀 &nbsp;|&nbsp; Niv A = -30🫀 &nbsp;|&nbsp; Niv S = -40🫀</p></div><div class="section"><h3>FULL POWER</h3><p><strong>CLASSIFICATION DES PERSONNAGES :</strong><br>
 Les personnages sont class&eacute;s par rang d&eacute;finissant leur capacit&eacute; physique comme : vitesse de r&eacute;action (V.R), vitesse de d&eacute;placement (V.D) et potentiels (Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green)<br><br>
 
 <strong>D&eacute;finition des valeurs par rang :</strong><br>
@@ -98,7 +98,7 @@ Par exemple :<br>
 Le potentiel normal des personnages est Brown sauf si sa description indique le contraire.<br><br>
 
 <strong>CLASSEMENT DES TECHNIQUES :</strong><br>
-Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon leur efficacit&eacute; gr&acirc;ce au nombre d&#39;effets qu&#39;elles peuvent avoir.<br><br>
+Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon leur efficacit&eacute; gr&acirc;ce au nombre d&#39;effets qu&#39;elles peuvent avoir.</p><br><br>
 
 <table border="1" cellpadding="5" cellspacing="0">
   <thead>
@@ -135,7 +135,7 @@ Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon l
   </tbody>
 </table><br>
 
-<strong>R&egrave;gles de sup&eacute;riorit&eacute; :</strong><br>
+<p><strong>R&egrave;gles de sup&eacute;riorit&eacute; :</strong><br>
 - Une attaque de niveau sup&eacute;rieur brise la d&eacute;fense de niveau inf&eacute;rieur mais voit sa puissance r&eacute;duite de 50%.<br>
 - Si l&#39;&eacute;cart est de 2 niveaux ou plus, l&#39;attaque garde sa puissance initiale.<br>
 - Certaines techniques peuvent &ecirc;tre efficaces en raison de leur nature (ex : d&eacute;mat&eacute;rialisation, distorsion spatiale, etc.).<br>
@@ -145,7 +145,7 @@ Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon l
 <strong>Exemples de hi&eacute;rarchie (plus petit que &lt;) :</strong><br>
 - Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green<br>
 - Rang C &lt; Rang B &lt; Rang A &lt; Rang S &lt; Rang Z<br>
-- Niveau B &lt; Niveau A &lt; Niveau S</div>
+- Niveau B &lt; Niveau A &lt; Niveau S</p></div>
     <h2>SRPN - ABM v1</h2>
 </body>
 </html>`;
@@ -181,9 +181,12 @@ zokou(
       margin: 2rem;
       padding: 1rem;
     }
-    h1, h2, h3 {
+    h2, h3 {
       border-bottom: 2px solid #ccc;
       padding-bottom: 0.2em;
+    }
+    h1 {
+      text-align: center;
     }
     section {
       margin-bottom: 2rem;
@@ -222,7 +225,8 @@ zokou(
 
   <section>
     <h2>🔹 STRUCTURE DU PAVÉ RP STORY</h2>
-    <code><br>
+    <div class="highlight">
+      <p><br>
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
 *▓▓▓▓[ORIGAMY  STORY]▓▓▓▓*<br>
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br>
@@ -244,9 +248,12 @@ zokou(
 &gt; *<br>
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
 *▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*<br>
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br><br></code><strong>R&Egrave;GLES DE JEU RP STORY</strong><br><br>
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br><br></p>
+    </div><strong>R&Egrave;GLES DE JEU RP STORY</strong><br><br>
 
-<strong>ORIGAMY SERVEURS :</strong> Origamy World est divis&eacute; en plusieurs serveurs repr&eacute;sentant une zone chacune. Il est important de respecter les r&egrave;gles suivantes : pas de spam [message, stickers, etc.], juste vos pav&eacute;s et questions ; apr&egrave;s 3⚠️ avertissements c&#39;est -30 XP et -3 000🧭. Vous ne pouvez pas &ecirc;tre dans plusieurs serveurs &agrave; la fois ; si vous changez de zone vous devez rejoindre le serveur de cette zone et quitter le pr&eacute;c&eacute;dent, sous peine de sanction. Veuillez rester r&eacute;aliste, respecter le syst&egrave;me de jeu et les lois de la physique.<br><br></section>
+<div class="highlight">
+      <p><strong>ORIGAMY SERVEURS :</strong> Origamy World est divis&eacute; en plusieurs serveurs repr&eacute;sentant une zone chacune. Il est important de respecter les r&egrave;gles suivantes : pas de spam [message, stickers, etc.], juste vos pav&eacute;s et questions ; apr&egrave;s 3⚠️ avertissements c&#39;est -30 XP et -3 000🧭. Vous ne pouvez pas &ecirc;tre dans plusieurs serveurs &agrave; la fois ; si vous changez de zone vous devez rejoindre le serveur de cette zone et quitter le pr&eacute;c&eacute;dent, sous peine de sanction. Veuillez rester r&eacute;aliste, respecter le syst&egrave;me de jeu et les lois de la physique.</p>
+    </div><br><br></section>
 
   <section>
     <h2>🔹 EXPLORATION ET DÉPLACEMENTS</h2>
@@ -266,26 +273,31 @@ zokou(
 
   <section>
     <h2>🔹 ENVIRONNEMENTS SPÉCIFIQUES</h2>
-    <ul>
+    <div class="highlight">
+      <p><ul>
         </li><strong>SWIM :</strong> Nager vous co&ucirc;te -10🫀 par section et sous l&#39;eau vous perdez -20🌬️ d&#39;oxyg&egrave;ne par section. Sur une jauge de 100🌬️ &agrave; 0, que ce soit en 🫀 ou en 🌬️, c&#39;est la noyade. R&eacute;cup&eacute;rer votre souffle restaure votre jauge d&#39;oxyg&egrave;ne &agrave; &laquo;&nbsp;100%&nbsp;&raquo;.</li><br><br>
 
 </li><strong>MONTAGNE :</strong> Cet environnement double la perte de Heart🫀 si vous &ecirc;tes &agrave; pied, et r&eacute;duit de 50% la vitesse de d&eacute;placement des montures terrestres.</li><br><br>
 
 <li><strong>NEIGE :</strong> Risque de maladie en raison de l&#39;humidit&eacute; (ex : forte fi&egrave;vre, incapacit&eacute; &agrave; combattre, et double perte de 🫀), ainsi que l&#39;effet du froid intense. Vous devez poss&eacute;der un &eacute;quipement adapt&eacute;.</li>
-    </ul>
+    </p>
+    </div></ul>
   </section>
 
   <section>
     <h2>🔹 CLIMAT, SAISONS ET MÉTÉO</h2>
-    <p>Influencent la survie et l’acc&egrave;s aux ressources.<br>
+    <div class="highlight">
+      <p>Influencent la survie et l’acc&egrave;s aux ressources.<br>
 Par exemple : la surp&ecirc;che ou chasse excessive entra&icirc;ne des esp&egrave;ces en voie de disparition.<br>
 Des catastrophes (incendies, inondations, temp&ecirc;tes) peuvent modifier durablement une zone.<br>
 Chacun pouvant impacter le gameplay.<br><br></p>
+    </div>
   </section>
 
   <section>
     <h2>🔹 INTERACTIONS & PNJ</h2>
-    <p><strong>RELATIONS &amp; R&Eacute;PUTATION :</strong> Vos actions sociales influencent la mani&egrave;re dont les PNJ r&eacute;agissent.<br>
+    <div class="highlight">
+      <p><strong>RELATIONS &amp; R&Eacute;PUTATION :</strong> Vos actions sociales influencent la mani&egrave;re dont les PNJ r&eacute;agissent.<br>
 Ex : un PNJ pourrait alerter les autorit&eacute;s locales si vous &ecirc;tes fugitif ou que vous chassez pour la prime.<br>
 Une bonne action vous rapporte +20🙂, une mauvaise action +20😈.<br>
 L&#39;interpr&eacute;tation d&#39;une action d&eacute;pend de la vision des PNJ &agrave; votre &eacute;gard.<br>
@@ -320,11 +332,13 @@ Chaque p&eacute;riode dure 3 tours.<br><br>
 ❄️ <strong>Neige</strong> (moins 30&deg;C) : -20❤️ par tour sans protection, risque de maladie.<br>
 🌡️ <strong>Canicule</strong> (plus 40&deg;C) : double perte en 🫀 et en Soif 🍶.<br>
 🌪️ <strong>Temp&ecirc;tes</strong> : malus vari&eacute;s (sable, glace, foudre).</p>
+    </div>
   </section>
 
   <section>
     <h2>🔹 CRAFTING ET POSSESSIONS</h2>
-    <p><strong>CONSTRUCTION :</strong> Le crafting vous co&ucirc;te en unit&eacute;s de ressources.<br>
+    <div class="highlight">
+      <p><strong>CONSTRUCTION :</strong> Le crafting vous co&ucirc;te en unit&eacute;s de ressources.<br>
 Une surface minimale de 1m&sup2; &eacute;quivaut &agrave; 2 unit&eacute;s, donc 5m&sup2; = 10 unit&eacute;s.<br>
 Exemple :<br>
 &nbsp;&nbsp;- Sol en bois (5m&sup2;) = 10🪵.<br>
@@ -342,11 +356,13 @@ Niveau sp&eacute;cial (🏅) : objets particuliers faits &agrave; base de magie,
 
 L&#39;utilisation d&#39;un outil durant une activit&eacute; (affrontement, r&eacute;colte, fuite, etc.) lui fait perdre 10⚙️ de durabilit&eacute; apr&egrave;s l&#39;activit&eacute;.<br>
 Lorsque sa durabilit&eacute; atteint 0⚙️, l&#39;outil est inutilisable ou d&eacute;truit.</p>
+    </div>
   </section>
 
   <section>
     <h2>🔹 STATS & SURVIE</h2>
-    <p><strong>BESOINS VITAUX :</strong> La Faim (🍽️) et la Soif (🍶) baissent de -30% tous les 3 tours.<br>
+    <div class="highlight">
+      <p><strong>BESOINS VITAUX :</strong> La Faim (🍽️) et la Soif (🍶) baissent de -30% tous les 3 tours.<br>
 À 0%, la perte de Heart🫀 est doubl&eacute;e et vous risquez de perdre connaissance.<br>
 Elles peuvent &ecirc;tre restaur&eacute;es par la consommation d&#39;aliment ou de boisson.<br><br>
 
@@ -357,11 +373,13 @@ L&#39;Endurance (Heart) se restaure de +10🫀 apr&egrave;s une section de repos
 <strong>NOTICE :</strong> Les comp&eacute;tences des joueurs peuvent influencer le syst&egrave;me de jeu.<br>
 Par exemple : un joueur avec une technique de r&eacute;g&eacute;n&eacute;ration pourrait soigner ses blessures ou r&eacute;cuperer des points de sant&eacute;.<br>
 Un joueur avec une technique de vitesse pourrait se d&eacute;placer plus vite sans overdrive (voir la description de la technique).</p>
+    </div>
   </section>
 
   <section>
     <h2>🔹 RESSOURCES</h2>
-    <p>Les ressources sont class&eacute;es en diff&eacute;rentes cat&eacute;gories avec leurs caract&eacute;ristiques sp&eacute;cifiques, et chaque ressource a des particularit&eacute;s propres.<br>
+    <div class="highlight">
+      <p>Les ressources sont class&eacute;es en diff&eacute;rentes cat&eacute;gories avec leurs caract&eacute;ristiques sp&eacute;cifiques, et chaque ressource a des particularit&eacute;s propres.<br>
 Vous r&eacute;coltez 1 unit&eacute; de ressource pour 1 tour de r&eacute;colte &agrave; main nue.<br>
 Equip&eacute; d&#39;un outil appropri&eacute; (pioche, hache, pelle, etc.), vous r&eacute;coltez 2 unit&eacute;s pour 1 section de r&eacute;colte.<br><br>
 
@@ -401,13 +419,16 @@ Certaines esp&egrave;ces peuvent fournir des mat&eacute;riaux magiques ou rares.
 Essentiels pour les ressources r&eacute;guli&egrave;res.<br>
 - <strong>MAGIQUES</strong> (🐉, 🦄) : Cr&eacute;atures rares pouvant &ecirc;tre chass&eacute;es ou apprivois&eacute;es.<br>
 Elles fournissent des ressources magiques comme &eacute;cailles, plumes ou griffes, utilis&eacute;es dans des recettes magiques ou artisanat l&eacute;gendaire.</p>
+    </div>
   </section>
 
   <section>
     <h2>🔹 PROGRESSION & RANG</h2>
-    <p>La progression en rang (C, B, A, S, Z) est d&eacute;termin&eacute;e par l&#39;accumulation d&#39;XP.<br>
+    <div class="highlight">
+      <p>La progression en rang (C, B, A, S, Z) est d&eacute;termin&eacute;e par l&#39;accumulation d&#39;XP.<br>
 Chaque rang n&eacute;cessite un nombre d&#39;XP cumul&eacute; sp&eacute;cifique.<br>
-La progression en rang permet d&#39;acc&eacute;der &agrave; des comp&eacute;tences et des &eacute;quipements plus puissants.</p><br><br>
+La progression en rang permet d&#39;acc&eacute;der &agrave; des comp&eacute;tences et des &eacute;quipements plus puissants.</p>
+    </div><br><br>
 
 <strong>COMBATIVIT&Eacute; :</strong> L&#39;augmentation du niveau de combativit&eacute; au sein d&#39;un m&ecirc;me rang permet d&#39;affronter des PNJ plus puissants.<br><br>
 
@@ -489,7 +510,9 @@ La progression en rang permet d&#39;acc&eacute;der &agrave; des comp&eacute;tenc
 
   <section>
     <h2>⚠️ COMBAT :</h2>
-    <p>Utilise le <strong>système ABM</strong> pour les affrontements dans Origamy World.</p>
+    <div class="highlight">
+      <p>Utilise le <strong>système ABM</strong> pour les affrontements dans Origamy World.</p>
+    </div>
   </section>
 </body>
 </html>`;
