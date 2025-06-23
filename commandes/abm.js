@@ -237,10 +237,11 @@ zokou(
 
 // Définition des circuits
 const circuitsSpeedRush = [
-  { nom: 'Burnwood', image: 'https://i.ibb.co/xGtFbZ9/Image-2024-09-24-07-37-21-0.jpg' },
-  { nom: 'Franklin Terrace', image: 'https://i.ibb.co/Xj1hmx0/Image-2024-09-24-07-37-21-1.jpg' },
-  { nom: 'Crescent Mountains', image: 'https://i.ibb.co/WP917KC/Image-2024-09-24-07-37-21-2.jpg' },
-  { nom: 'El Rey', image: 'https://i.ibb.co/Q8HpY8w/Image-2024-09-24-07-37-21-3.jpg' }
+  { nom: 'Volcans', image: 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg' },
+  { nom: 'Pic de Givre', image: 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg' },
+  { nom: 'Metropole Nocturne', image: 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg' },
+  { nom: 'Bois Sombres', image: 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg' },
+  { nom: 'Sanctuaire Perdu', image: 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg' }
 ];
 
 // Stockage des courses en cours
