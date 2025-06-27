@@ -251,7 +251,7 @@ zokou(
         document: readFileSync(fileName),
         mimetype: 'text/html',
         filename: 'deck_cards.html',
-        caption: `📘 *LISTE DES CARTES YU-GI-OH!* \n(${sortedCartes.length} cartes disponibles)`,
+        caption: `*🎴 LISTE DES CARTES YU-GI-OH! 🎴* \n*CARTES DISPONIBLES :* ${sortedCartes.length}`,
       }, { quoted: ms });
 
       unlinkSync(fileName);
