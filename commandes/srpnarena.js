@@ -3,7 +3,7 @@ const { zokou } = require('../framework/zokou');
 zokou( { nomCom: 'circuit', categorie: 'SPEED-RUSH' }, async (dest, zk, commandeOptions) => { const { repondre, arg, ms } = commandeOptions;
 
 const circuits = {
-  volcan: `//    *🌋 CIRCUIT DES VOLCANS 🌋*   \\\
+  volcan: `//    *🌋 CIRCUIT DES VOLCANS 🌋*   //
 
 > *Longueur :* 20 km (échelle réduite)
 > *Difficulté :* Élevée
@@ -92,7 +92,7 @@ const circuits = {
 *Effets :*
 > - Dernière ligne droite pour les dépassements
 > *MJ :* Mettre l’accent sur la tension dramatique jusqu’à la dernière seconde.`,
-  givre: `//  *❄️ CIRCUIT DU PIC DE GIVRE ❄️*  \\\
+  givre: `//  *❄️ CIRCUIT DU PIC DE GIVRE ❄️*  //
 
 > *Longueur :* 18 km (échelle réduite)
 > *Difficulté :* Moyenne à Élevée
@@ -172,7 +172,7 @@ const circuits = {
 > *Voie :* Moyenne voie (4 lignes)
 > *Effets :* Montée progressive, neige compacte
 > *MJ :* Dernière ligne dramatique. Ajoutez des effets visuels (traces dans la neige, moteurs rugissants) pour une arrivée cinématique.`,
-  metropole: `//   *🌃 CIRCUIT DE MÉTROPOLE 🌃*  \\\
+  metropole: `//   *🌃 CIRCUIT DE MÉTROPOLE 🌃*  //
 
 > *Longueur :* 19 km (échelle réduite)
 > *Difficulté :* Moyenne
@@ -258,7 +258,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > - Chrono visible sur écran géant
 > - Applaudissements sonores en fonction du classement
 > *MJ :* Accentuer la tension avec des effets sonores et holographiques. Les joueurs peuvent tenter un dépassement final avec turbo, mais attention à la surchauffe.`,
-  bois: `//  *🌲 CIRCUIT BOIS SOMBRES 🌲*  \\\
+  bois: `//  *🌲 CIRCUIT BOIS SOMBRES 🌲*  //
 
 > *Longueur :* 18 km (échelle réduite)
 > *Difficulté :* Moyenne à élevée
@@ -346,7 +346,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > - Zone plus claire, fin de la brume
 > - Possibilité de dernier gadget surprise
 > *MJ :* Idéal pour un sprint final avec un piège ou un bonus dramatique. Amplifier la tension avec bruit de tambours ou créatures en chasse.`,
-  sanctuaire: `//*⛩️ CIRCUIT SANCTUAIRE PERDU ⛩️*\\\
+  sanctuaire: `//*⛩️ CIRCUIT SANCTUAIRE PERDU ⛩️*//
 
 > *Longueur :* 19 km (échelle réduite)
 > *Difficulté :* Moyenne
