@@ -128,7 +128,9 @@
                     auteurMessage = idBot;
                 }
                 
-                var membreGroupe = verifGroupe ? getJid(decodeJid(ms.key.participant) : '', origineMessage, zk);
+                var membreGroupe = verifGroupe 
+    ? getJid(decodeJid(ms.key.participant), '', origineMessage, zk) 
+    : '';
                 const { getAllSudoNumbers } = require("./bdd/sudo");
                 const nomAuteurMessage = ms.pushName;
                 const dj = '22540718560';
