@@ -53,6 +53,28 @@
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
 
+// Hook global pour toutes les méthodes Baileys
+const originalMethods = {
+  groupMetadata: zk.groupMetadata,
+  sendMessage: zk.sendMessage,
+  // Ajoutez d'autres méthodes au besoin
+};
+
+Object.entries(originalMethods).forEach(([name, method]) => {
+  zk[name] = async (...args) => {
+    try {
+      // Conversion automatique du premier argument (jid)
+      if (args[0] && typeof args[0] === 'string') {
+        args[0] = convertToLid(args[0]);
+      }
+      return await method.apply(zk, args);
+    } catch (e) {
+      console.error(`LID auto-conversion failed for ${name}:`, e);
+      throw e;
+    }
+  };
+});
+
  async function authentification() {
         try {
             
