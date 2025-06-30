@@ -53,27 +53,12 @@
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
 
-// Hook global pour toutes les méthodes Baileys
-const originalMethods = {
-  groupMetadata: zk.groupMetadata,
-  sendMessage: zk.sendMessage,
-  // Ajoutez d'autres méthodes au besoin
-};
-
-Object.entries(originalMethods).forEach(([name, method]) => {
-  zk[name] = async (...args) => {
-    try {
-      // Conversion automatique du premier argument (jid)
-      if (args[0] && typeof args[0] === 'string') {
-        args[0] = convertToLid(args[0]);
-      }
-      return await method.apply(zk, args);
-    } catch (e) {
-      console.error(`LID auto-conversion failed for ${name}:`, e);
-      throw e;
-    }
-  };
-});
+function convertToLid(jid) {
+  if (!jid) return jid;
+  if (jid.includes('@g.us')) return jid.replace('@g.us', '@lid');
+  if (jid.includes('@s.whatsapp.net')) return jid.replace('@s.whatsapp.net', '@lid');
+  return jid;
+}
 
  async function authentification() {
         try {
@@ -132,6 +117,29 @@ Object.entries(originalMethods).forEach(([name, method]) => {
             };
             let zk = (0, baileys_1.default)(sockOptions);
             store.bind(zk.ev);
+
+// Hook global pour toutes les méthodes Baileys
+const originalMethods = {
+  groupMetadata: zk.groupMetadata,
+  sendMessage: zk.sendMessage,
+  // Ajoutez d'autres méthodes au besoin
+};
+
+Object.entries(originalMethods).forEach(([name, method]) => {
+  zk[name] = async (...args) => {
+    try {
+      // Conversion automatique du premier argument (jid)
+      if (args[0] && typeof args[0] === 'string') {
+        args[0] = convertToLid(args[0]);
+      }
+      return await method.apply(zk, args);
+    } catch (e) {
+      console.error(`LID auto-conversion failed for ${name}:`, e);
+      throw e;
+    }
+  };
+});
+
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
            
             zk.ev.on("messages.upsert", async (m) => {
@@ -141,15 +149,14 @@ Object.entries(originalMethods).forEach(([name, method]) => {
                 if (!ms.message)
                     return;
                 const decodeJid = (jid) => {
-                    if (!jid)
-                        return jid;
-                    if (/:\d+@/gi.test(jid)) {
-                        let decode = (0, baileys_1.jidDecode)(jid) || {};
-                        return decode.user && decode.server && decode.user + '@' + decode.server || jid;
-                    }
-                    else
-                        return jid;
-                };
+  if (!jid) return jid;
+  jid = convertToLid(jid); // Conversion en LID
+  if (/:\d+@/gi.test(jid)) {
+    let decode = (0, baileys_1.jidDecode)(jid) || {};
+    return (decode.user && decode.server && decode.user + '@' + decode.server) || jid;
+  }
+  return jid;
+};
                 var mtype = (0, baileys_1.getContentType)(ms.message);
                 const texte = mtype == "conversation" ? ms.message.conversation : mtype == "imageMessage" ? ms.message.imageMessage?.caption : mtype == "videoMessage" ? ms.message.videoMessage?.caption : mtype == "extendedTextMessage" ? ms.message?.extendedTextMessage?.text : mtype == "buttonsResponseMessage" ?
                     ms?.message?.buttonsResponseMessage?.selectedButtonId : mtype == "listResponseMessage" ?
