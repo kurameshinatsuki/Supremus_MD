@@ -54,25 +54,7 @@
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
 
- async function authentification() {
-        try {
-            
-            //console.log("le data "+data)
-            if (!fs.existsSync(__dirname + "/auth/creds.json")) {
-                console.log("connexion en cour ...");
-                await fs.writeFileSync(__dirname + "/auth/creds.json", atob(session), "utf8");
-                //console.log(session)
-            }
-            else if (fs.existsSync(__dirname + "/auth/creds.json") && session != "zokk") {
-                await fs.writeFileSync(__dirname + "/auth/creds.json", atob(session), "utf8");
-            }
-        }
-        catch (e) {
-            console.log("Session Invalide " + e );
-            return;
-        }
-    }
-    authentification();
+ 
     /*const store = (0, baileys_1.makeInMemoryStore)({
         logger: pino().child({ level: "silent", stream: "store" }),
     });*/
@@ -101,6 +83,9 @@
                 ///////
             };
             let zk = (0, baileys_1.default)(sockOptions);
+           if(!zk.authState.creds.registered) {
+               const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
+               console.log("PAIR-CODE", code);
            /* store.bind(zk.ev);
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
            */
