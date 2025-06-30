@@ -53,6 +53,12 @@ const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
 const logger_1 = __importDefault(
   require("@whiskeysockets/baileys/lib/Utils/logger")
 );
+function convertToLid(jid) {
+    if (!jid) return jid;
+    if (jid.includes('@g.us')) return jid.replace('@g.us', '@lid');
+    if (jid.includes('@s.whatsapp.net')) return jid.replace('@s.whatsapp.net', '@lid'); 
+    return jid;
+}
 const logger = logger_1.default.child({});
 logger.level = "silent";
 const pino = require("pino");
@@ -148,23 +154,26 @@ setTimeout(() => {
     };
     let zk = (0, baileys_1.default)(sockOptions);
 
-    zk.ev.on("messages.upsert", async (m) => {
-      const { messages } = m;
-      const ms = messages[0];
-      //  console.log(ms) ;
-      if (!ms.message) return;
-      const decodeJid = (jid) => {
-        if (!jid) return jid;
-        if (/:\d+@/gi.test(jid)) {
-          let decode = (0, baileys_1.jidDecode)(jid) || {};
-          return (
-            (decode.user &&
-              decode.server &&
-              decode.user + "@" + decode.server) ||
-            jid
-          );
-        } else return jid;
-      };
+    zk.ev.on('messages.upsert', ({ messages }) => {
+    messages.forEach(msg => {
+        msg.key.remoteJid = convertToLid(msg.key.remoteJid);
+        if (msg.key.participant) msg.key.participant = convertToLid(msg.key.participant);
+    });
+});
+
+zk.ev.on('group-participants.update', (update) => {
+    update.id = convertToLid(update.id);
+    update.participants = update.participants.map(convertToLid);
+});
+     const decodeJid = (jid) => {
+    if (!jid) return jid;
+    jid = convertToLid(jid); // Conversion LID intégrée
+    if (/:\d+@/gi.test(jid)) {
+        let decode = (0, baileys_1.jidDecode)(jid) || {};
+        return (decode.user && decode.server && decode.user + "@" + decode.server) || jid;
+    }
+    return jid;
+};
       var mtype = (0, baileys_1.getContentType)(ms.message);
       const texte =
         mtype == "conversation"
@@ -277,7 +286,7 @@ setTimeout(() => {
       const tes = "salut";
       const liens = conf.URL.split(",");
 
-      console.log("\t [][]...{Zokou-Md}...[][]");
+      console.log("\t [][]...{Supremus-Md}...[][]");
       console.log("=========== Nouveau message ===========");
       if (verifGroupe) {
         console.log("message provenant du groupe : " + nomGroupe);
