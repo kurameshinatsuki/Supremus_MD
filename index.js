@@ -50,7 +50,7 @@
     const { recupevents } = require('./bdd/welcome');
     //const //{loadCmd}=require("/framework/mesfonctions")
     let { reagir } = require(__dirname + "/framework/app");
-    const getJid = require("../framework/cacheJid");
+    const getJid = require("./framework/cacheJid");
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
 
