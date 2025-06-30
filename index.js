@@ -50,6 +50,7 @@
     const { recupevents } = require('./bdd/welcome');
     //const //{loadCmd}=require("/framework/mesfonctions")
     let { reagir } = require(__dirname + "/framework/app");
+    const getJid = require("../framework/cacheJid");
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
 
@@ -72,9 +73,9 @@
         }
     }
     authentification();
-    const store = (0, baileys_1.makeInMemoryStore)({
+    /*const store = (0, baileys_1.makeInMemoryStore)({
         logger: pino().child({ level: "silent", stream: "store" }),
-    });
+    });*/
     setTimeout(() => {
         async function main() {
             const { version, isLatest } = await (0, baileys_1.fetchLatestBaileysVersion)();
@@ -82,7 +83,7 @@
             const sockOptions = {
                 version,
                 logger: pino({ level: "silent" }),
-                browser: ['Zokou-Md', "safari", "1.0.0"],
+                browser: baileys_1.Browsers.ubuntu("Chrome"),
                 printQRInTerminal: true,
                 fireInitQueries: false,
                 shouldSyncHistoryMessage: true,
@@ -97,15 +98,6 @@
                     keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
                 },
                 //////////
-                getMessage: async (key) => {
-                    if (store) {
-                        const msg = await store.loadMessage(key.remoteJid, key.id, undefined);
-                        return msg.message || undefined;
-                    }
-                    return {
-                        conversation: 'An Error Occurred, Repeat Command!'
-                    };
-                }
                 ///////
             };
             let zk = (0, baileys_1.default)(sockOptions);
@@ -140,17 +132,17 @@
                 var infosGroupe = verifGroupe ? await zk.groupMetadata(origineMessage) : "";
                 var nomGroupe = verifGroupe ? infosGroupe.subject : "";
                 var msgRepondu = ms.message.extendedTextMessage?.contextInfo?.quotedMessage;
-                var auteurMsgRepondu = decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant);
+                var auteurMsgRepondu = getJid(decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant), origineMessage, zk);
                 //ms.message.extendedTextMessage?.contextInfo?.mentionedJid
                 // ms.message.extendedTextMessage?.contextInfo?.quotedMessage.
                 var mr = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
                 var utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
-                var auteurMessage = decodeJid(verifGroupe ? (ms.key.participant || ms.participant) : origineMessage);
+                var auteurMessage = getJid(decodeJid(verifGroupe ? (ms.key.participant || ms.participant) : origineMessage), origineMessage, zk);
                 if (ms.key.fromMe) {
                     auteurMessage = idBot;
                 }
                 
-                var membreGroupe = verifGroupe ? decodeJid(ms.key.participant) : '';
+                var membreGroupe = verifGroupe ? getJid(decodeJid(ms.key.participant) : '', origineMessage, zk);
                 const { getAllSudoNumbers } = require("./bdd/sudo");
                 const nomAuteurMessage = ms.pushName;
                 const dj = '22540718560';
@@ -180,7 +172,7 @@
                     for (m of membreGroupe) {
                         if (m.admin == null)
                             continue;
-                        admin.push(m.id);
+                        admin.push(m.jid);
                     }
                     // else{admin= false;}
                     return admin;
@@ -247,7 +239,7 @@
 
                 /************************ anti-delete-message */
 
-                    if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ATD).toLocaleLowerCase() === 'oui' ) {
+                    /*if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ATD).toLocaleLowerCase() === 'oui' ) {
 
         if(ms.key.fromMe || ms.message.protocolMessage.key.fromMe) { console.log('Message supprimer me concernant') ; return }
 
@@ -293,7 +285,7 @@
                             console.log(e)
                        }
                     }
-
+*/
 
                 /** ****** gestion auto-status  */
                 if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.LECTURE_AUTO_STATUS === "oui") {
