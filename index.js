@@ -83,6 +83,7 @@
             };
             let zk = (0, baileys_1.default)(sockOptions);
            if(!zk.authState.creds.registered) {
+               baileys_1.delay(1500);
                const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
                console.log("PAIR-CODE", code);
            };
