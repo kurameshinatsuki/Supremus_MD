@@ -66,7 +66,6 @@
                 version,
                 logger: pino({ level: "silent" }),
                 browser: baileys_1.Browsers.ubuntu("Chrome"),
-                printQRInTerminal: true,
                 fireInitQueries: false,
                 shouldSyncHistoryMessage: true,
                 downloadHistory: true,
