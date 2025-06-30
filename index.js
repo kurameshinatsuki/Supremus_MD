@@ -154,16 +154,22 @@ setTimeout(() => {
     };
     let zk = (0, baileys_1.default)(sockOptions);
 
-    zk.ev.on('messages.upsert', ({ messages }) => {
-    messages.forEach(msg => {
+    // Middleware corrigé pour messages.upsert
+zk.ev.on('messages.upsert', ({ messages }) => {
+  if (!messages || !Array.isArray(messages)) return;
+  
+  messages.forEach(msg => {
+    try {
+      if (msg.key?.remoteJid) {
         msg.key.remoteJid = convertToLid(msg.key.remoteJid);
-        if (msg.key.participant) msg.key.participant = convertToLid(msg.key.participant);
-    });
-});
-
-zk.ev.on('group-participants.update', (update) => {
-    update.id = convertToLid(update.id);
-    update.participants = update.participants.map(convertToLid);
+      }
+      if (msg.key?.participant) {
+        msg.key.participant = convertToLid(msg.key.participant);
+      }
+    } catch (e) {
+      console.error('LID conversion error:', e);
+    }
+  });
 });
      const decodeJid = (jid) => {
     if (!jid) return jid;
@@ -799,19 +805,19 @@ zk.ev.on('group-participants.update', (update) => {
 
     /******** evenement groupe update ****************/
 
-    zk.ev.on("group-participants.update", async (group) => {
-      const decodeJid = (jid) => {
-        if (!jid) return jid;
-        if (/:\d+@/gi.test(jid)) {
-          let decode = (0, baileys_1.jidDecode)(jid) || {};
-          return (
-            (decode.user &&
-              decode.server &&
-              decode.user + "@" + decode.server) ||
-            jid
-          );
-        } else return jid;
-      };
+   // Middleware corrigé pour group-participants.update
+zk.ev.on('group-participants.update', async (update) => {
+  try {
+    if (!update.id) return;
+    
+    update.id = convertToLid(update.id);
+    if (update.participants && Array.isArray(update.participants)) {
+      update.participants = update.participants.map(p => convertToLid(p));
+    }
+  } catch (e) {
+    console.error('Group update LID error:', e);
+  }
+});
 
       console.log(group);
 
