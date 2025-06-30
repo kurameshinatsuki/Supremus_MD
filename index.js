@@ -58,7 +58,6 @@
     /*const store = (0, baileys_1.makeInMemoryStore)({
         logger: pino().child({ level: "silent", stream: "store" }),
     });*/
-    setTimeout(() => {
         async function main() {
             const { version, isLatest } = await (0, baileys_1.fetchLatestBaileysVersion)();
             const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(__dirname + "/auth");
@@ -86,6 +85,7 @@
            if(!zk.authState.creds.registered) {
                const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
                console.log("PAIR-CODE", code);
+           };
            /* store.bind(zk.ev);
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
            */
