@@ -97,27 +97,64 @@ zokou({ nomCom: "stop", categorie: "MON-BOT", reaction: "🛑" }, async (origine
     }
 });
 
-zokou({ nomCom: "groupes", categorie: "MON-BOT", reaction: "📄" }, async (origineMessage, zk, { repondre }) => {
-    const groupes = await zk.groupFetchAllParticipating();
-    const liste = Object.values(groupes).map(g => `• ${g.subject} (${g.id})`).join("\n");
-    repondre(`*📦 Groupes visibles :*\n${liste}`);
+// Nouvelle fonction pour convertir les JID en LID de manière fiable
+function convertToLid(jid) {
+    if (!jid) return jid;
+    // Conversion forcée pour les groupes
+    if (jid.endsWith('@g.us')) return jid.replace('@g.us', '@lid');
+    // Gestion des numéros de téléphone
+    if (jid.includes('@s.whatsapp.net')) return jid.replace('@s.whatsapp.net', '@lid');
+    return jid;
+}
+
+zokou({ 
+    nomCom: "groupes", 
+    categorie: "MON-BOT", 
+    reaction: "🌐" 
+}, async (origineMessage, zk, { repondre }) => {
+    try {
+        const groupes = await zk.groupFetchAllParticipating();
+        const liste = Object.values(groupes)
+            .map(g => `• ${g.subject || 'Sans nom'} (${convertToLid(g.id)})`)
+            .join("\n");
+        
+        repondre(`*📋 Groupes Visibles (${Object.values(groupes).length}) :*\n${liste}`);
+    } catch (e) {
+        console.error("Erreur groupes:", e);
+        repondre("❌ Erreur lors de la récupération des groupes");
+    }
 });
 
-zokou({ nomCom: "resync", categorie: "MON-BOT", reaction: "🔄" }, async (origineMessage, zk, { repondre }) => {
-    const groupes = await zk.groupFetchAllParticipating();
-    const failed = [];
+zokou({ 
+    nomCom: "resync", 
+    categorie: "MON-BOT", 
+    reaction: "🔄" 
+}, async (origineMessage, zk, { repondre }) => {
+    try {
+        const groupes = await zk.groupFetchAllParticipating();
+        const failed = [];
+        let successCount = 0;
 
-    for (let g of Object.values(groupes)) {
-        try {
-            await zk.groupMetadata(g.id); // Forcer la mise à jour
-        } catch (e) {
-            failed.push(g.id);
+        for (let g of Object.values(groupes)) {
+            try {
+                const lid = convertToLid(g.id);
+                await zk.groupMetadata(lid); // Utilisation du LID
+                successCount++;
+                await new Promise(resolve => setTimeout(resolve, 500)); // Délai anti-ban
+            } catch (e) {
+                failed.push(`${g.subject || 'Sans nom'} (${g.id})`);
+            }
         }
-    }
 
-    if (failed.length > 0) {
-        repondre(`❗ Groupes échoués :\n${failed.join("\n")}`);
-    } else {
-        repondre("✅ Tous les groupes ont été resynchronisés !");
+        let result = `✅ ${successCount} groupes synchronisés`;
+        if (failed.length > 0) {
+            result += `\n❌ ${failed.length} échecs :\n${failed.slice(0, 5).join("\n")}`;
+            if (failed.length > 5) result += `\n...et ${failed.length - 5} autres`;
+        }
+
+        repondre(result);
+    } catch (e) {
+        console.error("Erreur resync:", e);
+        repondre("❌ Crash pendant la resynchronisation");
     }
 });
