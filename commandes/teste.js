@@ -1,5 +1,58 @@
 const { zokou } = require("../framework/zokou");
 const axios = require("axios");
+const fs = require('fs-extra');
+const path = require ('path');
+
+zokou({ 
+  nomCom: "broadcast", 
+  categorie: "MON-BOT", 
+  reaction: "📢" 
+}, async (origineMessage, zk, { repondre, prefixe }) => {
+
+  // ⚠️ Mode confirmation (optionnel)
+  const confirmation = true; // Passer à `false` pour désactiver
+
+  if (confirmation) {
+    await repondre("⚠️ *Confirmation requise* : Ceci enverra un message à tous les groupes. Répondez par *« Oui »* pour confirmer.");
+    const reponse = await zk.attendreReponse(origineMessage);
+    if (reponse?.toLowerCase() !== "oui") {
+      return repondre("❌ Diffusion annulée.");
+    }
+  }
+
+  // Récupérer les groupes
+  const groupes = await zk.groupFetchAllParticipating();
+  const listeGroupes = Object.values(groupes).filter(g => !g.isAnnounceGrpRestrict); // Filtre les groupes inactifs
+
+  // Message à diffuser (personnalisable)
+  const messageBroadcast = "📢 *Message global* :\n\nSalut tout le monde ! Ceci est une diffusion depuis mon bot. 🚀";
+
+  // Journalisation (sauvegarde dans un fichier)
+  const logPath = path.join(process.cwd(), 'broadcast_log.txt');
+  let succes = 0, echecs = 0;
+
+  // Envoi avec délai
+  for (const [index, groupe] of listeGroupes.entries()) {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Délai de 2s
+      await zk.sendMessage(groupe.id, { text: messageBroadcast });
+      fs.appendFileSync(logPath, `✅ ${new Date().toISOString()} : ${groupe.subject || 'Groupe sans nom'}\n`);
+      succes++;
+    } catch (e) {
+      fs.appendFileSync(logPath, `❌ ${new Date().toISOString()} : ${groupe.subject || 'Groupe sans nom'} -> ${e.message}\n`);
+      echecs++;
+    }
+  }
+
+  // Résumé final
+  await repondre(
+    `📊 *Rapport de diffusion* :\n` +
+    `• Groupes ciblés : ${listeGroupes.length}\n` +
+    `• Succès : ${succes}\n` +
+    `• Échecs : ${echecs}\n` +
+    `• Journal : \`${logPath}\``
+  );
+});
 
 let intervalPing = null;
 let latenceTimeout = null;
