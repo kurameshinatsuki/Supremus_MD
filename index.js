@@ -101,9 +101,9 @@
                 ///////
             };
             let zk = (0, baileys_1.default)(sockOptions);
-            store.bind(zk.ev);
+           /* store.bind(zk.ev);
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
-           
+           */
             zk.ev.on("messages.upsert", async (m) => {
                 const { messages } = m;
                 const ms = messages[0];
@@ -135,7 +135,8 @@
                 var auteurMsgRepondu = getJid(decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant), origineMessage, zk);
                 //ms.message.extendedTextMessage?.contextInfo?.mentionedJid
                 // ms.message.extendedTextMessage?.contextInfo?.quotedMessage.
-                var mr = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+                var mentionnes = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+                const mr = await Promise.all(mentionnes.map(lid => getJid(lid)));
                 var utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
                 var auteurMessage = getJid(decodeJid(verifGroupe ? (ms.key.participant || ms.participant) : origineMessage), origineMessage, zk);
                 if (ms.key.fromMe) {
