@@ -3,55 +3,50 @@ const axios = require("axios");
 const fs = require('fs-extra');
 const path = require ('path');
 
-zokou({ 
-  nomCom: "broadcast", 
+zokou({
+  nomCom: "broadcast",
   categorie: "MON-BOT", 
-  reaction: "📢" 
-}, async (origineMessage, zk, { repondre, prefixe }) => {
+  reaction: "🚀"
+}, async (origineMessage, zk, { repondre }) => {
 
-  // ⚠️ Mode confirmation (optionnel)
-  const confirmation = true; // Passer à `false` pour désactiver
-
-  if (confirmation) {
-    await repondre("⚠️ *Confirmation requise* : Ceci enverra un message à tous les groupes. Répondez par *« Oui »* pour confirmer.");
-    const reponse = await zk.attendreReponse(origineMessage);
-    if (reponse?.toLowerCase() !== "oui") {
-      return repondre("❌ Diffusion annulée.");
-    }
-  }
-
-  // Récupérer les groupes
+  // 1. Récupération des groupes
   const groupes = await zk.groupFetchAllParticipating();
-  const listeGroupes = Object.values(groupes).filter(g => !g.isAnnounceGrpRestrict); // Filtre les groupes inactifs
+  const groupesActifs = Object.values(groupes).filter(g => !g.isAnnounceGrpRestrict);
 
-  // Message à diffuser (personnalisable)
-  const messageBroadcast = "📢 *Message global* :\n\nSalut tout le monde ! Ceci est une diffusion depuis mon bot. 🚀";
+  // 2. Préparation du message
+  const message = `
+📡 *DIFFUSION URGENTE*
 
-  // Journalisation (sauvegarde dans un fichier)
-  const logPath = path.join(process.cwd(), 'broadcast_log.txt');
-  let succes = 0, echecs = 0;
+Message envoyé à tous les groupes simultanément.
+• Date : ${new Date().toLocaleString()}
+• Bot : ${zk.user.name}
+  `.trim();
 
-  // Envoi avec délai
-  for (const [index, groupe] of listeGroupes.entries()) {
+  // 3. Envoi avec anti-ban
+  const logPath = path.join(process.cwd(), 'broadcast_logs.txt');
+  let succes = 0;
+
+  for (const groupe of groupesActifs) {
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Délai de 2s
-      await zk.sendMessage(groupe.id, { text: messageBroadcast });
-      fs.appendFileSync(logPath, `✅ ${new Date().toISOString()} : ${groupe.subject || 'Groupe sans nom'}\n`);
+      await zk.sendMessage(
+        groupe.id, 
+        { text: message },
+        { waitForAck: true } // Confirmation d'envoi
+      );
+      fs.appendFileSync(logPath, `[SUCCES] ${new Date().toISOString()} | ${groupe.subject || 'Sans nom'} | ${groupe.id}\n`);
       succes++;
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Délai réduit
     } catch (e) {
-      fs.appendFileSync(logPath, `❌ ${new Date().toISOString()} : ${groupe.subject || 'Groupe sans nom'} -> ${e.message}\n`);
-      echecs++;
+      fs.appendFileSync(logPath, `[ERREUR] ${new Date().toISOString()} | ${groupe.subject || 'Sans nom'} | ${e.message}\n`);
     }
   }
 
-  // Résumé final
-  await repondre(
-    `📊 *Rapport de diffusion* :\n` +
-    `• Groupes ciblés : ${listeGroupes.length}\n` +
-    `• Succès : ${succes}\n` +
-    `• Échecs : ${echecs}\n` +
-    `• Journal : \`${logPath}\``
-  );
+  // 4. Rapport final
+  await repondre(`
+✅ *Diffusion terminée*
+• Groupes atteints : ${succes}/${groupesActifs.length}
+• Consultez \`${logPath}\` pour les détails
+  `.trim());
 });
 
 let intervalPing = null;
