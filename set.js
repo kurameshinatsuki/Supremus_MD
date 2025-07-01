@@ -21,7 +21,7 @@ module.exports = {
     session: process.env.SESSION_ID || 'zokk',
     PREFIXE: process.env.PREFIX || "-",
     OWNER_NAME: process.env.OWNER_NAME || "Supremus-Prod",
-    NUMERO_OWNER : process.env.NUMERO_OWNER || "22651463203",              
+    NUMERO_OWNER : process.env.NUMERO_OWNER || "",              
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "yes",
     AUTO_DOWNLOAD_STATUS: process.env.AUTO_DOWNLOAD_STATUS || 'no',
     BOT : process.env.BOT_NAME || 'SP-ZK-MD',
