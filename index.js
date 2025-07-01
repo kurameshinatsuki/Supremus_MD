@@ -85,6 +85,10 @@
       console.error("❌ Erreur pairing code :", err.message);
     }
            }
+
+            //événement authentification 
+            zk.ev.on("creds.update", saveCreds);
+            //fin événement authentification 
            /* store.bind(zk.ev);
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
            */
@@ -946,9 +950,7 @@
                 }
             });
             //fin événement connexion
-            //événement authentification 
-            zk.ev.on("creds.update", saveCreds);
-            //fin événement authentification 
+            
             //
             /** ************* */
             //fonctions utiles
