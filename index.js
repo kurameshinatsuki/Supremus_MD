@@ -67,6 +67,7 @@
                 logger: pino({ level: "silent" }),
                 browser: baileys_1.Browsers.ubuntu("Chrome"),
                 fireInitQueries: false,
+                printQRInTerminal: !usePairingCode,
                 shouldSyncHistoryMessage: true,
                 downloadHistory: true,
                 syncFullHistory: true,
@@ -917,7 +918,7 @@
                     }
                     else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
                         console.log('!!! connexion fermée, reconnexion en cours ...');
-                        //main();
+                        main();
                     }
                     else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
                         console.log('connexion au serveur perdue 😞 ,,, reconnexion en cours ... ');
