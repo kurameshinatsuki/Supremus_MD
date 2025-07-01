@@ -66,28 +66,26 @@
                 version,
                 logger: pino({ level: "silent" }),
                 browser: baileys_1.Browsers.ubuntu("Chrome"),
-                fireInitQueries: false,
-                printQRInTerminal: !usePairingCode,
-                shouldSyncHistoryMessage: true,
-                downloadHistory: true,
-                syncFullHistory: true,
+                syncFullHistory: false,
                 generateHighQualityLinkPreview: true,
-                markOnlineOnConnect: false,
-                keepAliveIntervalMs: 30_000,
-                /* auth: state*/ auth: {
+                markOnlineOnConnect: true,
+                auth: {
                  creds: state.creds,
-                    /** caching makes the store faster to send/recv messages */
-                    keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
+                 keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
                 },
                 //////////
                 ///////
             };
             let zk = (0, baileys_1.default)(sockOptions);
-           if(!zk.authState.creds.registered) {
-               baileys_1.delay(1500);
-               const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
-               console.log("PAIR-CODE", code);
-           };
+           if (!zk.authState.creds.registered) {
+    try {
+      await delay(3000);
+      const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
+      console.log("🔗 PAIR-CODE : ", code);
+    } catch (err) {
+      console.error("❌ Erreur pairing code :", err.message);
+    }
+           }
            /* store.bind(zk.ev);
             setInterval(() => { store.writeToFile(__dirname + "/store.json");  }, 3000);
            */
