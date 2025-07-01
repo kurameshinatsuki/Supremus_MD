@@ -53,7 +53,7 @@
     const getJid = require("./framework/cacheJid");
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
-
+    const usePairingCode = process.argv.includes('--use-pairing-code')
  
     /*const store = (0, baileys_1.makeInMemoryStore)({
         logger: pino().child({ level: "silent", stream: "store" }),
