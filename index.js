@@ -53,6 +53,7 @@
     const getJid = require("./framework/cacheJid");
     var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g,"");
     const prefixe = conf.PREFIXE;
+    let pair = false;
     
     /*const store = (0, baileys_1.makeInMemoryStore)({
         logger: pino().child({ level: "silent", stream: "store" }),
@@ -76,11 +77,12 @@
                 ///////
             };
             let zk = (0, baileys_1.default)(sockOptions);
-           if (!zk.authState.creds.registered) {
+           if (!zk.authState.creds.registered && !pair) {
     try {
       await baileys_1.delay(3000);
       const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
       console.log("🔗 PAIR-CODE : ", code);
+            pair = true;
     } catch (err) {
       console.error("❌ Erreur pairing code :", err.message);
     }
