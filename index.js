@@ -964,8 +964,8 @@ if (ms.key.fromMe) {
                                     exec("pm2 restart all");            
                     }
                     // sleep(50000)
-                    console.log("hum " + connection);
-                    main(); //console.log(session)
+                   // console.log("hum " + connection);
+                   // main(); //console.log(session)
                 }
             });
             //fin événement connexion
