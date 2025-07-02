@@ -79,9 +79,9 @@
             let zk = (0, baileys_1.default)(sockOptions);
            if (!zk.authState.creds.registered && !pair) {
   try {
-    if (fs.existsSync(authDir)) {
-      fs.readdirSync(authDir).forEach(file => {
-        fs.unlinkSync(path.join(authDir, file));
+    if (fs.existsSync((__dirname + "/auth"))) {
+      fs.readdirSync((__dirname + "/auth")).forEach(file => {
+        fs.unlinkSync(path.join((__dirname + "/auth"), file));
       });
       console.log("🧹 Dossier auth vidé.");
     }
