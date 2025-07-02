@@ -78,14 +78,21 @@
             };
             let zk = (0, baileys_1.default)(sockOptions);
            if (!zk.authState.creds.registered && !pair) {
-    try {
-      await baileys_1.delay(3000);
-      const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
-      console.log("🔗 PAIR-CODE : ", code);
-            pair = true;
-    } catch (err) {
-      console.error("❌ Erreur pairing code :", err.message);
+  try {
+    if (fs.existsSync(authDir)) {
+      fs.readdirSync(authDir).forEach(file => {
+        fs.unlinkSync(path.join(authDir, file));
+      });
+      console.log("🧹 Dossier auth vidé.");
     }
+
+    await baileys_1.delay(3000);
+    const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
+    console.log("🔗 PAIR-CODE : ", code);
+    pair = true;
+  } catch (err) {
+    console.error("❌ Erreur pairing code :", err.message);
+  }
            }
 
             //événement authentification 
