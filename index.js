@@ -122,16 +122,26 @@
                 var infosGroupe = verifGroupe ? await zk.groupMetadata(origineMessage) : "";
                 var nomGroupe = verifGroupe ? infosGroupe.subject : "";
                 var msgRepondu = ms.message.extendedTextMessage?.contextInfo?.quotedMessage;
-                var auteurMsgRepondu = getJid(decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant), origineMessage, zk);
+                var auteurMsgRepondu = await getJid(
+  decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant),
+  origineMessage,
+  zk
+);
                 //ms.message.extendedTextMessage?.contextInfo?.mentionedJid
                 // ms.message.extendedTextMessage?.contextInfo?.quotedMessage.
-                var mentionnes = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
-                const mr = await Promise.all(mentionnes.map(lid => getJid(lid)));
+                const mentionnes = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+                let mr = mentionnes ? await Promise.all(mentionnes.map(lid => getJid(lid))) : [];
                 var utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
-                var auteurMessage = getJid(decodeJid(verifGroupe ? (ms.key.participant || ms.participant) : origineMessage), origineMessage, zk);
-                if (ms.key.fromMe) {
-                    auteurMessage = idBot;
-                }
+                let auteurMessage = await getJid(
+    decodeJid(verifGroupe ? (ms.key.participant || ms.participant) : origineMessage),
+    origineMessage,
+    zk
+);
+
+if (ms.key.fromMe) {
+    auteurMessage = idBot;
+}
+
                 
                 var membreGroupe = verifGroupe 
     ? getJid(decodeJid(ms.key.participant), '', origineMessage, zk) 
