@@ -79,13 +79,6 @@
             let zk = (0, baileys_1.default)(sockOptions);
            if (!zk.authState.creds.registered && !pair) {
   try {
-    if (fs.existsSync((__dirname + "/auth"))) {
-      fs.readdirSync((__dirname + "/auth")).forEach(file => {
-        fs.unlinkSync(path.join((__dirname + "/auth"), file));
-      });
-      console.log("🧹 Dossier auth vidé.");
-    }
-
     await baileys_1.delay(3000);
     const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
     console.log("🔗 PAIR-CODE : ", code);
@@ -852,7 +845,7 @@ if (ms.key.fromMe) {
        
                
             //événement contact
-            zk.ev.on("contacts.upsert", async (contacts) => {
+          /*  zk.ev.on("contacts.upsert", async (contacts) => {
                 const insertContact = (newContact) => {
                     for (const contact of newContact) {
                         if (store.contacts[contact.id]) {
@@ -865,7 +858,7 @@ if (ms.key.fromMe) {
                     return;
                 };
                 insertContact(contacts);
-            });
+            });*/
             //fin événement contact 
             //événement connexion
             zk.ev.on("connection.update", async (con) => {
