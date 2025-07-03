@@ -7,6 +7,16 @@ const playerProfiles = {
     playerName: 'Tęnnõ Sũpręmũs',
     imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
   },
+  'john': {
+    nomCom: 'john',
+    playerName: 'John Sũpręmũs',
+    imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
+  },
+  'assistant': {
+    nomCom: 'assistant',
+    playerName: 'Assistant Sũpręmũs',
+    imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
+  },
   'nelliel': { 
     nomCom: 'nelliel',
     playerName: 'Nelliel Volfir',
