@@ -73,7 +73,7 @@ const characters = {
         'BORUTO': {'lien': 'https://i.ibb.co/svrmRCq8/Image-2025-02-16-13-22-54-0.jpg'}
     },
         'DEMON_SLAYER': {
-            'TANJIRO': { lien: 'https://i.ibb.co/NsZp3mb/Image-2024-10-02-19-51-46-0.jpg' },
+            'TANJIRO_WB': { lien: 'https://i.ibb.co/NsZp3mb/Image-2024-10-02-19-51-46-0.jpg' },
             'NEZUKO': { lien: 'https://i.ibb.co/DGMgsBR/Image-2024-10-02-19-51-46-1.jpg' },
             'ZENITSU': { lien: 'https://i.ibb.co/nQZt1nM/Image-2024-10-02-19-51-46-2.jpg' },
             'INOSUKE': { lien: 'https://i.ibb.co/2PsDh85/Image-2024-10-02-19-51-46-3.jpg' },
@@ -81,7 +81,7 @@ const characters = {
             'SUSAMARU': { lien: 'https://i.ibb.co/JsfJKSr/Image-2024-10-02-19-51-46-5.jpg' },
             'RIU': { lien: 'https://i.ibb.co/7gh2Hvz/Image-2024-10-02-19-51-46-6.jpg' },
             'ENMU': { lien: 'https://i.ibb.co/gVCfKsX/Image-2024-10-02-19-51-46-7.jpg' },
-            'TANJIRO_2': { lien: 'https://i.ibb.co/K9xHhtJ/Image-2024-10-02-19-51-46-8.jpg' },
+            'TANJIRO_SB': { lien: 'https://i.ibb.co/K9xHhtJ/Image-2024-10-02-19-51-46-8.jpg' },
             'KANAO': { lien: 'https://i.ibb.co/FxRz0Kx/Image-2024-10-02-19-51-46-9.jpg' }
         },
         'JUJUTSU_KAISEN': {
