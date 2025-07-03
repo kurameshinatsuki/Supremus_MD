@@ -140,23 +140,41 @@ zokou({ nomCom: "join", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
 })
 
 
-zokou({ nomCom: "jid", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
+zokou(
+  {
+    nomCom: "jid",
+    categorie: "MON-BOT"
+  },
+  async (dest, zk, commandeOptions) => {
+    const {
+      arg,
+      ms,
+      repondre,
+      msgRepondu,
+      auteurMessage,
+      auteurMsgRepondu,
+      superUser
+    } = commandeOptions;
 
-  const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage, auteurMsgRepondu } = commandeOptions;
+    if (!superUser) {
+      return repondre("🚫 Commande réservée au propriétaire du bot.");
+    }
 
-  if (!superUser) {
-    repondre("command reserved for the bot owner");
-    return;
+    // Si réponse à un message, on cible cette personne
+    const cible = msgRepondu ? auteurMsgRepondu : auteurMessage;
+
+    // zk.decodeJid convertit normalement un LID en JID lisible (si dispo)
+    const jid = zk.decodeJid ? zk.decodeJid(cible) : cible;
+    const lid = cible;
+
+    await zk.sendMessage(dest, {
+      text:
+        `👤 *INFORMATIONS :*\n\n` +
+        `*LID* : ${lid}\n` +
+        `*JID* :\n${jid}`
+    }, { quoted: ms });
   }
-  if (!msgRepondu) {
-    jid = dest
-  } else {
-    jid = auteurMsgRepondu
-  };
-  zk.sendMessage(dest, { text: jid }, { quoted: ms });
-
-});
-
+);
 
 
 zokou({ nomCom: "block", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
