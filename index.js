@@ -80,7 +80,7 @@
            if (!zk.authState.creds.registered && !pair) {
   try {
     await baileys_1.delay(3000);
-    const code = await zk.requestPairingCode(conf.NUMERO_OWNER);
+    const code = await zk.requestPairingCode(conf.NUMERO_PAIR);
     console.log("🔗 PAIR-CODE : ", code);
     pair = true;
   } catch (err) {
