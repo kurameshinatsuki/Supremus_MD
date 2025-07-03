@@ -38,7 +38,7 @@ jobs:
       with:
         name: whatsapp-auth
         path: auth
-      continue-on-error: true # Ignore si le fichier n’existe pas encore (premier run)
+      continue-on-error: true
 
     - name: Install dependencies
       run: |
@@ -47,7 +47,11 @@ jobs:
 
     - name: Start application with timeout
       run: |
+        echo "📂 AVANT lancement : contenu du dossier auth"
+        ls -R auth || echo "Pas de dossier auth trouvé"
         timeout 14520s npm run zokou
+        echo "📂 APRÈS exécution : contenu du dossier auth"
+        ls -R auth || echo "auth introuvable après lancement"
 
     - name: Upload WhatsApp auth credentials
       if: always()
