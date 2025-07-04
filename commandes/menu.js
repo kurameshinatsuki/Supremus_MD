@@ -25,25 +25,25 @@ zokou({ nomCom: "menu", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
 
     // Informations sur le bot
     let infoMsg = `
-┏━━━━━ *${s.BOT}* ━━━━━━┓
+┏━━━━━━━ *${s.BOT}* ━━━━━━━┓
 > *🔑 Prefixe :* ${s.PREFIXE}
 > *👤 Proprio :* ${s.OWNER_NAME}
 > *🔄 Mode    :* ${mode}
 > *🧮 Commandes :* ${cm.length}
 > *💾 Stockage :* ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 > *🧑‍💻 Développeur :* Jøhñ Sũpręmũs
-┗━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━━━━━━┛
 `;
 
     // Liste des commandes
     let menuMsg = `\n*Liste des commandes :*\n`;
     for (const cat in coms) {
         menuMsg += `\n🪀 *${cat}*
-┏━━━━━━━━━━━━━━━━━━━┓\n`;
+┏━━━━━━━━━━━━━━━━━━━━━━━┓\n`;
         for (const cmd of coms[cat]) {
-            menuMsg += `> *${cmd}*\n`;
+            menuMsg += `┃ *${cmd}*\n`;
         }
-        menuMsg += `┗━━━━━━━━━━━━━━━━━━━┛\n`;
+        menuMsg += `┗━━━━━━━━━━━━━━━━━━━━━━━┛\n`;
     }
     menuMsg += `      🪀 𝙎𝙐𝙋𝙍𝙀𝙈𝙐𝙎 𝙋𝙍𝙊𝘿 🪀\n`;
 
