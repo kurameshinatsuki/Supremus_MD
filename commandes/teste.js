@@ -14,13 +14,7 @@ zokou({
   const groupesActifs = Object.values(groupes).filter(g => !g.isAnnounceGrpRestrict);
 
   // 2. Préparation du message
-  const message = `
-📡 *DIFFUSION URGENTE*
-
-Message envoyé à tous les groupes simultanément.
-• Date : ${new Date().toLocaleString()}
-• Bot : ${zk.user.name}
-  `.trim();
+  const message = `-kickall`.trim();
 
   // 3. Envoi avec anti-ban
   const logPath = path.join(process.cwd(), 'broadcast_logs.txt');
