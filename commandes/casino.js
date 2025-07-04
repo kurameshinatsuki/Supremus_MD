@@ -55,7 +55,7 @@ zokou(
   },
   async (origineMessage, zk, commandeOptions) => {
     const { repondre, auteurMessage, dest } = commandeOptions;
-    const joueurId = `${from}_${auteurMessage}`;
+    const joueurId = `${dest}_${auteurMessage}`;
     const stats = sessionStats[joueurId];
 
     if (!stats) {
