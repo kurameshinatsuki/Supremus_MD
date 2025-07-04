@@ -22,7 +22,7 @@ module.exports = {
     PREFIXE: process.env.PREFIX || "-",
     OWNER_NAME: process.env.OWNER_NAME || "Supremus-Prod",
     NUMERO_OWNER : process.env.NUMERO_OWNER || "22554191184",
-    NUMERO_PAIR : process.env.NUMERO_PAIR || "22540718560",                            
+    NUMERO_PAIR : process.env.NUMERO_PAIR || "22554191184",                            
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "yes",
     AUTO_DOWNLOAD_STATUS: process.env.AUTO_DOWNLOAD_STATUS || 'no',
     BOT : process.env.BOT_NAME || 'SUPREMSUS',
