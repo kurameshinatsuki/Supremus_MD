@@ -59,13 +59,16 @@ zokou(
     const stats = sessionStats[joueurId];
 
     if (!stats) {
-      return repondre("*_📭 Aucun reçu disponible. Lance une session avec la commande *-casino* !_*");
+      return repondre("_📭 Aucun reçu disponible. Lance une session avec la commande *-casino* !_");
     }
 
     const recu = genererRecuCasino(stats, new Date());
     delete sessionStats[joueurId]; // Réinitialisation après affichage
 
-    return repondre(recu);
+await zk.sendMessage(from, {
+  image: { url: 'https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg' },
+  caption: recu
+}, { quoted: origineMessage });
   }
 );
 
