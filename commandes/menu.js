@@ -26,12 +26,12 @@ zokou({ nomCom: "menu", categorie: "MON-BOT" }, async (dest, zk, commandeOptions
     // Informations sur le bot
     let infoMsg = `
 ┏━━━━━━━ *${s.BOT}* ━━━━━━━┓
-> *🔑 Prefixe :* ${s.PREFIXE}
-> *👤 Proprio :* ${s.OWNER_NAME}
-> *🔄 Mode    :* ${mode}
-> *🧮 Commandes :* ${cm.length}
-> *💾 Stockage :* ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
-> *🧑‍💻 Développeur :* Jøhñ Sũpręmũs
+┃ *🔑 Prefixe :* ${s.PREFIXE}
+┃ *👤 Proprio :* ${s.OWNER_NAME}
+┃ *🔄 Mode    :* ${mode}
+┃ *🧮 Commandes :* ${cm.length}
+┃ *💾 Stockage :* ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
+┃ *🧑‍💻 Développeur :* Jøhñ Sũpręmũs
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 `;
 
