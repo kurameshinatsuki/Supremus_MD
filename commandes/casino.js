@@ -54,7 +54,7 @@ zokou(
     categorie: 'ECONOMY'
   },
   async (origineMessage, zk, commandeOptions) => {
-    const { repondre, auteurMessage, from } = commandeOptions;
+    const { repondre, auteurMessage, dest } = commandeOptions;
     const joueurId = `${from}_${auteurMessage}`;
     const stats = sessionStats[joueurId];
 
