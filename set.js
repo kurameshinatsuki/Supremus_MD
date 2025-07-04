@@ -25,7 +25,7 @@ module.exports = {
     NUMERO_PAIR : process.env.NUMERO_PAIR || "22540718560",                            
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "yes",
     AUTO_DOWNLOAD_STATUS: process.env.AUTO_DOWNLOAD_STATUS || 'no',
-    BOT : process.env.BOT_NAME || 'SUPREMSUS BOT',
+    BOT : process.env.BOT_NAME || 'SUPREMSUS',
     URL : process.env.BOT_MENU_LINKS || 'https://i.ibb.co/k81T2WX/image.jpg',
     MODE: process.env.PUBLIC_MODE || "yes",
     PM_PERMIT: process.env.PM_PERMIT || 'no',
