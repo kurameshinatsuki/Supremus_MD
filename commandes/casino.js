@@ -281,6 +281,7 @@ function genererRecuCasino(stats, fin) {
 
 
 
+
 const { zokou } = require('../framework/zokou');
 
 const gameInProgress = {};
@@ -293,19 +294,39 @@ const provocations = [
   "💀 Rien ne va plus !",
 ];
 
-// 🛠️ Utilitaires
+// Utilitaires
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const lancerDe = () => Math.floor(Math.random() * 6) + 1;
 const randomProvocation = () => provocations[Math.floor(Math.random() * provocations.length)];
 const formatDate = (date) => date.toLocaleDateString('fr-FR');
 const formatHeure = (date) => date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
+// 🔐 Envoi d'image sécurisé (fallback si ms non quotable)
 async function sendWithImage(dest, zk, imageUrl, caption, ms) {
   try {
-    await zk.sendMessage(dest, { image: { url: imageUrl }, caption }, { quoted: ms });
+    const options = {};
+
+    const quotableTypes = [
+      'conversation',
+      'extendedTextMessage',
+      'imageMessage',
+      'videoMessage',
+      'documentMessage',
+      'audioMessage',
+      'stickerMessage'
+    ];
+
+    if (
+      ms?.message &&
+      Object.keys(ms.message).some(t => quotableTypes.includes(t))
+    ) {
+      options.quoted = ms;
+    }
+
+    await zk.sendMessage(dest, { image: { url: imageUrl }, caption }, options);
   } catch (e) {
     console.error("❌ Erreur image :", e);
-    await zk.sendMessage(dest, { text: caption }, { quoted: ms });
+    await zk.sendMessage(dest, { text: caption });
   }
 }
 
@@ -325,18 +346,18 @@ zokou(
     const game = arg[0];
     const mise = parseInt(arg[1]);
 
-if (!game) {
-  const texteBienvenue =
-    "🎰 *BIENVENUE AU CASINO SRPN !*\n\n" +
-    "*Jeux Disponibles :*\n\n" +
-    "1. *casino roulette <mise>* - 🎡 Roulette\n" +
-    "2. *casino des <mise>* - 🎲 Dé contre le croupier\n" +
-    "3. *casino slot <mise>* - 🎰 Machine à sous";
+    // 🎰 Accueil du Casino
+    if (!game) {
+      const texteBienvenue =
+        "🎰 *BIENVENUE AU CASINO SRPN !*\n\n" +
+        "*Jeux Disponibles :*\n\n" +
+        "1. *casino roulette <mise>* - 🎡 Roulette\n" +
+        "2. *casino des <mise>* - 🎲 Dé contre le croupier\n" +
+        "3. *casino slot <mise>* - 🎰 Machine à sous";
 
-  const imageBienvenue = "https://i.ibb.co/xNZVw6g/image.jpg"; // Remplace si tu as une image personnalisée
-
-  return await sendWithImage(from, zk, imageBienvenue, texteBienvenue, ms);
-}
+      const imageBienvenue = "https://i.ibb.co/xNZVw6g/image.jpg";
+      return await sendWithImage(from, zk, imageBienvenue, texteBienvenue, ms);
+    }
 
     if (isNaN(mise) || mise < 1000) {
       return repondre("*_💰 Mise invalide. Minimum requis :_* 1000🧭.");
