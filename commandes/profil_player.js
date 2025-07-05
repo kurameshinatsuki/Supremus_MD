@@ -1,12 +1,7 @@
 const { zokou } = require('../framework/zokou');
 const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
 
-const playerProfiles = {
-  'tenno': {
-    nomCom: 'tenno',
-    playerName: 'Tęnnõ Sũpręmũs',
-    imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
-  },
+const playerProfiles = { 
   'john': {
     nomCom: 'john',
     playerName: 'John Sũpręmũs',
@@ -16,81 +11,6 @@ const playerProfiles = {
     nomCom: 'assistant',
     playerName: 'Assistant Sũpręmũs',
     imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
-  },
-  'nelliel': { 
-    nomCom: 'nelliel',
-    playerName: 'Nelliel Volfir',
-    imageUrl: 'https://i.ibb.co/20hx4jVR/Image-2025-03-24-07-41-59-1.jpg'
-  },
-  'louis': { 
-    nomCom: 'louis',
-    playerName: 'Lone Ink Louis',
-    imageUrl: 'https://i.ibb.co/XrYFM8sR/Image-2025-03-27-02-14-52.jpg'
-  },
-  'aizen': { 
-    nomCom: 'aizen',
-    playerName: 'Aizen',
-    imageUrl: 'https://i.ibb.co/XrjPt3cY/Image-2025-04-20-22-39-40.jpg'
-  },
-  'tina': { 
-    nomCom: 'tina',
-    playerName: 'Tina Yuzuriha',
-    imageUrl: 'https://i.ibb.co/4wRc0k2m/Image-2025-04-21-23-35-23.jpg'
-  },
-  'inferno': { 
-    nomCom: 'inferno',
-    playerName: 'Inferno',
-    imageUrl: 'https://i.ibb.co/RTv16qdh/Image-2025-03-28-13-43-31-0.jpg'
-  },
-  /*'shadow': { 
-    nomCom: 'shadow',
-    playerName: 'Lloyd Shadow T.',
-    imageUrl: 'https://i.ibb.co/4Z8r4mgn/Image-2025-03-28-13-43-31-1.jpg'
-  },*/
-  'vecta': { 
-    nomCom: 'vecta',
-    playerName: 'Vecta Uchiwa.',
-    imageUrl: 'https://i.ibb.co/cXy8YsLq/Image-2025-03-30-00-24-06.jpg'
-  },
-  /*'sophie': { 
-    nomCom: 'sophie',
-    playerName: 'Sophie Scarlet Louis',
-    imageUrl: 'https://i.ibb.co/PZwGRjNL/Image-2025-04-02-13-55-06-0.jpg'
-  },*/
-  'lord': { 
-    nomCom: 'lord',
-    playerName: 'Lord',
-    imageUrl: 'https://i.ibb.co/5hPBn1j3/Image-2025-04-02-13-55-06-1.jpg'
-  },
-  'boyle': { 
-    nomCom: 'boyle',
-    playerName: 'Arthur Boyle',
-    imageUrl: 'https://i.ibb.co/bMsPvMzn/Image-2025-04-08-23-10-16.jpg'
-  },
- 'nezuko': { 
-    nomCom: 'nezuko',
-    playerName: 'Nezuko',
-    imageUrl: 'https://i.ibb.co/PdKp7GJ/Image-2025-04-09-00-34-23.jpg'
-  },
- 'yuki': { 
-    nomCom: 'yuki',
-    playerName: 'Yuki Shigoku',
-    imageUrl: 'https://i.ibb.co/8nKBsgY2/Image-2025-04-10-22-15-34-1.jpg'
-  },
- 'rudeus': { 
-    nomCom: 'rudeus',
-    playerName: 'Rudeus Hells',
-    imageUrl: 'https://i.ibb.co/FLnjFQ5X/Image-2025-04-10-22-15-34-2.jpg'
-  },
- 'no_name': { 
-    nomCom: 'no_name',
-    playerName: 'No Name',
-    imageUrl: 'https://i.ibb.co/yn4zWDK4/Image-2025-04-10-22-15-34-0.jpg'
-  },
- 'arthur': { 
-    nomCom: 'arthur',
-    playerName: 'Arthur Kamado',
-    imageUrl: 'https://i.ibb.co/HpKGM9yc/Image-2025-04-17-01-44-19.jpg'
   }
 };
 
