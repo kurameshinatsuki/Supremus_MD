@@ -48,7 +48,7 @@ const provocations = [
   '> 🗣️ Le croupier murmure : *"Next !"*'
 ];
 
-async function envoyerAvecImage(zk, jid, message, imageUrl = 'https://i.imgur.com/rOWtE9b.png') {
+async function envoyerAvecImage(zk, jid, message, imageUrl = 'https://i.ibb.co/ks4XGm8c/image.jpg') {
   try {
     const imageBuffer = (await axios.get(imageUrl, { responseType: 'arraybuffer' })).data;
     await zk.sendMessage(jid, {
