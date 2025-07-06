@@ -160,11 +160,11 @@ zokou(
       return repondre("🚫 Commande réservée au propriétaire du bot.");
     }
 
-    // Si réponse à un message, on cible cette personne
-    const cible = msgRepondu ? auteurMsgRepondu : auteurMessage;
+    const cible = msgRepondu ? auteurMsgRepondu : auteurMessage || ms.key.participant || ms.key.remoteJid;
 
-    // zk.decodeJid convertit normalement un LID en JID lisible (si dispo)
-    const jid = zk.decodeJid ? zk.decodeJid(cible) : cible;
+    const decodeJid = (jid) => jid.replace(/:\d+@/, "@");
+
+    const jid = decodeJid(cible);
     const lid = cible;
 
     await zk.sendMessage(dest, {
@@ -176,6 +176,72 @@ zokou(
   }
 );
 
+
+zokou(
+  {
+    nomCom: "profil",
+    categorie: "MON-BOT",
+    reaction: "👤"
+  },
+  async (dest, zk, commandeOptions) => {
+    const {
+      arg,
+      ms,
+      repondre,
+      msgRepondu,
+      auteurMessage,
+      auteurMsgRepondu,
+      superUser
+    } = commandeOptions;
+
+    const cible = arg[0] || (msgRepondu ? auteurMsgRepondu : auteurMessage || ms.key.participant);
+
+    const decodeJid = (jid) => jid.replace(/:\d+@/, "@");
+    const jid = decodeJid(cible);
+    const lid = cible;
+    const numero = jid.replace(/@s\.whatsapp\.net/, "");
+
+    try {
+      // Récupère les infos de profil
+      const [pp, info] = await Promise.all([
+        zk.profilePictureUrl(jid, 'image').catch(() => null),
+        zk.onWhatsApp(jid)
+      ]);
+
+      const nom = info?.[0]?.notify || "Non disponible";
+
+      // Récupère la description (bio)
+      let description = "Non disponible";
+      try {
+        const status = await zk.fetchStatus(jid);
+        description = status?.status || "Aucune bio";
+      } catch (e) {
+        // Bio indisponible ou masquée
+      }
+
+      const messageTexte =
+        `👤 *PROFIL UTILISATEUR :*\n\n` +
+        `• *Nom :* ${nom}\n` +
+        `• *Numéro :* +${numero}\n` +
+        `• *LID :* ${lid}\n` +
+        `• *JID :* ${jid}\n` +
+        `• *Bio :* ${description}`;
+
+      if (pp) {
+        await zk.sendMessage(dest, {
+          image: { url: pp },
+          caption: messageTexte
+        }, { quoted: ms });
+      } else {
+        await repondre(messageTexte);
+      }
+
+    } catch (e) {
+      console.error("Erreur profil:", e);
+      repondre("❌ Impossible d'obtenir les infos du profil.");
+    }
+  }
+);
 
 zokou({ nomCom: "block", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
