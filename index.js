@@ -152,7 +152,7 @@ if (ms.key.fromMe) {
                 const dj2 = '2250140718560';
                 const dj3 = "22545697604";
                 const luffy = '22554191184';
-                const dj4 = '2250545697604';
+                const dj4 = '‪2250545697604';
                 const sudo = await getAllSudoNumbers();
                 const superUserNumbers = [servBot, dj, dj2, dj3,dj4, luffy, conf.NUMERO_OWNER].map((s) => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
                 const allAllowedNumbers = superUserNumbers.concat(sudo);
@@ -291,10 +291,10 @@ if (ms.key.fromMe) {
 */
 
                 /** ****** gestion auto-status  */
-                if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.LECTURE_AUTO_STATUS === "yes") {
+                if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.LECTURE_AUTO_STATUS === "oui") {
                     await zk.readMessages([ms.key]);
                 }
-                if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.TELECHARGER_AUTO_STATUS === "yes") {
+                if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.TELECHARGER_AUTO_STATUS === "oui") {
                     /* await zk.readMessages([ms.key]);*/
                     if (ms.message.extendedTextMessage) {
                         var stTxt = ms.message.extendedTextMessage.text;
@@ -444,7 +444,7 @@ if (ms.key.fromMe) {
                                        // txt += `message supprimé \n @${auteurMessage.split("@")[0]} rétiré du groupe.`;
                                         const gifLink = "https://raw.githubusercontent.com/djalega8000/Zokou-MD/main/media/remover.gif";
                                         var sticker = new Sticker(gifLink, {
-                                            pack: 'Supremus-Md',
+                                            pack: 'Zoou-Md',
                                             author: conf.NOM_OWNER,
                                             type: StickerTypes.FULL,
                                             categories: ['🤩', '🎉'],
@@ -545,7 +545,7 @@ if (ms.key.fromMe) {
                // txt += `message supprimé \n @${auteurMessage.split("@")[0]} rétiré du groupe.`;
                 const gifLink = "https://raw.githubusercontent.com/djalega8000/Zokou-MD/main/media/remover.gif";
                 var sticker = new Sticker(gifLink, {
-                    pack: 'Supremus-Md',
+                    pack: 'Zoou-Md',
                     author: conf.NOM_OWNER,
                     type: StickerTypes.FULL,
                     categories: ['🤩', '🎉'],
@@ -711,7 +711,7 @@ if (ms.key.fromMe) {
         try {
             const metadata = await zk.groupMetadata(group.id);
 
-            if (group.action == 'add' && (await recupevents(group.id, "welcome") == 'yes')) {
+            if (group.action == 'add' && (await recupevents(group.id, "welcome") == 'oui')) {
                 let msg = `╔════◇◇◇═════╗
     ║ Souhaitons la bienvenue au(x) nouveau(x) membre(s)
     ║ *Nouveau(x) Membre(s) :*
@@ -729,7 +729,7 @@ if (ms.key.fromMe) {
     ${metadata.desc}`;
 
                 zk.sendMessage(group.id, { image: { url: ppgroup }, caption: msg, mentions: membres });
-            } else if (group.action == 'remove' && (await recupevents(group.id, "goodbye") == 'yes')) {
+            } else if (group.action == 'remove' && (await recupevents(group.id, "goodbye") == 'oui')) {
                 let msg = `Un ou des membres vient(nent) de quitter le groupe;\n`;
 
                 let membres = group.participants;
@@ -739,17 +739,17 @@ if (ms.key.fromMe) {
 
                 zk.sendMessage(group.id, { text: msg, mentions: membres });
 
-            } else if (group.action == 'add' && (await recupevents(group.id, "neowelcome") == 'yes')) {
+            } else if (group.action == 'add' && (await recupevents(group.id, "neowelcome") == 'oui')) {
                 let membres = group.participants;
                 for (let membre of membres) {
-                let msg = `*🪀 Bienvenue @${membre.split("@")[0]} :* veuillez lire la description pour la suite.
+                let msg = `@${membre.split("@")[0]} Bienvenue🙂 💙 : *Remplis les 3️⃣ Étapes en conditions dans la description*, puis après passe prendre ta première card de combat
 
 ░░░░░░░░░░░░░░░░░░░
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-                             🪀 𝗦𝗥𝗣𝗡 🧑‍🧑‍🧒‍🧒 \n`;
-     zk.sendMessage(group.id, { image: { url: "https://i.ibb.co/BVQ90c7r/image.jpg" }, caption: msg, mentions: membres });
+                             🔷𝗡Ξ𝗢24🏆🔝 \n`;
+     zk.sendMessage(group.id, { image: { url: "https://telegra.ph/file/7c2cb8ff44a0bc3338cdc.jpg" }, caption: msg, mentions: membres });
                 }
-                }    else if (group.action == 'promote' && (await recupevents(group.id, "antipromote") == 'yes') ) {
+                }    else if (group.action == 'promote' && (await recupevents(group.id, "antipromote") == 'oui') ) {
                 //  console.log(zk.user.id)
               if (group.author == metadata.owner || group.author  == conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id)  || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
 
@@ -764,7 +764,7 @@ if (ms.key.fromMe) {
                   }
              )
 
-            } else if (group.action == 'demote' && (await recupevents(group.id, "antidemote") == 'yes') ) {
+            } else if (group.action == 'demote' && (await recupevents(group.id, "antidemote") == 'oui') ) {
 
                 if (group.author == metadata.owner || group.author ==  conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id) || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
 
@@ -895,10 +895,10 @@ if (ms.key.fromMe) {
                     (0, baileys_1.delay)(700);
 
                     var md;
-                    if ((conf.MODE).toLowerCase() === "yes") {
+                    if ((conf.MODE).toLowerCase() === "oui") {
                         md = "public";
                     }
-                    else if ((conf.MODE).toLowerCase() === "no") {
+                    else if ((conf.MODE).toLowerCase() === "non") {
                         md = "privé";
                     }
                     else {
@@ -908,7 +908,7 @@ if (ms.key.fromMe) {
 
                     await activateCrons();
 
-                 if((conf.DP).toLowerCase() === 'yes') {
+                 if((conf.DP).toLowerCase() === 'oui') {
                     let cmsg = `╔════◇
     ║ 『𝐙𝐨𝐤𝐨𝐮-𝐌𝐃』
     ║    Prefix : [ ${prefixe} ]
@@ -1066,7 +1066,7 @@ app.get('/', (req, res) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🙂 Supremus-Md est en ligne 🔝</title>
+        <title>Thanks for using Zokou</title>
         <style>
             /* Styles pour centrer le texte */
             body {
