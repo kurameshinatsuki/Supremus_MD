@@ -3,44 +3,60 @@ const axios = require("axios");
 const fs = require('fs-extra');
 const path = require ('path');
 
+
 zokou({
-  nomCom: "broadcast",
-  categorie: "MON-BOT", 
+  nomCom: "diffusion",
+  categorie: "MON-BOT",
   reaction: "🚀"
-}, async (origineMessage, zk, { repondre }) => {
+}, async (origineMessage, zk, commandeOptions) => {
+  const { repondre, arg, superUser } = commandeOptions;
 
-  // 1. Récupération des groupes
-  const groupes = await zk.groupFetchAllParticipating();
-  const groupesActifs = Object.values(groupes).filter(g => !g.isAnnounceGrpRestrict);
-
-  // 2. Préparation du message
-  const message = `-kickall`.trim();
-
-  // 3. Envoi avec anti-ban
-  const logPath = path.join(process.cwd(), 'broadcast_logs.txt');
-  let succes = 0;
-
-  for (const groupe of groupesActifs) {
-    try {
-      await zk.sendMessage(
-        groupe.id, 
-        { text: message },
-        { waitForAck: true } // Confirmation d'envoi
-      );
-      fs.appendFileSync(logPath, `[SUCCES] ${new Date().toISOString()} | ${groupe.subject || 'Sans nom'} | ${groupe.id}\n`);
-      succes++;
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Délai réduit
-    } catch (e) {
-      fs.appendFileSync(logPath, `[ERREUR] ${new Date().toISOString()} | ${groupe.subject || 'Sans nom'} | ${e.message}\n`);
-    }
+  // 1. Vérifie si c'est le propriétaire
+  if (!superUser) {
+    return repondre("🚫 Commande réservée au propriétaire du bot.");
   }
 
-  // 4. Rapport final
-  await repondre(`
+  // 2. Vérifie que le message est bien fourni
+  const message = arg.join(" ").trim();
+  if (!message) {
+    return repondre("❗ Veuillez fournir le message à diffuser.\n\nExemple : `-diffusion Bonjour à tous !`");
+  }
+
+  try {
+    // 3. Récupération des groupes actifs
+    const groupes = await zk.groupFetchAllParticipating();
+    const groupesActifs = Object.values(groupes).filter(g => !g.isAnnounceGrpRestrict);
+
+    // 4. Préparation des logs
+    const logPath = path.join(process.cwd(), "broadcast_logs.txt");
+    let succes = 0;
+
+    for (const groupe of groupesActifs) {
+      try {
+        await zk.sendMessage(
+          groupe.id,
+          { text: message },
+          { waitForAck: true }
+        );
+        fs.appendFileSync(logPath, `[SUCCES] ${new Date().toISOString()} | ${groupe.subject || 'Sans nom'} | ${groupe.id}\n`);
+        succes++;
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Anti-ban
+      } catch (e) {
+        fs.appendFileSync(logPath, `[ERREUR] ${new Date().toISOString()} | ${groupe.subject || 'Sans nom'} | ${e.message}\n`);
+      }
+    }
+
+    // 5. Rapport final
+    await repondre(`
 ✅ *Diffusion terminée*
 • Groupes atteints : ${succes}/${groupesActifs.length}
 • Consultez \`${logPath}\` pour les détails
-  `.trim());
+    `.trim());
+
+  } catch (e) {
+    console.error("Erreur diffusion :", e);
+    repondre("❌ Erreur lors de la diffusion du message.");
+  }
 });
 
 let intervalPing = null;
