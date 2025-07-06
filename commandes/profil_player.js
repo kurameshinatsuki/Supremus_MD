@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile } = require('../bdd/player_bdd');
+const { insertPlayerProfile, getPlayerProfile, updatePlayerProfile, deletePlayerProfile } = require('../bdd/player_bdd');
 
 const playerProfiles = { 
   'john': {
