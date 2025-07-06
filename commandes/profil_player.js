@@ -185,3 +185,38 @@ for (const nomCom in playerProfiles) {
     }
   );
 };
+
+
+
+zokou({
+  nomCom: "delprofil",
+  categorie: "DRPN",
+  reaction: "🗑️"
+}, async (dest, zk, commandeOptions) => {
+  const { arg, repondre, superUser } = commandeOptions;
+
+  // 1. Vérification sécurité
+  if (!superUser) {
+    return repondre("🚫 Cette commande est réservée au propriétaire du bot.");
+  }
+
+  // 2. Vérifie que le nom du joueur est fourni
+  const name = arg.join(" ").trim();
+  if (!name) {
+    return repondre("❗ Veuillez spécifier le nom du joueur à supprimer.\nExemple : `-delprofil John`");
+  }
+
+  try {
+    const resultat = await deletePlayerProfile(name);
+
+    if (resultat) {
+      await repondre(`✅ Le profil de *${name}* a été supprimé avec succès.`);
+    } else {
+      await repondre(`⚠️ Aucun profil trouvé pour le joueur *${name}*.`);
+    }
+
+  } catch (e) {
+    console.error("Erreur lors de la suppression :", e);
+    await repondre("❌ Une erreur est survenue lors de la suppression du profil.");
+  }
+});
