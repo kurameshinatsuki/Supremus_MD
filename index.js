@@ -623,7 +623,7 @@ if (ms.key.fromMe) {
                     const cd = evt.cm.find((zokou) => zokou.nomCom === (com));
                     if (cd) {
 
-                        if (conf.MODE != 'non' && !superUser) {
+                        if (conf.MODE != 'yes' && !superUser) {
                             return;
                         }
 
