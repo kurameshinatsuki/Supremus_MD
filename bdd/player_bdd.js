@@ -81,6 +81,32 @@ async function createTables() {
   }
 }
 
+
+// Supprime un profil de joueur
+async function deletePlayerProfile(name) {
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      `DELETE FROM player_profiles WHERE name = $1 RETURNING *;`,
+      [name]
+    );
+
+    if (res.rowCount === 0) {
+      console.log(`Aucun profil trouvé à supprimer : ${name}`);
+      return false;
+    }
+
+    console.log(`Profil supprimé : ${name}`);
+    return true;
+  } catch (error) {
+    console.error('Erreur lors de la suppression du profil:', error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+
 // Insère un profil de joueur s'il n'existe pas déjà
 async function insertPlayerProfile(name) {
   const client = await pool.connect();
@@ -190,5 +216,6 @@ createTables();
 module.exports = {
   insertPlayerProfile,
   getPlayerProfile,
-  updatePlayerProfile
+  updatePlayerProfile,
+  deletePlayerProfile 
 };
