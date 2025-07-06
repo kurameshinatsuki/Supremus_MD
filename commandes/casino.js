@@ -48,24 +48,15 @@ const provocations = [
   '> 🗣️ Le croupier murmure : *"Next !"*'
 ];
 
-const gameImages = {
-  roulette: 'https://i.ibb.co/ks4XGm8c/image.jpg',
-  des: 'https://i.ibb.co/ks4XGm8c/image.jpg',
-  slot: 'https://i.ibb.co/ks4XGm8c/image.jpg',
-  recu: 'https://i.ibb.co/ks4XGm8c/image.jpg',
-  default: 'https://i.ibb.co/ks4XGm8c/image.jpg'
-};
-
-async function sendWithImage(zk, from, message, imageUrl) {
+async function envoyerAvecImage(zk, jid, message, imageUrl = 'https://i.imgur.com/rOWtE9b.png') {
   try {
-    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-    await zk.sendMessage(from, {
-      image: Buffer.from(response.data),
+    const imageBuffer = (await axios.get(imageUrl, { responseType: 'arraybuffer' })).data;
+    await zk.sendMessage(jid, {
+      image: imageBuffer,
       caption: message
     });
-  } catch (error) {
-    console.error('Erreur envoi image:', error);
-    await zk.sendMessage(from, { text: message });
+  } catch {
+    await zk.sendMessage(jid, { text: message });
   }
 }
 
@@ -73,25 +64,18 @@ zokou(
   {
     nomCom: 'recu',
     reaction: '🎰',
-    categorie: 'ECONOMY'
+    categorie: 'TRANSACT'
   },
   async (origineMessage, zk, commandeOptions) => {
     const { auteurMessage, from } = commandeOptions;
     const joueurId = `${from}_${auteurMessage}`;
     const stats = sessionStats[joueurId];
-
     if (!stats) {
-      return await sendWithImage(
-        zk,
-        from,
-        "*_📭 Aucun reçu disponible. Lance une session avec la commande -casino !_*",
-        gameImages.default
-      );
+      return envoyerAvecImage(zk, from, "*_📭 Aucun reçu disponible. Lance une session avec la commande *-casino* !_*");
     }
-
     const recu = genererRecuCasino(stats, new Date());
     delete sessionStats[joueurId];
-    await sendWithImage(zk, from, recu, gameImages.recu);
+    return envoyerAvecImage(zk, from, recu);
   }
 );
 
@@ -99,47 +83,31 @@ zokou(
   {
     nomCom: 'casino',
     reaction: '🎰',
-    categorie: 'ECONOMY'
+    categorie: 'TRANSACT'
   },
   async (origineMessage, zk, commandeOptions) => {
-    const { repondre, auteurMessage, arg, from } = commandeOptions;
-
+    const { auteurMessage, arg, from } = commandeOptions;
     if (gameInProgress[from]?.[auteurMessage]) {
-      return await sendWithImage(
-        zk,
-        from,
-        "*_⏳ Vous avez déjà un jeu en cours. Veuillez le terminer avant d'en lancer un autre._*",
-        gameImages.default
-      );
+      return envoyerAvecImage(zk, from, "*_⏳ Vous avez déjà un jeu en cours. Veuillez le terminer avant d'en lancer un autre._*");
     }
-
     const game = arg[0];
     const mise = parseInt(arg[1]);
-
     if (!game) {
-      const message = 
+      return envoyerAvecImage(zk, from,
         "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n" +
         "*🎰 BIENVENUE AU CASINO SRPN !*\n\n" +
         "*Jeux Disponibles :*\n\n" +
         "1. *casino roulette <mise>* - 🎡 Roulette\n" +
         "2. *casino des <mise>* - 🎲 Dé contre le croupier\n" +
         "3. *casino slot <mise>* - 🎰 Machine à sous" +
-        "\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔";
-      return await sendWithImage(zk, from, message, gameImages.default);
-    }
-
-    if (isNaN(mise) || mise < 1000) {
-      return await sendWithImage(
-        zk,
-        from,
-        "*_💰 Mise invalide. Minimum requis :_* 1000🧭.",
-        gameImages.default
+        "\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"
       );
     }
-
+    if (isNaN(mise) || mise < 1000) {
+      return envoyerAvecImage(zk, from, "*_💰 Mise invalide. Minimum requis :_* 1000🧭.");
+    }
     gameInProgress[from] = gameInProgress[from] || {};
     gameInProgress[from][auteurMessage] = true;
-
     const joueurId = `${from}_${auteurMessage}`;
     if (!sessionStats[joueurId]) {
       sessionStats[joueurId] = {
@@ -152,18 +120,15 @@ zokou(
         totalGain: 0
       };
     }
-
     const stats = sessionStats[joueurId];
     stats.nbJeux++;
     stats.totalMise += mise;
-
     try {
       switch (game.toLowerCase()) {
         case 'roulette': {
           const rouletteResult = Math.random();
           let gain = 0;
           let resultat = '';
-
           if (rouletteResult < 0.05) {
             gain = mise * 10;
             resultat = '🎯 *Mise ×10*';
@@ -180,30 +145,22 @@ zokou(
             resultat = '❌ *0 (Perdu)*';
             stats.nbDefaites++;
           }
-
           stats.totalGain += gain;
           await wait(2000);
-
           const message = gain > 0
             ? `*🎉 Félicitations, vous avez gagné ${gain} !*`
             : `*🥲 Dommage, vous avez perdu votre mise.*\n${randomProvocation()}`;
-
-          const fullMessage = 
+          return envoyerAvecImage(zk, from,
             "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n🎡 *JEU : Roulette*\n" +
-            `🧮 *RÉSULTAT :* ${resultat}\n\n${message}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-
-          await sendWithImage(zk, from, fullMessage, gameImages.roulette);
-          break;
+            `🧮 *RÉSULTAT :* ${resultat}\n\n${message}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
+          );
         }
-
         case 'des': {
           const joueurDe = lancerDe();
           const croupierDe = lancerDe();
           let gain = 0;
           let message = '';
-
           await wait(2000);
-
           if (joueurDe > croupierDe) {
             gain = mise * 2;
             message = `*🎉 Victoire ! Vous gagnez ${gain} !*`;
@@ -215,28 +172,20 @@ zokou(
             message = `*💀 Défaite. Mise perdue.*\n${randomProvocation()}`;
             stats.nbDefaites++;
           }
-
           stats.totalGain += gain;
-
-          const fullMessage = 
+          return envoyerAvecImage(zk, from,
             "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n🎲 *JEU : Dés*\n" +
-            `🎲 *Votre dé :* ${joueurDe} 🆚 *Croupier :* ${croupierDe}\n\n${message}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-
-          await sendWithImage(zk, from, fullMessage, gameImages.des);
-          break;
+            `🎲 *Votre dé :* ${joueurDe} 🆚 *Croupier :* ${croupierDe}\n\n${message}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
+          );
         }
-
         case 'slot': {
           const fruits = ['🍒', '🍋', '🍇', '🍊', '🔔', '⭐', '💎', '🃏', '🧸', '💠'];
           const spin = () => fruits[Math.floor(Math.random() * fruits.length)];
           const r1 = spin(), r2 = spin(), r3 = spin();
           const result = `*| ${r1} | ${r2} | ${r3} |*`;
-
           let gain = 0;
           let message = '*Pas de chance cette fois...*';
-
           await wait(2000);
-
           if (r1 === r2 && r2 === r3) {
             gain = mise * 10;
             message = `*🎉 JACKPOT ! Vous gagnez ${gain} !*`;
@@ -249,33 +198,17 @@ zokou(
             message += `\n${randomProvocation()}`;
             stats.nbDefaites++;
           }
-
           stats.totalGain += gain;
-
-          const fullMessage = 
+          return envoyerAvecImage(zk, from,
             "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n🎰 *JEU : Machine À Sous*\n" +
-            `🧮 *RÉSULTAT :* ${result}\n\n${message}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-
-          await sendWithImage(zk, from, fullMessage, gameImages.slot);
-          break;
-        }
-
-        default:
-          await sendWithImage(
-            zk,
-            from,
-            "🎮 *_Jeu inconnu.* Utilisez `roulette`, `des` ou `slot`._",
-            gameImages.default
+            `🧮 *RÉSULTAT :* ${result}\n\n${message}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
           );
+        }
+        default:
+          return envoyerAvecImage(zk, from, "🎮 *_Jeu inconnu.* Utilisez `roulette`, `des` ou `slot`._");
       }
-    } catch (err) {
-      console.error('Erreur dans le casino :', err);
-      await sendWithImage(
-        zk,
-        from,
-        "*_❌ Une erreur s'est produite pendant le jeu._*",
-        gameImages.default
-      );
+    } catch {
+      return envoyerAvecImage(zk, from, "*_❌ Une erreur s'est produite pendant le jeu._*");
     } finally {
       delete gameInProgress[from][auteurMessage];
     }
@@ -300,17 +233,12 @@ function formatHeure(date) {
 
 function genererRecuCasino(stats, fin) {
   const bilan = stats.totalGain - stats.totalMise;
-  const bilanTexte = bilan >= 0
-    ? `🔺 *+${bilan}🧭*`
-    : `🔻 *${Math.abs(bilan)}🧭*`;
-
-  const commentaire =
-    bilan > 0
-      ? "🎉 Quelle session ! Tu ressors gagnant du casino !"
-      : bilan < 0
-        ? "😓 La chance t'a fui… mais tu reviendras plus fort !"
-        : "🙃 Tu repars sans gain ni perte.";
-
+  const bilanTexte = bilan >= 0 ? `🔺 *+${bilan}🧭*` : `🔻 *${Math.abs(bilan)}🧭*`;
+  const commentaire = bilan > 0
+    ? "🎉 Quelle session ! Tu ressors gagnant du casino !"
+    : bilan < 0
+      ? "😓 La chance t’a fui… mais tu reviendras plus fort !"
+      : "🙃 Tu repars sans gain ni perte.";
   return (
     "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n🪀 *Reçu Transact — Casino* 🪀\n" +
     `👤 *Joueur :* ${stats.joueur}\n` +
@@ -323,6 +251,7 @@ function genererRecuCasino(stats, fin) {
     `*_💬${commentaire}_*`
   );
 }
+ 
 
 
 /*const { zokou } = require('../framework/zokou');
