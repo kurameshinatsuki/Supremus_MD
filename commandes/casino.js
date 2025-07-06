@@ -604,4 +604,4 @@ function genererRecuCasino(stats, fin) {
     `📊 *Bilan :* ${bilanTexte}\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n` +
     `*_💬${commentaire}_*`
   );
-}
+}*/
