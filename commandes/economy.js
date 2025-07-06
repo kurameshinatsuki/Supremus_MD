@@ -116,7 +116,7 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
 zokou({
     nomCom: "addplayer",
     reaction: "👤",
-    categorie: "ECONOMY",
+    categorie: "DRPN",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu } = commandOptions;
@@ -183,7 +183,7 @@ addplayer <nom> <coupons> <supremus_tokens> <supremus_gemmes>
 zokou({
     nomCom: "getplayer",
     reaction: "👨🏻‍💻",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -226,7 +226,7 @@ zokou({
 zokou({
     nomCom: "updateplayer",
     reaction: "🔄",
-    categorie: "ECONOMY",
+    categorie: "DRPN",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu } = commandOptions;
@@ -313,7 +313,7 @@ updateplayer <variable> <valeur> <méthode>
 zokou({
     nomCom: "buypack",
     reaction: "🎁",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -392,7 +392,7 @@ zokou({
 zokou({
     nomCom: "getitems",
     reaction: "📦",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -427,7 +427,7 @@ zokou({
 zokou({
     nomCom: "sell",
     reaction: "💸",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -469,7 +469,7 @@ zokou({
 zokou({
     nomCom: "market",
     reaction: "🛒",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -500,7 +500,7 @@ zokou({
 zokou({
     nomCom: "unsell",
     reaction: "🔄",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -536,7 +536,7 @@ zokou({
 zokou({
     nomCom: "buy",
     reaction: "🛍️",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -587,7 +587,7 @@ zokou({
 zokou({
     nomCom: "newbet",
     reaction: "💲",
-    categorie: "ECONOMY",
+    categorie: "DRPN",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -660,7 +660,7 @@ newbet <titre> / <description> / <option 1>, <option 2>, <option n> / <type de m
 zokou({
     nomCom: "betlist",
     reaction: "💹",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -692,7 +692,7 @@ zokou({
 zokou({
     nomCom: 'bet',
     reaction: "💰",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -739,7 +739,7 @@ bet <ID> <numero de l'option>`;
 zokou({
     nomCom: "finishbet",
     reaction: "⚖️",
-    categorie: "ECONOMY",
+    categorie: "DRPN",
 }, async (dest, zk, commandOptions) => {
 
     try {
@@ -792,7 +792,7 @@ ${response.winners.map(e => e?.username || null).join("\n")}
 zokou({
     nomCom: "cancelbet",
     reaction: "🔄",
-    categorie: "ECONOMY",
+    categorie: "DRPN",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
@@ -831,7 +831,7 @@ cancelbet <ID>`
 zokou({
     nomCom: "exchange",
     reaction: "💱",
-    categorie: "ECONOMY",
+    categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
 
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
