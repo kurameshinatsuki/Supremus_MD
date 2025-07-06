@@ -134,37 +134,3 @@ zokou({
         repondre("❌ Erreur lors de la récupération des groupes");
     }
 });
-
-zokou({ 
-    nomCom: "resync", 
-    categorie: "MON-BOT", 
-    reaction: "🔄" 
-}, async (origineMessage, zk, { repondre }) => {
-    try {
-        const groupes = await zk.groupFetchAllParticipating();
-        const failed = [];
-        let successCount = 0;
-
-        for (let g of Object.values(groupes)) {
-            try {
-                const lid = convertToLid(g.id);
-                await zk.groupMetadata(lid); // Utilisation du LID
-                successCount++;
-                await new Promise(resolve => setTimeout(resolve, 500)); // Délai anti-ban
-            } catch (e) {
-                failed.push(`${g.subject || 'Sans nom'} (${g.id})`);
-            }
-        }
-
-        let result = `✅ ${successCount} groupes synchronisés`;
-        if (failed.length > 0) {
-            result += `\n❌ ${failed.length} échecs :\n${failed.slice(0, 5).join("\n")}`;
-            if (failed.length > 5) result += `\n...et ${failed.length - 5} autres`;
-        }
-
-        repondre(result);
-    } catch (e) {
-        console.error("Erreur resync:", e);
-        repondre("❌ Crash pendant la resynchronisation");
-    }
-});
