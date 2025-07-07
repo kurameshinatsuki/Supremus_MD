@@ -25,7 +25,7 @@ const GAMES_CONFIG = {
     aliases: ['slot', 'slots', 'machine']
   },
   BINGO: {
-    name: "🎱 Bingo",
+    name: "🎱 BINGO/LOTO",
     min: 500,
     description: "Trouvez les numéros gagnants !",
     aliases: ['bingo', 'loto']
