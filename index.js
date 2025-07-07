@@ -908,18 +908,15 @@ if (ms.key.fromMe) {
 
                     await activateCrons();
                    
-                 if((conf.DP).toLowerCase() === 'oui') {
-                    let cmsg = `╔════◇
-    ║ 『𝐙𝐨𝐤𝐨𝐮-𝐌𝐃』
-    ║    Prefix : [ ${prefixe} ]
-    ║    Mode :${md}
-    ║    Nombre total de Commandes : ${evt.cm.length}︎
-    ╚══════════════════╝
-    
-    ╔═════◇
-    ║『𝗯𝘆 Djalega++』
-    ║ 
-    ╚══════════════════╝`;
+                 if((conf.DP).toLowerCase() === 'yes') {
+                    let cmsg = `📡《 *SUPREMUS BOT CONSOLE* 》📡
+━━━━━━━━━━━━━━━━━━━━━━
+🧩 Préfixe système : [ ${prefixe} ]
+🧪 Mode opérationnel : ${md}
+📖 Modules actifs : ${evt.cm.length} commandes
+━━━━━━━━━━━━━━━━━━━━━━
+👑 Dev : John Supremus | SRPN Core Dev
+━━━━━━━━━━━━━━━━━━━━━━`;
                    
                     await zk.sendMessage(zk.user.id, { text: cmsg });
                  }
