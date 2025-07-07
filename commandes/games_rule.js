@@ -677,81 +677,170 @@ zokou(
   }
 );
 
-// Commande pour suivre une course 
+
+// Commande pour suivre une course (version améliorée)
 zokou(
   { nomCom: 'sr', categorie: 'SPEED-RUSH' },
-  (dest, zk, { repondre, arg, ms }) => {
-    if (arg.length < 1) {
-      return repondre('*Usage:* -sr stats/delete [options]');
+  async (dest, zk, { repondre, arg, ms }) => {
+    const input = arg.join(' ');
+
+    // Aide
+    if (!input) return repondre(
+      '🏁 *SPEED-RUSH Help* 🏁\n\n' +
+      '➤ MàJ stats: `-sr [Pilote] [stat]±[valeur] ...`\n' +
+      '   Ex: `-sr Pilote1 voiture-20 essence+15`\n\n' +
+      '➤ Multi-pilotes: `-sr [Pilote1] [stat]±[valeur]; [Pilote2] ...`\n' +
+      '   Ex: `-sr Pilote1 turbo+10; Pilote2 essence-5`\n\n' +
+      '➤ Reset: `-sr reset [Pilote1] [Pilote2]...`\n' +
+      '➤ Reset ALL: `-sr resetall`\n' +
+      '➤ Delete: `-sr delete [courseKey]`\n' +
+      '➤ Liste: `-sr list`\n\n' +
+      '📊 Stats disponibles: voiture, essence, turbo'
+    );
+
+    // Commandes spéciales
+    if (input === 'resetall') {
+      Object.values(coursesSpeedRush).forEach(course => {
+        [course.pilote1, course.pilote2, course.pilote3].forEach(p => {
+          if (p) p.stats = { voiture: 100, essence: 100, turbo: 100 };
+        });
+      });
+      return repondre('♻️ Toutes les stats des pilotes réinitialisées !');
     }
 
-    const action = arg[0].toLowerCase();
+    if (input === 'list') {
+      if (Object.keys(coursesSpeedRush).length === 0) {
+        return repondre('ℹ️ Aucune course en cours.');
+      }
+      let liste = '🏎️ *Courses actives* 🏎️\n';
+      Object.keys(coursesSpeedRush).forEach(key => {
+        liste += `\n▸ ${key}`;
+      });
+      return repondre(liste);
+    }
 
-    switch (action) {
-      case 'stats':
-        if (arg.length < 5) {
-          return repondre('*Usage:* -sr stats @Pilote stat +/- valeur [@Pilote stat +/- valeur ...]\n' +
-            'Ex: -sr stats @Pilote1 voiture - 20 essence + 15 @Pilote2 turbo - 10');
+    if (input.startsWith('delete ')) {
+      const courseKey = input.slice(7).trim();
+      if (coursesSpeedRush[courseKey]) {
+        delete coursesSpeedRush[courseKey];
+        return repondre(`🗑️ Course "${courseKey}" supprimée !`);
+      }
+      return repondre('❌ Course non trouvée. Utilisez `-sr list` pour voir les courses actives.');
+    }
+
+    if (input.startsWith('reset ')) {
+      const noms = input.slice(6).split(' ').filter(n => n);
+      let count = 0;
+
+      noms.forEach(nom => {
+        for (const course of Object.values(coursesSpeedRush)) {
+          const pilote = [course.pilote1, course.pilote2, course.pilote3].find(p => p?.nom === nom);
+          if (pilote) {
+            pilote.stats = { voiture: 100, essence: 100, turbo: 100 };
+            count++;
+          }
+        }
+      });
+
+      return repondre(count > 0 ? `🔄 ${count} pilote(s) réinitialisé(s) !` : '❌ Pilote(s) non trouvé(s)');
+    }
+
+    // Gestion des stats
+    if (input.includes(';')) {
+      // Mode multi-pilotes
+      const pilotesInputs = input.split(';').map(p => p.trim()).filter(p => p);
+      let results = [];
+      let updatedCourse = null;
+
+      for (const piloteInput of pilotesInputs) {
+        const [nomPilote, ...modifs] = piloteInput.split(' ').filter(p => p);
+        if (!nomPilote || modifs.length === 0) continue;
+
+        // Trouver le pilote
+        let piloteTrouve = null;
+        let courseTrouvee = null;
+
+        for (const course of Object.values(coursesSpeedRush)) {
+          const pilote = [course.pilote1, course.pilote2, course.pilote3].find(p => p?.nom === nomPilote);
+          if (pilote) {
+            piloteTrouve = pilote;
+            courseTrouvee = course;
+            break;
+          }
         }
 
-        let i = 1;
-        let modificationsEffectuées = false;
+        if (!piloteTrouve) {
+          results.push(`❌ "${nomPilote}" non trouvé`);
+          continue;
+        }
 
-        while (i < arg.length) {
-          const piloteId = arg[i];
-          const stat = arg[i + 1];
-          const signe = arg[i + 2];
-          const valeurStr = arg[i + 3];
-
-          if (!piloteId || !stat || !signe || !valeurStr) break; // Arrêter si format incorrect
-
-          const valeur = parseInt(valeurStr);
-          if (isNaN(valeur)) return repondre(`Valeur invalide pour ${piloteId}.`);
-
-          if (!['voiture', 'essence', 'turbo'].includes(stat)) {
-            return repondre(`Stat invalide pour ${piloteId}. Les stats valides sont : voiture, essence, turbo.`);
+        // Appliquer les modifs
+        for (const mod of modifs) {
+          const match = mod.match(/^(voiture|essence|turbo)([+-])(\d+)$/);
+          if (!match) {
+            results.push(`❌ Format invalide: "${mod}"`);
+            continue;
           }
 
-          const courseKey = Object.keys(coursesSpeedRush).find(key => key.includes(piloteId));
-          if (!courseKey) return repondre(`Pilote ${piloteId} non trouvé dans une course en cours.`);
+          const [_, stat, op, valStr] = match;
+          const valeur = parseInt(valStr) * (op === '+' ? 1 : -1);
+          const result = limiterStatsSpeedRush(piloteTrouve.stats, stat, valeur);
 
-          const course = coursesSpeedRush[courseKey];
-          let pilote = [course.pilote1, course.pilote2, course.pilote3].find(p => p?.nom === piloteId);
+          piloteTrouve.stats = result.stats;
+          updatedCourse = courseTrouvee;
+          results.push(result.message || `✅ ${nomPilote} ${stat} ${op}= ${valStr}`);
+        }
+      }
 
-          if (!pilote) return repondre(`Pilote ${piloteId} non trouvé dans cette course.`);
+      if (results.length > 0) await repondre(results.join('\n'));
+      if (updatedCourse) {
+        return zk.sendMessage(dest, {
+          image: { url: updatedCourse.circuit.image },
+          caption: generateFicheCourseSpeedRush(updatedCourse)
+        }, { quoted: ms });
+      }
+    } else {
+      // Mode single-pilote
+      const [nomPilote, ...modifs] = input.split(' ').filter(p => p);
+      if (!nomPilote || modifs.length === 0) return;
 
-          const { stats, message } = limiterStatsSpeedRush(pilote.stats, stat, (signe === '-' ? -valeur : valeur));
-          pilote.stats = stats;
-          if (message) repondre(message);
+      let piloteTrouve = null;
+      let courseTrouvee = null;
+      const results = [];
 
-          modificationsEffectuées = true;
-          i += 4; // Passer au prochain bloc de stats
+      for (const course of Object.values(coursesSpeedRush)) {
+        const pilote = [course.pilote1, course.pilote2, course.pilote3].find(p => p?.nom === nomPilote);
+        if (pilote) {
+          piloteTrouve = pilote;
+          courseTrouvee = course;
+          break;
+        }
+      }
+
+      if (!piloteTrouve) return repondre(`❌ Pilote "${nomPilote}" non trouvé`);
+
+      for (const mod of modifs) {
+        const match = mod.match(/^(voiture|essence|turbo)([+-])(\d+)$/);
+        if (!match) {
+          results.push(`❌ Format invalide: "${mod}"`);
+          continue;
         }
 
-        if (modificationsEffectuées) {
-          const courseKey = Object.keys(coursesSpeedRush)[0]; // On prend une course quelconque pour renvoyer une fiche mise à jour
-          const course = coursesSpeedRush[courseKey];
-          const ficheCourse = generateFicheCourseSpeedRush(course);
-          return zk.sendMessage(dest, { image: { url: course.circuit.image }, caption: ficheCourse }, { quoted: ms });
-        }
-        break;
+        const [_, stat, op, valStr] = match;
+        const valeur = parseInt(valStr) * (op === '+' ? 1 : -1);
+        const result = limiterStatsSpeedRush(piloteTrouve.stats, stat, valeur);
 
-      case 'delete':
-        if (arg.length < 2) {
-          return repondre('*Usage:* -sr delete courseKey. Ex: -sr delete @Pilote1 vs @Pilote2');
-        }
+        piloteTrouve.stats = result.stats;
+        results.push(result.message || `✅ ${stat} ${op}= ${valStr}`);
+      }
 
-        const courseKeyToDelete = arg.slice(1).join(' ');
-
-        if (!coursesSpeedRush[courseKeyToDelete]) {
-          return repondre('Course non trouvée.');
-        }
-
-        delete coursesSpeedRush[courseKeyToDelete];
-        return repondre(`La course ${courseKeyToDelete} a été supprimée.`);
-
-      default:
-        return repondre('Action invalide. Utilisez "stats" ou "delete".');
+      if (results.length > 0) await repondre(results.join('\n'));
+      if (courseTrouvee) {
+        return zk.sendMessage(dest, {
+          image: { url: courseTrouvee.circuit.image },
+          caption: generateFicheCourseSpeedRush(courseTrouvee)
+        }, { quoted: ms });
+      }
     }
   }
 );
