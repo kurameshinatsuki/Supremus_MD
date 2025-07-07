@@ -37,7 +37,274 @@ function limiterStatsABM(stats, stat, valeur) {
     return { stats, message: null };
 }
 
+// ... (le reste du code reste inchangé jusqu'à la fonction generateFicheDuelABM)
+
 function generateFicheDuelABM(duel) {
+    let equipe1Text = '';
+    for (const joueur of duel.equipe1) {
+        equipe1Text += `*👤 ${joueur.nom} :*\n> ❤️: ${joueur.stats.vie} | 🌀: ${joueur.stats.energie} | 🫀: ${joueur.stats.heart}\n\n`;
+    }
+
+    let equipe2Text = '';
+    for (const joueur of duel.equipe2) {
+        equipe2Text += `*👤 ${joueur.nom} :*\n> ❤️: ${joueur.stats.vie} | 🌀: ${joueur.stats.energie} | 🫀: ${joueur.stats.heart}\n\n`;
+    }
+
+    return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
+    🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
+   👊 𝐀𝐧𝐢𝐦𝐞 𝐁𝐚𝐭𝐭𝐥𝐞 𝐌𝐮𝐥𝐭𝐢𝐯𝐞𝐫𝐬 👊
+*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*ÉQUIPE 1 (${duel.equipe1.length} JOUEUR${duel.equipe1.length > 1 ? 'S' : ''}) :*
+${equipe1Text}
+                     *𝙑𝙎*
+
+*ÉQUIPE 2 (${duel.equipe2.length} JOUEUR${duel.equipe2.length > 1 ? 'S' : ''}) :*
+${equipe2Text}
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+          *\`FIGHTING RULE\`*
+
+> - *Wtf :* MC
+> - *Latence :* +100ms⚡
+> - *Potentiel :* ${duel.statsCustom}
+> - *Items :* (voir perso)
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+> *🔄 Tourneur :* ${duel.equipe2[0].nom} -> ${duel.equipe1[0].nom}
+> *⚖️ Arbitre :* Auto Modo
+> *🌦️ Météo :* (voir arène)
+> *🌍 Zone :*  ${duel.arene.nom}
+> *📌 Distance initiale :* 5m
+> *⭕ Arène Stats :* (voir arène)
+> *⏱️ Délai :* 5 + 1min max
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+> *🌍 Environnement :* (voir arène)
+
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+    *MAÎTRISE INITIALE "⭐" : 5*
+
+> *❌ Sans Visuel :* -1⭐
+> *❌ Pavé Lassant :* -2⭐
+> *❌ Contredit Verdict :* -2⭐
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+> *🥇 Easy: 3:* Victory.
+> *🥈 Medium: 2:* +30%🫀def
+> *🥉 Hard: 1:* -70%❤️/+50%🫀
+> *🏅 Perfect: 5:* No variation.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+> *⚠️ Si vous achevez l'adversaire d'un seul coup, c'est un "ONE SHOT" +2⭐. Si vous l'achevez en full power, c'est "RAMPAGE" +2⭐. Et si vous gagnez contre un personnage de rang supérieur, c'est "MONSTER KILLER" +4⭐.*
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+> *⏱️ DELAY:* Si vous ne parvenez pas à battre l'adversaire avant la fin du compteur, la victoire revient au joueur en meilleure posture *(stats ou domination).*
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+}
+
+// Commande pour démarrer un duel dynamique
+zokou(
+    { nomCom: 'abm_rule', categorie: 'ABM' },
+    async (dest, zk, { repondre, arg, ms }) => {
+        if (!arg[0]) {
+            return repondre('Usage: -duel_abm joueur1,joueur2 vs joueur3 / stats. Ex: -duel_abm Gojo,Sukuna vs Madara / Madara F: Rinnegan');
+        }
+
+        try {
+            const input = arg.join(' ');
+            const [joueursInput, statsCustom] = input.split('/').map(p => p.trim());
+            const [equipe1Str, equipe2Str] = joueursInput.split('vs').map(p => p.trim());
+
+            if (!equipe1Str || !equipe2Str) return repondre('Erreur de format ! Utilisez "vs" pour séparer les équipes.');
+
+            // Gestion des équipes dynamiques
+            const equipe1 = equipe1Str.split(',').map(n => ({ 
+                nom: n.trim(), 
+                stats: { heart: 100, energie: 100, vie: 100 } 
+            }));
+            
+            const equipe2 = equipe2Str.split(',').map(n => ({ 
+                nom: n.trim(), 
+                stats: { heart: 100, energie: 100, vie: 100 } 
+            }));
+
+            const areneT = tirerArABM();
+            const duelKey = `${equipe1.map(j => j.nom).join(',')} vs ${equipe2.map(j => j.nom).join(',')}`;
+            
+            duelsABM[duelKey] = {
+                equipe1,
+                equipe2,
+                statsCustom: statsCustom || 'Aucune stat personnalisée',
+                arene: areneT
+            };
+
+            const ficheDuel = generateFicheDuelABM(duelsABM[duelKey]);
+
+            await zk.sendMessage(dest, {
+                image: { url: areneT.image },
+                caption: ficheDuel
+            }, { quoted: ms });
+
+            // Modèle de pavé pour le RP combat
+            const modelePave = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓▓▓[PAVE ABM]▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*[Perso] :*
+
+> ▪️ [Décris tes actions RP ici]
+
+*💠 TECHNIQUES :* 
+*📌 DISTANCE :* 
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
+
+            await zk.sendMessage(dest, { text: modelePave }, { quoted: ms });
+
+        } catch (error) {
+            console.error('Erreur lors du duel ABM:', error);
+            repondre('Une erreur est survenue: ' + error.message);
+        }
+    }
+);
+
+// Nouvelle commande pour gérer les mises à jour multi-joueurs
+zokou(
+    { nomCom: 'duel_abm', categorie: 'ABM' },
+    async (dest, zk, { repondre, arg, ms }) => {
+        if (arg.length < 1) return repondre(
+            'Format: \n' +
+            '- Mise à jour: @Joueur1 stat1 +/- valeur1 @Joueur2 stat2 +/- valeur2 ...\n' +
+            '- Reset: reset @Joueur1 @Joueur2 ...\n' +
+            '- Reset global: reset all\n' +
+            '- Suppression: delete'
+        );
+
+        const action = arg[0].toLowerCase();
+
+        // Gestion de la suppression
+        if (action === 'delete') {
+            duelsABM = {};
+            return repondre('Tous les duels ont été supprimés.');
+        }
+
+        // Gestion des reset
+        if (action === 'reset') {
+            if (arg[1] === 'all') {
+                Object.values(duelsABM).forEach(duel => {
+                    [...duel.equipe1, ...duel.equipe2].forEach(j => {
+                        j.stats = { heart: 100, energie: 100, vie: 100 };
+                    });
+                });
+                return repondre('Toutes les stats ont été réinitialisées !');
+            }
+
+            // Reset multi-joueurs
+            const joueurs = arg.slice(1);
+            let updatedDuel = null;
+
+            for (const nomJoueur of joueurs) {
+                for (const duelKey in duelsABM) {
+                    const duel = duelsABM[duelKey];
+                    const allPlayers = [...duel.equipe1, ...duel.equipe2];
+                    const joueur = allPlayers.find(j => j.nom === nomJoueur);
+                    
+                    if (joueur) {
+                        joueur.stats = { heart: 100, energie: 100, vie: 100 };
+                        updatedDuel = duel;
+                    }
+                }
+            }
+
+            if (updatedDuel) {
+                const fiche = generateFicheDuelABM(updatedDuel);
+                await zk.sendMessage(dest, {
+                    image: { url: updatedDuel.arene.image },
+                    caption: fiche
+                }, { quoted: ms });
+            } else {
+                repondre('Aucun joueur valide trouvé.');
+            }
+            return;
+        }
+
+        // Gestion des mises à jour de stats multi-joueurs
+        const modifications = [];
+        let i = 0;
+        
+        while (i < arg.length) {
+            if (arg[i].startsWith('@')) {
+                const nomJoueur = arg[i].substring(1);
+                const stat = arg[i + 1];
+                const operation = arg[i + 2];
+                const valeur = parseInt(arg[i + 3]);
+                
+                if (!stat || !operation || isNaN(valeur)) {
+                    repondre(`Format invalide pour ${nomJoueur}`);
+                    i += 4;
+                    continue;
+                }
+                
+                modifications.push({ nomJoueur, stat, operation, valeur });
+                i += 4;
+            } else {
+                i++;
+            }
+        }
+
+        // Appliquer les modifications
+        let updatedDuel = null;
+        let results = [];
+
+        for (const mod of modifications) {
+            let joueurTrouve = null;
+            let duelTrouve = null;
+
+            for (const duelKey in duelsABM) {
+                const duel = duelsABM[duelKey];
+                const allPlayers = [...duel.equipe1, ...duel.equipe2];
+                const joueur = allPlayers.find(j => j.nom === mod.nomJoueur);
+                
+                if (joueur) {
+                    joueurTrouve = joueur;
+                    duelTrouve = duel;
+                    break;
+                }
+            }
+
+            if (joueurTrouve) {
+                const valeurReelle = mod.operation === '+' ? mod.valeur : -mod.valeur;
+                const result = limiterStatsABM(joueurTrouve.stats, mod.stat, valeurReelle);
+                
+                joueurTrouve.stats = result.stats;
+                updatedDuel = duelTrouve;
+                
+                if (result.message) {
+                    results.push(`${mod.nomJoueur}: ${result.message}`);
+                } else {
+                    results.push(`${mod.nomJoueur} ${mod.stat} ${mod.operation}= ${mod.valeur}`);
+                }
+            } else {
+                results.push(`${mod.nomJoueur} non trouvé`);
+            }
+        }
+
+        // Envoyer les résultats
+        if (results.length > 0) {
+            repondre('Résultats:\n' + results.join('\n'));
+        }
+
+        // Mettre à jour la fiche si un duel a été modifié
+        if (updatedDuel) {
+            const fiche = generateFicheDuelABM(updatedDuel);
+            await zk.sendMessage(dest, {
+                image: { url: updatedDuel.arene.image },
+                caption: fiche
+            }, { quoted: ms });
+        }
+    }
+);
+
+
+/*function generateFicheDuelABM(duel) {
     return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 *▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
     🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
@@ -233,7 +500,7 @@ zokou(
             return zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
         }
     }
-);
+);*/
 
 // Définition des circuits
 const circuitsSpeedRush = [
