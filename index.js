@@ -683,103 +683,137 @@ if (ms.key.fromMe) {
                 });
             //fin événement message
 
-    /******** evenement groupe update ****************/
 
-
-    zk.ev.on('group-participants.update', async (group) => {
-
-            const decodeJid = (jid) => {
-                if (!jid)
-                    return jid;
-                if (/:\d+@/gi.test(jid)) {
-                    let decode = (0, baileys_1.jidDecode)(jid) || {};
-                    return decode.user && decode.server && decode.user + '@' + decode.server || jid;
-                }
-                else
-                    return jid;
-            };
-
-       console.log(group)
-
-        let ppgroup;
-        try {
-            ppgroup = await zk.profilePictureUrl(group.id, 'image');
-        } catch {
-            ppgroup = 'https://i.ibb.co/n8BZLY3b/image.jpg';
+    /******** Événement mise à jour des participants de groupe ****************/
+zk.ev.on('group-participants.update', async (group) => {
+    const decodeJid = (jid) => {
+        if (!jid) return jid;
+        if (/:\d+@/gi.test(jid)) {
+            let decode = (0, baileys_1.jidDecode)(jid) || {};
+            return decode.user && decode.server && decode.user + '@' + decode.server || jid;
         }
+        return jid;
+    };
 
-        try {
-            const metadata = await zk.groupMetadata(group.id);
+    console.log('Événement groupe détecté:', group);
 
-            if (group.action == 'add' && (await recupevents(group.id, "welcome") == 'yes')) {
-                let msg = `🪀 *《 WELCOME SRPN ACTIVÉ 》* 🪀
+    let ppgroup;
+    try {
+        ppgroup = await zk.profilePictureUrl(group.id, 'image');
+    } catch {
+        ppgroup = 'https://i.ibb.co/n8BZLY3b/image.jpg';
+    }
+
+    try {
+        const metadata = await zk.groupMetadata(group.id);
+        const membres = group.participants;
+
+        // Gestion des nouveaux membres
+        if (group.action === 'add' && (await recupevents(group.id, "welcome") === 'yes') {
+            let msg = `🪀 *《 WELCOME SRPN ACTIVÉ 》* 🪀
 
 ⚙️ Chargement des données...
 
 *✨🙂 Bienvenue à :*
-${group.participants.map(m => `🔹 @${m.split("@")[0]}`).join('\n')}
+${membres.map(m => `🔹 @${m.split("@")[0]}`).join('\n')}
 
 *🪀 SERVEUR :*
-${metadata.desc}`;
+${metadata.desc || 'Aucune description'}`;
 
-                zk.sendMessage(group.id, { image: { url: ppgroup }, caption: msg, mentions: membres });
-            } else if (group.action == 'remove' && (await recupevents(group.id, "goodbye") == 'yes')) {
-                let msg = `╔═══『⚠️ DÉCONNEXION INATTENDUE 』═══╗
+            await zk.sendMessage(group.id, { 
+                image: { url: ppgroup }, 
+                caption: msg, 
+                mentions: membres 
+            });
+
+        // Gestion des membres quittants
+        } else if (group.action === 'remove' && (await recupevents(group.id, "goodbye") === 'yes')) {
+            let msg = `╔═══『⚠️ DÉCONNEXION INATTENDUE 』═══╗
 ║ Un ou des membres vient(nent) de quitter le système SRPN...
 ║ Utilisateur(s) expulsé(s) :
 ║`;
 
-let membres = group.participants;
-for (let membre of membres) {
-    msg += `║   ❌ @${membre.split("@")[0]}\n`;
-}
+            membres.forEach(membre => {
+                msg += `║   ❌ @${membre.split("@")[0]}\n`;
+            });
 
-msg += `║
+            msg += `║
 ╠═══『📤 DÉCHARGEMENT TERMINÉ』═══╣
 ║ 📛 Profil(s) supprimé(s) du multivers.
 ║ 🎮 Le jeu continue... sans eux.
 ╚════════════════════════════════╝`;
+
+            await zk.sendMessage(group.id, { 
+                text: msg, 
+                mentions: membres 
+            });
+
+        // Gestion des promotions
+        } else if (group.action === 'promote' && (await recupevents(group.id, "antipromote") === 'yes')) {
+            try {
+                const superUsers = [
+                    metadata.owner,
+                    conf.NUMERO_OWNER + '@s.whatsapp.net',
+                    decodeJid(zk.user.id),
+                    group.participants[0]
+                ];
+
+                if (superUsers.includes(group.author)) {
+                    console.log('SuperUser détecté - Aucune action');
+                    return;
                 }
 
-                zk.sendMessage(group.id, { text: msg, mentions: membres });
-
-            } else if (group.action == 'promote' && (await recupevents(group.id, "antipromote") == 'yes') ) {
-                //  console.log(zk.user.id)
-              if (group.author == metadata.owner || group.author  == conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id)  || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
-
-
-             await   zk.groupParticipantsUpdate(group.id ,[group.author,group.participants[0]],"demote") ;
-
-             zk.sendMessage(
-                  group.id,
-                  {
-                    text : `@${(group.author).split("@")[0]} a enfreinst la règle de l'antipromote par consequent lui et @${(group.participants[0]).split("@")[0]} ont été demis des droits d'aministration`,
-                    mentions : [group.author,group.participants[0]]
-                  }
-             )
-
-            } else if (group.action == 'demote' && (await recupevents(group.id, "antidemote") == 'yes') ) {
-
-                if (group.author == metadata.owner || group.author ==  conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id) || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
-
-
-               await  zk.groupParticipantsUpdate(group.id ,[group.author],"demote") ;
-               await zk.groupParticipantsUpdate(group.id , [group.participants[0]] , "promote")
-
-               zk.sendMessage(
+                await zk.groupParticipantsUpdate(
                     group.id,
-                    {
-                      text : `@${(group.author).split("@")[0]} a enfreint la règle de l'antidemote car il a denommer @${(group.participants[0]).split("@")[0]} par consequent , il est demit des droits d'aministration` ,
-                      mentions : [group.author,group.participants[0]]
-                    }
-               )
+                    [group.author, group.participants[0]],
+                    "demote"
+                );
 
-         } 
+                await zk.sendMessage(group.id, {
+                    text: `@${group.author.split("@")[0]} a enfreint la règle de l'antipromote.\n` +
+                          `Conséquence : Lui et @${group.participants[0].split("@")[0]} ` +
+                          `ont été rétrogradés.`,
+                    mentions: [group.author, group.participants[0]]
+                });
 
-        } catch (e) {
-            console.error(e);
+            } catch (promoteError) {
+                console.error('Erreur antipromote:', promoteError);
+            }
+
+        // Gestion des rétrogradations
+        } else if (group.action === 'demote' && (await recupevents(group.id, "antidemote") === 'yes')) {
+            try {
+                const superUsers = [
+                    metadata.owner,
+                    conf.NUMERO_OWNER + '@s.whatsapp.net',
+                    decodeJid(zk.user.id),
+                    group.participants[0]
+                ];
+
+                if (superUsers.includes(group.author)) {
+                    console.log('SuperUser détecté - Aucune action');
+                    return;
+                }
+
+                await zk.groupParticipantsUpdate(group.id, [group.author], "demote");
+                await zk.groupParticipantsUpdate(group.id, [group.participants[0]], "promote");
+
+                await zk.sendMessage(group.id, {
+                    text: `@${group.author.split("@")[0]} a enfreint la règle antidemote ` +
+                          `en rétrogradant @${group.participants[0].split("@")[0]}.\n` +
+                          `Conséquence : Il a perdu ses droits admin.`,
+                    mentions: [group.author, group.participants[0]]
+                });
+
+            } catch (demoteError) {
+                console.error('Erreur antidemote:', demoteError);
+            }
         }
-    });
+
+    } catch (mainError) {
+        console.error('Erreur principale:', mainError);
+    }
+});
 
 
 
