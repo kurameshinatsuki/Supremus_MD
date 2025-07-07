@@ -166,53 +166,55 @@ zokou(
     }
 );
 
+
 // Nouvelle commande pour gérer les mises à jour multi-joueurs
 zokou(
     { nomCom: 'duel_abm', categorie: 'ABM' },
     async (dest, zk, { repondre, arg, ms }) => {
         if (arg.length < 1) return repondre(
-            'Format: \n' +
-            '- Mise à jour: @Joueur1 stat1 +/- valeur1 @Joueur2 stat2 +/- valeur2 ...\n' +
-            '- Reset: reset @Joueur1 @Joueur2 ...\n' +
+            '🔹 *Usage* :\n' +
+            '- MàJ stats: @Joueur stat1 +- valeur1,stat2 +- valeur2; @Joueur2 ...\n' +
+            '- Reset: reset @Joueur1; @Joueur2\n' +
             '- Reset global: reset all\n' +
-            '- Suppression: delete'
+            '- Suppression: delete\n\n' +
+            'Exemple:\n' +
+            '-duel_abm @Gojo vie -20,energie +30; @Sukuna heart +15'
         );
 
-        const action = arg[0].toLowerCase();
-
-        // Gestion de la suppression
-        if (action === 'delete') {
+        const input = arg.join(' ');
+        
+        // Gestion delete
+        if (input === 'delete') {
             duelsABM = {};
-            return repondre('Tous les duels ont été supprimés.');
+            return repondre('✅ Tous les duels ont été supprimés.');
         }
 
-        // Gestion des reset
-        if (action === 'reset') {
-            if (arg[1] === 'all') {
+        // Gestion reset
+        if (input.startsWith('reset')) {
+            if (input === 'reset all') {
                 Object.values(duelsABM).forEach(duel => {
                     [...duel.equipe1, ...duel.equipe2].forEach(j => {
                         j.stats = { heart: 100, energie: 100, vie: 100 };
                     });
                 });
-                return repondre('Toutes les stats ont été réinitialisées !');
+                return repondre('✅ Toutes les stats réinitialisées !');
             }
 
-            // Reset multi-joueurs
-            const joueurs = arg.slice(1);
+            const joueurs = input.replace('reset', '').split(';').map(j => j.trim()).filter(j => j);
             let updatedDuel = null;
 
-            for (const nomJoueur of joueurs) {
+            joueurs.forEach(nomJoueur => {
                 for (const duelKey in duelsABM) {
                     const duel = duelsABM[duelKey];
                     const allPlayers = [...duel.equipe1, ...duel.equipe2];
-                    const joueur = allPlayers.find(j => j.nom === nomJoueur);
+                    const joueur = allPlayers.find(j => j.nom === nomJoueur.replace('@', ''));
                     
                     if (joueur) {
                         joueur.stats = { heart: 100, energie: 100, vie: 100 };
                         updatedDuel = duel;
                     }
                 }
-            }
+            });
 
             if (updatedDuel) {
                 const fiche = generateFicheDuelABM(updatedDuel);
@@ -220,48 +222,34 @@ zokou(
                     image: { url: updatedDuel.arene.image },
                     caption: fiche
                 }, { quoted: ms });
+                return repondre('✅ Stats réinitialisées pour les joueurs spécifiés.');
             } else {
-                repondre('Aucun joueur valide trouvé.');
-            }
-            return;
-        }
-
-        // Gestion des mises à jour de stats multi-joueurs
-        const modifications = [];
-        let i = 0;
-        
-        while (i < arg.length) {
-            if (arg[i].startsWith('@')) {
-                const nomJoueur = arg[i].substring(1);
-                const stat = arg[i + 1];
-                const operation = arg[i + 2];
-                const valeur = parseInt(arg[i + 3]);
-                
-                if (!stat || !operation || isNaN(valeur)) {
-                    repondre(`Format invalide pour ${nomJoueur}`);
-                    i += 4;
-                    continue;
-                }
-                
-                modifications.push({ nomJoueur, stat, operation, valeur });
-                i += 4;
-            } else {
-                i++;
+                return repondre('❌ Aucun joueur valide trouvé.');
             }
         }
 
-        // Appliquer les modifications
-        let updatedDuel = null;
+        // Gestion des mises à jour de stats
+        const joueursInputs = input.split(';').map(j => j.trim()).filter(j => j);
         let results = [];
+        let updatedDuel = null;
 
-        for (const mod of modifications) {
+        for (const joueurInput of joueursInputs) {
+            const [nomJoueur, ...statsParts] = joueurInput.split(' ').filter(p => p);
+            const nomJoueurClean = nomJoueur.replace('@', '').trim();
+            
+            if (!statsParts.length) continue;
+
+            const statsStr = statsParts.join(' ');
+            const statsUpdates = statsStr.split(',').map(s => s.trim()).filter(s => s);
+
+            // Trouver le joueur
             let joueurTrouve = null;
             let duelTrouve = null;
 
             for (const duelKey in duelsABM) {
                 const duel = duelsABM[duelKey];
                 const allPlayers = [...duel.equipe1, ...duel.equipe2];
-                const joueur = allPlayers.find(j => j.nom === mod.nomJoueur);
+                const joueur = allPlayers.find(j => j.nom === nomJoueurClean);
                 
                 if (joueur) {
                     joueurTrouve = joueur;
@@ -270,38 +258,65 @@ zokou(
                 }
             }
 
-            if (joueurTrouve) {
-                const valeurReelle = mod.operation === '+' ? mod.valeur : -mod.valeur;
-                const result = limiterStatsABM(joueurTrouve.stats, mod.stat, valeurReelle);
+            if (!joueurTrouve) {
+                results.push(`❌ ${nomJoueurClean} non trouvé`);
+                continue;
+            }
+
+            // Traiter chaque modification
+            for (const update of statsUpdates) {
+                const parts = update.split(/(\+|-)/).filter(p => p);
+                if (parts.length !== 3) {
+                    results.push(`❌ Format invalide pour ${nomJoueurClean}: ${update}`);
+                    continue;
+                }
+
+                const stat = parts[0].trim();
+                const operation = parts[1];
+                const valeur = parseInt(parts[2]);
+
+                if (!['vie', 'energie', 'heart'].includes(stat)) {
+                    results.push(`❌ Stat invalide pour ${nomJoueurClean}: ${stat}`);
+                    continue;
+                }
+
+                if (isNaN(valeur)) {
+                    results.push(`❌ Valeur invalide pour ${nomJoueurClean}: ${parts[2]}`);
+                    continue;
+                }
+
+                const valeurReelle = operation === '+' ? valeur : -valeur;
+                const result = limiterStatsABM(joueurTrouve.stats, stat, valeurReelle);
                 
                 joueurTrouve.stats = result.stats;
                 updatedDuel = duelTrouve;
                 
                 if (result.message) {
-                    results.push(`${mod.nomJoueur}: ${result.message}`);
+                    results.push(`⚠️ ${nomJoueurClean} ${stat}: ${result.message}`);
                 } else {
-                    results.push(`${mod.nomJoueur} ${mod.stat} ${mod.operation}= ${mod.valeur}`);
+                    results.push(`✅ ${nomJoueurClean} ${stat} ${operation}= ${valeur}`);
                 }
-            } else {
-                results.push(`${mod.nomJoueur} non trouvé`);
             }
         }
 
         // Envoyer les résultats
         if (results.length > 0) {
-            repondre('Résultats:\n' + results.join('\n'));
+            await repondre('📊 Résultats:\n' + results.join('\n'));
         }
 
-        // Mettre à jour la fiche si un duel a été modifié
+        // Mettre à jour la fiche
         if (updatedDuel) {
             const fiche = generateFicheDuelABM(updatedDuel);
             await zk.sendMessage(dest, {
                 image: { url: updatedDuel.arene.image },
                 caption: fiche
             }, { quoted: ms });
+        } else if (!input.startsWith('reset') && input !== 'delete') {
+            repondre('ℹ️ Aucun duel actif trouvé pour mise à jour.');
         }
     }
 );
+
 
 
 /*function generateFicheDuelABM(duel) {
