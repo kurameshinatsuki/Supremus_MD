@@ -31,7 +31,7 @@ function tirerArABM() {
 
 function limiterStatsABM(stats, stat, valeur) {
     if (stats[stat] === 100 && valeur > 0) {
-        return { stats, message: '_⚠️ Statistique déjà au maximum!_' };
+        return { stats, message: '*_⚠️ Statistique déjà au maximum!_*' };
     }
     stats[stat] = Math.min(stats[stat] + valeur, 100);
     return { stats, message: null };
@@ -56,11 +56,11 @@ function generateFicheDuelABM(duel) {
    👊 𝐀𝐧𝐢𝐦𝐞 𝐁𝐚𝐭𝐭𝐥𝐞 𝐌𝐮𝐥𝐭𝐢𝐯𝐞𝐫𝐬 👊
 *▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*ÉQUIPE 1 (${duel.equipe1.length} JOUEUR${duel.equipe1.length > 1 ? 'S' : ''}) :*
+*👥 ${duel.equipe1.length} JOUEUR${duel.equipe1.length > 1 ? 'S' : ''} :*
 ${equipe1Text}
                      *𝙑𝙎*
 
-*ÉQUIPE 2 (${duel.equipe2.length} JOUEUR${duel.equipe2.length > 1 ? 'S' : ''}) :*
+*👥 ${duel.equipe2.length} JOUEUR${duel.equipe2.length > 1 ? 'S' : ''} :*
 ${equipe2Text}
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
           *\`FIGHTING RULE\`*
@@ -76,7 +76,7 @@ ${equipe2Text}
 > *🌍 Zone :*  ${duel.arene.nom}
 > *📌 Distance initiale :* 5m
 > *⭕ Arène Stats :* (voir arène)
-> *⏱️ Délai :* 5 + 1min max
+> *⏱️ Délai :* 4 + 1min max
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 > *🌍 Environnement :* (voir arène)
 
@@ -105,7 +105,7 @@ zokou(
     { nomCom: 'abm_rule', categorie: 'ABM' },
     async (dest, zk, { repondre, arg, ms }) => {
         if (!arg[0]) {
-            return repondre('Usage: -duel_abm joueur1,joueur2 vs joueur3 / stats. Ex: -duel_abm Gojo,Sukuna vs Madara / Madara F: Rinnegan');
+            return repondre('*🔹Usage:* -abm_rule joueur1,joueur2 vs joueur3 / stats. *Ex:* -abm_rule Gojo,Sukuna vs Madara / Madara F: Gray.');
         }
 
         try {
@@ -113,14 +113,14 @@ zokou(
             const [joueursInput, statsCustom] = input.split('/').map(p => p.trim());
             const [equipe1Str, equipe2Str] = joueursInput.split('vs').map(p => p.trim());
 
-            if (!equipe1Str || !equipe2Str) return repondre('Erreur de format ! Utilisez "vs" pour séparer les équipes.');
+            if (!equipe1Str || !equipe2Str) return repondre('*_⚠️ Erreur de format ! Utilisez "vs" pour séparer les équipes._*');
 
             // Gestion des équipes dynamiques
             const equipe1 = equipe1Str.split(',').map(n => ({ 
                 nom: n.trim(), 
                 stats: { heart: 100, energie: 100, vie: 100 } 
             }));
-            
+
             const equipe2 = equipe2Str.split(',').map(n => ({ 
                 nom: n.trim(), 
                 stats: { heart: 100, energie: 100, vie: 100 } 
@@ -128,11 +128,11 @@ zokou(
 
             const areneT = tirerArABM();
             const duelKey = `${equipe1.map(j => j.nom).join(',')} vs ${equipe2.map(j => j.nom).join(',')}`;
-            
+
             duelsABM[duelKey] = {
                 equipe1,
                 equipe2,
-                statsCustom: statsCustom || 'Aucune stat personnalisée',
+                statsCustom: statsCustom || 'Non defini',
                 arene: areneT
             };
 
@@ -175,17 +175,17 @@ zokou(
 
         // Aide enrichie
         if (!input) return repondre(
-            '⚔️ *ABM ULTIMATE HELP* ⚔️\n\n' +
-            '➤ MàJ stats: `-duel_abm [Joueur] [stat]±[valeur] ...`\n' +
-            '   Ex: `-duel_abm Gojo vie-20 energie+30`\n\n' +
-            '➤ Multi-joueurs: `-duel_abm [Joueur1] [stat]±[valeur]; [Joueur2] ...`\n' +
-            '   Ex: `-duel_abm Gojo heart+15; Sukuna vie-10`\n\n' +
-            '➤ Reset: `-duel_abm reset [Joueur1] [Joueur2]...`\n' +
-            '➤ Reset ALL: `-duel_abm resetall`\n' +
-            '➤ Delete: `-duel_abm delete [duelKey]`\n' +
-            '➤ Liste: `-duel_abm list`\n\n' +
-            '📊 Stats disponibles: vie, energie, heart\n' +
-            '🔍 Exemple complet:\n' +
+            '🆚 *ABM ULTIMATE HELP* 🆚\n\n' +
+            '➤ *MàJ stats:* `-duel_abm [Joueur] [stat]±[valeur] ...`\n' +
+            '   *Ex:* `-duel_abm Gojo vie-20 energie+30`\n\n' +
+            '➤ *Multi-joueurs:* `-duel_abm [Joueur1] [stat]±[valeur]; [Joueur2] ...`\n' +
+            '   *Ex:* `-duel_abm Gojo heart+15; Sukuna vie-10`\n\n' +
+            '➤ *Reset:* `-duel_abm reset [Joueur1] [Joueur2]...`\n' +
+            '➤ *Reset ALL:* `-duel_abm resetall`\n' +
+            '➤ *Delete:* `-duel_abm delete [duelKey]`\n' +
+            '➤ *Liste:* `-duel_abm list`\n\n' +
+            '📊 *Stats disponibles:* vie, energie, heart\n' +
+            '*Exemple complet:*\n' +
             '-duel_abm Gojo vie-10,energie+20; Sukuna heart+15'
         );
 
@@ -196,14 +196,14 @@ zokou(
                     j.stats = { heart: 100, energie: 100, vie: 100 };
                 });
             });
-            return repondre('♻️ Toutes les stats ont été réinitialisées !');
+            return repondre('*_♻️ Toutes les stats ont été réinitialisées !_*');
         }
 
         if (input === 'list') {
             if (Object.keys(duelsABM).length === 0) {
-                return repondre('ℹ️ Aucun duel actif.');
+                return repondre('*_ℹ️ Aucun duel actif._*');
             }
-            let liste = '⚔️ *Duels en cours* ⚔️\n';
+            let liste = '🆚 *DUELS EN COURS* 🆚\n';
             Object.keys(duelsABM).forEach(key => {
                 liste += `\n▸ ${key}`;
             });
@@ -214,9 +214,9 @@ zokou(
             const duelKey = input.slice(7).trim();
             if (duelsABM[duelKey]) {
                 delete duelsABM[duelKey];
-                return repondre(`🗑️ Duel "${duelKey}" supprimé !`);
+                return repondre(`*_🗑️ Duel "${duelKey}" supprimé !_*`);
             }
-            return repondre('❌ Duel non trouvé. Utilisez `-duel_abm list` pour voir les duels actifs.');
+            return repondre('*_❌ Duel non trouvé. Utilisez `-duel_abm list` pour voir les duels actifs._*');
         }
 
         if (input.startsWith('reset ')) {
@@ -233,7 +233,7 @@ zokou(
                 }
             });
 
-            return repondre(count > 0 ? `🔄 ${count} joueur(s) réinitialisé(s) !` : '❌ Joueur(s) non trouvé(s)');
+            return repondre(count > 0 ? `🔄 ${count} joueur(s) réinitialisé(s) !` : '*_❌ Joueur(s) non trouvé(s)_*');
         }
 
         // Gestion des stats (version optimisée)
@@ -295,210 +295,11 @@ zokou(
                 caption: generateFicheDuelABM(updatedDuel)
             }, { quoted: ms });
         } else if (!['reset', 'delete', 'list', 'resetall'].some(cmd => input.startsWith(cmd))) {
-            repondre('ℹ️ Aucun duel actif trouvé. Créez d\'abord un duel avec -abm_rule');
+            repondre('*_ℹ️ Aucun duel actif trouvé. Créez d\'abord un duel avec -abm_rule_*');
         }
     }
 );
 
-
-
-/*function generateFicheDuelABM(duel) {
-    return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
-    🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
-   👊 𝐀𝐧𝐢𝐦𝐞 𝐁𝐚𝐭𝐭𝐥𝐞 𝐌𝐮𝐥𝐭𝐢𝐯𝐞𝐫𝐬 👊
-*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*\`👤 ${duel.equipe1[0].nom} :\`* 
-> ❤️: ${duel.equipe1[0].stats.vie} | 🌀: ${duel.equipe1[0].stats.energie} | 🫀: ${duel.equipe1[0].stats.heart}
-
-                     *𝙑𝙎*
-
-*\`👤 ${duel.equipe2[0].nom} :\`* 
-> ❤️: ${duel.equipe2[0].stats.vie} | 🌀: ${duel.equipe2[0].stats.energie} | 🫀: ${duel.equipe2[0].stats.heart}
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-          *\`FIGHTING RULE\`*
-
-> - *Wtf :* MC
-> - *Latence :* +100ms⚡
-> - *Potentiel :* ${duel.statsCustom}
-> - *Items :* (voir perso)
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-> *🔄 Tourneur :* ${duel.equipe2[0].nom} -> ${duel.equipe1[0].nom}
-> *⚖️ Arbitre :* Auto Modo
-> *🌦️ Météo :* (voir arène)
-> *🌍 Zone :*  ${duel.arene.nom}
-> *📌 Distance initiale :* 5m
-> *⭕ Arène Stats :* (voir arène)
-> *⏱️ Délai :* 5 + 1min max
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-> *🌍 Environnement :* (voir arène)
-
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-    *MAÎTRISE INITIALE "⭐" : 5*
-
-> *❌ Sans Visuel :* -1⭐
-> *❌ Pavé Lassant :* -2⭐
-> *❌ Contredit Verdict :* -2⭐
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-> *🥇 Easy: 3:* Victory.
-> *🥈 Medium: 2:* +30%🫀def
-> *🥉 Hard: 1:* -70%❤️/+50%🫀
-> *🏅 Perfect: 5:* No variation.
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-> *⚠️ Si vous achevez l'adversaire d'un seul coup, c'est un "ONE SHOT" +2⭐. Si vous l'achevez en full power, c'est "RAMPAGE" +2⭐. Et si vous gagnez contre un personnage de rang supérieur, c'est "MONSTER KILLER" +4⭐.*
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-> *⏱️ DELAY:* Si vous ne parvenez pas à battre l'adversaire avant la fin du compteur, la victoire revient au joueur en meilleure posture *(stats ou domination).*
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-}
-
-// Commande pour démarrer un duel
-zokou(
-    { nomCom: 'abm_rule', categorie: 'ABM' },
-    async (dest, zk, { repondre, arg, ms }) => {
-        if (!arg[0]) {
-            return repondre('Usage: -duel_abm joueur1 vs joueur2 / stats. Ex: -duel_abm Gojo vs Sukuna / Sukuna F: Gray');
-        }
-
-        try {
-            const input = arg.join(' ');
-            const [joueursInput, statsCustom] = input.split('/').map(p => p.trim());
-            const [equipe1Str, equipe2Str] = joueursInput.split('vs').map(p => p.trim());
-
-            if (!equipe1Str || !equipe2Str) return repondre('Erreur de format !');
-
-            const equipe1 = equipe1Str.split(',').map(n => ({ nom: n.trim(), stats: { heart: 100, energie: 100, vie: 100 } }));
-            const equipe2 = equipe2Str.split(',').map(n => ({ nom: n.trim(), stats: { heart: 100, energie: 100, vie: 100 } }));
-
-            const areneT = tirerArABM();
-            const duelKey = `${equipe1Str} vs ${equipe2Str}`;
-            duelsABM[duelKey] = {
-                equipe1,
-                equipe2,
-                statsCustom: statsCustom || 'Aucune stat personnalisée',
-                arene: areneT
-            };
-
-            const ficheDuel = generateFicheDuelABM(duelsABM[duelKey]);
-
-            // 1. Envoi de l'arène avec la fiche
-            await zk.sendMessage(dest, {
-                image: { url: areneT.image },
-                caption: ficheDuel
-            }, { quoted: ms });
-
-            // 2. Envoi d’un seul pavé vide pour le RP combat
-            const modelePave = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓▓[PAVE ABM]▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*[Perso] :*
-
-> ▪️ [Décris tes actions RP ici]
-
-*💠 TECHNIQUES :* 
-*📌 DISTANCE :* 
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-
-            await zk.sendMessage(dest, { text: modelePave }, { quoted: ms });
-
-        } catch (error) {
-            console.error('Erreur lors du duel ABM:', error);
-            repondre('Une erreur est survenue.');
-        }
-    }
-);
-
-zokou(
-    { nomCom: 'duel_abm', categorie: 'ABM' },
-    (dest, zk, { repondre, arg, ms }) => {
-        if (arg.length < 1) return repondre(
-            'Format: \n' +
-            '- Pour ajuster des stats : @Joueur stat +/- valeur [@Joueur stat +/- valeur ...]\n' +
-            '  Ex: duel_abm Sukuna heart - 30 energie + 20\n' +
-            '- Pour réinitialiser un joueur : reset @Joueur\n' +
-            '- Pour réinitialiser tous les joueurs : reset all\n' +
-            '- Pour supprimer tous les duels : delete'
-        );
-
-        const action = arg[0].trim().toLowerCase();
-
-        // Suppression de tous les duels
-        if (action === 'delete') {
-            duelsABM = {}; // Réinitialisation complète
-            return repondre('Tous les duels en cours ont été supprimés.');
-        }
-
-        // Réinitialisation des statistiques
-        if (action === 'reset') {
-            if (arg.length < 2) return repondre('Format: reset @Joueur ou reset all');
-
-            const joueurId = arg[1].trim().toLowerCase();
-
-            if (joueurId === 'all') {
-                for (const key in duelsABM) {
-                    duelsABM[key].equipe1.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
-                    duelsABM[key].equipe2.forEach(j => j.stats = { heart: 100, energie: 100, vie: 100 });
-                }
-                return repondre('Les statistiques de tous les joueurs ont été réinitialisées.');
-            }
-
-            const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
-            if (!duelKey) return repondre('Joueur non trouvé.');
-
-            const duel = duelsABM[duelKey];
-            const joueur = duel.equipe1.find(j => j.nom.toLowerCase() === joueurId) || duel.equipe2.find(j => j.nom.toLowerCase() === joueurId);
-            if (!joueur) return repondre('Joueur non trouvé.');
-
-            joueur.stats = { heart: 100, energie: 100, vie: 100 };
-            repondre(`Les statistiques de ${joueur.nom} ont été réinitialisées.`);
-
-            const ficheDuel = generateFicheDuelABM(duel);
-            return zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
-        }
-
-        // Gestion de l'ajustement des stats pour plusieurs joueurs
-        if (arg.length < 4) return repondre('Format: @Joueur stat +/- valeur [@Joueur stat +/- valeur ...]');
-
-        let i = 0;
-        let modifsEffectuées = false;
-        while (i < arg.length) {
-            const joueurId = arg[i];
-            const stat = arg[i + 1];
-            const signe = arg[i + 2];
-            const valeurStr = arg[i + 3];
-
-            if (!joueurId || !stat || !signe || !valeurStr) break; // Arrêter si format incorrect
-
-            const valeur = parseInt(valeurStr);
-            if (isNaN(valeur)) return repondre(`Valeur invalide pour ${joueurId}.`);
-
-            const duelKey = Object.keys(duelsABM).find(key => key.includes(joueurId));
-            if (!duelKey) return repondre(`Joueur ${joueurId} non trouvé.`);
-
-            const duel = duelsABM[duelKey];
-            const joueur = duel.equipe1.find(j => j.nom === joueurId) || duel.equipe2.find(j => j.nom === joueurId);
-            if (!joueur || !['heart', 'energie', 'vie'].includes(stat)) return repondre(`Stat invalide pour ${joueurId}.`);
-
-            const { stats, message } = limiterStatsABM(joueur.stats, stat, (signe === '-' ? -valeur : valeur));
-            joueur.stats = stats;
-            if (message) repondre(message);
-
-            modifsEffectuées = true;
-            i += 4; // Passer au prochain joueur/stat
-        }
-
-        if (modifsEffectuées) {
-            const duelKey = Object.keys(duelsABM)[0]; // On prend un duel quelconque pour renvoyer une fiche mise à jour
-            const duel = duelsABM[duelKey];
-            const ficheDuel = generateFicheDuelABM(duel);
-            return zk.sendMessage(dest, { image: { url: duel.arene.image }, caption: ficheDuel }, { quoted: ms });
-        }
-    }
-);*/
 
 // Définition des circuits
 const circuitsSpeedRush = [
@@ -520,7 +321,7 @@ function tirerCircuitSpeedRush() {
 // Fonction pour limiter les stats (0-100)
 function limiterStatsSpeedRush(stats, stat, valeur) {
   if (stats[stat] === 100 && valeur > 0) {
-    return { stats, message: '⚠️ Statistique déjà au maximum!' };
+    return { stats, message: '*_⚠️ Statistique déjà au maximum!_*' };
   }
   stats[stat] = Math.max(0, Math.min(stats[stat] + valeur, 100)); // S'assure que la valeur reste entre 0 et 100
   return { stats, message: null };
@@ -554,7 +355,7 @@ ${course.pilote3 ? `*🏎️ ${course.pilote3.nom} :*\n> 🚘: ${course.pilote3.
 *🌦️ Conditions :* ${course.conditions}
 *🌐 Circuit :* ${course.circuit.nom}
 *📌 Départ :* ${course.depart}
-*⏱️ Latence :* 5 + 1min max
+*⏱️ Latence :* 4 + 1min max
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 ═══════════════════
  *MAÎTRISE INITIALE "⭐" : 5*
@@ -579,7 +380,7 @@ zokou(
   { nomCom: 'sr_rule', categorie: 'SPEED-RUSH' },
   async (dest, zk, { repondre, arg, ms }) => {
     if (arg.length < 2) {
-      return repondre('*Usage:* -sr_rule pilote1 pilote2 [pilote3] / <tourneur> <master> <conditions> <depart>');
+      return repondre('*🔹Usage:* -sr_rule pilote1 pilote2 [pilote3] / <tourneur> <master> <conditions> <depart>');
     }
 
     try {
@@ -590,12 +391,12 @@ zokou(
       }));
 
       if (pilotes.length < 2 || pilotes.length > 3) {
-        return repondre('Il faut 2 ou 3 pilotes pour démarrer une course.');
+        return repondre('*_💬 Il faut 2 ou 3 pilotes pour démarrer une course._*');
       }
 
       const [tourneur, master, conditions, depart] = detailsCourse
         ? detailsCourse.split(' ').map(p => p.trim())
-        : ['Auto', 'Auto', 'Sec', 'Ligne'];
+        : ['Pilote1', 'Auto', 'voir circuit', 'Section 1'];
 
       const circuit = tirerCircuitSpeedRush();
 
@@ -655,7 +456,7 @@ zokou(
 
     } catch (error) {
       console.error('Erreur lors du démarrage de la course Speed Rush:', error);
-      repondre('Une erreur est survenue lors du démarrage de la course.');
+      repondre('*_😅 Une erreur est survenue lors du démarrage de la course._*');
     }
   }
 );
@@ -669,16 +470,16 @@ zokou(
 
     // Aide
     if (!input) return repondre(
-      '🏁 *SPEED-RUSH Help* 🏁\n\n' +
-      '➤ MàJ stats: `-sr [Pilote] [stat]±[valeur] ...`\n' +
-      '   Ex: `-sr Pilote1 voiture-20 essence+15`\n\n' +
-      '➤ Multi-pilotes: `-sr [Pilote1] [stat]±[valeur]; [Pilote2] ...`\n' +
-      '   Ex: `-sr Pilote1 turbo+10; Pilote2 essence-5`\n\n' +
-      '➤ Reset: `-sr reset [Pilote1] [Pilote2]...`\n' +
-      '➤ Reset ALL: `-sr resetall`\n' +
-      '➤ Delete: `-sr delete [courseKey]`\n' +
-      '➤ Liste: `-sr list`\n\n' +
-      '📊 Stats disponibles: voiture, essence, turbo'
+      '🏁 *SPEED-RUSH HELP* 🏁\n\n' +
+      '➤ *MàJ stats:* `-sr [Pilote] [stat]±[valeur] ...`\n' +
+      '   *Ex:* `-sr Pilote1 voiture-20 essence+15`\n\n' +
+      '➤ *Multi-pilotes:* `-sr [Pilote1] [stat]±[valeur]; [Pilote2] ...`\n' +
+      '   *Ex:* `-sr Pilote1 turbo+10; Pilote2 essence-5`\n\n' +
+      '➤ *Reset:* `-sr reset [Pilote1] [Pilote2]...`\n' +
+      '➤ *Reset ALL:* `-sr resetall`\n' +
+      '➤ *Delete:* `-sr delete [courseKey]`\n' +
+      '➤ *Liste:* `-sr list`\n\n' +
+      '📊 *Stats disponibles:* voiture, essence, turbo'
     );
 
     // Commandes spéciales
@@ -688,14 +489,14 @@ zokou(
           if (p) p.stats = { voiture: 100, essence: 100, turbo: 100 };
         });
       });
-      return repondre('♻️ Toutes les stats des pilotes réinitialisées !');
+      return repondre('*_♻️ Toutes les stats des pilotes réinitialisées !_*');
     }
 
     if (input === 'list') {
       if (Object.keys(coursesSpeedRush).length === 0) {
-        return repondre('ℹ️ Aucune course en cours.');
+        return repondre('*_ℹ️ Aucune course en cours._*');
       }
-      let liste = '🏎️ *Courses actives* 🏎️\n';
+      let liste = '🏎️ *COURSE ACTIVES* 🏎️\n';
       Object.keys(coursesSpeedRush).forEach(key => {
         liste += `\n▸ ${key}`;
       });
@@ -706,9 +507,9 @@ zokou(
       const courseKey = input.slice(7).trim();
       if (coursesSpeedRush[courseKey]) {
         delete coursesSpeedRush[courseKey];
-        return repondre(`🗑️ Course "${courseKey}" supprimée !`);
+        return repondre(`*_🗑️ Course "${courseKey}" supprimée !_*`);
       }
-      return repondre('❌ Course non trouvée. Utilisez `-sr list` pour voir les courses actives.');
+      return repondre('*_❌ Course non trouvée. Utilisez `-sr list` pour voir les courses actives._*');
     }
 
     if (input.startsWith('reset ')) {
@@ -725,7 +526,7 @@ zokou(
         }
       });
 
-      return repondre(count > 0 ? `🔄 ${count} pilote(s) réinitialisé(s) !` : '❌ Pilote(s) non trouvé(s)');
+      return repondre(count > 0 ? `*_🔄 ${count} pilote(s) réinitialisé(s) !_*` : '*_❌ Pilote(s) non trouvé(s)_*');
     }
 
     // Gestion des stats
@@ -800,7 +601,7 @@ zokou(
         }
       }
 
-      if (!piloteTrouve) return repondre(`❌ Pilote "${nomPilote}" non trouvé`);
+      if (!piloteTrouve) return repondre(`*_❌ Pilote "${nomPilote}" non trouvé_*`);
 
       for (const mod of modifs) {
         const match = mod.match(/^(voiture|essence|turbo)([+-])(\d+)$/);
@@ -841,13 +642,12 @@ function generateFicheDuelYugi(duel) {
          🎴 𝐒𝐩𝐞𝐞𝐝 𝐃𝐮𝐞𝐥 🎴
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-
 👤 *${duel.j1.nom}*
 > LP❤️: ${duel.j1.lp} | CM🀄: ${duel.j1.cm}
 > Deck Principal: ${duel.j1.deck.main}/30
 > Extra Deck: ${duel.j1.deck.extra}/5
 > Cimetière: ${duel.j1.deck.cimetiere}
-> Magie de Terrain: ${duel.j1.deck.terrain || '---'}
+> Magie de Terrain: ${duel.j1.deck.terrain || '___'}
 > Zone Monstre: ${formatZones(duel.j1.deck.zone_monstre)}
 > Zone Magie/Piège: ${formatZones(duel.j1.deck.zone_magie_piege)}
 
@@ -858,10 +658,9 @@ function generateFicheDuelYugi(duel) {
 > Deck Principal: ${duel.j2.deck.main}/30
 > Extra Deck: ${duel.j2.deck.extra}/5
 > Cimetière: ${duel.j2.deck.cimetiere}
-> Magie de Terrain: ${duel.j2.deck.terrain || '---'}
+> Magie de Terrain: ${duel.j2.deck.terrain || '___'}
 > Zone Monstre: ${formatZones(duel.j2.deck.zone_monstre)}
 > Zone Magie/Piège: ${formatZones(duel.j2.deck.zone_magie_piege)}
-
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
    *\`⚠️ RÈGLES DU DUEL ⚠️\`*
 
@@ -871,21 +670,20 @@ function generateFicheDuelYugi(duel) {
 > 🔄 Tourneur : ${duel.tourneur}
 > ⚖️ Arbitre : Auto Modo
 > ⌚ Délai : 5 + 2 min max
-> 💥 Conditions : LP 0 ou Deck out
-
+> 💥 Conditions : LP 0 ou Deck out.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 > 🏅 *Perfect:* Aucun dégât subis = 5⭐
 > 🥉 *Hard:* -2000LP ou -10 cartes
 > 💣 *POWER STRIKE:* >2000 dégâts directs = +2⭐
 > 🧠 *COMBO MASTER:* Victoire combo = +2⭐
 
-▓▓▓▓[ CHARGEMENT... ]▓▓▓▓`;
+▓▓▓▓[ CHARGEMENT... ]▓▓▓▓\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
 }
 
 zokou(
     { nomCom: 'yugirule', categorie: 'YU-GI-OH' },
     async (dest, zk, { repondre, arg, ms }) => {
-        if (!arg || arg.length < 1) return repondre('Ex : -yugi_rule Yugi vs Kaiba / Yugi main:26 extra:3; Kaiba main:28 extra:3');
+        if (!arg || arg.length < 1) return repondre('*Ex :* -yugi_rule Yugi vs Kaiba / Yugi main:26 extra:3; Kaiba main:28 extra:3');
 
         try {
             const input = arg.join(' ');
@@ -906,7 +704,7 @@ zokou(
                     zone_magie_piege: []
                 }
             };
-            
+
             const j2 = {
                 nom: p2,
                 lp: 4000,
@@ -926,13 +724,13 @@ zokou(
                 deckStatsPart.split(';').forEach(section => {
                     const [name, ...stats] = section.trim().split(/\s+/);
                     const playerName = name.toLowerCase();
-                    
+
                     stats.forEach(st => {
                         const [key, val] = st.split(':');
                         if (key && val) {
                             const statKey = key.toLowerCase();
                             const value = parseInt(val);
-                            
+
                             if (playerName === p1.toLowerCase()) {
                                 if (statKey === 'main') j1.deck.main = value;
                                 else if (statKey === 'extra') j1.deck.extra = value;
@@ -953,7 +751,7 @@ zokou(
 
         } catch (e) {
             console.error('Erreur duel Yugi:', e);
-            repondre('Une erreur est survenue: ' + e.message);
+            repondre('*_😥 Une erreur est survenue:* ' + e.message);
         }
     }
 );
@@ -962,19 +760,19 @@ zokou(
   { nomCom: 'duel_yugi', categorie: 'YU-GI-OH' },
   async (dest, zk, { repondre, arg, ms }) => {
     const input = arg.join(' ').trim();
-    
+
     if (!input) {
       return repondre(
-        '🎴 *YU-GI-OH Duel Manager* 🎴\n\n' +
-        '➤ Modifier stats: `-duel_yugi [joueur] [modif1] [modif2] ...`\n' +
-        '  Ex: `-duel_yugi Yugi lp-500 main+2 zone_monstre+Dragon Blanc`\n\n' +
-        '➤ Multi-joueurs: `-duel_yugi [joueur1] [modifs]; [joueur2] [modifs]`\n' +
-        '  Ex: `-duel_yugi Yugi lp-500; Kaiba zone_monstre+Dragon Blanc`\n\n' +
-        '➤ Réinitialiser: `-duel_yugi reset [joueur]`\n' +
-        '➤ Tout réinitialiser: `-duel_yugi resetall`\n' +
-        '➤ Supprimer duel: `-duel_yugi delete [clé_duel]`\n' +
-        '➤ Liste duels: `-duel_yugi list`\n\n' +
-        '📌 Modifs disponibles: lp, cm, main, extra, cimetiere, terrain, zone_monstre, zone_magie_piege'
+        '🎴 *YU-GI-OH DUEL MANAGER* 🎴\n\n' +
+        '➤ *Modifier stats:* `-duel_yugi [joueur] [modif1] [modif2] ...`\n' +
+        '  *Ex:* `-duel_yugi Yugi lp-500 main+2 zone_monstre+Dragon Blanc`\n\n' +
+        '➤ *Multi-joueurs:* `-duel_yugi [joueur1] [modifs]; [joueur2] [modifs]`\n' +
+        '  *Ex:* `-duel_yugi Yugi lp-500; Kaiba zone_monstre+Dragon Blanc`\n\n' +
+        '➤ "Réinitialiser:* `-duel_yugi reset [joueur]`\n' +
+        '➤ "Tout réinitialiser:* `-duel_yugi resetall`\n' +
+        '➤ *Supprimer duel:* `-duel_yugi delete [clé_duel]`\n' +
+        '➤ *Liste duels:* `-duel_yugi list`\n\n' +
+        '📌 *Modifs disponibles:* lp, cm, main, extra, cimetiere, terrain, zone_monstre, zone_magie_piege'
       );
     }
 
@@ -994,29 +792,29 @@ zokou(
           };
         });
       }
-      return repondre('♻️ Toutes les parties ont été réinitialisées !');
+      return repondre('*_♻️ Toutes les parties ont été réinitialisées !_*');
     }
 
     if (input === 'list') {
       const duels = Object.keys(duelsYugi);
       if (duels.length === 0) return repondre('Aucun duel en cours');
-      return repondre('🏆 Duels actifs:\n' + duels.join('\n'));
+      return repondre('🎴 DUEL ACTIFS:*\n' + duels.join('\n'));
     }
 
     if (input.startsWith('delete ')) {
       const duelKey = input.slice(7).trim();
       if (duelsYugi[duelKey]) {
         delete duelsYugi[duelKey];
-        return repondre(`🗑️ Duel "${duelKey}" supprimé !`);
+        return repondre(`*_🗑️ Duel "${duelKey}" supprimé !_*`);
       } else {
-        return repondre('❌ Duel non trouvé');
+        return repondre('*_❌ Duel non trouvé_*');
       }
     }
 
     if (input.startsWith('reset ')) {
       const joueurNom = input.slice(6).trim();
       let duelModifie = null;
-      
+
       for (const key in duelsYugi) {
         const duel = duelsYugi[key];
         if (duel.j1.nom.toLowerCase() === joueurNom.toLowerCase()) {
@@ -1047,34 +845,34 @@ zokou(
           break;
         }
       }
-      
+
       if (duelModifie) {
-        repondre(`♻️ ${joueurNom} réinitialisé !`);
+        repondre(`*_♻️ ${joueurNom} réinitialisé !_*`);
         const fiche = generateFicheDuelYugi(duelModifie);
         return zk.sendMessage(dest, { image: { url: imageYugiDuel }, caption: fiche }, { quoted: ms });
       } else {
-        return repondre(`❌ ${joueurNom} non trouvé dans un duel actif`);
+        return repondre(`*_❌ ${joueurNom} non trouvé dans un duel actif_*`);
       }
     }
 
     // Gestion des modifications
     let duelModifie = null;
     const results = [];
-    
+
     // Support multi-joueurs avec séparateur ;
     const sections = input.split(';').map(s => s.trim());
-    
+
     for (const section of sections) {
       const parts = section.split(/\s+/);
       if (parts.length < 2) continue;
-      
+
       const joueurNom = parts[0];
       const modifs = parts.slice(1);
-      
+
       // Trouver le joueur dans un duel
       let joueur = null;
       let duelKeyFound = null;
-      
+
       for (const key in duelsYugi) {
         const duel = duelsYugi[key];
         if (duel.j1.nom.toLowerCase() === joueurNom.toLowerCase()) {
@@ -1087,14 +885,14 @@ zokou(
           break;
         }
       }
-      
+
       if (!joueur) {
         results.push(`❌ ${joueurNom} non trouvé`);
         continue;
       }
-      
+
       duelModifie = duelsYugi[duelKeyFound];
-      
+
       // Traiter chaque modification
       for (const mod of modifs) {
         const match = mod.match(/^(\w+)([+-])(.+)$/);
@@ -1102,14 +900,14 @@ zokou(
           results.push(`❌ Format invalide: ${mod}`);
           continue;
         }
-        
+
         const [_, stat, op, value] = match;
         const statKey = stat.toLowerCase();
-        
+
         // Gestion des zones spéciales
         if (statKey === 'zone_monstre' || statKey === 'zone_magie_piege') {
           const cartes = value.split(',').map(c => c.trim());
-          
+
           if (op === '+') {
             // Ajouter les cartes si la zone n'est pas pleine
             cartes.forEach(carte => {
@@ -1125,7 +923,7 @@ zokou(
           }
           continue;
         }
-        
+
         // Gestion du terrain
         if (statKey === 'terrain') {
           if (op === '+') {
@@ -1137,56 +935,56 @@ zokou(
           }
           continue;
         }
-        
+
         // Gestion des valeurs numériques
         const numValue = parseInt(value);
         if (isNaN(numValue)) {
           results.push(`❌ Valeur numérique invalide: ${value}`);
           continue;
         }
-        
+
         switch(statKey) {
           case 'lp':
             joueur.lp = op === '+' ? joueur.lp + numValue : joueur.lp - numValue;
             joueur.lp = Math.max(0, joueur.lp);
             results.push(`✅ ${joueurNom}: LP ${op}= ${numValue} (${joueur.lp})`);
             break;
-            
+
           case 'cm':
             joueur.cm = op === '+' ? joueur.cm + numValue : joueur.cm - numValue;
             joueur.cm = Math.max(0, joueur.cm);
             results.push(`✅ ${joueurNom}: CM ${op}= ${numValue} (${joueur.cm})`);
             break;
-            
+
           case 'main':
             joueur.deck.main = op === '+' ? joueur.deck.main + numValue : joueur.deck.main - numValue;
             joueur.deck.main = Math.min(30, Math.max(0, joueur.deck.main));
             results.push(`✅ ${joueurNom}: Main ${op}= ${numValue} (${joueur.deck.main})`);
             break;
-            
+
           case 'extra':
             joueur.deck.extra = op === '+' ? joueur.deck.extra + numValue : joueur.deck.extra - numValue;
             joueur.deck.extra = Math.min(5, Math.max(0, joueur.deck.extra));
             results.push(`✅ ${joueurNom}: Extra ${op}= ${numValue} (${joueur.deck.extra})`);
             break;
-            
+
           case 'cimetiere':
             joueur.deck.cimetiere = op === '+' ? joueur.deck.cimetiere + numValue : joueur.deck.cimetiere - numValue;
             joueur.deck.cimetiere = Math.max(0, joueur.deck.cimetiere);
             results.push(`✅ ${joueurNom}: Cimetière ${op}= ${numValue} (${joueur.deck.cimetiere})`);
             break;
-            
+
           default:
             results.push(`❌ Stat inconnue: ${stat}`);
         }
       }
     }
-    
+
     // Envoyer les résultats
     if (results.length > 0) {
       await repondre(results.join('\n'));
     }
-    
+
     // Mettre à jour la fiche
     if (duelModifie) {
       const fiche = generateFicheDuelYugi(duelModifie);
@@ -1194,311 +992,3 @@ zokou(
     }
   }
 );
-
-
-/*let duelsYugi = {};
-const imageYugiDuel = 'https://i.ibb.co/rKxJ2g7r/image.jpg';
-
-function generateFicheDuelYugi(duel) {
-    const formatZones = (zones) => zones.length > 0 ? zones.join(' | ') : '---';
-
-    return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-    🌐 𝐒𝐔𝐏𝐑𝐄𝐌𝐔𝐒 𝐍𝐀𝐓𝐈𝐎𝐍 🌐
-         🎴 𝐒𝐩𝐞𝐞𝐝 𝐃𝐮𝐞𝐥 🎴
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-
-👤 *${duel.j1.nom}*
-> LP❤️: ${duel.j1.lp} | CM🀄: ${duel.j1.cm}
-> Deck Principal: ${duel.j1.deck.main}/30
-> Extra Deck: ${duel.j1.deck.extra}/5
-> Cimetière: ${duel.j1.deck.cimetiere}
-> Magie de Terrain: ${duel.j1.deck.terrain || '---'}
-> Zone Monstre: ${formatZones(duel.j1.deck.zone_monstre)}
-> Zone Magie/Piège: ${formatZones(duel.j1.deck.zone_magie_piege)}
-
-                     *𝙑𝙎*
-
-👤 *${duel.j2.nom}*
-> LP❤️: ${duel.j2.lp} | CM🀄: ${duel.j2.cm}
-> Deck Principal: ${duel.j2.deck.main}/30
-> Extra Deck: ${duel.j2.deck.extra}/5
-> Cimetière: ${duel.j2.deck.cimetiere}
-> Magie de Terrain: ${duel.j2.deck.terrain || '---'}
-> Zone Monstre: ${formatZones(duel.j2.deck.zone_monstre)}
-> Zone Magie/Piège: ${formatZones(duel.j2.deck.zone_magie_piege)}
-
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-   *\`⚠️ RÈGLES DU DUEL ⚠️\`*
-
-> - Triche : Game Over
-> - Latence : -1⭐
-> - Zones : 3 Monstres / 3 Magies-Pièges
-> 🔄 Tourneur : ${duel.tourneur}
-> ⚖️ Arbitre : Auto Modo
-> ⌚ Délai : 5 + 2 min max
-> 💥 Conditions : LP 0 ou Deck out
-
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-> 🏅 *Perfect:* Aucun dégât subis = 5⭐
-> 🥉 *Hard:* -2000LP ou -10 cartes
-> 💣 *POWER STRIKE:* >2000 dégâts directs = +2⭐
-> 🧠 *COMBO MASTER:* Victoire combo = +2⭐
-
-▓▓▓▓[ CHARGEMENT... ]▓▓▓▓`;
-}
-
-function parseDeckDetails(text) {
-    const players = {};
-    text.split(';').forEach(section => {
-        const [name, ...stats] = section.trim().split(/\s+/);
-        players[name.toLowerCase()] = { main: 30, extra: 0 };
-        stats.forEach(st => {
-            const [key, val] = st.split(':');
-            if (key && val && ['main', 'extra'].includes(key.toLowerCase())) {
-                players[name.toLowerCase()][key.toLowerCase()] = parseInt(val);
-            }
-        });
-    });
-    return players;
-}
-
-zokou(
-    { nomCom: 'yugirule', categorie: 'YU-GI-OH' },
-    async (dest, zk, { repondre, arg, ms }) => {
-        if (!arg || arg.length < 1) return repondre('Ex : -yugi_rule Yugi vs Kaiba / Yugi main:26 extra:3; Kaiba main:28 extra:3');
-
-        try {
-            const input = arg.join(' ');
-            const [duelPart, deckStatsPart] = input.split('/').map(s => s.trim());
-            const [p1, p2] = duelPart.split('vs').map(s => s.trim());
-
-            const deckStats = deckStatsPart ? parseDeckDetails(deckStatsPart) : {};
-
-            const j1 = {
-                nom: p1,
-                lp: 4000,
-                cm: 4,
-                deck: {
-                    main: deckStats[p1.toLowerCase()]?.main ?? 30,
-                    extra: deckStats[p1.toLowerCase()]?.extra ?? 0,
-                    cimetiere: 0,
-                    terrain: '',
-                    zone_monstre: [],
-                    zone_magie_piege: []
-                }
-            };
-            const j2 = {
-                nom: p2,
-                lp: 4000,
-                cm: 4,
-                deck: {
-                    main: deckStats[p2.toLowerCase()]?.main ?? 30,
-                    extra: deckStats[p2.toLowerCase()]?.extra ?? 0,
-                    cimetiere: 0,
-                    terrain: '',
-                    zone_monstre: [],
-                    zone_magie_piege: []
-                }
-            };
-
-            const duelKey = `${p1}_vs_${p2}`;
-            duelsYugi[duelKey] = { j1, j2, tourneur: Math.random() < 0.5 ? p1 : p2 };
-
-            const fiche = generateFicheDuelYugi(duelsYugi[duelKey]);
-            await zk.sendMessage(dest, { image: { url: imageYugiDuel }, caption: fiche }, { quoted: ms });
-
-        } catch (e) {
-            console.error('Erreur duel Yugi:', e);
-            repondre('Une erreur est survenue.');
-        }
-    }
-);
-
-zokou(
-  { nomCom: 'duel_yugi', categorie: 'YU-GI-OH' },
-  (dest, zk, { repondre, arg, ms }) => {
-    if (arg.length < 1) {
-      return repondre(
-        'Usage:\n' +
-        '- Modifier stats: @Joueur stat +/- valeur [@Joueur stat +/- valeur ...]\n' +
-        '  Ex: duel_yugi Yugi lp -500 main +2 zone_monstre +Dragon,Magicien\n' +
-        '- Réinitialiser un joueur: reset @Joueur\n' +
-        '- Réinitialiser tous: reset all\n' +
-        '- Supprimer tous les duels: delete'
-      );
-    }
-
-    const action = arg[0].toLowerCase();
-
-    if (action === 'delete') {
-      duelsYugi = {};
-      return repondre('Tous les duels Yu-Gi-Oh ont été supprimés.');
-    }
-
-    if (action === 'reset') {
-      if (arg.length < 2) return repondre('Format: reset @Joueur ou reset all');
-
-      const cible = arg[1].toLowerCase();
-
-      if (cible === 'all') {
-        for (const key in duelsYugi) {
-          ['j1', 'j2'].forEach(joueurKey => {
-            duelsYugi[key][joueurKey].lp = 4000;
-            duelsYugi[key][joueurKey].cm = 4;
-            duelsYugi[key][joueurKey].deck = {
-              main: 30,
-              extra: 0,
-              cimetiere: 0,
-              terrain: '',
-              zone_monstre: [],
-              zone_magie_piege: []
-            };
-          });
-        }
-        return repondre('Tous les joueurs ont été réinitialisés.');
-      }
-
-      // Trouver le duel et joueur
-      const duelKey = Object.keys(duelsYugi).find(k =>
-        duelsYugi[k].j1.nom.toLowerCase() === cible || duelsYugi[k].j2.nom.toLowerCase() === cible
-      );
-
-      if (!duelKey) return repondre(`Joueur ${cible} non trouvé.`);
-
-      const duel = duelsYugi[duelKey];
-      const joueur = duel.j1.nom.toLowerCase() === cible ? duel.j1 : duel.j2;
-
-      joueur.lp = 4000;
-      joueur.cm = 4;
-      joueur.deck = {
-        main: 30,
-        extra: 0,
-        cimetiere: 0,
-        terrain: '',
-        zone_monstre: [],
-        zone_magie_piege: []
-      };
-
-      repondre(`Statistiques de ${joueur.nom} réinitialisées.`);
-
-      const fiche = generateFicheDuelYugi(duel);
-      return zk.sendMessage(dest, { image: { url: imageYugiDuel }, caption: fiche }, { quoted: ms });
-    }
-
-    // Modification stats
-    // Format attendu: joueur stat signe valeur ...
-    // Exemple: duel_yugi Yugi lp - 500 main + 2 zone_monstre + Dragon,Magicien
-
-    let i = 0;
-    let modifOk = false;
-    while (i < arg.length) {
-      const joueurNom = arg[i];
-      const duelKey = Object.keys(duelsYugi).find(k =>
-        duelsYugi[k].j1.nom.toLowerCase() === joueurNom.toLowerCase() ||
-        duelsYugi[k].j2.nom.toLowerCase() === joueurNom.toLowerCase()
-      );
-
-      if (!duelKey) {
-        repondre(`Joueur ${joueurNom} non trouvé.`);
-        return;
-      }
-
-      const duel = duelsYugi[duelKey];
-      const joueur = duel.j1.nom.toLowerCase() === joueurNom.toLowerCase() ? duel.j1 : duel.j2;
-
-      // Parcourir stat / signe / valeur tant que possible
-      let j = i + 1;
-      while (j + 2 <= arg.length) {
-        const stat = arg[j].toLowerCase();
-        const signe = arg[j + 1];
-        let valeur = arg[j + 2];
-
-        if (!['lp', 'cm', 'main', 'extra', 'cimetiere', 'terrain', 'zone_monstre', 'zone_magie_piege'].includes(stat)) break;
-
-        // Pour zone_monstre et zone_magie_piege, valeur est une liste de noms séparés par ","
-        if (stat === 'zone_monstre' || stat === 'zone_magie_piege') {
-          if (signe !== '+' && signe !== '-') {
-            repondre(`Format invalide pour ${stat}. Utilise + ou - suivi d'une liste séparée par virgule.`);
-            return;
-          }
-          const noms = valeur.split(',');
-          if (signe === '+') {
-            const zone = joueur.deck[stat];
-            noms.forEach(n => {
-              if (zone.length < 3 && !zone.includes(n.trim())) zone.push(n.trim());
-            });
-          } else if (signe === '-') {
-            joueur.deck[stat] = joueur.deck[stat].filter(n => !noms.includes(n));
-          }
-          modifOk = true;
-          j += 3;
-          continue;
-        }
-
-        // Pour terrain c'est une chaîne simple, signe + ou - remplace ou vide
-        if (stat === 'terrain') {
-          if (signe === '+') {
-            joueur.deck.terrain = valeur;
-          } else if (signe === '-') {
-            joueur.deck.terrain = '';
-          } else {
-            repondre(`Signe invalide pour terrain, utilise + ou -`);
-            return;
-          }
-          modifOk = true;
-          j += 3;
-          continue;
-        }
-
-        // Pour les stats numériques
-        valeur = parseInt(valeur);
-        if (isNaN(valeur)) {
-          repondre(`Valeur invalide pour ${stat} de ${joueurNom}`);
-          return;
-        }
-
-        // Appliquer modif selon signe
-        let nouvelleValeur;
-        switch (stat) {
-          case 'lp':
-            nouvelleValeur = signe === '+' ? joueur.lp + valeur : joueur.lp - valeur;
-            joueur.lp = Math.max(0, nouvelleValeur);
-            break;
-          case 'cm':
-            nouvelleValeur = signe === '+' ? joueur.cm + valeur : joueur.cm - valeur;
-            joueur.cm = Math.max(0, nouvelleValeur);
-            break;
-          case 'main':
-            nouvelleValeur = signe === '+' ? joueur.deck.main + valeur : joueur.deck.main - valeur;
-            joueur.deck.main = Math.min(30, Math.max(0, nouvelleValeur));
-            break;
-          case 'extra':
-            nouvelleValeur = signe === '+' ? joueur.deck.extra + valeur : joueur.deck.extra - valeur;
-            joueur.deck.extra = Math.min(5, Math.max(0, nouvelleValeur));
-            break;
-          case 'cimetiere':
-            nouvelleValeur = signe === '+' ? joueur.deck.cimetiere + valeur : joueur.deck.cimetiere - valeur;
-            joueur.deck.cimetiere = Math.max(0, nouvelleValeur);
-            break;
-        }
-
-        modifOk = true;
-        j += 3;
-      }
-
-      i = j;
-    }
-
-    if (!modifOk) return repondre('Aucune modification valide détectée.');
-
-    // Renvoi fiche à jour (pour le premier duel modifié)
-    const duelKey = Object.keys(duelsYugi)[0];
-    if (!duelKey) return repondre('Aucun duel en cours.');
-
-    const duel = duelsYugi[duelKey];
-    const fiche = generateFicheDuelYugi(duel);
-    return zk.sendMessage(dest, { image: { url: imageYugiDuel }, caption: fiche }, { quoted: ms });
-  }
-);*/
