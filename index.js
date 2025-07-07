@@ -150,7 +150,7 @@ if (ms.key.fromMe) {
                 const nomAuteurMessage = ms.pushName;
                 const dj = '22540718560';
                 const dj2 = '2250140718560';
-                const dj3 = '22545697604';
+                const dj3 = "22545697604";
                 const luffy = '22554191184';
                 const dj4 = '‪2250545697604';
                 const sudo = await getAllSudoNumbers();
@@ -242,8 +242,7 @@ if (ms.key.fromMe) {
 
                 /************************ anti-delete-message */
 
-                    
-if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ATD).toLocaleLowerCase() === 'yes' ) {
+                    /*if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ATD).toLocaleLowerCase() === 'oui' ) {
 
         if(ms.key.fromMe || ms.message.protocolMessage.key.fromMe) { console.log('Message supprimer me concernant') ; return }
 
@@ -289,13 +288,13 @@ if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.
                             console.log(e)
                        }
                     }
-
+*/
 
                 /** ****** gestion auto-status  */
-                if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.LECTURE_AUTO_STATUS === "yes") {
+                if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.LECTURE_AUTO_STATUS === "oui") {
                     await zk.readMessages([ms.key]);
                 }
-                if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.TELECHARGER_AUTO_STATUS === "no") {
+                if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.TELECHARGER_AUTO_STATUS === "oui") {
                     /* await zk.readMessages([ms.key]);*/
                     if (ms.message.extendedTextMessage) {
                         var stTxt = ms.message.extendedTextMessage.text;
@@ -445,7 +444,7 @@ if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.
                                        // txt += `message supprimé \n @${auteurMessage.split("@")[0]} rétiré du groupe.`;
                                         const gifLink = "https://raw.githubusercontent.com/djalega8000/Zokou-MD/main/media/remover.gif";
                                         var sticker = new Sticker(gifLink, {
-                                            pack: 'Supremus-Md',
+                                            pack: 'Zoou-Md',
                                             author: conf.NOM_OWNER,
                                             type: StickerTypes.FULL,
                                             categories: ['🤩', '🎉'],
@@ -706,53 +705,55 @@ if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.
         try {
             ppgroup = await zk.profilePictureUrl(group.id, 'image');
         } catch {
-            ppgroup = 'https://telegra.ph/file/4cc2712eee93c105f6739.jpg';
+            ppgroup = 'https://i.ibb.co/n8BZLY3b/image.jpg';
         }
 
         try {
             const metadata = await zk.groupMetadata(group.id);
 
-            if (group.action == 'add' && (await recupevents(group.id, "welcome") == 'oui')) {
-                let msg = `╔════◇◇◇═════╗
-    ║ Souhaitons la bienvenue au(x) nouveau(x) membre(s)
-    ║ *Nouveau(x) Membre(s) :*
-    `;
+            if (group.action == 'add' && (await recupevents(group.id, "welcome") == 'yes')) {
+                let msg = `🪀 *《 WELCOME SRPN ACTIVÉ 》* 🪀
 
-                let membres = group.participants;
-                for (let membre of membres) {
-                    msg += `║ @${membre.split("@")[0]}\n`;
-                }
+⚙️ Chargement des données...
 
-                msg += `║
-    ╚════◇◇◇═════╝
-    ◇ *Description*   ◇
-    
-    ${metadata.desc}`;
+*✨🙂 Bienvenue à :*
+${group.participants.map(m => `🔹 @${m.split("@")[0]}`).join('\n')}
+
+*🪀 SERVEUR :*
+${metadata.desc}`;
 
                 zk.sendMessage(group.id, { image: { url: ppgroup }, caption: msg, mentions: membres });
-            } else if (group.action == 'remove' && (await recupevents(group.id, "goodbye") == 'oui')) {
-                let msg = `Un ou des membres vient(nent) de quitter le groupe;\n`;
+            } else if (group.action == 'remove' && (await recupevents(group.id, "goodbye") == 'yes')) {
+                let msg = `╔═══『⚠️ DÉCONNEXION INATTENDUE 』═══╗
+║ Un ou des membres vient(nent) de quitter le système SRPN...
+║ Utilisateur(s) expulsé(s) :
+║`;
 
-                let membres = group.participants;
-                for (let membre of membres) {
-                    msg += `@${membre.split("@")[0]}\n`;
+let membres = group.participants;
+for (let membre of membres) {
+    msg += `║   ❌ @${membre.split("@")[0]}\n`;
+}
+
+msg += `║
+╠═══『📤 DÉCHARGEMENT TERMINÉ』═══╣
+║ 📛 Profil(s) supprimé(s) du multivers.
+║ 🎮 Le jeu continue... sans eux.
+╚════════════════════════════════╝`;
                 }
 
                 zk.sendMessage(group.id, { text: msg, mentions: membres });
 
-            } else if (group.action == 'add' && (await recupevents(group.id, "neowelcome") == 'yes')) {
+            } else if (group.action == 'add' && (await recupevents(group.id, "neowelcome") == 'non')) {
                 let membres = group.participants;
                 for (let membre of membres) {
-                let msg = `┏━━━━ *BIENVENUE À SRPN*
-┃
-┃ *Salut @${membre.split("@")[0]} bienvenue :* 
-┃Veuillez lire la description du serveur/groupe
-┃pour plus d'informations. Amusez vous bien 😊.
-┗━━━━━━━━━━━━━━━━━━━━━━━
-                             🪀 𝗦𝗥𝗣𝗡 2𝗞25 🔝\n`;
-     zk.sendMessage(group.id, { image: { url: "https://i.ibb.co/hnKrPkP/image.jpg" }, caption: msg, mentions: membres });
+                let msg = `@${membre.split("@")[0]} Bienvenue🙂 💙 : *Remplis les 3️⃣ Étapes en conditions dans la description*, puis après passe prendre ta première card de combat
+
+░░░░░░░░░░░░░░░░░░░
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+                             🔷𝗡Ξ𝗢24🏆🔝 \n`;
+     zk.sendMessage(group.id, { image: { url: "https://telegra.ph/file/7c2cb8ff44a0bc3338cdc.jpg" }, caption: msg, mentions: membres });
                 }
-                }    else if (group.action == 'promote' && (await recupevents(group.id, "antipromote") == 'yes') ) {
+                }    else if (group.action == 'promote' && (await recupevents(group.id, "antipromote") == 'oui') ) {
                 //  console.log(zk.user.id)
               if (group.author == metadata.owner || group.author  == conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id)  || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
 
@@ -767,7 +768,7 @@ if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.
                   }
              )
 
-            } else if (group.action == 'demote' && (await recupevents(group.id, "antidemote") == 'yes') ) {
+            } else if (group.action == 'demote' && (await recupevents(group.id, "antidemote") == 'oui') ) {
 
                 if (group.author == metadata.owner || group.author ==  conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id) || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
 
@@ -912,14 +913,14 @@ if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.
                     await activateCrons();
 
                  if((conf.DP).toLowerCase() === 'yes') {
-                    let cmsg = `┏━━━━━━ *SUPREMSUS* ━━━━━━┓
-┃*🔑 Prefixe :* ${s.PREFIXE}
-┃ *👤 Proprio :* ${s.OWNER_NAME}
-┃ *🔄 Mode    :* ${mode}
-┃ *🧮 Commandes :* ${cm.length}
-┃ *💾 Stockage :* ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
-┃ *🧑‍💻 Développeur :* Jøhñ Sũpręmũs
-┗━━━━━━━━━━━━━━━━━━━━━━┛`;
+                    let cmsg = `📡《 SUPREMUS BOT CONSOLE 》📡
+━━━━━━━━━━━━━━━━━━━━━━
+🧩 Préfixe système : [ ${prefixe} ]
+🧪 Mode opérationnel : ${md}
+📖 Modules actifs : ${evt.cm.length} commandes
+━━━━━━━━━━━━━━━━━━━━━━
+👑 Dev : John Supremus | SRPN Core Dev
+━━━━━━━━━━━━━━━━━━━━━━`;
 
                     await zk.sendMessage(zk.user.id, { text: cmsg });
                  }
