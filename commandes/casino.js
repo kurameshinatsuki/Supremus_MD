@@ -1,6 +1,6 @@
 const { zokou } = require('../framework/zokou');
 
-let gameInProgress = {};
+// Suppression du verrou global des parties
 let sessionStats = {};
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -93,15 +93,6 @@ zokou({
     return repondre(`*💰 Mise invalide. Minimum pour ${gameConfig.name} : ${gameConfig.min}🧭*`);
   }
 
-  // Gestion des sessions
-  gameInProgress[from] = gameInProgress[from] || {};
-  
-  if (gameInProgress[from][auteurMessage]) {
-    return repondre("*⏳ Vous avez déjà un jeu en cours. Terminez-le d'abord.*");
-  }
-
-  gameInProgress[from][auteurMessage] = true;
-  
   // Initialisation des stats
   const joueurId = `${from}_${auteurMessage}`;
   sessionStats[joueurId] = sessionStats[joueurId] || {
@@ -253,10 +244,6 @@ zokou({
   } catch (err) {
     console.error('Erreur casino :', err);
     repondre("*❌ Erreur pendant le jeu - réessayez*");
-  } finally {
-    if (from && auteurMessage && gameInProgress[from]) {
-      delete gameInProgress[from][auteurMessage];
-    }
   }
 });
 
