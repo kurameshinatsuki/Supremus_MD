@@ -743,7 +743,7 @@ msg += `║
 
                 zk.sendMessage(group.id, { text: msg, mentions: membres });
 
-            } else if (group.action == 'add' && (await recupevents(group.id, "neowelcome") == 'non')) {
+            } else if (group.action == 'add' && (await recupevents(group.id, "neowelcome") == 'no')) {
                 let membres = group.participants;
                 for (let membre of membres) {
                 let msg = `@${membre.split("@")[0]} Bienvenue🙂 💙 : *Remplis les 3️⃣ Étapes en conditions dans la description*, puis après passe prendre ta première card de combat
