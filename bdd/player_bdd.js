@@ -15,8 +15,8 @@ const pool = new Pool(proConfig);
 
 // Fonction pour générer un ID unique
 function generateUniqueId(name) {
-  const timestamp = Date.now(); // Timestamp actuel
-  return `${name}_${timestamp}`; // Combinaison du nom et du timestamp
+  const timestamp = Date.now();
+  return `${name}_${timestamp}`;
 }
 
 // Création des tables si elles n'existent pas encore
@@ -29,7 +29,7 @@ async function createTables() {
         name TEXT UNIQUE NOT NULL,
          statut TEXT DEFAULT '🕹️Player',
          mode TEXT DEFAULT '🆓Free',
-         supremus_cup INTEGER DEFAULT 0,
+         supremus_cup TEXT DEFAULT '0',
          division TEXT DEFAULT '🥉Bronze',
          statut_abm TEXT DEFAULT 'aucun',
          statut_speed_rush TEXT DEFAULT 'aucun',
@@ -73,14 +73,14 @@ async function createTables() {
          solde INTEGER DEFAULT 0
       );
     `);
-    console.log('Table créée ou déjà existante');
+    console.log('[BDD] Table player_profiles vérifiée/créée');
   } catch (error) {
-    console.error('Erreur lors de la création des tables:', error);
+    console.error('Erreur création table:', error);
+    throw error;
   } finally {
     client.release();
   }
 }
-
 
 // Supprime un profil de joueur
 async function deletePlayerProfile(name) {
@@ -92,50 +92,51 @@ async function deletePlayerProfile(name) {
     );
 
     if (res.rowCount === 0) {
-      console.log(`Aucun profil trouvé à supprimer : ${name}`);
+      console.log(`[BDD] Profil non trouvé: ${name}`);
       return false;
     }
 
-    console.log(`Profil supprimé : ${name}`);
+    console.log(`[BDD] Profil supprimé: ${name}`);
     return true;
   } catch (error) {
-    console.error('Erreur lors de la suppression du profil:', error);
+    console.error('Erreur suppression profil:', error);
     throw error;
   } finally {
     client.release();
   }
 }
 
-
-// Insère un profil de joueur s'il n'existe pas déjà
+// Insère un profil de joueur
 async function insertPlayerProfile(name) {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN'); // Début de la transaction
+    await client.query('BEGIN');
 
-    const queryExistence = `
-      SELECT 1 FROM player_profiles WHERE name = $1;
-    `;
-    const resultExistence = await client.query(queryExistence, [name]);
+    // Vérifie si le profil existe déjà
+    const exists = await client.query(
+      `SELECT 1 FROM player_profiles WHERE name = $1;`,
+      [name]
+    );
 
-    if (resultExistence.rows.length > 0) {
-      console.log(`Le profil du joueur ${name} existe déjà.`);
+    if (exists.rows.length > 0) {
+      console.log(`[BDD] Profil ${name} existe déjà`);
       await client.query('COMMIT');
       return;
     }
 
-    const id = generateUniqueId(name); // Génération de l'ID
-    const queryInsert = `
-      INSERT INTO player_profiles(id, name)
-      VALUES ($1, $2);
-    `;
-    await client.query(queryInsert, [id, name]);
+    const id = generateUniqueId(name);
+    await client.query(
+      `INSERT INTO player_profiles(id, name) VALUES ($1, $2);`,
+      [id, name]
+    );
 
-    await client.query('COMMIT'); // Validation de la transaction
-    console.log(`Profil du joueur créé avec succès : Nom ${name}`);
+    await client.query('COMMIT');
+    console.log(`[BDD] Profil créé: ${name}`);
+    return true;
   } catch (error) {
-    await client.query('ROLLBACK'); // Annulation de la transaction en cas d'erreur
-    console.error('Erreur lors de la création du profil du joueur:', error);
+    await client.query('ROLLBACK');
+    console.error('Erreur création profil:', error);
+    throw error;
   } finally {
     client.release();
   }
@@ -145,18 +146,28 @@ async function insertPlayerProfile(name) {
 async function getPlayerProfile(name) {
   const client = await pool.connect();
   try {
-    const query = `
-      SELECT * FROM player_profiles WHERE name = $1;
-    `;
-    const result = await client.query(query, [name]);
+    const res = await client.query(
+      `SELECT * FROM player_profiles WHERE name = $1;`,
+      [name]
+    );
 
-    if (result.rows.length === 0) {
-      console.log(`Joueur non trouvé : ${name}`);
+    if (res.rows.length === 0) {
+      console.log(`[BDD] Profil non trouvé: ${name}`);
       return null;
     }
-    return result.rows[0];
+    
+    // Convertit tous les champs en string pour compatibilité
+    const profile = res.rows[0];
+    for (const key in profile) {
+      if (profile[key] !== null && typeof profile[key] !== 'string') {
+        profile[key] = String(profile[key]);
+      }
+    }
+    
+    return profile;
   } catch (error) {
-    console.error('Erreur lors de la récupération du profil du joueur:', error);
+    console.error('Erreur récupération profil:', error);
+    throw error;
   } finally {
     client.release();
   }
@@ -166,52 +177,63 @@ async function getPlayerProfile(name) {
 async function updatePlayerProfile(name, updates) {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN'); // Début de la transaction
+    await client.query('BEGIN');
 
+    // Vérifie si le profil existe
+    const exists = await client.query(
+      `SELECT 1 FROM player_profiles WHERE name = $1;`,
+      [name]
+    );
+    
+    if (exists.rows.length === 0) {
+      console.log(`[BDD] Profil non trouvé pour mise à jour: ${name}`);
+      await client.query('COMMIT');
+      return false;
+    }
+
+    // Construction de la requête dynamique
     const setClauses = [];
     const values = [];
-    let index = 1;
+    let paramIndex = 1;
 
-    for (const field in updates) {
-      setClauses.push(`${field} = $${index}`);
-      values.push(updates[field]);
-      index++;
+    for (const [field, value] of Object.entries(updates)) {
+      setClauses.push(`${field} = $${paramIndex}`);
+      values.push(value);
+      paramIndex++;
     }
 
     if (setClauses.length === 0) {
-      console.log("Aucune mise à jour fournie");
+      console.log('[BDD] Aucune mise à jour fournie');
       await client.query('COMMIT');
-      return;
+      return false;
     }
 
+    values.push(name);
     const query = `
       UPDATE player_profiles
       SET ${setClauses.join(', ')}
-      WHERE name = $${index}
+      WHERE name = $${paramIndex}
       RETURNING *;
     `;
-    values.push(name);
 
-    const result = await client.query(query, values);
-    if (result.rowCount === 0) {
-      console.log(`Joueur non trouvé pour mise à jour : ${name}`);
-      await client.query('COMMIT');
-      return null;
-    }
-
-    await client.query('COMMIT'); // Validation de la transaction
-    console.log(`Profil du joueur ${name} mis à jour avec succès`);
-    return result.rows[0];
+    const res = await client.query(query, values);
+    await client.query('COMMIT');
+    console.log(`[BDD] Profil ${name} mis à jour avec succès`);
+    return res.rows[0];
   } catch (error) {
-    await client.query('ROLLBACK'); // Annulation de la transaction en cas d'erreur
-    console.error('Erreur lors de la mise à jour du profil du joueur:', error);
+    await client.query('ROLLBACK');
+    console.error('Erreur mise à jour profil:', error);
+    throw error;
   } finally {
     client.release();
   }
 }
 
-// Crée les tables à l'initialisation
-createTables();
+// Initialisation de la base de données
+createTables().catch(err => {
+  console.error('[BDD CRITIQUE] Erreur initialisation:', err);
+  process.exit(1);
+});
 
 module.exports = {
   insertPlayerProfile,
