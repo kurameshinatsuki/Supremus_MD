@@ -50,23 +50,23 @@ const FIELD_CATEGORIES = {
 // Messages constants
 const MESSAGES = {
   ERRORS: {
-    INVALID_FORMAT: "❌ Format de commande invalide. Utilisation : champ1=value1; champ2+=value2",
-    FIELD_NOT_EXIST: "❌ Le champ '%s' n'existe pas",
-    NUMERIC_REQUIRED: "❌ La valeur pour '%s' doit être numérique",
-    LIST_OPERATION: "❌ L'opération '%s' n'est pas autorisée pour le champ texte '%s'",
+    INVALID_FORMAT: "❌ Format de commande invalide. *Utilisation :* champ1=value1; champ2+=value2",
+    FIELD_NOT_EXIST: "Le champ *%s* n'existe pas",
+    NUMERIC_REQUIRED: "❌ La valeur pour *%s* doit être numérique",
+    LIST_OPERATION: "❌ L'opération *%s* n'est pas autorisée pour le champ texte *%s*",
     DB_ERROR: "❌ Erreur base de données",
     IMAGE_LOAD: "⚠️ Impossible de charger l'image du profil",
-    PERMISSION_DENIED: "🚫 Action réservée à l'administrateur"
+    PERMISSION_DENIED: "🚫 Action réservée à l'administration."
   },
   SUCCESS: {
-    PROFILE_CREATED: "✅ Profil joueur %s créé avec succès",
-    PROFILE_UPDATED: "✅ Profil %s mis à jour avec succès",
-    PROFILE_DELETED: "✅ Profil de %s supprimé avec succès"
+    PROFILE_CREATED: "_✅ Profil joueur *%s* créé avec succès_",
+    PROFILE_UPDATED: "_✅ Profil *%s* mis à jour avec succès_",
+    PROFILE_DELETED: "_✅ Profil de %s supprimé avec succès_"
   },
   INFO: {
     NO_CHANGES: "ℹ️ Aucune modification effectuée",
-    PROFILE_NOT_FOUND: "ℹ️ Profil %s non trouvé",
-    FIELD_LIST: "📋 Liste des champs modifiables :"
+    PROFILE_NOT_FOUND: "ℹ️ Profil *%s* non trouvé",
+    FIELD_LIST: "*📋 LISTE DES CHAMPS MODIFIABLES :*"
   }
 };
 
@@ -269,13 +269,13 @@ function processProfileUpdates(data, command) {
  * Formatte les résultats des modifications pour l'affichage
  */
 function formatUpdateResults(profileName, successfulChanges, failedChanges) {
-  let response = `🔁 *Résultats de la mise à jour pour ${profileName}*\n\n`;
+  let response = `🪀 *DÉTAILS MISE À JOUR POUR :* ${profileName}*\n\n`;
   
   // Affichage des succès
   if (successfulChanges.length > 0) {
     response += "✅ *Modifications réussies:*\n";
     successfulChanges.forEach(change => {
-      response += `• ${change.field}: ${change.oldValue} → ${change.newValue}\n`;
+      response += `• *${change.field}:* ${change.oldValue} ➡️ ${change.newValue}\n`;
     });
     response += "\n";
   }
@@ -284,14 +284,14 @@ function formatUpdateResults(profileName, successfulChanges, failedChanges) {
   if (failedChanges.length > 0) {
     response += "❌ *Échecs de modification:*\n";
     failedChanges.forEach(fail => {
-      response += `• ${fail.field}=${fail.value}: ${fail.error}\n`;
+      response += `• *${fail.field}=${fail.value}:* ${fail.error}\n`;
     });
     response += "\n";
   }
   
   // Suggestions si échecs
   if (failedChanges.length > 0) {
-    response += "💡 *Conseils:*\n";
+    response += "💡 *CONSEILS:*\n";
     response += "- Vérifiez l'orthographe des champs avec `-champs`\n";
     response += "- Pour les nombres, utilisez seulement des chiffres\n";
     response += "- Format: `champ=valeur` ou `champ+=valeur`\n";
@@ -390,7 +390,7 @@ zokou({
     message += `${fields.join(', ')}\n\n`;
   });
   
-  message += "💡 *Usage* :\n";
+  message += "💡 *USAGE* :\n";
   message += "- `champ=valeur` : Définit une valeur\n";
   message += "- `champ+=valeur` : Ajoute à la valeur existante\n";
   message += "- `champ-=valeur` : Retire de la valeur existante\n";
