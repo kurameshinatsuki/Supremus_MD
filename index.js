@@ -623,7 +623,7 @@ if (ms.key.fromMe) {
                     const cd = evt.cm.find((zokou) => zokou.nomCom === (com));
                     if (cd) {
 
-                        if (conf.MODE != 'oui' && !superUser) {
+                        if (conf.MODE != 'yes' && !superUser) {
                             return;
                         }
 
@@ -895,7 +895,7 @@ if (ms.key.fromMe) {
                     (0, baileys_1.delay)(700);
 
                     var md;
-                    if ((conf.MODE).toLowerCase() === "oui") {
+                    if ((conf.MODE).toLowerCase() === "yes") {
                         md = "public";
                     }
                     else if ((conf.MODE).toLowerCase() === "non") {
@@ -911,11 +911,11 @@ if (ms.key.fromMe) {
                  if((conf.DP).toLowerCase() === 'yes') {
                     let cmsg = `📡《 *SUPREMUS BOT CONSOLE* 》📡
 ━━━━━━━━━━━━━━━━━━━━━━
-🧩 Préfixe système : [ ${prefixe} ]
-🧪 Mode opérationnel : ${md}
-📖 Modules actifs : ${evt.cm.length} commandes
+🕹️ *PRÉFIXE :* [ ${prefixe} ]
+👾 *MODE :* ${md}
+🪀 *MODULES ACTIFS :* ${evt.cm.length} commandes
 ━━━━━━━━━━━━━━━━━━━━━━
-👑 Dev : John Supremus | SRPN Core Dev
+*👑 DEV: John Supremus | SRPN Core Dev*
 ━━━━━━━━━━━━━━━━━━━━━━`;
                    
                     await zk.sendMessage(zk.user.id, { text: cmsg });
