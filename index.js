@@ -895,7 +895,7 @@ if (ms.key.fromMe) {
                     (0, baileys_1.delay)(700);
 
                     var md;
-                    if ((conf.MODE).toLowerCase() === "yes") {
+                    if ((conf.MODE).toLowerCase() === "oui") {
                         md = "public";
                     }
                     else if ((conf.MODE).toLowerCase() === "non") {
