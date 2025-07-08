@@ -12,31 +12,103 @@ zokou(
     <meta charset="UTF-8">
     <title>ABM SYSTEM – SRPN</title>
     <style>
+    :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #252525;
+        --accent-primary: #ff9e44;
+        --accent-secondary: #4fc3f7;
+        --text-primary: #f0f0f0;
+        --text-secondary: #cccccc;
+        --border-radius: 8px;
+    }
+    
+    body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    h1, h2 {
+        text-align: center;
+        color: var(--accent-primary);
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    h2 {
+        font-size: 2rem;
+        border-bottom: 2px solid var(--accent-secondary);
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+    
+    h3 {
+        color: var(--accent-secondary);
+        margin-top: 2.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .section {
+        margin-bottom: 3rem;
+        background: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    p {
+        background: var(--bg-secondary);
+        padding: 1.25rem;
+        border-left: 4px solid var(--accent-primary);
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        font-size: 1.1rem;
+    }
+    
+    /* Améliorations d'accessibilité */
+    a {
+        color: #4fc3f7;
+        text-decoration: none;
+        transition: opacity 0.3s;
+    }
+    
+    a:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+    }
+    
+    ::selection {
+        background: rgba(255, 158, 68, 0.3);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
         body {
-            background-color: #1e1e1e;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #f39c12;
-        }
-        h3 {
-            color: #00aced;
-            margin-top: 40px;
-        }
-        p {
-            background: #2e2e2e;
             padding: 15px;
-            border-left: 4px solid #f39c12;
-            overflow-x: auto;
-            white-space: pre-wrap;
+            font-size: 95%;
         }
+        
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.7rem; }
+        h3 { font-size: 1.3rem; }
+        
         .section {
-            margin-bottom: 40px;
+            padding: 1.2rem;
         }
-    </style>
+    }
+</style>
 </head>
 <body>
     <h1>🆚 ABM - SYSTÈME DE COMBAT 🌐</h1>
@@ -174,51 +246,172 @@ zokou(
   <meta charset="UTF-8">
   <title>ORIGAMY SYSTEM – SRPN</title>
   <style>
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f0f2f5;
+        --bg-tertiary: #e9ecef;
+        --text-primary: #1a1a1a;
+        --text-secondary: #4a4a4a;
+        --accent-primary: #4361ee;
+        --accent-secondary: #3a0ca3;
+        --border-color: #d3d3d3;
+        --border-radius: 8px;
+        --box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f8f9fa;
-      color: #111;
-      margin: 2rem;
-      padding: 1rem;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
     }
-    h2, h3 {
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 0.2em;
-    }
+
     h1 {
-      text-align: center;
+        text-align: center;
+        color: var(--accent-secondary);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
     }
+
+    h2 {
+        color: var(--accent-primary);
+        border-bottom: 2px solid var(--accent-primary);
+        padding-bottom: 0.4rem;
+        font-size: 1.8rem;
+        margin: 2.5rem 0 1.5rem;
+    }
+
+    h3 {
+        color: var(--accent-secondary);
+        font-size: 1.4rem;
+        margin: 2rem 0 1rem;
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    h3::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.4em;
+        height: 0.8em;
+        width: 4px;
+        background: var(--accent-primary);
+        border-radius: 2px;
+    }
+
     section {
-      margin-bottom: 2rem;
+        margin-bottom: 3rem;
+        background: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
     }
+
     .highlight {
-      background-color: #e9ecef;
-      padding: 0.5em;
-      border-radius: 0.4em;
+        background-color: var(--bg-tertiary);
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        border-left: 4px solid var(--accent-primary);
+        margin: 1.5rem 0;
     }
+
     pre {
-      background: #f1f1f1;
-      padding: 0.8em;
-      border-radius: 6px;
-      overflow-x: auto;
+        background: var(--bg-tertiary);
+        padding: 1.2rem;
+        border-radius: var(--border-radius);
+        overflow-x: auto;
+        box-shadow: var(--box-shadow);
+        line-height: 1.5;
     }
+
     code {
-      font-family: 'Courier New', monospace;
+        font-family: 'Fira Code', 'Courier New', monospace;
+        font-size: 0.95em;
     }
+
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.5rem 0;
+        box-shadow: var(--box-shadow);
     }
+
+    table th {
+        background-color: var(--accent-primary);
+        color: white;
+        font-weight: 600;
+        text-align: left;
+    }
+
     table th, table td {
-      border: 1px solid #ccc;
-      padding: 0.5em;
-      text-align: center;
+        border: 1px solid var(--border-color);
+        padding: 0.75rem;
+        text-align: left;
     }
+
+    table tr:nth-child(even) {
+        background-color: var(--bg-secondary);
+    }
+
+    table tr:hover {
+        background-color: var(--bg-tertiary);
+    }
+
     .emojis {
-      font-size: 1.2em;
+        font-size: 1.3em;
+        vertical-align: middle;
+        margin: 0 0.2em;
     }
-  </style>
+
+    /* Améliorations d'accessibilité */
+    a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    a:hover {
+        color: var(--accent-primary);
+        text-decoration: underline;
+    }
+
+    ::selection {
+        background: rgba(67, 97, 238, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        body {
+            padding: 1.5rem;
+            margin: 1rem;
+            font-size: 95%;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+        }
+
+        section {
+            padding: 1.2rem;
+        }
+    }
+</style>
 </head>
 <body>
   <h1>🌐 ORIGAMY WORLD – SYSTEM SRPN 🌐</h1>
@@ -543,55 +736,174 @@ zokou(
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YU-GI-OH! SPEED DUEL – GAMEPLAY SRPN</title>
   <style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #121212;
-    color: #f8f8f8;
-    padding: 1rem;
-    line-height: 1.5;
-    font-size: 14px;
-  }
+    :root {
+        --bg-primary: #0d0d0d;
+        --bg-secondary: #1a1a1a;
+        --bg-tertiary: #262626;
+        --text-primary: #f0f0f0;
+        --text-secondary: #cccccc;
+        --accent-primary: #ffd700;
+        --accent-secondary: #00e6e6;
+        --accent-tertiary: #ff6b6b;
+        --border-radius: 6px;
+        --border-accent: 4px solid var(--accent-primary);
+        --box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
 
-  h1, h2, h3 {
-    color: #ffe600;
-    text-align: center;
-    margin: 0.5rem 0;
-    font-size: 18px;
-  }
+    body {
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        font-size: 16px;
+    }
 
-  .section {
-    margin: 1rem 0;
-    padding: 0.75rem 1rem;
-    background-color: #1f1f1f;
-    border-left: 4px solid #ffcc00;
-    border-radius: 4px;
-  }
+    h1, h2, h3 {
+        color: var(--accent-primary);
+        margin: 1.5rem 0;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
 
-  code {
-    background: #333;
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
-    font-size: 13px;
-  }
+    h1 {
+        font-size: 2.2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 4px rgba(255, 215, 0, 0.2);
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
 
-  ul {
-    padding-left: 1.1rem;
-    margin: 0.5rem 0;
-  }
+    h1::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--accent-primary);
+        border-radius: 3px;
+    }
 
-  li {
-    margin-bottom: 0.3rem;
-  }
+    h2 {
+        font-size: 1.8rem;
+        text-align: left;
+        border-left: 4px solid var(--accent-primary);
+        padding-left: 1rem;
+        margin: 2.5rem 0 1.5rem;
+    }
 
-  .highlight {
-    color: #00ffff;
-    font-weight: bold;
-  }
+    h3 {
+        font-size: 1.4rem;
+        color: var(--accent-secondary);
+        margin: 2rem 0 1rem;
+    }
 
-  .small {
-    font-size: 12px;
-    opacity: 0.85;
-  }
+    .section {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background-color: var(--bg-secondary);
+        border-left: var(--border-accent);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    code {
+        font-family: 'Fira Code', 'Courier New', monospace;
+        background: var(--bg-tertiary);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--border-radius);
+        font-size: 0.9em;
+        color: var(--accent-secondary);
+    }
+
+    pre {
+        background: var(--bg-tertiary);
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        overflow-x: auto;
+        box-shadow: var(--box-shadow);
+        margin: 1.5rem 0;
+    }
+
+    pre code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+        font-size: 0.95em;
+    }
+
+    ul, ol {
+        padding-left: 1.5rem;
+        margin: 1rem 0;
+    }
+
+    li {
+        margin-bottom: 0.75rem;
+        padding-left: 0.5rem;
+    }
+
+    li::marker {
+        color: var(--accent-primary);
+    }
+
+    .highlight {
+        color: var(--accent-secondary);
+        font-weight: 600;
+        background: rgba(0, 230, 230, 0.1);
+        padding: 0.1rem 0.3rem;
+        border-radius: 3px;
+    }
+
+    .small {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        opacity: 0.9;
+    }
+
+    /* Effets interactifs */
+    a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    a:hover {
+        color: var(--accent-primary);
+        text-decoration: underline;
+    }
+
+    ::selection {
+        background: rgba(255, 215, 0, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        body {
+            padding: 1.5rem;
+            font-size: 95%;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+        }
+
+        .section {
+            padding: 1.2rem;
+        }
+    }
 </style>
 </head>
 <body>
@@ -783,30 +1095,154 @@ zokou(
     <meta charset="UTF-8">
     <title>SPEED RUSH SYSTEM – SRPN</title>
     <style>
+    :root {
+        --bg-primary: #121212;
+        --bg-secondary: #1e1e1e;
+        --bg-tertiary: #252525;
+        --text-primary: #f5f5f5;
+        --text-secondary: #b0b0b0;
+        --accent-primary: #ff9e1b;
+        --accent-secondary: #1da1f2;
+        --accent-tertiary: #2ecc71;
+        --border-radius: 8px;
+        --border-accent: 4px solid var(--accent-primary);
+        --box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        --transition: all 0.25s ease;
+    }
+
+    body {
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.7;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2.5rem;
+    }
+
+    h1, h2, h3 {
+        margin: 2rem 0;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+        color: var(--accent-primary);
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        text-shadow: 0 2px 8px rgba(255, 158, 27, 0.15);
+    }
+
+    h1::after {
+        content: "";
+        position: absolute;
+        bottom: -1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        border-radius: 2px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: var(--accent-primary);
+        text-align: center;
+        margin: 3rem 0 2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--bg-tertiary);
+    }
+
+    h3 {
+        font-size: 1.6rem;
+        color: var(--accent-secondary);
+        margin: 2.5rem 0 1.5rem;
+        padding-left: 1rem;
+        border-left: 4px solid var(--accent-secondary);
+    }
+
+    .section {
+        margin: 3rem 0;
+        padding: 2rem;
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        transition: var(--transition);
+    }
+
+    .section:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        transform: translateY(-2px);
+    }
+
+    pre {
+        background: var(--bg-tertiary);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        border-left: var(--border-accent);
+        overflow-x: auto;
+        box-shadow: var(--box-shadow);
+        margin: 2rem 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    code {
+        font-family: 'Fira Code', 'Courier New', monospace;
+        color: var(--accent-tertiary);
+    }
+
+    pre code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+    }
+
+    /* Effets interactifs */
+    a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    a:hover {
+        color: var(--accent-primary);
+        text-decoration: underline;
+    }
+
+    ::selection {
+        background: rgba(255, 158, 27, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
         body {
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            padding: 20px;
+            padding: 1.5rem;
+            font-size: 95%;
         }
-        h1, h2 {
-            text-align: center;
-            color: #f39c12;
+
+        h1 {
+            font-size: 2.2rem;
         }
+
+        h2 {
+            font-size: 1.7rem;
+        }
+
         h3 {
-            color: #00aced;
-            margin-top: 40px;
+            font-size: 1.4rem;
         }
+
         .section {
-            margin-bottom: 40px;
+            padding: 1.5rem;
+            margin: 2rem 0;
         }
-        pre {
-            background: #222;
-            padding: 15px;
-            border-left: 4px solid #f39c12;
-            overflow-x: auto;
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <h1>🏁 SPEED RUSH SYSTEM 🏁</h1>
