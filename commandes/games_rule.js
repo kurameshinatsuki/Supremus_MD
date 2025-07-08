@@ -176,13 +176,13 @@ zokou(
         // Aide enrichie
         if (!input) return repondre(
             '🆚 *ABM ULTIMATE HELP* 🆚\n\n' +
-            '➤ *MàJ stats:* `-duel_abm [Joueur] [stat]±[valeur] ...`\n' +
+            '➤ *MàJ Perso:* `-duel_abm [Joueur] [stat]±[valeur] ...`\n' +
             '   *Ex:* `-duel_abm Gojo vie-20 energie+30`\n\n' +
-            '➤ *Multi-joueurs:* `-duel_abm [Joueur1] [stat]±[valeur]; [Joueur2] ...`\n' +
+            '➤ *MàJ Multi:* `-duel_abm [Joueur1] [stat]±[valeur]; [Joueur2] ...`\n' +
             '   *Ex:* `-duel_abm Gojo heart+15; Sukuna vie-10`\n\n' +
-            '➤ *Reset:* `-duel_abm reset [Joueur1] [Joueur2]...`\n' +
-            '➤ *Reset ALL:* `-duel_abm resetall`\n' +
-            '➤ *Delete:* `-duel_abm delete [duelKey]`\n' +
+            '➤ *Réinitialisé:* `-duel_abm reset [Joueur1] [Joueur2]...`\n' +
+            '➤ *Tout Réinitialisé:* `-duel_abm resetall`\n' +
+            '➤ *Supprimer:* `-duel_abm delete [duelKey]`\n' +
             '➤ *Liste:* `-duel_abm list`\n\n' +
             '📊 *Stats disponibles:* vie, energie, heart\n' +
             '*Exemple complet:*\n' +
@@ -233,7 +233,7 @@ zokou(
                 }
             });
 
-            return repondre(count > 0 ? `🔄 ${count} joueur(s) réinitialisé(s) !` : '*_❌ Joueur(s) non trouvé(s)_*');
+            return repondre(count > 0 ? `*_🔄 ${count} joueur(s) réinitialisé(s) !_*` : '*_❌ Joueur(s) non trouvé(s)_*');
         }
 
         // Gestion des stats (version optimisée)
@@ -278,7 +278,7 @@ zokou(
 
                     joueurTrouve.stats = result.stats;
                     updatedDuel = duelTrouve;
-                    results.push(result.message || `✅ ${nomJoueur} ${stat} ${op}= ${valStr}`);
+                    results.push(result.message || `*✅ ${nomJoueur} ${stat} ${op}*= ${valStr}`);
                 }
             }
 
@@ -471,13 +471,13 @@ zokou(
     // Aide
     if (!input) return repondre(
       '🏁 *SPEED-RUSH HELP* 🏁\n\n' +
-      '➤ *MàJ stats:* `-sr [Pilote] [stat]±[valeur] ...`\n' +
+      '➤ *MàJ Perso:* `-sr [Pilote] [stat]±[valeur] ...`\n' +
       '   *Ex:* `-sr Pilote1 voiture-20 essence+15`\n\n' +
-      '➤ *Multi-pilotes:* `-sr [Pilote1] [stat]±[valeur]; [Pilote2] ...`\n' +
+      '➤ *MàJ Multi:* `-sr [Pilote1] [stat]±[valeur]; [Pilote2] ...`\n' +
       '   *Ex:* `-sr Pilote1 turbo+10; Pilote2 essence-5`\n\n' +
-      '➤ *Reset:* `-sr reset [Pilote1] [Pilote2]...`\n' +
-      '➤ *Reset ALL:* `-sr resetall`\n' +
-      '➤ *Delete:* `-sr delete [courseKey]`\n' +
+      '➤ *Réinitialisé:* `-sr reset [Pilote1] [Pilote2]...`\n' +
+      '➤ *Tout Réinitialisé:* `-sr resetall`\n' +
+      '➤ *Supprimer:* `-sr delete [courseKey]`\n' +
       '➤ *Liste:* `-sr list`\n\n' +
       '📊 *Stats disponibles:* voiture, essence, turbo'
     );
@@ -572,7 +572,7 @@ zokou(
 
           piloteTrouve.stats = result.stats;
           updatedCourse = courseTrouvee;
-          results.push(result.message || `✅ ${nomPilote} ${stat} ${op}= ${valStr}`);
+          results.push(result.message || `*✅ ${nomPilote} ${stat} ${op}*= ${valStr}`);
         }
       }
 
@@ -615,7 +615,7 @@ zokou(
         const result = limiterStatsSpeedRush(piloteTrouve.stats, stat, valeur);
 
         piloteTrouve.stats = result.stats;
-        results.push(result.message || `✅ ${stat} ${op}= ${valStr}`);
+        results.push(result.message || `*✅ ${stat} ${op}*= ${valStr}`);
       }
 
       if (results.length > 0) await repondre(results.join('\n'));
@@ -634,7 +634,7 @@ let duelsYugi = {};
 const imageYugiDuel = 'https://i.ibb.co/rKxJ2g7r/image.jpg';
 
 function generateFicheDuelYugi(duel) {
-    const formatZones = (zones) => zones.length > 0 ? zones.join(' | ') : '---';
+    const formatZones = (zones) => zones.length > 0 ? zones.join(' | ') : '___';
 
     return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
@@ -683,7 +683,7 @@ function generateFicheDuelYugi(duel) {
 zokou(
     { nomCom: 'yugirule', categorie: 'YU-GI-OH' },
     async (dest, zk, { repondre, arg, ms }) => {
-        if (!arg || arg.length < 1) return repondre('*Ex :* -yugi_rule Yugi vs Kaiba / Yugi main:26 extra:3; Kaiba main:28 extra:3');
+        if (!arg || arg.length < 1) return repondre('🔹*Usage :* -yugirule Yugi vs Kaiba / Yugi main:26 extra:3; Kaiba main:28 extra:3');
 
         try {
             const input = arg.join(' ');
@@ -764,14 +764,14 @@ zokou(
     if (!input) {
       return repondre(
         '🎴 *YU-GI-OH DUEL MANAGER* 🎴\n\n' +
-        '➤ *Modifier stats:* `-duel_yugi [joueur] [modif1] [modif2] ...`\n' +
+        '➤ *MàJ Perso:* `-duel_yugi [joueur] [modif1] [modif2] ...`\n' +
         '  *Ex:* `-duel_yugi Yugi lp-500 main+2 zone_monstre+Dragon Blanc`\n\n' +
-        '➤ *Multi-joueurs:* `-duel_yugi [joueur1] [modifs]; [joueur2] [modifs]`\n' +
+        '➤ *MàJ Multi:* `-duel_yugi [joueur1] [modifs]; [joueur2] [modifs]`\n' +
         '  *Ex:* `-duel_yugi Yugi lp-500; Kaiba zone_monstre+Dragon Blanc`\n\n' +
-        '➤ "Réinitialiser:* `-duel_yugi reset [joueur]`\n' +
-        '➤ "Tout réinitialiser:* `-duel_yugi resetall`\n' +
-        '➤ *Supprimer duel:* `-duel_yugi delete [clé_duel]`\n' +
-        '➤ *Liste duels:* `-duel_yugi list`\n\n' +
+        '➤ *Réinitialiser:* `-duel_yugi reset [joueur]`\n' +
+        '➤ *Tout réinitialiser:* `-duel_yugi resetall`\n' +
+        '➤ *Supprimer:* `-duel_yugi delete [clé_duel]`\n' +
+        '➤ *Liste:* `-duel_yugi list`\n\n' +
         '📌 *Modifs disponibles:* lp, cm, main, extra, cimetiere, terrain, zone_monstre, zone_magie_piege'
       );
     }
@@ -798,7 +798,7 @@ zokou(
     if (input === 'list') {
       const duels = Object.keys(duelsYugi);
       if (duels.length === 0) return repondre('Aucun duel en cours');
-      return repondre('🎴 DUEL ACTIFS:*\n' + duels.join('\n'));
+      return repondre('*🎴 DUEL ACTIFS 🎴*\n' + duels.join('\n'));
     }
 
     if (input.startsWith('delete ')) {
