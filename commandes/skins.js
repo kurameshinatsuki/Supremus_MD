@@ -84,7 +84,7 @@ async function envoyerListeSkinsHTML(dest, zk, ms) {
           padding-left: 15px;
         }
         li::before {
-          content: "🎭 ";
+          content: "- ";
           position: absolute;
           left: 0;
           color: #f39c12;
@@ -94,11 +94,11 @@ async function envoyerListeSkinsHTML(dest, zk, ms) {
       <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
     </head>
     <body>
-      <h1>🎭 CATALOGUE DES SKINS - ORIGAMY WORLD 🎭</h1>
+      <h1>🎭 ORIGAMY SKINS 🎭</h1>
     `;
 
     for (const [rang, raretes] of Object.entries(select_skins)) {
-        html += `<h2>RANG ${rang}</h2>`;
+        html += `<h2>${rang}</h2>`;
         for (const [rarete, skins] of Object.entries(raretes)) {
             html += `<h3>${rarete}</h3><ul>`;
             for (const nom of Object.keys(skins)) {
