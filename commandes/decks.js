@@ -1,4 +1,3 @@
-// 📁 fichier/decks.js
 const { zokou } = require('../framework/zokou');
 const { decks } = require('../commandes/deck_manager');
 const { deck_cards } = require("../commandes/deck_cards");
@@ -44,7 +43,14 @@ zokou(
     }
 
     const { image, competence, main, extra } = deckData;
-    const deckMelange = [...main].sort(() => Math.random() - 0.5);
+    
+    // Assigner un ID numérique unique à chaque carte (1, 2, 3...)
+    const deckAvecIds = main.map((name, index) => ({
+      id: index + 1,
+      name
+    }));
+
+    const deckMelange = [...deckAvecIds].sort(() => Math.random() - 0.5);
 
     sessions[dest] = {
       deck: deckMelange,
@@ -52,7 +58,8 @@ zokou(
       nom: nomDeck
     };
 
-    const contenu = `🧠 *Compétence :*\n• ${competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n• ${deckMelange.join('\n• ')}` +
+    const contenu = `🧠 *Compétence :*\n• ${competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n` +
+      deckMelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
       (extra?.length
         ? `\n\n🧩 *Extra Deck (${extra.length}) :*\n• ${extra.join('\n• ')}`
         : '');
@@ -64,7 +71,7 @@ zokou(
   }
 );
 
-// Commande : .pioche <numéro>
+// Commande : .pioche <id>
 zokou(
   { nomCom: 'pioche', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
@@ -79,27 +86,60 @@ zokou(
 
     if (!arg[0] || isNaN(arg[0])) {
       await zk.sendMessage(dest, {
-        text: `❌ Veuillez spécifier un numéro de carte à piocher. Exemple : *.pioche 3*`
+        text: `❌ Veuillez spécifier l'ID de la carte à piocher. Exemple : *.pioche 3*`
       }, { quoted: ms });
       return;
     }
 
-    const index = parseInt(arg[0], 10) - 1;
-    const deckEnCours = sessions[dest].deck;
+    const idCarte = parseInt(arg[0], 10);
+    const session = sessions[dest];
+    const carteIndex = session.deck.findIndex(c => c.id === idCarte);
 
-    if (index < 0 || index >= deckEnCours.length) {
+    if (carteIndex === -1) {
       await zk.sendMessage(dest, {
-        text: `❌ Numéro invalide. Le deck contient ${deckEnCours.length} cartes.`
+        text: `❌ ID invalide. Utilise *.mondeck* pour voir les IDs disponibles.`
       }, { quoted: ms });
       return;
     }
 
-    const cartePiochée = deckEnCours.splice(index, 1)[0];
-    sessions[dest].deck = deckEnCours;
+    const cartePiochée = session.deck.splice(carteIndex, 1)[0];
+    session.pioches.push(cartePiochée);
+    session.deck = session.deck; // Mise à jour
 
     await zk.sendMessage(dest, {
-      text: `🃏 Vous avez pioché : *${cartePiochée}*\n🗂️ Cartes restantes : ${deckEnCours.length}`
+      text: `🃏 Vous avez pioché : *${cartePiochée.name}* (ID: ${cartePiochée.id})\n🗂️ Cartes restantes : ${session.deck.length}`
     }, { quoted: ms });
+  }
+);
+
+// Nouvelle commande : .mondeck
+zokou(
+  { nomCom: 'mondeck', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    if (!sessions[dest]) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif. Commence avec *.deck <nom>*`
+      }, { quoted: ms });
+      return;
+    }
+
+    const session = sessions[dest];
+    
+    const cartesRestantes = session.deck
+      .map(c => `[${c.id}] ${c.name}`)
+      .join('\n') || 'Aucune';
+
+    const cartesPiochées = session.pioches
+      .map(c => `[${c.id}] ${c.name}`)
+      .join('\n') || 'Aucune';
+
+    const message = `🗂️ *DECK ACTUEL: ${session.nom.toUpperCase()}*\n\n` +
+      `📦 *CARTES RESTANTES (${session.deck.length}):*\n${cartesRestantes}\n\n` +
+      `🎴 *CARTES PIOCHEES (${session.pioches.length}):*\n${cartesPiochées}`;
+
+    await zk.sendMessage(dest, { text: message }, { quoted: ms });
   }
 );
 
@@ -121,13 +161,15 @@ zokou(
 
     const nomDeck = sessions[dest].nom;
     const deckOriginal = decks[nomDeck];
-    const cartesRestantes = sessions[dest].deck;
+    const cartesRestantes = [...sessions[dest].deck]; // Copie
 
-    // Mélange uniquement les cartes non piochées
-    const deckMelange = [...cartesRestantes].sort(() => Math.random() - 0.5);
+    // Mélanger en conservant les IDs
+    const deckMelange = cartesRestantes.sort(() => Math.random() - 0.5);
     sessions[dest].deck = deckMelange;
 
-    const contenu = `🧠 *Compétence :*\n• ${deckOriginal.competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n• ${deckMelange.join('\n• ')}\n\n🧩 *Extra Deck (${deckOriginal.extra.length}) :*\n• ${deckOriginal.extra.join('\n• ')}`;
+    const contenu = `🧠 *Compétence :*\n• ${deckOriginal.competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n` +
+      deckMelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
+      `\n\n🧩 *Extra Deck (${deckOriginal.extra.length}) :*\n• ${deckOriginal.extra.join('\n• ')}`;
 
     await zk.sendMessage(dest, {
       image: { url: deckOriginal.image },
@@ -162,16 +204,22 @@ zokou(
       return;
     }
 
-    const deckRemelange = [...deckData.main].sort(() => Math.random() - 0.5);
+    // Recréer le deck avec les mêmes IDs
+    const deckRemelange = deckData.main.map((name, index) => ({
+      id: index + 1,
+      name
+    })).sort(() => Math.random() - 0.5);
 
     // Mise à jour de la session
     sessions[dest] = {
       nom: nomDeck,
       deck: deckRemelange,
-      pioches: [] // Reset aussi les cartes piochées
+      pioches: []
     };
 
-    const contenu = `🧠 *Compétence :*\n• ${deckData.competence}\n\n🃏 *Deck Principal (${deckRemelange.length}) :*\n• ${deckRemelange.join('\n• ')}\n\n🧩 *Extra Deck (${deckData.extra.length}) :*\n• ${deckData.extra.join('\n• ')}`;
+    const contenu = `🧠 *Compétence :*\n• ${deckData.competence}\n\n🃏 *Deck Principal (${deckRemelange.length}) :*\n` +
+      deckRemelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
+      `\n\n🧩 *Extra Deck (${deckData.extra.length}) :*\n• ${deckData.extra.join('\n• ')}`;
 
     await zk.sendMessage(dest, {
       image: { url: deckData.image },
