@@ -11,7 +11,7 @@
     "@adiwajshing/keyed-db": "^0.2.4",
     "@hapi/boom": "^10.0.1",
     "@types/node": "^20.11.5",
-    "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys#fixes",
+    "@whiskeysockets/baileys": "github:Ainz-devs/Baileys",
     "@xaviabot/fb-downloader": "^1.0.14",
     "aptoide-scraper": "^1.0.1",
     "axios": "^1.6.2",
