@@ -151,6 +151,8 @@ zokou(
 
 > ▪️ [Décris tes actions RP ici]
 
+> ▪️ [Décris tes actions RP ici]
+
 *💠 TECHNIQUES :* 
 *📌 DISTANCE :* 
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
