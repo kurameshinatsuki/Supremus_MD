@@ -686,16 +686,16 @@ zokou(
     <li>Apr&egrave;s chaque pav&eacute;, il attend la validation de l&rsquo;arbitre et une &eacute;ventuelle r&eacute;action de l&rsquo;adversaire (cartes pi&egrave;ge, contre, etc.).</li>
   </ul>
 
-  <h3>&#128221; Structure du Tour</h3>
+  <h3>&#128221; Structure du Tour &#128221;</h3>
 
   <h4>Phase 1 : Pioche &amp; Main Phase 1</h4>
   <p>Je pioche une carte.<br>
-  J&rsquo;invoque [Nom du monstre] en mode Attaque.<br>
+  J&rsquo;invoque [Monstre] en mode [Position].<br>
   Je pose 1 carte face cach&eacute;e.</p>
   <p><em>➡️ Attendre la validation ou interruption avant de continuer.</em></p>
 
   <h4>Phase 2 : Battle Phase</h4>
-  <p>[Monstre] attaque [Monstre adverse ou joueur].<br>
+  <p>[Monstre] attaque [Monstre adverse ou Joueur].<br>
   Dommages : [si calcul connu]</p>
   <p><em>➡️ Attendre la validation ou interruption.</em></p>
 
@@ -735,25 +735,26 @@ zokou(
     <li><code>~carte [Nom]</code> : Afficher la carte</li>
   </ul>
 
-  <h3>&#128221; Mod&egrave;le de Tour</h3>
+  <h3>&#128221; Modèle de Tour &#128221;</h3>
 
-  <strong>Phase 1 :</strong>
-  <p><strong>PLAYER :</strong><br>
-  Je pioche une carte.<br>
-  J&rsquo;invoque [Monstre].<br>
-  Je pose 1 carte face cach&eacute;e.</p>
+<strong>Phase 1 :</strong>
+<p><strong>YUGI :</strong><br>
+Je pioche une carte !<br>
+J’invoque <strong>Axe Raider</strong> (★★★ [ATK: 1700 / DEF: 1000]) en Position d'Attaque.<br>
+Je pose 1 carte Magie/Piège face cachée.</p>
 
-  <em>(Attente validation / r&eacute;action)</em>
+<em>(Kaiba ne réagit pas. La phase continue.)</em>
 
-  <strong>Phase 2 :</strong>
-  <p>J&rsquo;attaque [Monstre/adversaire] avec [Monstre].<br>
-  <strong>Dommages :</strong> ...</p>
+<strong>Phase 2 :</strong>
+<p>J’attaque <strong>Soldat du Lustre Noir</strong> (★★★ [ATK: 1600]) avec <strong>Axe Raider</strong> !<br>
+<strong>Dommages :</strong> 1700 - 1600 = <strong>100 points</strong> de dégâts à Kaiba.</p>
 
-  <em>(Attente validation / r&eacute;action)</em>
+<em>(Kaiba serre les dents mais ne contre pas.)</em>
 
-  <strong>Phase 3 :</strong>
-  <p>Je pose 1 carte magie.<br>
-  Fin de mon tour.</p>
+<strong>Phase 3 :</strong>
+<p>J’active ma carte Magie face cachée : <strong>Équipement Éclair</strong> !<br>
+<strong>Axe Raider</strong> gagne 500 ATK jusqu'à la End Phase (1700 → 2200).<br>
+Fin de mon tour.</p>
   </div></body>
 </html>`;
 
