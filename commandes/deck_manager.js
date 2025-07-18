@@ -90,6 +90,8 @@ const decks = {
       "Dragon Météore",
       "Dragon Météore",
       "Dragon Météore",
+      "Bébé Dragon",
+      "Magicien du Temps",
       "Axe Raider",
       "Axe Raider",
       "Axe Raider",
