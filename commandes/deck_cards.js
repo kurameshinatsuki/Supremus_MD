@@ -79,6 +79,8 @@ const deck_cards = {
   'Polymérisation': 'https://i.ibb.co/nq9nLXX5/RA03-51-Bc.jpg',
   'Dragon Noir aux Yeux Bleus': 'https://i.ibb.co/sv2SrvjR/Dragon-Noiraux-Yeux-Rouges-RA04-FR-QCSE-1-E.webp',
   'Dragon Noir Météore': 'https://i.ibb.co/DfWyj6Sm/LDS1-13.jpg',
+  'Magicien du Temps' : 'https://i.ibb.co/sdWThJtZ/image.jpg',
+  'Bébé Dragon' : 'https://i.ibb.co/vxX9Gxr3/image.jpg',
 
   // MAI
   'Tornade Violente': 'https://i.ibb.co/60dyry5D/47766694.jpg',
