@@ -320,12 +320,11 @@ Certains PNJ peuvent influencer l&rsquo;histoire, devenir leaders, trahir ou com
 - ou comp&eacute;tences de combat.<br>
 Vous y trouverez des pi&egrave;ges et &eacute;v&eacute;nements impr&eacute;vus : sables mouvants, embuscades, hallucinations, ennemis vari&eacute;s avec niveaux, comp&eacute;tences cr&eacute;dibles et impressionnantes.<br><br>
 
-<strong>CYCLE TEMPOREL &amp; M&Eacute;T&Eacute;O :</strong> La journ&eacute;e dure 12 tours.<br>
-- <em>Matin</em> : visibilit&eacute; accrue, PNJ actifs.<br>
-- <em>Apr&egrave;s-midi</em> : activit&eacute; marchande, fort ensoleillement.<br>
-- <em>Soir&eacute;e</em> : plus dangereuse (monstres, embuscades).<br>
-- <em>Nuit</em> : visibilit&eacute; r&eacute;duite (-50% perception).<br>
-Chaque p&eacute;riode dure 3 tours.<br><br>
+<strong>CYCLE TEMPOREL &amp; M&Eacute;T&Eacute;O :</strong> La journ&eacute;e dure 16 tours. Chaque p&eacute;riode dure 4 tours. Une journ&eacute;e compl&egrave;te repr&eacute;sente 24 heures in-game, avec chaque tour &eacute;quivalant &agrave; 1h30.<br>
+- <em>Matin (Tours 5 &agrave; 8 / 06:00 - 12:00)</em> : visibilit&eacute; accrue, PNJ actifs.<br>
+- <em>Apr&egrave;s-midi (Tours 9 &agrave; 12 / 12:00 - 18:00)</em> : activit&eacute; marchande, fort ensoleillement.<br>
+- <em>Soir&eacute;e (Tours 13 &agrave; 16 / 18:00 - 00:00)</em> : plus dangereuse (monstres, embuscades).<br>
+- <em>Nuit (Tours 1 &agrave; 4 / 00:00 - 06:00)</em> : visibilit&eacute; r&eacute;duite (-50% perception).<br><br>
 
 <strong>EFFETS CLIMATIQUES :</strong><br>
 🌧️ <strong>Pluie</strong> : taux de coup critique &eacute;lev&eacute;, sol glissant, avantage aux comp&eacute;tences &eacute;lectriques, d&eacute;savantage aux comp&eacute;tences feu.<br>
