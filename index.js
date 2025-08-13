@@ -912,8 +912,8 @@ if (ms.key.fromMe) {
                     let cmsg = `📡《 *SUPREMUS BOT CONSOLE* 》📡
 ━━━━━━━━━━━━━━━━━━━━━━
 🕹️ *PRÉFIXE :* [ ${prefixe} ]
-👾 *MODE :* ${md}
-🪀 *MODULES ACTIFS :* ${evt.cm.length} commandes
+👾 *MODE :* ${md} / Public
+🪀 *MODULES :* ${evt.cm.length} commandes
 ━━━━━━━━━━━━━━━━━━━━━━
 *👑 DEV: John Supremus | SRPN Core Dev*
 ━━━━━━━━━━━━━━━━━━━━━━`;
@@ -1086,7 +1086,7 @@ app.get('/', (req, res) => {
     </head>
     <body>
         <div class="content">
-            <h1>Merci d'avoir choisi Zokou</h1>
+            <h1>Supremus MD est actif</h1>
         </div>
     </body>
     </html>
