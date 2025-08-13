@@ -12,10 +12,9 @@ let monitoringState = {
 };
 
 zokou({
-  nomCom: "monitor",
+  nomCom: "ping",
   categorie: "MON-BOT",
-  reaction: "🌐",
-  description: "Surveille une URL web à intervalles réguliers"
+  reaction: "🌐"
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
 
