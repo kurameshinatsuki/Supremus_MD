@@ -3,6 +3,51 @@ const axios = require("axios");
 const fs = require('fs-extra');
 const path = require ('path');
 
+zokou({
+  nomCom: "minuteur",
+  categorie: "MON-BOT",
+  reaction: "⏳",
+  description: "Minuteur visuel (1-15 minutes)"
+}, async (origineMessage, zk, commandeOptions) => {
+  const { repondre, arg } = commandeOptions;
+
+  // Configuration
+  const dureeMax = 15; // 15 minutes maximum
+  let minutes = parseInt(arg[0]) || 3; // 3min par défaut
+
+  // Validation
+  if (isNaN(minutes) || minutes < 1 || minutes > dureeMax) {
+    return repondre(`❌ Durée invalide ! Choisis entre 1 et ${dureeMax} minutes.`);
+  }
+
+  // Conversion en secondes pour l'animation
+  const totalSeconds = minutes * 60;
+  const etapes = 10;
+  const interval = (totalSeconds * 1000) / etapes;
+
+  // Message initial
+  const msgInit = await zk.sendMessage(origineMessage, {
+    text: `⏳ Minuteur démarré (${minutes}min)\n\n[${'░'.repeat(etapes)}] 0%`
+  });
+
+  // Animation
+  for (let i = 1; i <= etapes; i++) {
+    await new Promise(resolve => setTimeout(resolve, interval));
+    
+    const pourcentage = i * 10;
+    const barre = '█'.repeat(i) + '░'.repeat(etapes - i);
+    
+    await zk.sendMessage(origineMessage, {
+      text: `⏳ Temps restant: ${Math.round(minutes - (minutes * pourcentage/100))}min\n\n[${barre}] ${pourcentage}%`,
+      edit: msgInit.key
+    });
+  }
+
+  // Message final (nouveau message)
+  await zk.sendMessage(origineMessage, {
+    text: `✅ Minuteur terminé ! (${minutes} minutes écoulées)`
+  });
+});
 
 zokou({
   nomCom: "diffusion",
