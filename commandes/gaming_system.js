@@ -54,11 +54,11 @@ Se lib&eacute;rer d&#39;une saisie vous co&ucirc;te 10🫀 mais les personnages 
 
 <strong>VITESSE :</strong> R&eacute;action (V.R) : mesur&eacute;e en millisecondes (ms ou ⚡). D&eacute;placement (V.D) : mesur&eacute; en m&egrave;tres par section (m/s ou 🎯). Se d&eacute;placer &agrave; vitesse maximale vous co&ucirc;te 10🫀.<br><br>
 
-- Le personnage r&eacute;agissant avec 500ms⚡ de retard ou plus ne peut pas r&eacute;agir.<br>
-- Le personnage r&eacute;agissant avec 400ms⚡ de retard ne peut que mettre sa garde (bloquer), ce qui l&#39;expose.<br>
-- Le personnage r&eacute;agissant avec 300ms⚡ de retard peut bloquer ou esquiver.<br>
-- Le personnage r&eacute;agissant avec 100ms⚡ ou 200ms⚡ de retard peut riposter (attaquer simultan&eacute;ment, mais peut s&#39;exposer &agrave; l&#39;attaque adverse.)<br>
-- Si le personnage n&#39;est pas affect&eacute; par le retard de r&eacute;action, il peut attaquer avant m&ecirc;me que l&#39;adversaire puisse ex&eacute;cuter son action.<br><br>
+- Le personnage r&eacute;agissant avec 500ms⚡ de retard ne peut que mettre sa garde (bloquer) ce qui l'expose &agrave; plus de 500ms⚡, ne peut pas r&eacute;agir.<br>
+- Le personnage r&eacute;agissant avec 400ms⚡ de retard peut seulement bloquer ou esquiver.<br>
+- Le personnage r&eacute;agissant avec 300ms⚡ de retard peut bloquer, esquiver ou m&ecirc;me riposter (attaquer simultan&eacute;ment, mais peut s'exposer &agrave; l'attaque adverse.)<br>
+- Le personnage r&eacute;agissant avec 100ms⚡ ou 200ms⚡ de retard peut r&eacute;agir normalement.<br>
+- Si le personnage n'est pas affect&eacute; par le retard de r&eacute;action, il peut attaquer avant m&ecirc;me que l'adversaire puisse ex&eacute;cuter son action.<br><br>
 
 <strong>TEMPO :</strong> Le retard de r&eacute;action normal en position d&eacute;fensive est de 200ms⚡. R&eacute;agir au lancement d&#39;un coup &agrave; close distance augmente le temps de r&eacute;action de +100ms⚡ : vous devez donc r&eacute;agir &agrave; la pr&eacute;pa du coup (mouvement) afin de contrer normalement.<br>
 Vous ne pouvez pas r&eacute;agir &agrave; une attaque que vous ne voyez pas (de profil ou de dos), vous devez donc r&eacute;agir &agrave; ce que vous ressentez (perception sensorielle). Cela aussi augmente le temps de r&eacute;action de +100ms⚡.<br>
@@ -72,7 +72,7 @@ Vous ne pouvez ex&eacute;cuter un combo qu&#39;une fois par tour et il ne peut p
 Seul un personnage plus rapide en (V.D🎯) peut encha&icirc;ner d&eacute;placement et coup sans casser l&#39;encha&icirc;nement.<br><br>
 
 Si un personnage se d&eacute;place plus vite que l&#39;adversaire, celui-ci r&eacute;agit avec +100ms⚡ de retard.<br>
-Dans le cas o&ugrave; le personnage plus rapide se repositionne dans l&#39;angle mort de l&#39;adversaire (hors du champ de vision : 180&deg; pour les deux yeux et 90&deg; pour un &oelig;il), l&#39;adversaire r&eacute;agit avec +300ms⚡ de retard.<br>
+Dans le cas o&ugrave; le personnage plus rapide se repositionne dans l&#39;angle mort de l&#39;adversaire (hors du champ de vision : 180&deg; pour les deux yeux et 90&deg; pour un &oelig;il), l&#39;adversaire r&eacute;agit avec +200ms⚡ de retard.<br>
 Les personnages plus r&eacute;actifs verront leur retard r&eacute;duit selon la diff&eacute;rence de r&eacute;action entre eux et leur adversaire.<br><br>
 
 <strong>OVERDRIVE :</strong> L&#39;Overdrive, utilisable seulement en position d&eacute;fensive et 1 fois toutes les 4 sections, permet de r&eacute;agir face &agrave; une attaque impossible &agrave; r&eacute;agir normalement.<br>
