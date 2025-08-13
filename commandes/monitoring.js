@@ -18,9 +18,14 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
 
+  // Vérifie si c'est le propriétaire
+  if (!superUser) {
+    return repondre("🚫 Commande réservée au propriétaire du bot.");
+  }
+
   // Vérifier si un monitoring est déjà actif
   if (monitoringState.active) {
-    return repondre("❌ Une surveillance est déjà en cours. Utilisez *-stopmonitor* d'abord.");
+    return repondre("❌ Une surveillance est déjà en cours. Utilisez *-stopping* d'abord.");
   }
 
   // Récupérer les paramètres
@@ -29,11 +34,11 @@ zokou({
 
   // Validation des entrées
   if (!url) {
-    return repondre("❌ URL manquante !\nUsage : *-monitor [url] [intervalle-en-min]*\nExemple : *-monitor https://monbot.com 10*");
+    return repondre("❌ URL manquante !\nUsage : *-monitor [url] [intervalle-en-min]*\nExemple : *-monitor https://supremusbot.com 5*");
   }
 
   if (intervalMinutes < 1 || intervalMinutes > 1440) {
-    return repondre("❌ Intervalle invalide (1-1440 minutes)");
+    return repondre("❌ Intervalle invalide (1-10 minutes)");
   }
 
   // Initialiser le monitoring
@@ -48,7 +53,7 @@ zokou({
 
   // Envoyer le message initial
   const initialMessage = await zk.sendMessage(origineMessage, {
-    text: `🔍 *Début surveillance* 🔍\nURL: ${url}\nIntervalle: ${intervalMinutes} min\nStatut: En attente...`
+    text: `🔍 *DÉBUT SURVEILLANCE* 🔍\n\n*URL:* ${url}\n*Intervalle:* ${intervalMinutes} min\n*Statut:* En attente...`
   });
   monitoringState.lastMessage = initialMessage.key;
 
@@ -62,11 +67,11 @@ zokou({
       const response = await axios.get(url, { timeout: 10000 });
       const responseTime = Date.now() - startTime;
 
-      const statusText = `✅ Check #${monitoringState.checkCount}\n` +
-                         `URL: ${url}\n` +
-                         `Statut: ${response.status}\n` +
-                         `Temps: ${responseTime}ms\n` +
-                         `Prochain: ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
+      const statusText = `✅ *CHECK #${monitoringState.checkCount}*\n\n` +
+                         `*URL:* ${url}\n` +
+                         `*Statut:* ${response.status}\n` +
+                         `*Temps:* ${responseTime}ms\n` +
+                         `*Prochain:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
 
       // Éditer le message précédent
       await zk.sendMessage(origineMessage, {
@@ -75,10 +80,10 @@ zokou({
       });
 
     } catch (error) {
-      const errorText = `❌ Check #${monitoringState.checkCount}\n` +
-                        `URL: ${url}\n` +
-                        `Erreur: ${error.code || error.message}\n` +
-                        `Prochain: ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
+      const errorText = `❌ *CHECK #${monitoringState.checkCount}*\n\n` +
+                        `*URL:* ${url}\n` +
+                        `*Erreur:* ${error.code || error.message}\n` +
+                        `*Prochain:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
 
       await zk.sendMessage(origineMessage, {
         text: errorText,
@@ -93,16 +98,20 @@ zokou({
   // Configurer l'intervalle
   monitoringState.interval = setInterval(checkWebsite, intervalMinutes * 60 * 1000);
 
-  repondre(`Surveillance démarrée pour ${url} (vérification toutes les ${intervalMinutes} minutes)`);
+  repondre(`*Surveillance démarrée pour ${url} (vérification toutes les ${intervalMinutes} minutes)*`);
 });
 
 zokou({
-  nomCom: "stopmonitor",
+  nomCom: "stopping",
   categorie: "MON-BOT",
-  reaction: "🛑",
-  description: "Arrête la surveillance en cours"
+  reaction: "🛑"
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
+
+  // Vérifie si c'est le propriétaire
+  if (!superUser) {
+    return repondre("🚫 Commande réservée au propriétaire du bot.");
+  }
 
   if (!monitoringState.active) {
     return repondre("❌ Aucune surveillance en cours !");
@@ -112,10 +121,10 @@ zokou({
   clearInterval(monitoringState.interval);
   
   // Envoyer le rapport final
-  const finalText = `🛑 Surveillance arrêtée\n` +
-                   `URL: ${monitoringState.url}\n` +
-                   `Vérifications: ${monitoringState.checkCount}\n` +
-                   `Dernier statut: ${new Date().toLocaleTimeString()}`;
+  const finalText = `🛑 SURVEILLANCE ARRÊTÉE\n\n` +
+                   `*URL:* ${monitoringState.url}\n` +
+                   `*Vérifications:* ${monitoringState.checkCount}\n` +
+                   `*Dernier statut:* ${new Date().toLocaleTimeString()}`;
 
   await zk.sendMessage(origineMessage, {
     text: finalText,
@@ -136,20 +145,24 @@ zokou({
 zokou({
   nomCom: "monitorstatus",
   categorie: "MON-BOT",
-  reaction: "ℹ️",
-  description: "Affiche le statut de la surveillance en cours"
+  reaction: "ℹ️"
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
+
+  // Vérifie si c'est le propriétaire
+  if (!superUser) {
+    return repondre("🚫 Commande réservée au propriétaire du bot.");
+  }
 
   if (!monitoringState.active) {
     return repondre("❌ Aucune surveillance en cours !");
   }
 
-  const statusText = `🔍 *Surveillance active* 🔍\n` +
-                     `URL: ${monitoringState.url}\n` +
-                     `Intervalle: ${monitoringState.intervalMinutes} min\n` +
-                     `Vérifications: ${monitoringState.checkCount}\n` +
-                     `Prochain check: ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
+  const statusText = `🔍 *SURVEILLANCE ACTIVE* 🔍\n\n` +
+                     `*URL:* ${monitoringState.url}\n` +
+                     `*Intervalle:* ${monitoringState.intervalMinutes} min\n` +
+                     `*Vérifications:* ${monitoringState.checkCount}\n` +
+                     `*Prochain check:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
 
   repondre(statusText);
 });
