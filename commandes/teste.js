@@ -134,3 +134,50 @@ zokou({
         repondre("❌ Erreur lors de la récupération des groupes");
     }
 });
+
+
+zokou({
+  nomCom: "chargement",
+  categorie: "MON-BOT",
+  reaction: "⏳"
+}, async (origineMessage, zk, commandeOptions) => {
+  const { repondre, arg } = commandeOptions;
+
+  // Durée du chargement en secondes (par défaut 5s)
+  const duree = parseInt(arg[0]) || 5;
+  
+  if (duree > 30) {
+    return repondre("❌ La durée maximale est de 30 secondes.");
+  }
+
+  // Envoi du message initial
+  const messageInitial = await zk.sendMessage(origineMessage, { 
+    text: `⏳ Chargement en cours... 0%` 
+  });
+
+  // Simulation du chargement
+  const etapes = 10;
+  const interval = (duree * 1000) / etapes;
+  
+  for (let i = 1; i <= etapes; i++) {
+    await new Promise(resolve => setTimeout(resolve, interval));
+    
+    const pourcentage = i * 10;
+    const barre = '█'.repeat(i) + '░'.repeat(etapes - i);
+    
+    try {
+      await zk.sendMessage(origineMessage, { 
+        text: `⏳ Chargement en cours... ${pourcentage}%\n${barre}`,
+        edit: messageInitial.key 
+      });
+    } catch (e) {
+      console.error("Erreur modification message:", e);
+    }
+  }
+
+  // Message final
+  await zk.sendMessage(origineMessage, { 
+    text: `✅ Chargement terminé en ${duree} secondes !`,
+    edit: messageInitial.key 
+  });
+});
