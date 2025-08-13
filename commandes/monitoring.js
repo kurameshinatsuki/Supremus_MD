@@ -11,6 +11,7 @@ let monitoringState = {
   lastMessage: null
 };
 
+// Commande pour démarrer la surveillance
 zokou({
   nomCom: "ping",
   categorie: "MON-BOT",
@@ -23,25 +24,24 @@ zokou({
     return repondre("🚫 Commande réservée au propriétaire du bot.");
   }
 
-  // Vérifier si un monitoring est déjà actif
   if (monitoringState.active) {
-    return repondre("❌ Une surveillance est déjà en cours. Utilisez *-stopping* d'abord.");
+    return repondre("❌ Une surveillance est déjà en cours. Utilisez *-stopping* pour arrêter.");
   }
 
-  // Récupérer les paramètres
+  // Récupérer paramètres
   const url = arg[0]?.match(/https?:\/\/[^\s]+/)?.toString();
-  const intervalMinutes = parseInt(arg[1]) || 5; // 5min par défaut
+  const intervalMinutes = parseInt(arg[1]) || 5; // par défaut 5 min
 
-  // Validation des entrées
+  // Validation
   if (!url) {
-    return repondre("❌ URL manquante !\nUsage : *-monitor [url] [intervalle-en-min]*\nExemple : *-monitor https://supremusbot.com 5*");
+    return repondre("❌ URL manquante !\nUsage : *-ping [url] [intervalle-en-min]*\nExemple : *-ping https://supremusbot.com 5*");
   }
 
-  if (intervalMinutes < 1 || intervalMinutes > 1440) {
+  if (intervalMinutes < 1 || intervalMinutes > 10) {
     return repondre("❌ Intervalle invalide (1-10 minutes)");
   }
 
-  // Initialiser le monitoring
+  // Initialisation
   monitoringState = {
     active: true,
     url,
@@ -51,13 +51,14 @@ zokou({
     lastMessage: null
   };
 
-  // Envoyer le message initial
-  const initialMessage = await zk.sendMessage(origineMessage, {
-    text: `🔍 *DÉBUT SURVEILLANCE* 🔍\n\n*URL:* ${url}\n*Intervalle:* ${intervalMinutes} min\n*Statut:* En attente...`
+  // Envoi message initial
+  const jid = origineMessage.key.remoteJid;
+  const initialMessage = await zk.sendMessage(jid, {
+    text: `🔍 *DÉBUT PING* 🔍\n\n*URL:* ${url}\n*Intervalle:* ${intervalMinutes} min\n*Statut:* En attente...`
   });
   monitoringState.lastMessage = initialMessage.key;
 
-  // Fonction de vérification
+  // Fonction de check
   const checkWebsite = async () => {
     if (!monitoringState.active) return;
     
@@ -67,40 +68,42 @@ zokou({
       const response = await axios.get(url, { timeout: 10000 });
       const responseTime = Date.now() - startTime;
 
-      const statusText = `✅ *CHECK #${monitoringState.checkCount}*\n\n` +
+      const statusText = `✅ *PING #${monitoringState.checkCount}*\n\n` +
                          `*URL:* ${url}\n` +
-                         `*Statut:* ${response.status}\n` +
-                         `*Temps:* ${responseTime}ms\n` +
-                         `*Prochain:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
+                         `*Statut HTTP:* ${response.status}\n` +
+                         `*Temps de réponse:* ${responseTime}ms\n` +
+                         `*Prochain test:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
 
-      // Éditer le message précédent
-      await zk.sendMessage(origineMessage, {
-        text: statusText,
-        edit: monitoringState.lastMessage
-      });
+      try {
+        await zk.sendMessage(jid, { text: statusText, edit: monitoringState.lastMessage });
+      } catch {
+        await zk.sendMessage(jid, { text: statusText });
+      }
 
     } catch (error) {
-      const errorText = `❌ *CHECK #${monitoringState.checkCount}*\n\n` +
+      const errorText = `❌ *PING #${monitoringState.checkCount}*\n\n` +
                         `*URL:* ${url}\n` +
                         `*Erreur:* ${error.code || error.message}\n` +
-                        `*Prochain:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
-
-      await zk.sendMessage(origineMessage, {
-        text: errorText,
-        edit: monitoringState.lastMessage
-      });
+                        `*Prochain test:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
+      
+      try {
+        await zk.sendMessage(jid, { text: errorText, edit: monitoringState.lastMessage });
+      } catch {
+        await zk.sendMessage(jid, { text: errorText });
+      }
     }
   };
 
-  // Premier check immédiat
+  // Premier ping immédiat
   await checkWebsite();
 
-  // Configurer l'intervalle
+  // Démarrage intervalle
   monitoringState.interval = setInterval(checkWebsite, intervalMinutes * 60 * 1000);
 
-  repondre(`*Surveillance démarrée pour ${url} (vérification toutes les ${intervalMinutes} minutes)*`);
+  repondre(`*Surveillance de ${url} démarrée (ping toutes les ${intervalMinutes} minutes)*`);
 });
 
+// Commande pour arrêter le ping
 zokou({
   nomCom: "stopping",
   categorie: "MON-BOT",
@@ -108,30 +111,28 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
 
-  // Vérifie si c'est le propriétaire
   if (!superUser) {
     return repondre("🚫 Commande réservée au propriétaire du bot.");
   }
 
   if (!monitoringState.active) {
-    return repondre("❌ Aucune surveillance en cours !");
+    return repondre("❌ Aucun ping en cours !");
   }
 
-  // Arrêter l'intervalle
   clearInterval(monitoringState.interval);
-  
-  // Envoyer le rapport final
-  const finalText = `🛑 SURVEILLANCE ARRÊTÉE\n\n` +
+
+  const jid = origineMessage.key.remoteJid;
+  const finalText = `🛑 *PING ARRÊTÉ*\n\n` +
                    `*URL:* ${monitoringState.url}\n` +
-                   `*Vérifications:* ${monitoringState.checkCount}\n` +
-                   `*Dernier statut:* ${new Date().toLocaleTimeString()}`;
+                   `*Total de pings effectués:* ${monitoringState.checkCount}\n` +
+                   `*Dernier test:* ${new Date().toLocaleTimeString()}`;
 
-  await zk.sendMessage(origineMessage, {
-    text: finalText,
-    edit: monitoringState.lastMessage
-  });
+  try {
+    await zk.sendMessage(jid, { text: finalText, edit: monitoringState.lastMessage });
+  } catch {
+    await zk.sendMessage(jid, { text: finalText });
+  }
 
-  // Réinitialiser l'état
   monitoringState = {
     active: false,
     url: null,
@@ -142,27 +143,27 @@ zokou({
   };
 });
 
+// Commande pour voir le statut du ping
 zokou({
-  nomCom: "monitorstatus",
+  nomCom: "pingstatus",
   categorie: "MON-BOT",
   reaction: "ℹ️"
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
 
-  // Vérifie si c'est le propriétaire
   if (!superUser) {
     return repondre("🚫 Commande réservée au propriétaire du bot.");
   }
 
   if (!monitoringState.active) {
-    return repondre("❌ Aucune surveillance en cours !");
+    return repondre("❌ Aucun ping en cours !");
   }
 
-  const statusText = `🔍 *SURVEILLANCE ACTIVE* 🔍\n\n` +
+  const statusText = `🔍 *PING ACTIF* 🔍\n\n` +
                      `*URL:* ${monitoringState.url}\n` +
                      `*Intervalle:* ${monitoringState.intervalMinutes} min\n` +
-                     `*Vérifications:* ${monitoringState.checkCount}\n` +
-                     `*Prochain check:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
+                     `*Pings effectués:* ${monitoringState.checkCount}\n` +
+                     `*Prochain ping:* ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}`;
 
   repondre(statusText);
 });
