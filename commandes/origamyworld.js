@@ -364,94 +364,104 @@ zokou(
 const { writeFileSync, readFileSync, unlinkSync } = require('fs');
 const { randomInt } = require('crypto');
 
-zokou( { nomCom: 'origamy_visuel', categorie: 'CENTRAL' }, async (dest, zk, commandeOptions) => { const { ms, superUser, repondre } = commandeOptions;
+zokou( { nomCom: 'origamy_visuel', categorie: 'CENTRAL' }, async (dest, zk, commandeOptions) => { 
+  const { ms, superUser, repondre } = commandeOptions;
 
-if (!superUser) {
-  return repondre("❌ Accès refusé : vous n'êtes pas autorisé à exécuter cette commande !");
-}
+  if (!superUser) {
+    return repondre("❌ Accès refusé : vous n'êtes pas autorisé à exécuter cette commande !");
+  }
 
-const liens = [
-  'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg',
-  'https://i.ibb.co/G3ztCpW/20240927-230914.jpg',
-  'https://i.ibb.co/vmN0SSr/20240927-231229.jpg',
-  'https://i.ibb.co/mBqrG20/20240927-233225.jpg',
-  'https://i.ibb.co/G5jPJN8/20240927-233347.jpg',
-  'https://i.ibb.co/51qmnJJ/20240927-233900.jpg',
-  'https://i.ibb.co/bJPbxW2/20240927-230107.jpg',
-  'https://i.ibb.co/4m005vx/20240927-233715.jpg',
-  'https://i.ibb.co/0YkNDvc/20240927-230702.jpg',
-  'https://i.ibb.co/HGhxgDs/20240928-001444.jpg',
-  'https://i.ibb.co/jv8q587/20240927-234214.jpg',
-  'https://i.ibb.co/QmMF8B6/20240927-223830.jpg',
-  'https://i.ibb.co/VgCPhyd/20240928-000526.jpg',
-  'https://i.ibb.co/zX3NZrR/20240927-234341.jpg',
-  'https://i.ibb.co/nBZ08Lh/20240927-224242.jpg',
-  'https://i.ibb.co/sj9z6jC/20240928-000853.jpg',
-  'https://i.ibb.co/fCRgqwy/20240928-001305.jpg',
-  'https://i.ibb.co/MpxhHrd/20240927-212108.jpg',
-  'https://i.ibb.co/RCpMXYj/20240927-234545.jpg',
-  'https://i.ibb.co/5WjszYy/20240927-221021.jpg',
-  'https://i.ibb.co/5Tr77gw/20240927-235428.jpg',
-  'https://i.ibb.co/L091WtQ/20240927-222537.jpg',
-  'https://i.ibb.co/j8R23mF/20240927-235952.jpg',
-  'https://i.ibb.co/0MXQjcy/20240927-222739.jpg',
-  'https://i.ibb.co/t2Txdd8/20240928-000303.jpg',
-  'https://i.ibb.co/QYzgXNg/20240928-001822.jpg',
-  'https://i.ibb.co/WvfbbgK/20240927-223020.jpg',
-  'https://i.ibb.co/3mcQzpb/20240927-235656.jpg',
-  'https://i.ibb.co/4dKMmWq/20240927-224809.jpg',
-  'https://i.ibb.co/MVFJzh1/20240927-223321.jpg',
-  'https://i.ibb.co/thkwBjn/20240927-234927.jpg',
-  'https://i.ibb.co/Kh3JdMK/20240927-221342.jpg',
-  'https://i.ibb.co/tKQCYHb/20240927-223933.jpg'
-];
+  const liens = [
+    'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg',
+    'https://i.ibb.co/G3ztCpW/20240927-230914.jpg',
+    'https://i.ibb.co/vmN0SSr/20240927-231229.jpg',
+    'https://i.ibb.co/mBqrG20/20240927-233225.jpg',
+    'https://i.ibb.co/G5jPJN8/20240927-233347.jpg',
+    'https://i.ibb.co/51qmnJJ/20240927-233900.jpg',
+    'https://i.ibb.co/bJPbxW2/20240927-230107.jpg',
+    'https://i.ibb.co/4m005vx/20240927-233715.jpg',
+    'https://i.ibb.co/0YkNDvc/20240927-230702.jpg',
+    'https://i.ibb.co/HGhxgDs/20240928-001444.jpg',
+    'https://i.ibb.co/jv8q587/20240927-234214.jpg',
+    'https://i.ibb.co/QmMF8B6/20240927-223830.jpg',
+    'https://i.ibb.co/VgCPhyd/20240928-000526.jpg',
+    'https://i.ibb.co/zX3NZrR/20240927-234341.jpg',
+    'https://i.ibb.co/nBZ08Lh/20240927-224242.jpg',
+    'https://i.ibb.co/sj9z6jC/20240928-000853.jpg',
+    'https://i.ibb.co/fCRgqwy/20240928-001305.jpg',
+    'https://i.ibb.co/MpxhHrd/20240927-212108.jpg',
+    'https://i.ibb.co/RCpMXYj/20240927-234545.jpg',
+    'https://i.ibb.co/5WjszYy/20240927-221021.jpg',
+    'https://i.ibb.co/5Tr77gw/20240927-235428.jpg',
+    'https://i.ibb.co/L091WtQ/20240927-222537.jpg',
+    'https://i.ibb.co/j8R23mF/20240927-235952.jpg',
+    'https://i.ibb.co/0MXQjcy/20240927-222739.jpg',
+    'https://i.ibb.co/t2Txdd8/20240928-000303.jpg',
+    'https://i.ibb.co/QYzgXNg/20240928-001822.jpg',
+    'https://i.ibb.co/WvfbbgK/20240927-223020.jpg',
+    'https://i.ibb.co/3mcQzpb/20240927-235656.jpg',
+    'https://i.ibb.co/4dKMmWq/20240927-224809.jpg',
+    'https://i.ibb.co/MVFJzh1/20240927-223321.jpg',
+    'https://i.ibb.co/thkwBjn/20240927-234927.jpg',
+    'https://i.ibb.co/Kh3JdMK/20240927-221342.jpg',
+    'https://i.ibb.co/tKQCYHb/20240927-223933.jpg',
+    'https://i.ibb.co/3mpGZhf/20240927-221704.jpg',
+    'https://i.ibb.co/2YMF9QC/20240927-235106.jpg',
+    'https://i.ibb.co/RBPVVNz/20240927-222034.jpg',
+    'https://i.ibb.co/k4ZSCtD/20240927-235254.jpg',
+    'https://i.ibb.co/2N3ZKtr/20240927-224604.jpg',
+    'https://i.ibb.co/SnqSzGk/20240927-222306.jpg',
+    'https://i.ibb.co/CwZk2nF/20240927-235758.jpg',
+    'https://i.ibb.co/Qd80mx4/20240927-225101.jpg',
+    'https://i.ibb.co/hRpgVLP/20240927-225518.jpg',
+    'https://i.ibb.co/sWt3HFh/20240927-225230.jpg'
+  ];
 
-let html = `
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Galerie Origamy World</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #1a1a1a;
-      color: #fff;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 20px;
-    }
-    .image {
-      margin: 10px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 10px #000;
-    }
-    .image img {
-      max-width: 300px;
-      border-radius: 12px;
-      transition: transform 0.3s ease;
-    }
-    .image img:hover {
-      transform: scale(1.05);
-    }
-  </style>
-</head>
-<body>
-  ${liens.map(url => `<div class="image"><img src="${url}" alt="Origamy" /></div>`).join('')}
-</body>
-</html>`;
+  let html = `
+  <html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Galerie Origamy World</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #1a1a1a;
+        color: #fff;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+      }
+      .image {
+        margin: 10px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 10px #000;
+      }
+      .image img {
+        max-width: 300px;
+        border-radius: 12px;
+        transition: transform 0.3s ease;
+      }
+      .image img:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    ${liens.map(url => `<div class="image"><img src="${url}" alt="Origamy" /></div>`).join('')}
+  </body>
+  </html>`;
 
-const fileName = `origamy_galerie_${randomInt(10000)}.html`;
-writeFileSync(fileName, html);
+  const fileName = `origamy_galerie_${randomInt(10000)}.html`;
+  writeFileSync(fileName, html);
 
-await zk.sendMessage(dest, {
-  document: readFileSync(fileName),
-  mimetype: 'text/html',
-  fileName: 'origamy_galerie.html',
-  caption: '*📸 GALERIE ORIGAMY WORLD*'
-}, { quoted: ms });
+  await zk.sendMessage(dest, {
+    document: readFileSync(fileName),
+    mimetype: 'text/html',
+    fileName: 'origamy_galerie.html',
+    caption: '*📸 GALERIE ORIGAMY WORLD*'
+  }, { quoted: ms });
 
-unlinkSync(fileName);
-
-} );
+  unlinkSync(fileName);
+});
