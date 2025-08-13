@@ -17,7 +17,7 @@ zokou({
   categorie: "MON-BOT",
   reaction: "🌐"
 }, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
+  const { repondre, arg, superUser } = commandeOptions;
 
   // Vérifie si c'est le propriétaire
   if (!superUser) {
@@ -109,7 +109,7 @@ zokou({
   categorie: "MON-BOT",
   reaction: "🛑"
 }, async (origineMessage, zk, commandeOptions) => {
-  const { repondre } = commandeOptions;
+  const { repondre, superUser } = commandeOptions;
 
   if (!superUser) {
     return repondre("🚫 Commande réservée au propriétaire du bot.");
@@ -149,7 +149,7 @@ zokou({
   categorie: "MON-BOT",
   reaction: "ℹ️"
 }, async (origineMessage, zk, commandeOptions) => {
-  const { repondre } = commandeOptions;
+  const { repondre, superUser } = commandeOptions;
 
   if (!superUser) {
     return repondre("🚫 Commande réservée au propriétaire du bot.");
