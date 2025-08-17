@@ -283,7 +283,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
     try {
       await zk.sendMessage(dest, { 
         image: { url: lien },
-        caption: `⏳ Chargement de la carte ${key}... ${pourcentage}%\n${barre}`,
+        caption: `⏳ Chargement de la carte ${key}... ${pourcentage}%\n  ▶${barre}◀`,
         edit: messageInitial.key 
       });
     } catch (e) {
