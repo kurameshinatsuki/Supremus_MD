@@ -9,9 +9,9 @@ zokou({
 
   // Cartes disponibles
 const cartes = {
-  centre: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  centre: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[🗺️MAP : ASURA  ]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 *\`↔️ CENTRE DE LA RÉGION ↕️\`*
 
 > *🏰 Astoria, Capitale :* (X: 0, Y: 0)  
@@ -24,11 +24,11 @@ const cartes = {
 > Source de vie pour la région, où pêchent des pêcheurs spécialisés dans la capture des Carpes d’Azur, prisées pour leurs écailles scintillantes. Vous pourriez y péché 🎣 si vous possédez un appât.
 > - *🌉 Pont de l’Alliance :* (X: 3, Y: -1)  
 > Un pont monumental, symbole de paix entre les royaumes voisins. Vous devrez la traversé pour rejoindre Astoria ou la quitté.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
-  nord: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  nord: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[🗺️MAP : ASURA  ]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
           *\`⬆️ ZONE NORD ⬆️\`*
 
 > *🏞️ Vallée des Brumes :* (X: 0, Y: 12)  
@@ -64,11 +64,11 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > Une forêt dense d’arbres au tronc gelé, abritant des créatures mystiques et des esprits anciens.
 > - *🏡 Village d’Icethorn :* (X: -11, Y: 19)
 > Peuplé de chasseurs et de trappeurs vivant en symbiose avec la nature glaciale.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
-  sud: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  sud: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[🗺️MAP : ASURA  ]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
            *\`⬇️ ZONE SUD ⬇️\`*
 
 > *⛩️ Port de Vaeloria :* (X: 0, Y: -12)  
@@ -88,11 +88,11 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > - *🐄 Ferme d’Eldrin :* (X: -8, Y: -11)  
 > Élevage de bovins à la viande réputée. La traite des vaches célestes, aux propriétés curatives, est un rituel sacré.
 > Vous y trouverez toutes sortes de nourriture, fruits, légumes et viandes.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
-  est: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  est: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[🗺️MAP : ASURA  ]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
            *\`⬅️ ZONE EST ⬅️\`*
 
 > *🌲 Forêt de Sylvara :* (X: 10, Y: 0)  
@@ -126,11 +126,11 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > Formation rocheuse aux teintes rouges et orangées, réputée pour ses tempêtes de sable brûlant.
 > - *⛺ Camp des Prospecteurs :* (X: 22, Y: -2)
 > Explorateurs et mineurs cherchant des pierres précieuses enfouies dans le sable.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
-  ouest: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  ouest: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[🗺️MAP : ASURA  ]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
        *\`➡️ ZONE OUEST ➡️\`*
 
 > *⛰️ Chaîne des Brisecimes :* (X: -15, Y: 0)  
@@ -149,11 +149,11 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > 
 > *🏚️ Ruines de Valmora :* (X: -15, Y: 5)  
 > Vestiges d’une cité ancienne engloutie par la forêt. On dit que les âmes des anciens rois y errent encore, veillant sur un trésor oublié. Vous y trouverez sûrement des trésors mais peut-être aussi la mort.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
-  capital: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  *▓▓▓[🗺️MAP : ASTORIA]▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`,
+  capital: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+  *▓▓▓▓▓[🗺️MAP : ASURA  ]▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
           *\`⬇️ ZONE SUD ⬇️\`*
 
 > *⛩️ Porte Principale :* (X: 0, Y: -5)
@@ -167,7 +167,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > 
 > *🌲 Bois Sacrés :* (X: 1, Y: -7)
 > Forêt sanctuaire où les citoyens viennent méditer. Une rumeur parle d’un autel caché accordant des bénédictions à ceux qui le trouvent.
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
         *\`➡️ ZONE OUEST ➡️\`*
 
 > *🏟️ Colisée d'Aurelius :* (X: -4.5, Y: 0)
@@ -188,7 +188,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > 
 > *🚧 Entrée Restreinte :* (X: -7, Y: 0)
 > Passage surveillé menant vers des installations militaires interdites au public.
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
        *\`↔️ CENTRE VILLE ↕️\`*
 
 > *🛍️ Marché Central :* (0, 0)
@@ -215,7 +215,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > 
 > *🏘️ Quartier Résidentiel :* NE (3, 3), NO (-3, 3)
 > Regroupement d’habitations, allant des maisons modestes aux demeures de riches marchands. Vous pourriez y résider sous tutelle mais seul vous devrez loué.
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
            *\`⬅️ ZONE EST ⬅️\`*
 
 > *🎮 Salle des Jeux :* (X: 3.5, Y: 0)
@@ -232,7 +232,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > 
 > *🧵 Nobles Couture :* (X: 7, Y: 0.5)
 > Ateliers de mode produisant vêtements raffinés et broderies enchantées.
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
          *\`⬆️ ZONE NORD ⬆️\`*
 
 > *⛲ Cour d'Honneur :* (X: 0, Y: 2.5)
@@ -252,9 +252,8 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 > Observatoire où les astrologues et érudits étudient le ciel à la recherche d’augures.
 > - *🗡️ Arsenal Royal :* (X: 1, Y: 3.5)
 > Dépôt secret renfermant les armes les plus précieuses du royaume.
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
- *▓▓▓▓▓▓[À SUIVRE...]▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
 };
 
   const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
@@ -269,7 +268,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
   // Envoi du message initial avec l'image et le chargement
   const messageInitial = await zk.sendMessage(dest, { 
     image: { url: lien },
-    caption: `⏳ Chargement de la carte ${key}...\n0% [░░░░░░░░░░]`
+    caption: `*⏳ Chargement de la carte ${key}...*\n0% [░░░░░░░░░░░░░]`
   }, { quoted: ms });
 
   // Simulation du chargement (5 secondes)
@@ -278,12 +277,12 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
     await new Promise(resolve => setTimeout(resolve, 1000)); // 1s par étape
     
     const pourcentage = i * 20;
-    const barre = '█'.repeat(i) + '░'.repeat(etapes - i);
+    const barre = '██'.repeat(i) + '░░'.repeat(etapes - i);
     
     try {
       await zk.sendMessage(dest, { 
         image: { url: lien },
-        caption: `⏳ Chargement de la carte ${key}... ${pourcentage}%\n  ▶${barre}◀`,
+        caption: `*⏳ Chargement de la carte ${key}...*\n ${pourcentage}% [${barre}]`,
         edit: messageInitial.key 
       });
     } catch (e) {
@@ -344,56 +343,84 @@ zokou(
 zokou(
     {
         nomCom: 'origamy_world',
-        categorie: 'ORIGAMY'
+        categorie: 'ORIGAMY',
+        reaction: "🌐"
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, arg, ms } = commandeOptions;
 
-        if (!arg || arg.length === 0)  {
-            const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-            const msg = `▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-      *🌐 ORIGAMY WORLD 🌐*
-▁▁▁▁▁▁▁ *SRPN*  ▁▁▁▁▁▁▁▁
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+        const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
+        const msg = `▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+           *🌐 ORIGAMY WORLD 🌐*
+▁▁▁▁▁▁▁▁▁ *SRPN*  ▁▁▁▁▁▁▁▁▁
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+*▷ LES DIVINITÉS, LES FRAGMENTS ET LE DESTIN*.
 
-  *▷ DIVINITÉS & ARTEFACTS ◁*
+> Il y a bien longtemps, avant que les royaumes ne soient bâtis, le monde n'était qu'un champ de bataille entre les Divinités Primordiales. Chacune possédait un Fragment d'Origam, une parcelle d'énergie pure capable de créer ou de détruire.
+Après des siècles de guerre, ces divinités disparurent, laissant derrière elles des artefacts sacrés imprégnés de leur essence.
 
-> Dans l'univers fascinant d'Origamy World, les légendes racontent l'existence de puissantes divinités anciennes, gardiennes d'artefacts aux pouvoirs uniques et redoutables. Ces artefacts, disséminés dans des temples mystérieux, recèlent des capacités capables de renverser le destin d'un royaume ou d'octroyer à leur porteur une puissance divine.
+> Ces reliques ne sont pas de simples objets : elles portent en elles une volonté propre. Celui qui les manie n'hérite pas seulement de leur puissance, mais doit affronter la conscience même du dieu qui l'habitait. Certains héros devinrent des légendes… d'autres sombrèrent, consumés par une force trop grande pour eux.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+*▷ LES TEMPLES DES FRAGMENTS :*
 
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▷ LES TEMPLES MYSTÉRIEUX :*
+> Les temples où reposent ces artefacts ne sont pas de simples ruines. Ce sont des poches d'univers façonnées par les divinités elles-mêmes. Chaque temple est vivant, changeant, et adapté à la nature de son dieu :
 
-> Chaque temple est un chef-d'œuvre d'architecture ancienne, dissimulé dans des lieux où la nature reprend ses droits. Montagnes escarpées, jungles luxuriantes, cavernes profondes et îles perdues en mer abritent ces édifices, chacun dédié à une divinité spécifique. Les épreuves à l'intérieur sont autant de défis que d'énigmes, conçues pour tester la valeur, la force ou la sagesse de ceux qui osent s'y aventurer. Seuls les élus parviendront à surmonter les dangers et à arracher l'artefact sacré de son socle.
+> - La montagne qui s'effondre sous les pas de l'intrus.
+> - La jungle où les racines se referment comme des chaînes.
+> - L'océan qui se soulève en mur de vagues pour repousser l'envahisseur.
+> - La caverne dont les échos prennent forme et attaquent comme des ombres.
 
-> Ces épreuves peuvent inclure des énigmes millénaires, des combats contre des créatures mythiques ou des parcours semés de pièges mortels. Une fois l'artefact obtenu, son porteur devient la cible de quiconque convoite son pouvoir.
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*▷ LES DIFFÉRENTES CATÉGORIES :* 
+> Les épreuves ne mesurent pas seulement la force, mais aussi la volonté, la mémoire et le cœur de celui qui ose pénétrer ces lieux.
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+*▷ LES TROIS VOIES DES COMBATTANTS :* 
 
-> Au cœur d'Origamy World, les habitants et combattants se divisent en trois grandes catégories, chacune dotée d'un potentiel unique et distinct.
+> Dans ce monde fracturé entre légendes et ambitions, trois voies dominent :
 
-1. *🔻LES PROFANES :* Ces créatures sont incapables d'utiliser la magie, mais leur restriction compensent cette carence par un potentiel physique hors norme. Leur corps est une arme vivante, capable de performances surpassant l'entendement humain. Il peuvent possédé jusqu'à 2 potentiel exceptionnel, utiliser l'overdrive sans restriction, *Par exemple :* Se déplacer à une vitesse fulgurante, esquivant les attaques en un éclair. Briser la roche d’un coup de poing et soulever des poids titanesques. Endurer des coups mortels sans faiblir. Effectuer des acrobaties impossibles avec précision et fluidité. Répondre aux attaques adverses avant même qu'elles ne soient pleinement déclenchées. 
+1. 🔻 Les Profanes – Dépourvus de toute aptitude magique, ces êtres ne possèdent aucun potentiel mystique. Pourtant, leur corps dépasse largement les limites humaines. Incapables d'utiliser la magie, leur restriction se transforme en avantage : leur force physique atteint un niveau hors du commun. Leur corps devient une véritable arme vivante, capable d'exploits dépassant l'entendement. Ils peuvent développer jusqu'à deux potentiels exceptionnels et manier l'Overdrive sans aucune restriction.
 
-> Ces combattants sont souvent des mercenaires, des gladiateurs ou des protecteurs de villages, usant de leur force brute pour dominer le champ de bataille.
+2. 🔹 Les Mononature – Détenteurs d'une unique magie, ils la portent comme une marque indélébile. Feu, eau, gravité ou espace : leur élément devient leur essence même. Bien que limités à une seule nature magique, ils en explorent toutes les facettes, la perfectionnant jusqu'à l'extrême. Chaque technique découle de cette affinité particulière, leur permettant de concevoir des stratégies d'une redoutable complexité.
 
-2. *🔹LES MONONATURE :* Ces individus sont capables d'utiliser une seule nature magique, mais peuvent la décliner sous différentes formes de techniques. Ils exploitent leur affinité avec une nature spécifique pour façonner des stratégies complexes. *Par exemple :* Feu : Créer des flammes tourbillonnantes, des murs de feu ou des explosions ardentes. Eau : Générer des vagues destructrices, des lames d'eau ou de la vapeur brûlante. Gravité : Manipuler la pesanteur pour écraser ou alléger des objets. Téléportation : Se déplacer instantanément d'un point à un autre ou échanger de place.
-
-> Les magiciens mononature sont des experts de leur élément, développant des techniques raffinées et variées pour exploiter au mieux leur potentiel. Leur diversité tactique les rend imprévisibles en combat.
-
-3. *🔺LES ARCANISTES :* Ces êtres rares possèdent la capacité de manipuler plusieurs natures magiques, mais avec une contrainte majeure : une seule technique par nature. *Par exemple :* Téléportation Rapide : Se déplacer d'un point A à un point B. Bouclier de Feu : Former une barrière enflammée pour se protéger. Griffe de Glace : Créer une griffe tranchante en glace pure. Et Orbe de Gravité : Condenser la pesanteur en une sphère pour attirer les ennemis.
-
-> Bien que moins polyvalents dans chaque élément, leur capacité à puiser dans plusieurs arts magiques fait d'eux des stratèges redoutables, capables de surprendre leurs adversaires avec des combinaisons inattendues.
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+3. 🔺 Les Arcanistes – Élus d'exception, ils sont capables de manier plusieurs natures magiques. Leur don rare leur permet de puiser dans diverses affinités, mais une règle immuable limite leur pouvoir : une seule technique par nature. Pourtant, cette contrainte devient leur plus grande force, car en combinant leurs différentes magies, ils déchaînent des stratégies imprévisibles, capables de renverser le cours d'un combat.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 
 ▷ *LA QUÊTE DES ARTEFACTS :* 
 
-> Peu importe leur catégorie, les aventuriers d'Origamy World cherchent à obtenir les artefacts pour devenir des légendes vivantes. Pourtant, posséder un artefact n'est que le début, car sa maîtrise nécessite de l'entraînement, de la force d'âme et de la volonté pour ne pas se laisser consumer par son pouvoir.
+> Désormais, les rumeurs courent : certains temples s'ouvrent à nouveau, attirant mercenaires, magiciens et arcanistes avides de gloire. Mais chaque artefact récupéré devient un fardeau : le monde observe, convoite, et se prépare à une guerre où la véritable menace n'est peut-être pas les aventuriers… mais les divinités elles-mêmes, prêtes à renaître à travers leurs fragments.
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
 
-> Alors que les rumeurs sur de nouveaux temples et d'anciens artefacts refont surface, les aventuriers affluent des quatre coins du monde, prêts à affronter les divinités elles-mêmes pour saisir leur destin. Le monde est en effervescence, et seuls les plus dignes pourront espérer laisser leur nom dans l'histoire d'Origamy World.
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-           zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+        // Envoi du message initial avec l'image et le chargement
+        const messageInitial = await zk.sendMessage(dest, { 
+            image: { url: lien },
+            caption: "*⏳ Chargement du monde Origamy...*\n0% [░░░░░░░░░░░░░]"
+        }, { quoted: ms });
+
+        // Simulation du chargement (5 secondes)
+        const etapes = 5;
+        for (let i = 1; i <= etapes; i++) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1s par étape
+            
+            const pourcentage = i * 20;
+            const barre = '██'.repeat(i) + '░░'.repeat(etapes - i);
+            
+            try {
+                await zk.sendMessage(dest, { 
+                    image: { url: lien },
+                    caption: `*⏳ Chargement du monde Origamy...*\n${pourcentage}% [${barre}]`,
+                    edit: messageInitial.key 
+                });
+            } catch (e) {
+                console.error("Erreur modification message:", e);
+            }
         }
+
+        // Envoi du message final avec le contenu complet
+        await zk.sendMessage(dest, { 
+            image: { url: lien },
+            caption: msg,
+            edit: messageInitial.key 
+        });
     }
 );
 
