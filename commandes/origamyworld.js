@@ -393,7 +393,7 @@ Après des siècles de guerre, ces divinités disparurent, laissant derrière el
         // Envoi du message initial avec l'image et le chargement
         const messageInitial = await zk.sendMessage(dest, { 
             image: { url: lien },
-            caption: "*⏳ Chargement du monde Origamy...*\n0% [░░░░░░░░░░░░░]"
+            caption: "*⏳ Chargement du monde Origamy...*\n0% [░░░░░░░░░░░░░░░░]"
         }, { quoted: ms });
 
         // Simulation du chargement (5 secondes)
@@ -402,12 +402,12 @@ Après des siècles de guerre, ces divinités disparurent, laissant derrière el
             await new Promise(resolve => setTimeout(resolve, 1000)); // 1s par étape
             
             const pourcentage = i * 20;
-            const barre = '██'.repeat(i) + '░░'.repeat(etapes - i);
+            const barre = '███'.repeat(i) + '░░░'.repeat(etapes - i);
             
             try {
                 await zk.sendMessage(dest, { 
                     image: { url: lien },
-                    caption: `*⏳ Chargement du monde Origamy...*\n${pourcentage}% [${barre}]`,
+                    caption: `*⏳ Chargement du monde Origamy...*\n   ${pourcentage}% [${barre}]`,
                     edit: messageInitial.key 
                 });
             } catch (e) {
