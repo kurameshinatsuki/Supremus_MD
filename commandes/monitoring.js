@@ -29,12 +29,12 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
 
-  logger.info(`Commande monitor déclenchée par ${origineMessage.participant || origineMessage.key.remoteJid}`);
+  logger.info(`Commande monitor déclenchée.`);
   
   // Vérifier si un monitoring est déjà actif
   if (monitoringState.active) {
     logger.warn("Tentative de démarrage alors qu'un monitoring est actif");
-    return repondre("❌ *Surveillance déjà active* \nUtilisez " + "```-stopmonitor```" + " pour l'arrêter");
+    return repondre("❌ *Surveillance déjà active* \nUtilisez " + "`-stopmonitor`" + " pour l'arrêter");
   }
 
   // Récupérer les paramètres
@@ -46,8 +46,8 @@ zokou({
     logger.error("URL manquante dans la commande");
     return repondre(
       "❌ *URL manquante !*\n\n" +
-      "🔹 Usage : " + "```-monitor [url] [intervalle-en-min]```" + "\n" +
-      "🔹 Exemple : " + "```-monitor https://exemple.com 10```"
+      "🔹 Usage : " + "`-monitor [url] [intervalle-en-min]`" + "\n" +
+      "🔹 Exemple : " + "`-monitor https://supremus-bot.com 10`"
     );
   }
 
@@ -161,7 +161,7 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
   
-  logger.info(`Commande stopmonitor déclenchée par ${origineMessage.participant || origineMessage.key.remoteJid}`);
+  logger.info(`Commande stopmonitor déclenchée.`);
 
   if (!monitoringState.active) {
     logger.warn("Tentative d'arrêt alors qu'aucun monitoring n'est actif");
@@ -210,12 +210,12 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
   
-  logger.info(`Commande status déclenchée par ${origineMessage.participant || origineMessage.key.remoteJid}`);
+  logger.info(`Commande status déclenchée.`);
 
   if (!monitoringState.active) {
     return repondre(
       "🔎 *Aucune surveillance active* \n\n" +
-      "Utilisez " + "```-monitor [url]```" + " pour démarrer une surveillance"
+      "Utilisez " + "`-monitor [url]`" + " pour démarrer une surveillance"
     );
   }
 
