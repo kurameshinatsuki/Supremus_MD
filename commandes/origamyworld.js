@@ -1,7 +1,13 @@
 const { zokou } = require('../framework/zokou');
 
-zokou( { nomCom: 'asura', categorie: 'ORIGAMY' }, async (dest, zk, commandeOptions) => { const { repondre, arg, ms } = commandeOptions;
+zokou({
+  nomCom: 'asura',
+  categorie: 'ORIGAMY',
+  reaction: "🗺️"
+}, async (dest, zk, commandeOptions) => {
+  const { repondre, arg, ms } = commandeOptions;
 
+  // Cartes disponibles
 const cartes = {
   centre: `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
   *▓▓▓[🗺️MAP : ASURA  ]▓▓▓*
@@ -249,18 +255,59 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
  *▓▓▓▓▓▓[À SUIVRE...]▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
-};
+};nels du royaume.
+> - *🐎 Écuries Royales :* (X: 2, Y: 4)
+> Abri des chevaux les plus rapides et puissants, réservés aux cavaliers du roi.
+> - *🔭 Tour Astral :* (X: -2, Y: 4.5)
+> Observatoire où les astrologues et érudits étudient le ciel à la recherche d’augures.
+> - *🗡️ Arsenal Royal :* (X: 1, Y: 3.5)
+> Dépôt secret renfermant les armes les plus précieuses du royaume.
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+ *▓▓▓▓▓▓[À SUIVRE...]▓▓▓▓▓▓*
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
+  };
 
-const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
-const key = (arg[0] || '').toLowerCase();
+  const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
+  const key = (arg[0] || '').toLowerCase();
+  const zonesValides = ['centre', 'nord', 'sud', 'est', 'ouest', 'capital'];
 
-if (!cartes[key]) {
-  return repondre(`*Usage :* -asura centre | nord | sud | est | ouest | capital`);
-}
+  // Vérification de la zone demandée
+  if (!zonesValides.includes(key)) {
+    return repondre(`*❌ Zone invalide*\nUsage : -asura [zone]\nZones disponibles: ${zonesValides.join(' | ')}`);
+  }
 
-zk.sendMessage(dest, { image: { url: lien }, caption: cartes[key] }, { quoted: ms });
+  // Envoi du message initial avec l'image et le chargement
+  const messageInitial = await zk.sendMessage(dest, { 
+    image: { url: lien },
+    caption: `⏳ Chargement de la carte ${key}...\n0% [░░░░░░░░░░]`
+  }, { quoted: ms });
 
-} );
+  // Simulation du chargement (5 secondes)
+  const etapes = 5;
+  for (let i = 1; i <= etapes; i++) {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 1s par étape
+    
+    const pourcentage = i * 20;
+    const barre = '█'.repeat(i) + '░'.repeat(etapes - i);
+    
+    try {
+      await zk.sendMessage(dest, { 
+        image: { url: lien },
+        caption: `⏳ Chargement de la carte ${key}... ${pourcentage}%\n${barre}`,
+        edit: messageInitial.key 
+      });
+    } catch (e) {
+      console.error("Erreur modification message:", e);
+    }
+  }
+
+  // Envoi de la carte finale
+  await zk.sendMessage(dest, { 
+    image: { url: lien },
+    caption: cartes[key],
+    edit: messageInitial.key 
+  });
+});
 
 zokou(
     {
