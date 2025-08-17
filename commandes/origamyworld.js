@@ -255,17 +255,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
  *▓▓▓▓▓▓[À SUIVRE...]▓▓▓▓▓▓*
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
-};nels du royaume.
-> - *🐎 Écuries Royales :* (X: 2, Y: 4)
-> Abri des chevaux les plus rapides et puissants, réservés aux cavaliers du roi.
-> - *🔭 Tour Astral :* (X: -2, Y: 4.5)
-> Observatoire où les astrologues et érudits étudient le ciel à la recherche d’augures.
-> - *🗡️ Arsenal Royal :* (X: 1, Y: 3.5)
-> Dépôt secret renfermant les armes les plus précieuses du royaume.
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
- *▓▓▓▓▓▓[À SUIVRE...]▓▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
-  };
+};
 
   const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
   const key = (arg[0] || '').toLowerCase();
