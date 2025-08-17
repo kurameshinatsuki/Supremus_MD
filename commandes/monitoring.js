@@ -1,26 +1,95 @@
 const { zokou } = require("../framework/zokou");
-const axios = require('axios');
+const axios = require("axios");
 
+// Toutes les surveillances actives
+let monitoringTasks = {};
 
-// État global pour le monitoring
-let monitoringState = {
-  active: false,
-  url: null,
-  interval: null,
-  intervalMinutes: null,
-  checkCount: 0,
-  lastMessage: null,
-  startTime: null
+// Petit logger console
+const logEvent = (msg) => {
+  console.log(`[${new Date().toISOString()}] ${msg}`);
 };
 
-// Logger amélioré
-const logger = {
-  info: (msg) => console.log(chalk.blue(`[ℹ] ${new Date().toISOString()} - ${msg}`)),
-  success: (msg) => console.log(chalk.green(`[✓] ${new Date().toISOString()} - ${msg}`)),
-  warn: (msg) => console.log(chalk.yellow(`[⚠] ${new Date().toISOString()} - ${msg}`)),
-  error: (msg) => console.log(chalk.red(`[✗] ${new Date().toISOString()} - ${msg}`))
+// Fonction qui fait le check
+const createMonitor = async (origineMessage, zk, url, intervalMinutes) => {
+  const id = url; // identifiant unique par URL
+
+  // Initialiser l'état
+  monitoringTasks[id] = {
+    active: true,
+    url,
+    interval: null,
+    intervalMinutes,
+    checkCount: 0,
+    lastMessage: null,
+    logs: []
+  };
+
+  // Message initial
+  const initialMessage = await zk.sendMessage(origineMessage, {
+    text: `🌐 *Surveillance démarrée* 🌐\n━━━━━━━━━━━━━━━\n🔗 URL: ${url}\n⏱ Intervalle: ${intervalMinutes} min\n📊 Vérifications: 0\n🕒 Prochain: ${new Date(Date.now() + intervalMinutes * 60000).toLocaleTimeString()}\n━━━━━━━━━━━━━━━`
+  });
+
+  monitoringTasks[id].lastMessage = initialMessage.key;
+  logEvent(`Surveillance démarrée sur ${url} toutes les ${intervalMinutes} minutes`);
+
+  // Fonction check
+  const checkWebsite = async () => {
+    if (!monitoringTasks[id] || !monitoringTasks[id].active) return;
+
+    try {
+      monitoringTasks[id].checkCount++;
+      const startTime = Date.now();
+      const response = await axios.get(url, { timeout: 10000 });
+      const responseTime = Date.now() - startTime;
+
+      const statusText =
+        `#${monitoringTasks[id].checkCount} | ✅ *OK*\n` +
+        `📡 Code: ${response.status}\n` +
+        `⚡ Temps: ${responseTime}ms\n` +
+        `🕒 Prochain: ${new Date(Date.now() + intervalMinutes * 60000).toLocaleTimeString()}`;
+
+      monitoringTasks[id].logs.push({
+        time: new Date(),
+        success: true,
+        status: response.status,
+        responseTime
+      });
+
+      await zk.sendMessage(origineMessage, {
+        text: statusText,
+        edit: monitoringTasks[id].lastMessage
+      });
+
+      logEvent(`Check #${monitoringTasks[id].checkCount} OK pour ${url} - ${response.status} en ${responseTime}ms`);
+    } catch (error) {
+      const errorText =
+        `#${monitoringTasks[id].checkCount} | ❌ *Erreur*\n` +
+        `📡 Code: ${error.code || error.message}\n` +
+        `🕒 Prochain: ${new Date(Date.now() + intervalMinutes * 60000).toLocaleTimeString()}`;
+
+      monitoringTasks[id].logs.push({
+        time: new Date(),
+        success: false,
+        error: error.code || error.message
+      });
+
+      await zk.sendMessage(origineMessage, {
+        text: errorText,
+        edit: monitoringTasks[id].lastMessage
+      });
+
+      logEvent(`Erreur check #${monitoringTasks[id].checkCount} pour ${url} - ${error.code || error.message}`);
+    }
+  };
+
+  // Premier check immédiat
+  await checkWebsite();
+
+  // Configurer l’intervalle
+  monitoringTasks[id].interval = setInterval(checkWebsite, intervalMinutes * 60000);
 };
 
+// Commande pour démarrer une surveillance
 zokou({
   nomCom: "monitor",
   categorie: "MON-BOT",
@@ -29,209 +98,91 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
 
-  logger.info(`Commande monitor déclenchée.`);
-  
-  // Vérifier si un monitoring est déjà actif
-  if (monitoringState.active) {
-    logger.warn("Tentative de démarrage alors qu'un monitoring est actif");
-    return repondre("❌ *Surveillance déjà active* \nUtilisez " + "`-stopmonitor`" + " pour l'arrêter");
-  }
-
-  // Récupérer les paramètres
   const url = arg[0]?.match(/https?:\/\/[^\s]+/)?.toString();
   const intervalMinutes = parseInt(arg[1]) || 5;
 
-  // Validation des entrées
   if (!url) {
-    logger.error("URL manquante dans la commande");
-    return repondre(
-      "❌ *URL manquante !*\n\n" +
-      "🔹 Usage : " + "`-monitor [url] [intervalle-en-min]`" + "\n" +
-      "🔹 Exemple : " + "`-monitor https://supremus-bot.com 10`"
-    );
+    return repondre("❌ URL manquante !\nUsage : *-monitor [url] [intervalle-en-min]*\nExemple : *-monitor https://monbot.com 10*");
   }
 
   if (intervalMinutes < 1 || intervalMinutes > 1440) {
-    logger.error(`Intervalle invalide: ${intervalMinutes} minutes`);
-    return repondre(
-      "❌ *Intervalle invalide !*\n\n" +
-      "L'intervalle doit être compris entre " + "`1 minute`" + " et " + "`24 heures`"
-    );
+    return repondre("❌ Intervalle invalide (1-1440 minutes)");
   }
 
-  // Initialiser le monitoring
-  monitoringState = {
-    active: true,
-    url,
-    interval: null,
-    intervalMinutes,
-    checkCount: 0,
-    lastMessage: null,
-    startTime: new Date()
-  };
+  if (monitoringTasks[url]) {
+    return repondre("❌ Cette URL est déjà surveillée !");
+  }
 
-  logger.success(`Démarrage surveillance: ${url} (${intervalMinutes} min)`);
-  
-  // Message initial avec design amélioré
-  const initialMessage = await zk.sendMessage(origineMessage, {
-    text: 
-      "🌐 *SURVEILLANCE ACTIVÉE* 🌐\n" +
-      "┌────────────────────────\n" +
-      `│ 🔗 *URL* : ${url}\n` +
-      `│ ⏱ *Intervalle* : ${intervalMinutes} min\n` +
-      `│ 🕒 *Début* : ${new Date().toLocaleTimeString()}\n` +
-      `│ 📊 *Statut* : ` + "```Initialisation...```\n" +
-      "└────────────────────────"
-  });
-  monitoringState.lastMessage = initialMessage.key;
-
-  // Fonction de vérification avec logs détaillés
-  const checkWebsite = async () => {
-    if (!monitoringState.active) return;
-    
-    monitoringState.checkCount++;
-    const checkNumber = monitoringState.checkCount;
-    const startTimestamp = Date.now();
-    
-    logger.info(`Check #${checkNumber} démarré pour ${monitoringState.url}`);
-    
-    try {
-      const response = await axios.get(monitoringState.url, { 
-        timeout: 15000,
-        validateStatus: () => true // Accepter tous les codes HTTP
-      });
-      
-      const responseTime = Date.now() - startTimestamp;
-      const isSuccess = response.status >= 200 && response.status < 300;
-      const statusEmoji = isSuccess ? '✅' : '⚠️';
-      
-      logger.info(`Check #${checkNumber} terminé - Statut: ${response.status} | Temps: ${responseTime}ms`);
-      
-      const statusText = 
-        `${statusEmoji} *Check #${checkNumber}*\n` +
-        "┌────────────────────────\n" +
-        `│ 🔗 *URL* : ${monitoringState.url}\n` +
-        `│ 🧾 *Code HTTP* : ${response.status}\n` +
-        `│ ⏱ *Temps réponse* : ${responseTime}ms\n` +
-        `│ 🕒 *Prochain check* : ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}\n` +
-        "└────────────────────────";
-        
-      await zk.sendMessage(origineMessage, {
-        text: statusText,
-        edit: monitoringState.lastMessage
-      });
-
-    } catch (error) {
-      const responseTime = Date.now() - startTimestamp;
-      logger.error(`Erreur lors du check #${checkNumber}: ${error.code || error.message}`);
-      
-      const errorText = 
-        "❌ *Check #${checkNumber}*\n" +
-        "┌────────────────────────\n" +
-        `│ 🔗 *URL* : ${monitoringState.url}\n` +
-        `│ 🚨 *Erreur* : ${error.code || error.message}\n` +
-        `│ ⏱ *Temps écoulé* : ${responseTime}ms\n` +
-        `│ 🕒 *Prochain check* : ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}\n` +
-        "└────────────────────────";
-        
-      await zk.sendMessage(origineMessage, {
-        text: errorText,
-        edit: monitoringState.lastMessage
-      });
-    }
-  };
-
-  // Premier check immédiat
-  await checkWebsite();
-  
-  // Configurer l'intervalle
-  monitoringState.interval = setInterval(
-    () => checkWebsite(), 
-    monitoringState.intervalMinutes * 60 * 1000
-  );
-
-  logger.success(`Intervalle configuré pour ${monitoringState.intervalMinutes} minutes`);
+  await createMonitor(origineMessage, zk, url, intervalMinutes);
+  repondre(`✅ Surveillance activée pour ${url} (toutes les ${intervalMinutes} minutes)`);
 });
 
+// Commande pour arrêter une surveillance
 zokou({
   nomCom: "stopmonitor",
   categorie: "MON-BOT",
   reaction: "🛑",
-  description: "Arrête la surveillance en cours"
+  description: "Arrête la surveillance d'une URL"
 }, async (origineMessage, zk, commandeOptions) => {
-  const { repondre } = commandeOptions;
-  
-  logger.info(`Commande stopmonitor déclenchée.`);
+  const { repondre, arg } = commandeOptions;
+  const url = arg[0];
 
-  if (!monitoringState.active) {
-    logger.warn("Tentative d'arrêt alors qu'aucun monitoring n'est actif");
-    return repondre("❌ *Aucune surveillance active !*");
+  if (!url || !monitoringTasks[url]) {
+    return repondre("❌ Aucune surveillance active pour cette URL !");
   }
 
-  // Calculer la durée totale
-  const duration = Math.round((new Date() - monitoringState.startTime) / 60000);
-  
-  // Arrêter l'intervalle
-  clearInterval(monitoringState.interval);
-  logger.success(`Surveillance arrêtée après ${monitoringState.checkCount} checks`);
+  clearInterval(monitoringTasks[url].interval);
 
-  // Message final avec design amélioré
-  const finalText = 
-    "🛑 *SURVEILLANCE ARRÊTÉE* 🛑\n" +
-    "┌────────────────────────\n" +
-    `│ 🔗 *URL* : ${monitoringState.url}\n` +
-    `│ 🕒 *Durée totale* : ${duration} min\n` +
-    `│ 📊 *Vérifications* : ${monitoringState.checkCount}\n` +
-    `│ ⏱ *Fin* : ${new Date().toLocaleTimeString()}\n` +
-    "└────────────────────────";
+  const finalText =
+    `🛑 *Surveillance arrêtée* 🛑\n━━━━━━━━━━━━━━━\n🔗 URL: ${monitoringTasks[url].url}\n📊 Vérifications: ${monitoringTasks[url].checkCount}\n🕒 Fin: ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━`;
 
   await zk.sendMessage(origineMessage, {
     text: finalText,
-    edit: monitoringState.lastMessage
+    edit: monitoringTasks[url].lastMessage
   });
 
-  // Réinitialiser l'état
-  monitoringState = {
-    active: false,
-    url: null,
-    interval: null,
-    intervalMinutes: null,
-    checkCount: 0,
-    lastMessage: null,
-    startTime: null
-  };
+  delete monitoringTasks[url];
+  logEvent(`Surveillance arrêtée pour ${url}`);
 });
 
+// Commande pour afficher statut d'une URL
 zokou({
   nomCom: "monitorstatus",
   categorie: "MON-BOT",
-  reaction: "📊",
-  description: "Affiche le statut de la surveillance en cours"
+  reaction: "ℹ️",
+  description: "Affiche le statut de la surveillance d'une URL"
 }, async (origineMessage, zk, commandeOptions) => {
-  const { repondre } = commandeOptions;
-  
-  logger.info(`Commande status déclenchée.`);
+  const { repondre, arg } = commandeOptions;
+  const url = arg[0];
 
-  if (!monitoringState.active) {
-    return repondre(
-      "🔎 *Aucune surveillance active* \n\n" +
-      "Utilisez " + "`-monitor [url]`" + " pour démarrer une surveillance"
-    );
+  if (!url || !monitoringTasks[url]) {
+    return repondre("❌ Aucune surveillance active pour cette URL !");
   }
 
-  // Calculer le temps écoulé
-  const duration = Math.round((new Date() - monitoringState.startTime) / 60000);
-  
-  const statusText = 
-    "📊 *STATUT DE SURVEILLANCE* 📊\n" +
-    "┌────────────────────────\n" +
-    `│ 🔗 *URL* : ${monitoringState.url}\n` +
-    `│ ⏱ *Intervalle* : ${monitoringState.intervalMinutes} min\n` +
-    `| 🕒 *Début* : ${monitoringState.startTime.toLocaleTimeString()}\n` +
-    `| ⏳ *Durée* : ${duration} min\n` +
-    `| 📊 *Vérifications* : ${monitoringState.checkCount}\n` +
-    `│ 🔜 *Prochain check* : ${new Date(Date.now() + monitoringState.intervalMinutes * 60000).toLocaleTimeString()}\n` +
-    "└────────────────────────";
+  const task = monitoringTasks[url];
+  const statusText =
+    `🌐 *Surveillance active* 🌐\n━━━━━━━━━━━━━━━\n🔗 URL: ${task.url}\n⏱ Intervalle: ${task.intervalMinutes} min\n📊 Vérifications: ${task.checkCount}\n🕒 Prochain: ${new Date(Date.now() + task.intervalMinutes * 60000).toLocaleTimeString()}\n━━━━━━━━━━━━━━━`;
 
   repondre(statusText);
+});
+
+// Commande pour voir les derniers logs
+zokou({
+  nomCom: "monitorlogs",
+  categorie: "MON-BOT",
+  reaction: "📜",
+  description: "Affiche les derniers logs d'une URL"
+}, async (origineMessage, zk, commandeOptions) => {
+  const { repondre, arg } = commandeOptions;
+  const url = arg[0];
+
+  if (!url || !monitoringTasks[url]) {
+    return repondre("❌ Aucune surveillance active pour cette URL !");
+  }
+
+  const logs = monitoringTasks[url].logs.slice(-5).map((log, i) => {
+    return `${i + 1}. ${log.success ? "✅" : "❌"} | ${log.status || log.error} | ${log.responseTime || "-"}ms | ${log.time.toLocaleTimeString()}`;
+  }).join("\n");
+
+  repondre(`📜 *Derniers logs* 📜\n━━━━━━━━━━━━━━━\n${logs}\n━━━━━━━━━━━━━━━`);
 });
