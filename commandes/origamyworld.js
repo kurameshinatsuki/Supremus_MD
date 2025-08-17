@@ -268,7 +268,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
   // Envoi du message initial avec l'image et le chargement
   const messageInitial = await zk.sendMessage(dest, { 
     image: { url: lien },
-    caption: `*⏳ Chargement de la carte ${key}...*\n0% [░░░░░░░░░░░░░]`
+    caption: `*⏳ Chargement de la carte ${key}...*\n0% [░░░░░░░░░░░░░░░░░░]`
   }, { quoted: ms });
 
   // Simulation du chargement (5 secondes)
@@ -277,12 +277,12 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
     await new Promise(resolve => setTimeout(resolve, 1000)); // 1s par étape
     
     const pourcentage = i * 20;
-    const barre = '██'.repeat(i) + '░░'.repeat(etapes - i);
+    const barre = '███'.repeat(i) + '░░░'.repeat(etapes - i);
     
     try {
       await zk.sendMessage(dest, { 
         image: { url: lien },
-        caption: `*⏳ Chargement de la carte ${key}...*\n ${pourcentage}% [${barre}]`,
+        caption: `*⏳ Chargement de la carte ${key}...*\n  ${pourcentage}% [${barre}]`,
         edit: messageInitial.key 
       });
     } catch (e) {
