@@ -107,7 +107,7 @@ Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon l
       <th>Port&eacute;e</th>
       <th>D&eacute;g&acirc;ts</th>
       <th>Vitesse</th>
-      <th>Effet</th>
+      <th>Cout</th>
     </tr>
   </thead>
   <tbody>
@@ -116,21 +116,21 @@ Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon l
       <td>5m⭕</td>
       <td>30💥</td>
       <td>6m🎯</td>
-      <td>1 / 2</td>
+      <td>20💠</td>
     </tr>
     <tr>
       <td>Niv A</td>
       <td>8m⭕</td>
       <td>50💥</td>
       <td>8m🎯</td>
-      <td>2</td>
+      <td>30💠</td>
     </tr>
     <tr>
       <td>Niv S</td>
       <td>10m⭕</td>
       <td>80💥</td>
       <td>10m🎯</td>
-      <td>3</td>
+      <td>50💠</td>
     </tr>
   </tbody>
 </table><br>
@@ -338,10 +338,10 @@ Vous y trouverez des pi&egrave;ges et &eacute;v&eacute;nements impr&eacute;vus :
     <h2>🔹 CRAFTING ET POSSESSIONS</h2>
     <div class="highlight">
       <p><strong>CONSTRUCTION :</strong> Le crafting vous co&ucirc;te en unit&eacute;s de ressources.<br>
-Une surface minimale de 1m&sup2; &eacute;quivaut &agrave; 2 unit&eacute;s, donc 5m&sup2; = 10 unit&eacute;s.<br>
+Une surface minimale de 1m&sup2; &eacute;quivaut &agrave; 10 unit&eacute;s, donc 5m&sup2; = 50 unit&eacute;s.<br>
 Exemple :<br>
-&nbsp;&nbsp;- Sol en bois (5m&sup2;) = 10🪵.<br>
-&nbsp;&nbsp;- Mur en pierre (20m&sup2;) = 40🪨.<br><br>
+&nbsp;&nbsp;- Sol en bois (5m&sup2;) = 50🪵.<br>
+&nbsp;&nbsp;- Mur en pierre (20m&sup2;) = 200🪨.<br><br>
 
 Collectez les ressources n&eacute;cessaires en explorant les lieux ou zones de la carte.<br><br>
 
@@ -361,7 +361,7 @@ Lorsque sa durabilit&eacute; atteint 0⚙️, l&#39;outil est inutilisable ou d&
   <section>
     <h2>🔹 STATS & SURVIE</h2>
     <div class="highlight">
-      <p><strong>BESOINS VITAUX :</strong> La Faim (🍽️) et la Soif (🍶) baissent de -30% tous les 3 tours.<br>
+      <p><strong>BESOINS VITAUX :</strong> La Faim (🍽️) et la Soif (🍶) baissent de -10% chaque tour.<br>
 À 0%, la perte de Heart🫀 est doubl&eacute;e et vous risquez de perdre connaissance.<br>
 Elles peuvent &ecirc;tre restaur&eacute;es par la consommation d&#39;aliment ou de boisson.<br><br>
 
@@ -479,19 +479,19 @@ La progression en rang permet d&#39;acc&eacute;der &agrave; des comp&eacute;tenc
     <th>XP</th>
   </tr>
   <tr>
-    <td>C</td><td>2 tours</td><td>100 XP</td><td>→</td><td>C</td><td>4 tours</td><td>200 XP</td><td>→</td><td>C</td><td>8 tours</td><td>300 XP</td>
+    <td>C</td><td>3 tours</td><td>100 XP</td><td>→</td><td>C</td><td>6 tours</td><td>200 XP</td><td>→</td><td>C</td><td>12 tours</td><td>300 XP</td>
   </tr>
   <tr>
-    <td>B</td><td>4 tours</td><td>200 XP</td><td>→</td><td>B</td><td>8 tours</td><td>400 XP</td><td>→</td><td>B</td><td>12 tours</td><td>600 XP</td>
+    <td>B</td><td>6 tours</td><td>200 XP</td><td>→</td><td>B</td><td>12 tours</td><td>400 XP</td><td>→</td><td>B</td><td>24 tours</td><td>600 XP</td>
   </tr>
   <tr>
-    <td>A</td><td>6 tours</td><td>400 XP</td><td>→</td><td>A</td><td>8 tours</td><td>800 XP</td><td>→</td><td>A</td><td>16 tours</td><td>1200 XP</td>
+    <td>A</td><td>12 tours</td><td>400 XP</td><td>→</td><td>A</td><td>24 tours</td><td>800 XP</td><td>→</td><td>A</td><td>48 tours</td><td>1200 XP</td>
   </tr>
   <tr>
-    <td>S</td><td>8 tours</td><td>800 XP</td><td>→</td><td>S</td><td>16 tours</td><td>1600 XP</td><td>→</td><td>S</td><td>32 tours</td><td>2400 XP</td>
+    <td>S</td><td>24 tours</td><td>800 XP</td><td>→</td><td>S</td><td>48 tours</td><td>1600 XP</td><td>→</td><td>S</td><td>96 tours</td><td>2400 XP</td>
   </tr>
   <tr>
-    <td>Z</td><td>10 tours</td><td>1600 XP</td><td>→</td><td>Z</td><td>20 tours</td><td>3200 XP</td><td>→</td><td>Z</td><td>40 tours</td><td>4800 XP</td>
+    <td>Z</td><td>48 tours</td><td>1600 XP</td><td>→</td><td>Z</td><td>96 tours</td><td>3200 XP</td><td>→</td><td>Z</td><td>192 tours</td><td>4800 XP</td>
   </tr>
 </table><br>
 
