@@ -357,8 +357,7 @@ zokou(
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 *▷ LES DIVINITÉS, LES FRAGMENTS ET LE DESTIN*.
 
-> Il y a bien longtemps, avant que les royaumes ne soient bâtis, le monde n'était qu'un champ de bataille entre les Divinités Primordiales. Chacune possédait un Fragment d'Origam, une parcelle d'énergie pure capable de créer ou de détruire.
-Après des siècles de guerre, ces divinités disparurent, laissant derrière elles des artefacts sacrés imprégnés de leur essence.
+> Il y a bien longtemps, avant que les royaumes ne soient bâtis, le monde n'était qu'un champ de bataille entre les Divinités Primordiales. Chacune possédait un Fragment d'Origam, une parcelle d'énergie pure capable de créer ou de détruire. Après des siècles de guerre, ces divinités disparurent, laissant derrière elles des artefacts sacrés imprégnés de leur essence.
 
 > Ces reliques ne sont pas de simples objets : elles portent en elles une volonté propre. Celui qui les manie n'hérite pas seulement de leur puissance, mais doit affronter la conscience même du dieu qui l'habitait. Certains héros devinrent des légendes… d'autres sombrèrent, consumés par une force trop grande pour eux.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
@@ -377,11 +376,11 @@ Après des siècles de guerre, ces divinités disparurent, laissant derrière el
 
 > Dans ce monde fracturé entre légendes et ambitions, trois voies dominent :
 
-1. 🔻 Les Profanes – Dépourvus de toute aptitude magique, ces êtres ne possèdent aucun potentiel mystique. Pourtant, leur corps dépasse largement les limites humaines. Incapables d'utiliser la magie, leur restriction se transforme en avantage : leur force physique atteint un niveau hors du commun. Leur corps devient une véritable arme vivante, capable d'exploits dépassant l'entendement. Ils peuvent développer jusqu'à deux potentiels exceptionnels et manier l'Overdrive sans aucune restriction.
+🔻 *Les Profanes* – Dépourvus de toute aptitude magique, ces êtres ne possèdent aucun potentiel mystique. Pourtant, leur corps dépasse largement les limites humaines. Incapables d'utiliser la magie, leur restriction se transforme en avantage : leur force physique atteint un niveau hors du commun. Leur corps devient une véritable arme vivante, capable d'exploits dépassant l'entendement. Ils peuvent développer jusqu'à deux potentiels exceptionnels et manier l'Overdrive sans aucune restriction.
 
-2. 🔹 Les Mononature – Détenteurs d'une unique magie, ils la portent comme une marque indélébile. Feu, eau, gravité ou espace : leur élément devient leur essence même. Bien que limités à une seule nature magique, ils en explorent toutes les facettes, la perfectionnant jusqu'à l'extrême. Chaque technique découle de cette affinité particulière, leur permettant de concevoir des stratégies d'une redoutable complexité.
+🔹 *Les Mononature* – Détenteurs d'une unique magie, ils la portent comme une marque indélébile. Feu, eau, gravité ou espace : leur élément devient leur essence même. Bien que limités à une seule nature magique, ils en explorent toutes les facettes, la perfectionnant jusqu'à l'extrême. Chaque technique découle de cette affinité particulière, leur permettant de concevoir des stratégies d'une redoutable complexité.
 
-3. 🔺 Les Arcanistes – Élus d'exception, ils sont capables de manier plusieurs natures magiques. Leur don rare leur permet de puiser dans diverses affinités, mais une règle immuable limite leur pouvoir : une seule technique par nature. Pourtant, cette contrainte devient leur plus grande force, car en combinant leurs différentes magies, ils déchaînent des stratégies imprévisibles, capables de renverser le cours d'un combat.
+🔺 *Les Arcanistes* – Élus d'exception, ils sont capables de manier plusieurs natures magiques. Leur don rare leur permet de puiser dans diverses affinités, mais une règle immuable limite leur pouvoir : une seule technique par nature. Pourtant, cette contrainte devient leur plus grande force, car en combinant leurs différentes magies, ils déchaînent des stratégies imprévisibles, capables de renverser le cours d'un combat.
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 
 ▷ *LA QUÊTE DES ARTEFACTS :* 
