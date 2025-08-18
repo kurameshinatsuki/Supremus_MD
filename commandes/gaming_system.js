@@ -226,29 +226,21 @@ zokou(
   <section>
     <h2>🔹 STRUCTURE DU PAVÉ RP STORY</h2>
     <div class="highlight">
-      <p><br>
+  <p><br>
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
 *▓▓▓▓[ORIGAMY  STORY]▓▓▓▓*<br>
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br>
 *[PLAYER NAME] :*<br><br>
 
-&gt; *Section 1:* [Premi&egrave;re description d&#39;actions du joueur respectant les r&egrave;gles du jeu].<br><br>
+&gt; *Section 1:*<br><br>
 
-&gt; *Section 2:* [Seconde description d&#39;actions du joueur respectant les r&egrave;gles du jeu].<br>
+&gt; *Section 2:*<br>
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
-*💠 POUVOIR :* [Techniques Actifs]<br>
-*🌐 POSITION :* [Localisation/Destination du joueur]<br>
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br>
-❤️: 100 | 🌀: 100 | 🫀: 100<br>
-🍽️: 100 | 🍶: 100 | 🎭: 000<br><br>
-
-*📦 INVENTAIRE :* 0/2<br>
-&gt; *💰 Bourse :* 0<br>
-&gt; *<br>
-&gt; *<br>
+*💠 POUVOIR :* Aucun<br>
+*🌐 POSITION :*<br>
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
 *▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*<br>
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br><br></p>
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br></p>
     </div><strong>R&Egrave;GLES DE JEU RP STORY</strong><br><br>
 
 <div class="highlight">
