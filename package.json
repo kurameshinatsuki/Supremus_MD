@@ -24,6 +24,8 @@
     "@hapi/boom": "^10.0.1",
     "@types/node": "^18.0.6",
     "@whiskeysockets/baileys": "github:Ainz-devs/Baileys",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
     "@xaviabot/fb-downloader": "^1.0.14",
     "aptoide-scraper": "^1.0.1",
     "axios": "^1.4.0",
