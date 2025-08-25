@@ -63,7 +63,7 @@
             const { isLatest } = await (0, baileys_1.fetchLatestBaileysVersion)();
             const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(__dirname + "/auth");
             const sockOptions = {
-                version,
+               
                 logger: pino({ level: "silent" }),
                 browser: baileys_1.Browsers.ubuntu("Chrome"),
                 syncFullHistory: false,
