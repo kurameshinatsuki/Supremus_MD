@@ -60,7 +60,7 @@
     });*/
         setTimeout(() => {
         async function main() {
-            const { version, isLatest } = await (0, baileys_1.fetchLatestBaileysVersion)();
+            const { isLatest } = await (0, baileys_1.fetchLatestBaileysVersion)();
             const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(__dirname + "/auth");
             const sockOptions = {
                 version,
