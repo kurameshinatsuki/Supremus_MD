@@ -7,13 +7,13 @@ zokou({
   nomCom: "minuteur",
   categorie: "MON-BOT",
   reaction: "⏳",
-  description: "Minuteur visuel (1-15 minutes)"
+  description: "Minuteur visuel (1-15 minutes) - Réagissez avec ❌ pour arrêter"
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
 
   // Configuration
   const dureeMax = 15; // 15 minutes maximum
-  let minutes = parseInt(arg[0]) || 3; // 3min par défaut
+  let minutes = parseInt(arg[0]) || 6; // 6min par défaut
 
   // Validation
   if (isNaN(minutes) || minutes < 1 || minutes > dureeMax) {
@@ -25,28 +25,69 @@ zokou({
   const etapes = 10;
   const interval = (totalSeconds * 1000) / etapes;
 
-  // Message initial
+  // Variables pour contrôler le minuteur
+  let minuteurActif = true;
+  let messageMinuteur = null;
+
+  // Message initial avec réaction d'arrêt
   const msgInit = await zk.sendMessage(origineMessage, {
-    text: `⏳ Minuteur démarré (${minutes}min)\n\n[${'░'.repeat(etapes)}] 0%`
+    text: `⏳ Minuteur démarré (${minutes}min)\n\n[${'░'.repeat(etapes)}] 0%\n\n_Réagissez avec ❌ pour arrêter_`
   });
+  
+  // Ajouter la réaction d'arrêt
+  await zk.sendMessage(origineMessage, {
+    react: {
+      text: "❌",
+      key: msgInit.key
+    }
+  });
+
+  messageMinuteur = msgInit;
+
+  // Écouter les réactions pour arrêter le minuteur
+  const stopListener = async (reaction) => {
+    if (reaction.key.remoteJid === origineMessage.remoteJid && 
+        reaction.key.id === msgInit.key.id && 
+        reaction.reaction === "❌") {
+      minuteurActif = false;
+      await zk.sendMessage(origineMessage, {
+        text: `⏹️ Minuteur arrêté manuellement après ${Math.round((i / etapes) * minutes)} minutes`
+      });
+    }
+  };
+
+  // Ajouter l'écouteur d'événements
+  zk.ev.on('messages.reaction', stopListener);
 
   // Animation
-  for (let i = 1; i <= etapes; i++) {
+  let i = 1;
+  for (; i <= etapes && minuteurActif; i++) {
     await new Promise(resolve => setTimeout(resolve, interval));
     
+    if (!minuteurActif) break;
+
     const pourcentage = i * 10;
     const barre = '█'.repeat(i) + '░'.repeat(etapes - i);
-    
-    await zk.sendMessage(origineMessage, {
-      text: `⏳ Temps restant: ${Math.round(minutes - (minutes * pourcentage/100))}min\n\n[${barre}] ${pourcentage}%`,
-      edit: msgInit.key
-    });
+
+    try {
+      await zk.sendMessage(origineMessage, {
+        text: `⏳ Temps restant: ${Math.round(minutes - (minutes * pourcentage/100))}min\n\n[${barre}] ${pourcentage}%\n\n_Réagissez avec ❌ pour arrêter_`,
+        edit: msgInit.key
+      });
+    } catch (e) {
+      console.log("Erreur d'édition du message, continuation normale...");
+    }
   }
 
-  // Message final (nouveau message)
-  await zk.sendMessage(origineMessage, {
-    text: `✅ Minuteur terminé ! (${minutes} minutes écoulées)`
-  });
+  // Retirer l'écouteur d'événements
+  zk.ev.off('messages.reaction', stopListener);
+
+  // Message final seulement si le minuteur n'a pas été arrêté
+  if (minuteurActif) {
+    await zk.sendMessage(origineMessage, {
+      text: `✅ Minuteur terminé ! (${minutes} minutes écoulées)`
+    });
+  }
 });
 
 zokou({
