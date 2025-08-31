@@ -76,15 +76,15 @@ let playerList = [];
 // Fonction pour charger les joueurs depuis la base de données
 async function loadPlayers() {
     try {
-        const players = await getAllPlayers();
-        playerList = players || [];
+       /*const players = await getAllPlayers();
+       playerList = players || [];
         
         // Créer les commandes pour chaque joueur
-        playerList.forEach(player => createPlayerCommand(player));
+          playerList.forEach(player => createPlayerCommand(player));
         
         console.log(`✅ ${playerList.length} joueurs chargés dynamiquement`);
     } catch (error) {
-        console.error("❌ Erreur lors du chargement des joueurs :", error);
+        console.error("❌ Erreur lors du chargement des joueurs :", error);*/
         // Liste de fallback si la base de données échoue
         playerList = [
             'akira', 'nosferatu', 'ashleyforger', 'bradox', 'eugene', 
