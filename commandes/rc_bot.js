@@ -70,8 +70,35 @@ function createPlayerCommand(playerName) {
     });
 }
 
-// Création de commandes dynamiques (ajoute autant de joueurs que tu veux ici)
-['test1', 'test2', 'test3', 'test4'].forEach(player => createPlayerCommand(player));
+// Création de commandes dynamiques
+[
+  'akira',
+  'nosferatu',
+  'ashleyforger',
+  'bradox',
+  'eugene',
+  'irito',
+  'kerjin',
+  'kuroro',
+  'lelouch',
+  'lmsesar',
+  'nato',
+  'oreki',
+  'thebigcim',
+  'blacknight',
+  'rainirainerll',
+  'jackleventreur',
+  'jumafshadow',
+  'donkillshot',
+  'phamtomed',
+  'mira',
+  'eniko',
+  'spectros',
+  'shadow',
+  'imura',
+  'loxsika',
+  'yoruichinamikaze'
+].forEach(player => createPlayerCommand(player));
 
 // Commande des règles RC
 zokou(
@@ -112,7 +139,7 @@ zokou(
 ┃            *RC_BOT_MENU*
 ┣━━━━━━━━━━━━━━━━━◇
 ┃ #rc_menu
-┃ #rules
+┃ #system
 ┃ #minuteur
 ┃ #fiche
 ┃ #(playerName)
