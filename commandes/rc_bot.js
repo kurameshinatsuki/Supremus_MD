@@ -6,12 +6,12 @@
 //               liées à la communauté RC par Supremus Prod.
 //
 // Date de création : 28/08/2025
-// Dernière modification : 28/08/2025
+// Dernière modification : [DATE]
 //
 // ============================================================
 
 const { zokou } = require('../framework/zokou');
-const { addOrUpdateDataInPlayer, getDataFromPlayer } = require('../bdd/rc_db');
+const { addOrUpdateDataInPlayer, getDataFromPlayer, getAllPlayers } = require('../bdd/rc_db');
 
 // Utilitaire pour envoyer une image avec légende
 async function envoyerImage(dest, zk, ms, lien, caption = '') {
@@ -70,71 +70,85 @@ function createPlayerCommand(playerName) {
     });
 }
 
-// Création de commandes dynamiques
-[
-  'akira',
-  'nosferatu',
-  'ashleyforger',
-  'bradox',
-  'eugene',
-  'irito',
-  'kerjin',
-  'kuroro',
-  'lelouch',
-  'lmsesar',
-  'nato',
-  'oreki',
-  'thebigcim',
-  'blacknight',
-  'rainirainerll',
-  'jackleventreur',
-  'jumafshadow',
-  'donkillshot',
-  'phamtomed',
-  'mira',
-  'eniko',
-  'spectros',
-  'shadow',
-  'imura',
-  'loxsika',
-  'yoruichinamikaze'
-].forEach(player => createPlayerCommand(player));
+// Liste des joueurs (maintenant chargée dynamiquement)
+let playerList = [];
+
+// Fonction pour charger les joueurs depuis la base de données
+async function loadPlayers() {
+    try {
+        const players = await getAllPlayers();
+        playerList = players || [];
+        
+        // Créer les commandes pour chaque joueur
+        playerList.forEach(player => createPlayerCommand(player));
+        
+        console.log(`✅ ${playerList.length} joueurs chargés dynamiquement`);
+    } catch (error) {
+        console.error("❌ Erreur lors du chargement des joueurs :", error);
+        // Liste de fallback si la base de données échoue
+        playerList = [
+            'akira', 'nosferatu', 'ashleyforger', 'bradox', 'eugene', 
+            'irito', 'kerjin', 'kuroro', 'lelouch', 'lmsesar', 'nato', 
+            'oreki', 'thebigcim', 'blacknight', 'rainirainerll', 
+            'jackleventreur', 'jumafshadow', 'donkillshot', 'phamtomed', 
+            'mira', 'eniko', 'spectros', 'shadow', 'imura', 'loxsika', 
+            'yoruichinamikaze'
+        ];
+        
+        playerList.forEach(player => createPlayerCommand(player));
+    }
+}
+
+// Charger les joueurs au démarrage
+loadPlayers();
 
 // Commande des règles RC
 zokou(
     { nomCom: 'system', categorie: 'RC' },
     async (dest, zk, { ms }) => {
         const liens = [
-    'https://i.ibb.co/6RM3WpY1/IMG-20250827-WA0134.jpg',
-    'https://i.ibb.co/1GW1qwG6/IMG-20250827-WA0133.jpg',
-    'https://i.ibb.co/mVRf0brh/IMG-20250827-WA0132.jpg',
-    'https://i.ibb.co/v91vmzW/IMG-20250827-WA0131.jpg',
-    'https://i.ibb.co/4gwtnSv4/IMG-20250827-WA0130.jpg',
-    'https://i.ibb.co/RTWx7MSQ/IMG-20250827-WA0129.jpg',
-    'https://i.ibb.co/xK4RT1Mm/IMG-20250827-WA0128.jpg',
-    'https://i.ibb.co/ZzGvfYpm/IMG-20250827-WA0127.jpg',
-    'https://i.ibb.co/nMXvmK4D/IMG-20250827-WA0126.jpg',
-    'https://i.ibb.co/67VD4HXv/IMG-20250827-WA0125.jpg',
-    'https://i.ibb.co/fzdDFLx2/IMG-20250827-WA0124.jpg',
-    'https://i.ibb.co/GQtSMC7g/IMG-20250827-WA0123.jpg',
-    'https://i.ibb.co/PsqQ89vX/IMG-20250827-WA0122.jpg',
-    'https://i.ibb.co/39qkZQCF/IMG-20250827-WA0121.jpg',
-    'https://i.ibb.co/PRSbKqQ/IMG-20250827-WA0120.jpg',
-    'https://i.ibb.co/rGx4rJkR/IMG-20250826-WA0169.jpg',
-    'https://i.ibb.co/60P3ncYf/IMG-20250826-WA0170.jpg',
-    'https://i.ibb.co/kk19YGc/IMG-20250826-WA0168.jpg'
-];
+            'https://i.ibb.co/6RM3WpY1/IMG-20250827-WA0134.jpg',
+            'https://i.ibb.co/1GW1qwG6/IMG-20250827-WA0133.jpg',
+            'https://i.ibb.co/mVRf0brh/IMG-20250827-WA0132.jpg',
+            'https://i.ibb.co/v91vmzW/IMG-20250827-WA0131.jpg',
+            'https://i.ibb.co/4gwtnSv4/IMG-20250827-WA0130.jpg',
+            'https://i.ibb.co/RTWx7MSQ/IMG-20250827-WA0129.jpg',
+            'https://i.ibb.co/xK4RT1Mm/IMG-20250827-WA0128.jpg',
+            'https://i.ibb.co/ZzGvfYpm/IMG-20250827-WA0127.jpg',
+            'https://i.ibb.co/nMXvmK4D/IMG-20250827-WA0126.jpg',
+            'https://i.ibb.co/67VD4HXv/IMG-20250827-WA0125.jpg',
+            'https://i.ibb.co/fzdDFLx2/IMG-20250827-WA0124.jpg',
+            'https://i.ibb.co/GQtSMC7g/IMG-20250827-WA0123.jpg',
+            'https://i.ibb.co/PsqQ89vX/IMG-20250827-WA0122.jpg',
+            'https://i.ibb.co/39qkZQCF/IMG-20250827-WA0121.jpg',
+            'https://i.ibb.co/PRSbKqQ/IMG-20250827-WA0120.jpg',
+            'https://i.ibb.co/rGx4rJkR/IMG-20250826-WA0169.jpg',
+            'https://i.ibb.co/60P3ncYf/IMG-20250826-WA0170.jpg',
+            'https://i.ibb.co/kk19YGc/IMG-20250826-WA0168.jpg'
+        ];
         for (const lien of liens) {
             await envoyerImage(dest, zk, ms, lien);
         }
     }
 );
 
-// Menu principal RC_BOT
+// Menu principal RC_BOT - Maintenant dynamique
 zokou(
     { nomCom: 'rc_menu', categorie: 'RC' },
     async (dest, zk, { ms }) => {
         const lien = 'https://i.ibb.co/TxwgXfRM/image.jpg';
+        
+        // Construire la liste des commandes de joueurs dynamiquement
+        let playerCommands = '';
+        if (playerList.length > 0) {
+            playerCommands = playerList.slice(0, 10).map(player => `┃ #${player}`).join('\n');
+            if (playerList.length > 10) {
+                playerCommands += `\n┃ ... et ${playerList.length - 10} autres`;
+            }
+        } else {
+            playerCommands = '┃ (Chargement des joueurs...)';
+        }
+        
         const msg = `┏━━━━━━━━━━━━━━━━━◇
 ┃            *RC_BOT_MENU*
 ┣━━━━━━━━━━━━━━━━━◇
@@ -142,8 +156,12 @@ zokou(
 ┃ #system
 ┃ #minuteur
 ┃ #fiche
-┃ #(playerName)
+┣━━━━━━━━━━━━━━━━━◇
+┃       *PROFILS JOUEURS*
+┣━━━━━━━━━━━━━━━━━◇
+${playerCommands}
 ┗━━━━━━━━━━━━━━━━━◇`;
+        
         await envoyerImage(dest, zk, ms, lien, msg);
     }
 );
