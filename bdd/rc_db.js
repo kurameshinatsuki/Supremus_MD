@@ -9,10 +9,10 @@ const proConfig = {
 
 const pool = new Pool(proConfig);
 
-// Flag pour ne vérifier la table qu’une seule fois
+// Flag pour ne vérifier la table qu'une seule fois
 let tableVerified = false;
 
-// Fonction pour créer la table si elle n’existe pas
+// Fonction pour créer la table si elle n'existe pas
 async function ensurePlayerDataTableExists() {
     if (tableVerified) return;
     const client = await pool.connect();
@@ -33,7 +33,7 @@ async function ensurePlayerDataTableExists() {
     }
 }
 
-// Ajouter ou mettre à jour les données d’un joueur
+// Ajouter ou mettre à jour les données d'un joueur
 async function addOrUpdateDataInPlayer(playerName, message, lien) {
     if (!playerName || !message || !lien) {
         console.warn("❌ Paramètres invalides (add/update)");
@@ -60,7 +60,7 @@ async function addOrUpdateDataInPlayer(playerName, message, lien) {
     }
 }
 
-// Récupérer les données d’un joueur
+// Récupérer les données d'un joueur
 async function getDataFromPlayer(playerName) {
     if (!playerName) {
         console.warn("❌ Nom de joueur invalide (get)");
@@ -89,7 +89,27 @@ async function getDataFromPlayer(playerName) {
     }
 }
 
-// Supprimer les données d’un joueur
+// Récupérer tous les noms de joueurs disponibles
+async function getAllPlayers() {
+    const client = await pool.connect();
+    try {
+        await ensurePlayerDataTableExists();
+
+        const result = await client.query(
+            `SELECT player_name FROM player_data ORDER BY player_name`
+        );
+
+        // Retourner un tableau des noms de joueurs
+        return result.rows.map(row => row.player_name);
+    } catch (error) {
+        console.error("❌ Erreur récupération de tous les joueurs:", error);
+        return [];
+    } finally {
+        client.release();
+    }
+}
+
+// Supprimer les données d'un joueur
 async function deleteDataFromPlayer(playerName) {
     if (!playerName) {
         console.warn("❌ Nom de joueur invalide (delete)");
@@ -116,5 +136,6 @@ async function deleteDataFromPlayer(playerName) {
 module.exports = {
     addOrUpdateDataInPlayer,
     getDataFromPlayer,
-    deleteDataFromPlayer
+    deleteDataFromPlayer,
+    getAllPlayers
 };
