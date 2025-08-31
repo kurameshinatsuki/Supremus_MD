@@ -146,7 +146,7 @@ zokou(
                 playerCommands += `\n┃ ... et ${playerList.length - 10} autres`;
             }
         } else {
-            playerCommands = '┃ (Chargement des joueurs...)';
+            playerCommands = '┃ (Aucun joueur enregistré)';
         }
         
         const msg = `┏━━━━━━━━━━━━━━━━━◇
