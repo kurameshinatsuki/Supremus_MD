@@ -8,13 +8,29 @@ const {
 
 // Configuration des profils prédéfinis
 const PREDEFINED_PROFILES = {
-  'john': {
-    displayName: 'John Sũpręmũs',
-    imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
+  'sigma': {
+    displayName: 'Sigma Suprêmus',
+    imageUrl: 'https://i.ibb.co/XfsZRCtV/Image-2025-09-01-13-05-32-1.jpg'
   },
-  'assistant': {
-    displayName: 'Assistant Sũpręmũs',
-    imageUrl: 'https://i.ibb.co/cSxxrVFv/Image-2025-03-24-07-41-59-2.jpg'
+  'manjiro': {
+    displayName: 'Manjiro',
+    imageUrl: 'https://i.ibb.co/8Lj9xC5v/Image-2025-09-01-16-08-08.jpg'
+  },
+  'rudeus': {
+    displayName: 'Rudeus Hells',
+    imageUrl: 'https://i.ibb.co/ccWfR9kp/Image-2025-09-01-22-16-13-0.jpg'
+  },
+  'lord': {
+    displayName: 'Lord',
+    imageUrl: 'https://i.ibb.co/cS3csSg0/Image-2025-09-01-22-16-13-1.jpg'
+  },
+  'xuan': {
+    displayName: 'Ye Xuan',
+    imageUrl: 'https://i.ibb.co/VcT9xNny/Image-2025-09-01-13-05-32-2.jpg'
+  },
+  'pnj': {
+    displayName: 'Ultra PNJ',
+    imageUrl: 'https://i.ibb.co/JR7LqqrP/Image-2025-09-01-13-05-32-0.jpg'
   }
 };
 
