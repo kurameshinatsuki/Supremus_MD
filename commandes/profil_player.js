@@ -43,7 +43,7 @@ const FIELD_SCHEMA = {
     's_tokens', 's_gemmes', 'coupons', 'acceuil', 'arbitrage', 'transaction',
     'diffusion', 'designs', 'story', 'balance', 'depenses', 'profits', 'retraits', 'solde'
   ]),
-  
+
   // Champs de type liste
   LISTS: new Set([
     'heroes', 'vehicles', 'yugioh_deck', 'items', 'skins'
@@ -72,7 +72,9 @@ const MESSAGES = {
     LIST_OPERATION: "❌ L'opération *%s* n'est pas autorisée pour le champ texte *%s*",
     DB_ERROR: "❌ Erreur base de données",
     IMAGE_LOAD: "⚠️ Impossible de charger l'image du profil",
-    PERMISSION_DENIED: "🚫 Action réservée à l'administration."
+    PERMISSION_DENIED: "🚫 Action réservée à l'administration.",
+    INVALID_OPERATION: "❌ Opération non supportée pour le champ *%s*",
+    DB_UPDATE_ERROR: "❌ Erreur lors de la mise à jour de la base de données"
   },
   SUCCESS: {
     PROFILE_CREATED: "_✅ Profil joueur *%s* créé avec succès_",
@@ -164,16 +166,17 @@ function processProfileUpdates(data, command) {
   const updates = {};
   const successfulChanges = [];
   const failedChanges = [];
-  
+
   const fieldPairs = command.split(';').map(pair => pair.trim());
-  
+  const allFields = Object.values(FIELD_CATEGORIES).flat();
+
   for (const fieldPair of fieldPairs) {
     if (!fieldPair) continue;
-    
+
     let operator = null;
     let field = null;
     let rawValue = null;
-    
+
     // Détection de l'opérateur
     if (fieldPair.includes('+=')) {
       [field, rawValue] = fieldPair.split('+=').map(item => item.trim());
@@ -191,9 +194,9 @@ function processProfileUpdates(data, command) {
       });
       continue;
     }
-    
+
     // Validation du champ
-    if (!data.hasOwnProperty(field)) {
+    if (!allFields.includes(field)) {
       failedChanges.push({
         field,
         value: rawValue,
@@ -201,15 +204,17 @@ function processProfileUpdates(data, command) {
       });
       continue;
     }
-    
+
     try {
-      const oldValue = data[field];
+      const oldValue = data[field] || (FIELD_SCHEMA.NUMERIC.has(field) ? 0 : '');
       let newValue = oldValue;
-      
+
       // Traitement des champs numériques
       if (FIELD_SCHEMA.NUMERIC.has(field)) {
-        const numericValue = Number(rawValue);
+        let numericValue;
         
+        // Pour les opérations += et -=, vérifier que rawValue est numérique
+        numericValue = Number(rawValue);
         if (isNaN(numericValue)) {
           failedChanges.push({
             field,
@@ -218,28 +223,33 @@ function processProfileUpdates(data, command) {
           });
           continue;
         }
-        
+
         switch (operator) {
-          case 'add': newValue = oldValue + numericValue; break;
-          case 'remove': newValue = oldValue - numericValue; break;
-          default: newValue = numericValue;
+          case 'add':
+            newValue = Number(oldValue) + numericValue;
+            break;
+          case 'remove':
+            newValue = Number(oldValue) - numericValue;
+            break;
+          default:
+            newValue = numericValue;
         }
       }
       // Traitement des listes
       else if (FIELD_SCHEMA.LISTS.has(field)) {
-        const list = oldValue ? oldValue.split(',').map(item => item.trim()) : [];
+        const currentList = oldValue ? oldValue.split(',').map(item => item.trim()) : [];
         
         switch (operator) {
           case 'add':
             const itemsToAdd = rawValue.split(',').map(item => item.trim());
             itemsToAdd.forEach(item => {
-              if (!list.includes(item)) list.push(item);
+              if (!currentList.includes(item)) currentList.push(item);
             });
-            newValue = list.join(', ');
+            newValue = currentList.join(', ');
             break;
           case 'remove':
             const itemsToRemove = rawValue.split(',').map(item => item.trim());
-            newValue = list.filter(item => !itemsToRemove.includes(item)).join(', ');
+            newValue = currentList.filter(item => !itemsToRemove.includes(item)).join(', ');
             break;
           default:
             newValue = rawValue;
@@ -259,7 +269,7 @@ function processProfileUpdates(data, command) {
         }
         newValue = rawValue;
       }
-      
+
       // Enregistrement des modifications
       if (newValue !== oldValue) {
         updates[field] = newValue;
@@ -277,7 +287,7 @@ function processProfileUpdates(data, command) {
       });
     }
   }
-  
+
   return { updates, successfulChanges, failedChanges };
 }
 
@@ -286,7 +296,7 @@ function processProfileUpdates(data, command) {
  */
 function formatUpdateResults(profileName, successfulChanges, failedChanges) {
   let response = `🪀 *DÉTAILS MISE À JOUR POUR :* ${profileName}*\n\n`;
-  
+
   // Affichage des succès
   if (successfulChanges.length > 0) {
     response += "✅ *Modifications réussies:*\n";
@@ -295,7 +305,7 @@ function formatUpdateResults(profileName, successfulChanges, failedChanges) {
     });
     response += "\n";
   }
-  
+
   // Affichage des échecs
   if (failedChanges.length > 0) {
     response += "❌ *Échecs de modification:*\n";
@@ -304,7 +314,7 @@ function formatUpdateResults(profileName, successfulChanges, failedChanges) {
     });
     response += "\n";
   }
-  
+
   // Suggestions si échecs
   if (failedChanges.length > 0) {
     response += "💡 *CONSEILS:*\n";
@@ -312,7 +322,7 @@ function formatUpdateResults(profileName, successfulChanges, failedChanges) {
     response += "- Pour les nombres, utilisez seulement des chiffres\n";
     response += "- Format: `champ=valeur` ou `champ+=valeur`\n";
   }
-  
+
   return response;
 }
 
@@ -327,13 +337,13 @@ Object.entries(PREDEFINED_PROFILES).forEach(([command, profile]) => {
     try {
       // Récupération ou création du profil
       let playerData = await getPlayerProfile(profile.displayName);
-      
+
       if (!playerData) {
         await insertPlayerProfile(profile.displayName);
         playerData = await getPlayerProfile(profile.displayName);
         repondre(MESSAGES.SUCCESS.PROFILE_CREATED.replace('%s', profile.displayName));
       }
-      
+
       // Affichage simple du profil
       if (!arg || arg.length === 0) {
         try {
@@ -355,24 +365,30 @@ Object.entries(PREDEFINED_PROFILES).forEach(([command, profile]) => {
         }
         return;
       }
-      
+
       // Vérification des permissions admin
       if (!superUser) {
         repondre(MESSAGES.ERRORS.PERMISSION_DENIED);
         return;
       }
-      
+
       // Traitement des modifications
       const { updates, successfulChanges, failedChanges } = processProfileUpdates(
         playerData,
         arg.join(' ')
       );
-      
+
       // Application des modifications
       if (Object.keys(updates).length > 0) {
-        await updatePlayerProfile(profile.displayName, updates);
+        try {
+          await updatePlayerProfile(profile.displayName, updates);
+        } catch (error) {
+          console.error('Erreur updatePlayerProfile:', error);
+          repondre(MESSAGES.ERRORS.DB_UPDATE_ERROR);
+          return;
+        }
       }
-      
+
       // Construction de la réponse
       if (successfulChanges.length > 0 || failedChanges.length > 0) {
         repondre(formatUpdateResults(
@@ -383,7 +399,7 @@ Object.entries(PREDEFINED_PROFILES).forEach(([command, profile]) => {
       } else {
         repondre(MESSAGES.INFO.NO_CHANGES);
       }
-      
+
     } catch (error) {
       console.error('Erreur commande:', error);
       repondre(`${MESSAGES.ERRORS.DB_ERROR}: ${error.message}`);
@@ -399,19 +415,19 @@ zokou({
   desc: "Affiche la liste des champs modifiables"
 }, async (dest, zk, { repondre }) => {
   let message = `${MESSAGES.INFO.FIELD_LIST}\n\n`;
-  
+
   // Construction du message par catégories
   Object.entries(FIELD_CATEGORIES).forEach(([category, fields]) => {
     message += `*${category}* :\n`;
     message += `${fields.join(', ')}\n\n`;
   });
-  
+
   message += "💡 *USAGE* :\n";
   message += "- `champ=valeur` : Définit une valeur\n";
-  message += "- `champ+=valeur` : Ajoute à la valeur existante\n";
-  message += "- `champ-=valeur` : Retire de la valeur existante\n";
+  message += "- `champ+=valeur` : Ajoute à la valeur existante (addition pour les nombres)\n";
+  message += "- `champ-=valeur` : Retire de la valeur existante (soustraction pour les nombres)\n";
   message += "- Séparer plusieurs modifications par `;`";
-  
+
   repondre(message);
 });
 
@@ -427,22 +443,22 @@ zokou({
     if (!superUser) {
       return repondre(MESSAGES.ERRORS.PERMISSION_DENIED);
     }
-    
+
     const playerName = arg.join(" ").trim();
-    
+
     // Validation nom joueur
     if (!playerName) {
       return repondre("❗ Spécifiez un nom de joueur");
     }
-    
+
     // Suppression profil
     const result = await deletePlayerProfile(playerName);
-    
+
     repondre(result ?
       MESSAGES.SUCCESS.PROFILE_DELETED.replace('%s', playerName) :
       MESSAGES.INFO.PROFILE_NOT_FOUND.replace('%s', playerName)
     );
-    
+
   } catch (error) {
     console.error('Erreur suppression:', error);
     repondre(`${MESSAGES.ERRORS.DB_ERROR}: ${error.message}`);
