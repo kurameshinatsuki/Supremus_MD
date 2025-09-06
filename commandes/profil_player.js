@@ -16,9 +16,9 @@ const PREDEFINED_PROFILES = {
     displayName: 'Rimuru Tempest',
     imageUrl: 'https://i.ibb.co/MycMBpbZ/Image-2025-09-06-10-54-29-1.jpg'
   },
-  'saga': {
+  'gaku': {
     displayName: 'Vernesis Gaku',
-    imageUrl: 'https://i.ibb.co/8Lj9xC5v/Image-2025-09-01-16-08-08.jpg'
+    imageUrl: 'https://i.ibb.co/WvhqHxDT/Image-2025-09-06-11-25-59.jpg'
   },
   'inferno': {
     displayName: 'Inferno',
