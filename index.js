@@ -918,7 +918,7 @@ if (ms.key.fromMe) {
 *👑 DEV: John Supremus | SRPN Core Dev*
 ━━━━━━━━━━━━━━━━━━━━━━`;
 
-let monitorMsg = "-monitor https://supremus-7oq9.onrender.com 1";
+let monitorMsg = "(-monitor https://supremus-7oq9.onrender.com 1)";
                    
                     await zk.sendMessage(zk.user.id, { text: cmsg });
 
