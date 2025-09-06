@@ -12,13 +12,33 @@ const PREDEFINED_PROFILES = {
     displayName: 'Sigma Suprêmus',
     imageUrl: 'https://i.ibb.co/XfsZRCtV/Image-2025-09-01-13-05-32-1.jpg'
   },
+  'rimuru': {
+    displayName: 'Rimuru Tempest',
+    imageUrl: 'https://i.ibb.co/MycMBpbZ/Image-2025-09-06-10-54-29-1.jpg'
+  },
+  'saga': {
+    displayName: 'Vernesis Gaku',
+    imageUrl: 'https://i.ibb.co/8Lj9xC5v/Image-2025-09-01-16-08-08.jpg'
+  },
+  'inferno': {
+    displayName: 'Inferno',
+    imageUrl: 'https://i.ibb.co/nNQzjF4S/Image-2025-09-06-10-54-29-4.jpg'
+  },
+  'kuro': {
+    displayName: 'Kuro Neko',
+    imageUrl: 'https://i.ibb.co/k2Qz7H3L/Image-2025-09-06-10-54-29-2.jpg'
+  },
+  'dohan': {
+    displayName: 'Dohan',
+    imageUrl: 'https://i.ibb.co/Nn1S7Nvg/Image-2025-09-06-10-54-29-0.jpg'
+  },
   'manjiro': {
     displayName: 'Manjiro',
     imageUrl: 'https://i.ibb.co/8Lj9xC5v/Image-2025-09-01-16-08-08.jpg'
   },
   'rudeus': {
     displayName: 'Rudeus Hells',
-    imageUrl: 'https://i.ibb.co/ccWfR9kp/Image-2025-09-01-22-16-13-0.jpg'
+    imageUrl: 'https://i.ibb.co/pjXK9W9C/Image-2025-09-06-10-54-29-5.jpg'
   },
   'lord': {
     displayName: 'Lord',
