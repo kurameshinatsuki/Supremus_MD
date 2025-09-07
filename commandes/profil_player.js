@@ -105,14 +105,14 @@ const MESSAGES = {
     DB_UPDATE_ERROR: "❌ Erreur lors de la mise à jour de la base de données"
   },
   SUCCESS: {
-    PROFILE_CREATED: "_✅ Profil joueur *%s* créé avec succès_",
-    PROFILE_UPDATED: "_✅ Profil *%s* mis à jour avec succès_",
-    PROFILE_DELETED: "_✅ Profil de %s supprimé avec succès_"
+    PROFILE_CREATED: "✅ Profil joueur *%s* créé avec succès",
+    PROFILE_UPDATED: "✅ Profil *%s* mis à jour avec succès",
+    PROFILE_DELETED: "✅ Profil de *%s* supprimé avec succès"
   },
   INFO: {
     NO_CHANGES: "ℹ️ Aucune modification effectuée",
     PROFILE_NOT_FOUND: "ℹ️ Profil *%s* non trouvé",
-    FIELD_LIST: "*📋 LISTE DES CHAMPS MODIFIABLES :*"
+    FIELD_LIST: "*📋 CHAMPS MODIFIABLES :*"
   }
 };
 
@@ -323,20 +323,20 @@ function processProfileUpdates(data, command) {
  * Formatte les résultats des modifications pour l'affichage
  */
 function formatUpdateResults(profileName, successfulChanges, failedChanges) {
-  let response = `🪀 *DÉTAILS MISE À JOUR POUR :* ${profileName}*\n\n`;
+  let response = `🪀 *MISE À JOUR :* ${profileName}\n\n`;
 
   // Affichage des succès
   if (successfulChanges.length > 0) {
-    response += "✅ *Modifications réussies:*\n";
+    response += "✅ *Réussites :*\n";
     successfulChanges.forEach(change => {
-      response += `• *${change.field}:* ${change.oldValue} ➡️ ${change.newValue}\n`;
+      response += `• *${change.field}:* ${change.oldValue} -> ${change.newValue}\n`;
     });
     response += "\n";
   }
 
   // Affichage des échecs
   if (failedChanges.length > 0) {
-    response += "❌ *Échecs de modification:*\n";
+    response += "❌ *Échecs :*\n";
     failedChanges.forEach(fail => {
       response += `• *${fail.field}=${fail.value}:* ${fail.error}\n`;
     });
