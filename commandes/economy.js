@@ -310,7 +310,7 @@ updateplayer <variable> <valeur> <méthode>
 
 
 
-zokou({
+/*zokou({
     nomCom: "buypack",
     reaction: "🎁",
     categorie: "TRANSACT",
@@ -420,6 +420,129 @@ zokou({
     }
     catch (error) {
         return repondre(error.message);
+    }
+});*/
+
+zokou({
+    nomCom: "buypack",
+    reaction: "🎁",
+    categorie: "TRANSACT",
+}, async (dest, zk, commandOptions) => {
+
+    const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
+
+    try {
+        // Étape 1: Afficher les packs disponibles
+        const packList = await requestOnApi('/packs/list', 'GET');
+
+        let texte = `*Packs disponibles choisissez un par son index*\n\n`
+
+        for (const pack in packList) {
+            texte += `${parseInt(pack) + 1} :  ${packList[pack]}\n`
+        }
+
+        texte += `\n *Répondez avec le numéro du pack que vous souhaitez acheter*`;
+
+        const imageUrl = "https://i.ibb.co/ycJLcFn6/Image-2025-03-17-00-21-51-2.jpg";
+        await zk.sendMessage(dest, {
+            image: { url: imageUrl },
+            caption: texte,
+        });
+
+        // Attendre la sélection du pack
+        let packResponse;
+        try {
+            packResponse = await zk.awaitForMessage({
+                sender: auteurMessage,
+                chatJid: dest,
+                timeout: 60000,
+            });
+        } catch (error) {
+            return repondre(`Achat annulé - temps écoulé`);
+        }
+
+        if (!packResponse) {
+            return repondre('Aucune réponse reçue, achat annulé.');
+        }
+
+        const packIndex = packResponse.message?.extendedTextMessage?.text?.trim() || 
+                          packResponse.message?.conversation?.trim();
+
+        if (!packIndex || isNaN(packIndex) || parseInt(packIndex) < 1 || parseInt(packIndex) > packList.length) {
+            return repondre('Numéro de pack invalide. Achat annulé.');
+        }
+
+        const selectedPack = packList[parseInt(packIndex) - 1];
+
+        // Étape 2: Demander le grade
+        await repondre(`Vous avez choisi: ${selectedPack}\n\n*Maintenant, choisissez un grade:*\n- bronze\n- argent\n- or\n- special\n\n*Répondez avec le nom du grade*`);
+
+        // Attendre la sélection du grade
+        let gradeResponse;
+        try {
+            gradeResponse = await zk.awaitForMessage({
+                sender: auteurMessage,
+                chatJid: dest,
+                timeout: 60000,
+            });
+        } catch (error) {
+            return repondre(`Achat annulé - temps écoulé`);
+        }
+
+        if (!gradeResponse) {
+            return repondre('Aucune réponse reçue, achat annulé.');
+        }
+
+        const grade = gradeResponse.message?.extendedTextMessage?.text?.trim().toLowerCase() || 
+                      gradeResponse.message?.conversation?.trim().toLowerCase();
+
+        if (!["bronze", "argent", "or", "special"].includes(grade)) {
+            return repondre('Grade invalide. Achat annulé.');
+        }
+
+        // Étape 3: Confirmation finale
+        await repondre(`Récapitulatif de votre achat:\nPack: ${selectedPack}\nGrade: ${grade}\n\n*Confirmez-vous cet achat? (oui/non)*`);
+
+        // Attendre la confirmation
+        let confirmResponse;
+        try {
+            confirmResponse = await zk.awaitForMessage({
+                sender: auteurMessage,
+                chatJid: dest,
+                timeout: 60000,
+            });
+        } catch (error) {
+            return repondre(`Achat annulé - temps écoulé`);
+        }
+
+        if (!confirmResponse) {
+            return repondre('Aucune réponse reçue, achat annulé.');
+        }
+
+        const confirmation = confirmResponse.message?.extendedTextMessage?.text?.trim().toLowerCase() || 
+                            confirmResponse.message?.conversation?.trim().toLowerCase();
+
+        if (confirmation !== 'oui' && confirmation !== 'o') {
+            return repondre('Achat annulé.');
+        }
+
+        // Étape 4: Exécuter l'achat
+        const response = await requestOnApi('/packs/buy', 'POST', null, {
+            packType: selectedPack,
+            packGrade: grade,
+            userId: auteurMessage
+        });
+
+        // Envoyer la confirmation avec image
+        const responseImageUrl = "https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg";
+        await zk.sendMessage(dest, {
+            image: { url: responseImageUrl },
+            caption: response.summary,
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de l\'achat:', error);
+        return repondre('Une erreur s\'est produite lors de l\'achat. Veuillez réessayer.');
     }
 });
 
