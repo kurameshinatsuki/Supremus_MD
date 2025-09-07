@@ -385,7 +385,7 @@ updateplayer <variable> <valeur> <méthode>
     } catch (error) {
         return repondre(error.message);
     }
-});
+});*/
 
 
 
@@ -421,7 +421,7 @@ zokou({
     catch (error) {
         return repondre(error.message);
     }
-});*/
+});
 
 zokou({
     nomCom: "buypack",
