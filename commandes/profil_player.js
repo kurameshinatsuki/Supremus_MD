@@ -16,6 +16,14 @@ const PREDEFINED_PROFILES = {
     displayName: 'Rimuru Tempest',
     imageUrl: 'https://i.ibb.co/MycMBpbZ/Image-2025-09-06-10-54-29-1.jpg'
   },
+  'tenno': {
+    displayName: 'Tenno Suprêmus',
+    imageUrl: 'https://i.ibb.co/XkLgtVCR/Image-2025-09-07-07-05-38-1.jpg'
+  },
+  'nelly': {
+    displayName: 'Nelly',
+    imageUrl: 'https://i.ibb.co/5WjNj2qC/Image-2025-09-07-07-05-38-0.jpg'
+  },
   'gaku': {
     displayName: 'Vernesis Gaku',
     imageUrl: 'https://i.ibb.co/WvhqHxDT/Image-2025-09-06-11-25-59.jpg'
