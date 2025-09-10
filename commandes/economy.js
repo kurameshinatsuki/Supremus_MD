@@ -310,7 +310,10 @@ updateplayer <variable> <valeur> <méthode>
 
 
 
-/*zokou({
+// Ajoutez cette variable globale au début de votre fichier
+const transactionsEnCours = new Map();
+
+zokou({
     nomCom: "buypack",
     reaction: "🎁",
     categorie: "TRANSACT",
@@ -319,73 +322,179 @@ updateplayer <variable> <valeur> <méthode>
     const { repondre, ms, arg, superUser, msgRepondu, auteurMsgRepondu, auteurMessage } = commandOptions;
 
     try {
+        // Vérifier si l'utilisateur a déjà une transaction en cours
+        if (transactionsEnCours.has(auteurMessage)) {
+            return repondre("❌ Vous avez déjà une transaction en cours. Veuillez la terminer avant d'en commencer une nouvelle.");
+        }
+
+        // Marquer la transaction comme en cours
+        transactionsEnCours.set(auteurMessage, {
+            etape: "debut",
+            timestamp: Date.now()
+        });
+
+        // Étape 1: Afficher les packs disponibles
         const packList = await requestOnApi('/packs/list', 'GET');
 
-        let texte = `*Packs disponibles choisissez un par son index*\n\n`
+        let texte = `*Packs disponibles - choisissez par index*\n\n`
 
         for (const pack in packList) {
             texte += `${parseInt(pack) + 1} :  ${packList[pack]}\n`
         }
 
-        texte += `\n *Choissiez un pack par son index et un grade (bronze, argent, or, special ) Exemple 1 bronze*`;
+        texte += `\n*Répondez avec le numéro du pack*`;
 
-        // URL ou chemin de l'image représentant les packs
         const imageUrl = "https://i.ibb.co/ycJLcFn6/Image-2025-03-17-00-21-51-2.jpg";
-
         await zk.sendMessage(dest, {
             image: { url: imageUrl },
             caption: texte,
         });
 
-        let userResponse;
+        // Mettre à jour l'étape
+        transactionsEnCours.set(auteurMessage, {
+            etape: "choix_pack",
+            timestamp: Date.now()
+        });
 
+        // Attendre la sélection du pack
+        let packResponse;
         try {
-            userResponse = await zk.awaitForMessage({
+            packResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
                 timeout: 60000,
+                filter: (m) => {
+                    const text = m.message?.extendedTextMessage?.text?.trim() || 
+                               m.message?.conversation?.trim();
+                    return !isNaN(text) && parseInt(text) >= 1 && parseInt(text) <= packList.length;
+                }
             });
-
         } catch (error) {
-            return repondre(`Achat aborder`);
+            transactionsEnCours.delete(auteurMessage);
+            return repondre("⏰ Achat annulé - temps écoulé");
         }
 
-        if (!userResponse) {
-            return repondre('Aucune réponse reçue, achat annulé.');
+        if (!packResponse) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre('❌ Aucune réponse valide, achat annulé.');
         }
 
-        let [index, grade] = userResponse.message?.extendedTextMessage?.text?.split(" ") || userResponse.message?.conversation?.split(" ") || [];
+        const packIndex = packResponse.message?.extendedTextMessage?.text?.trim() || 
+                          packResponse.message?.conversation?.trim();
+        const selectedPack = packList[parseInt(packIndex) - 1];
 
-        if (!index || !grade) {
-            return repondre('Veuillez entrer un index et un grade');
+        // Mettre à jour avec le pack choisi
+        transactionsEnCours.set(auteurMessage, {
+            etape: "choix_grade",
+            pack: selectedPack,
+            timestamp: Date.now()
+        });
+
+        // Étape 2: Demander le grade
+        await repondre(`✅ Pack choisi: ${selectedPack}\n\n*Choisissez un grade:*\n- bronze\n- argent\n- or\n- special\n\n*Répondez avec le nom du grade*`);
+
+        // Attendre la sélection du grade
+        let gradeResponse;
+        try {
+            gradeResponse = await zk.awaitForMessage({
+                sender: auteurMessage,
+                chatJid: dest,
+                timeout: 60000,
+                filter: (m) => {
+                    const text = (m.message?.extendedTextMessage?.text?.trim() || 
+                                m.message?.conversation?.trim()).toLowerCase();
+                    return ["bronze", "argent", "or", "special"].includes(text);
+                }
+            });
+        } catch (error) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre("⏰ Achat annulé - temps écoulé");
         }
 
-        if (isNaN(index)) {
-            return repondre('Veuillez entrer un index valide');
+        if (!gradeResponse) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre('❌ Aucune réponse valide, achat annulé.');
         }
 
-        if (!["bronze", "argent", "or", "special"].includes(grade)) {
-            return repondre('Veuillez entrer un grade valide');
+        const grade = gradeResponse.message?.extendedTextMessage?.text?.trim().toLowerCase() || 
+                      gradeResponse.message?.conversation?.trim().toLowerCase();
+
+        // Mettre à jour avec le grade choisi
+        transactionsEnCours.set(auteurMessage, {
+            etape: "confirmation",
+            pack: selectedPack,
+            grade: grade,
+            timestamp: Date.now()
+        });
+
+        // Étape 3: Confirmation finale
+        await repondre(`📋 Récapitulatif:\nPack: ${selectedPack}\nGrade: ${grade}\n\n*Confirmez-vous ? (oui/non)*`);
+
+        // Attendre la confirmation
+        let confirmResponse;
+        try {
+            confirmResponse = await zk.awaitForMessage({
+                sender: auteurMessage,
+                chatJid: dest,
+                timeout: 60000,
+                filter: (m) => {
+                    const text = (m.message?.extendedTextMessage?.text?.trim() || 
+                                m.message?.conversation?.trim()).toLowerCase();
+                    return ["oui", "o", "non", "n"].includes(text);
+                }
+            });
+        } catch (error) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre("⏰ Achat annulé - temps écoulé");
         }
 
+        if (!confirmResponse) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre('❌ Aucune réponse, achat annulé.');
+        }
+
+        const confirmation = confirmResponse.message?.extendedTextMessage?.text?.trim().toLowerCase() || 
+                            confirmResponse.message?.conversation?.trim().toLowerCase();
+
+        if (confirmation !== 'oui' && confirmation !== 'o') {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre('❌ Achat annulé.');
+        }
+
+        // Étape 4: Exécuter l'achat
         const response = await requestOnApi('/packs/buy', 'POST', null, {
-            packType: packList[parseInt(index) - 1],
+            packType: selectedPack,
             packGrade: grade,
             userId: auteurMessage
         });
 
-        // URL de l'image à envoyer avec le résumé de l'achat
-        const responseImageUrl = "https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg"; // Remplacer par l'URL de l'image spécifique que tu souhaites
+        // Nettoyer la transaction
+        transactionsEnCours.delete(auteurMessage);
 
+        // Envoyer la confirmation
+        const responseImageUrl = "https://i.ibb.co/sJ9ypSfn/Image-2025-03-17-00-21-51-3.jpg";
         await zk.sendMessage(dest, {
             image: { url: responseImageUrl },
-            caption: response.summary,  // Envoi du résumé de la réponse avec l'image
+            caption: response.summary,
         });
 
     } catch (error) {
-        return repondre(error.message);
+        // Nettoyer en cas d'erreur
+        transactionsEnCours.delete(auteurMessage);
+        console.error('Erreur lors de l\'achat:', error);
+        return repondre('❌ Une erreur s\'est produite. Veuillez réessayer.');
     }
-});*/
+});
+
+// Nettoyage automatique des transactions expirées (optionnel)
+setInterval(() => {
+    const maintenant = Date.now();
+    for (const [userId, transaction] of transactionsEnCours.entries()) {
+        if (maintenant - transaction.timestamp > 300000) { // 5 minutes
+            transactionsEnCours.delete(userId);
+        }
+    }
+}, 60000); // Vérifie toutes les minutes
 
 
 
@@ -423,7 +532,7 @@ zokou({
     }
 });
 
-zokou({
+/*zokou({
     nomCom: "buypack",
     reaction: "🎁",
     categorie: "TRANSACT",
@@ -544,7 +653,7 @@ zokou({
         console.error('Erreur lors de l\'achat:', error);
         return repondre('Une erreur s\'est produite lors de l\'achat. Veuillez réessayer.');
     }
-});
+});*/
 
 
 zokou({
