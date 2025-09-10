@@ -7,7 +7,7 @@
 //               liées à l'économie du bot Supremus.
 //
 // Date de création : 06/03/2025
-// Dernière modification : 28/03/2025
+// Dernière modification : 10/09/2025
 //
 // ============================================================
 
