@@ -26,7 +26,7 @@ zokou({
 
     // Connexion à la base de données
     const client = new Client({
-      connectionString: ''
+      connectionString: 'postgresql://supremia_db_yv1w_user:48VSmOe9pnw4hlfpHJ6TAqFvOYibaAlw@dpg-d322aaemcj7s7397equg-a.oregon-postgres.render.com/supremia_db_yv1w'
     });
 
     await client.connect();
