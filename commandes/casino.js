@@ -11,42 +11,42 @@ const GAMES_CONFIG = {
     name: "  🎡 *ROULETTE* 🎡",
     min: 1000,
     aliases: ['roulette', 'roul'],
-    image: "https://i.imgur.com/5Xr8Z2F.png"
+    image: "https://i.ibb.co/fzLp8wcx/image.jpg"
   },
   DICE: {
     name: "     🎲 *DICE* 🎲",
     min: 1000,
     aliases: ['des', 'dice', 'dé'],
-    image: "https://i.imgur.com/8JZ3Q2X.png"
+    image: "https://i.ibb.co/fzLp8wcx/image.jpg"
   },
   SLOTS: {
     name: "🎰 *MACHINE A SOUS* 🎰",
     min: 1000,
     aliases: ['slot', 'slots', 'machine'],
-    image: "https://i.imgur.com/3Q7V9ZJ.png"
+    image: "https://i.ibb.co/fzLp8wcx/image.jpg"
   },
   BINGO: {
     name: "   🎱 *BINGO/LOTO* 🎱",
     min: 1000,
     aliases: ['bingo', 'loto'],
-    image: "https://i.imgur.com/9K4L2WX.png"
+    image: "https://i.ibb.co/fzLp8wcx/image.jpg"
   },
   BLACKJACK: {
     name: "    🃏 *BLACKJACK* 🃏",
     min: 1000,
     aliases: ['blackjack', 'bj', '21'],
-    image: "https://i.imgur.com/4M5V7Y2.png"
+    image: "https://i.ibb.co/fzLp8wcx/image.jpg"
   },
   POKER: {
     name: "    ♠️ *POKER DICE* ♠️",
     min: 5000,
     aliases: ['poker', 'poker-dice'],
-    image: "https://i.imgur.com/2R9L4Z8.png"
+    image: "https://i.ibb.co/fzLp8wcx/image.jpg"
   }
 };
 
 // Image pour le menu principal
-const CASINO_MENU_IMAGE = "https://i.imgur.com/1B4V9ZJ.png";
+const CASINO_MENU_IMAGE = "https://i.ibb.co/fzLp8wcx/image.jpg";
 
 const slotSymbols = ['🍒', '🍋', '🍇', '🍊', '🔔', '⭐', '💎', '🃏'];
 const provocations = [
