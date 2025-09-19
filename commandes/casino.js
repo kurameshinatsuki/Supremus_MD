@@ -1,194 +1,37 @@
-/* casino_monitor_interactive.js Version réécrite : Casino interactif + système de monitoring
-Utilise la capacité du bot à éditer ses propres messages pour rendre les parties immersives
-Bingo : le joueur peut choisir ses numéros (ou demander une sélection aléatoire)
-Commandes incluses : monitor, stopmonitor, monitorstatus, monitorlogs, casino, recu
-Remarque : adapté à ton framework zokou et à l'API zk.sendMessage(origineMessage, { text, edit }). */
+// -----------------------------
+// Casino interactif - CORRIGÉ
+// -----------------------------
 
 const { zokou } = require("../framework/zokou");
-const axios = require("axios");
 
-// -----------------------------
-// Utilitaires généraux
-// -----------------------------
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const logEvent = (msg) => console.log(`[${new Date().toISOString()}] ${msg}`);
-
-// -----------------------------
-// Monitoring (repris et légèrement amélioré)
-// -----------------------------
-let monitoringTasks = {};
-
-const createMonitor = async (origineMessage, zk, url, intervalMinutes) => {
-  const id = url;
-
-  monitoringTasks[id] = {
-    active: true,
-    url,
-    interval: null,
-    intervalMinutes,
-    checkCount: 0,
-    lastMessage: null,
-    logs: []
-  };
-
-  const initialMessage = await zk.sendMessage(origineMessage, {
-    text: `🌐 *Surveillance démarrée* 🌐\n━━━━━━━━━━━━━━━\n🔗 URL: ${url}\n⏱ Intervalle: ${intervalMinutes} min\n📊 Vérifications: 0\n🕒 Prochain: ${new Date(Date.now() + intervalMinutes * 60000).toLocaleTimeString()}\n━━━━━━━━━━━━━━━`
-  });
-
-  monitoringTasks[id].lastMessage = initialMessage.key;
-  logEvent(`Surveillance démarrée sur ${url} toutes les ${intervalMinutes} minutes`);
-
-  const checkWebsite = async () => {
-    if (!monitoringTasks[id] || !monitoringTasks[id].active) return;
-
-    try {
-      monitoringTasks[id].checkCount++;
-      const startTime = Date.now();
-      const response = await axios.get(url, { timeout: 10000 });
-      const responseTime = Date.now() - startTime;
-      const statusText = `#${monitoringTasks[id].checkCount} | ✅ *OK*\n📡 Code: ${response.status}\n⚡ Temps: ${responseTime}ms\n🕒 Prochain: ${new Date(Date.now() + intervalMinutes * 60000).toLocaleTimeString()}`;
-      
-      monitoringTasks[id].logs.push({
-        time: new Date(),
-        success: true,
-        status: response.status,
-        responseTime
-      });
-      
-      await zk.sendMessage(origineMessage, {
-        text: statusText,
-        edit: monitoringTasks[id].lastMessage
-      });
-      
-      logEvent(`Check #${monitoringTasks[id].checkCount} OK pour ${url} - ${response.status} en ${responseTime}ms`);
-    } catch (error) {
-      monitoringTasks[id].checkCount++;
-      const errorText = `#${monitoringTasks[id].checkCount} | ❌ *Erreur*\n📡 Code: ${error.code || error.message}\n🕒 Prochain: ${new Date(Date.now() + intervalMinutes * 60000).toLocaleTimeString()}`;
-      
-      monitoringTasks[id].logs.push({
-        time: new Date(),
-        success: false,
-        error: error.code || error.message
-      });
-      
-      await zk.sendMessage(origineMessage, {
-        text: errorText,
-        edit: monitoringTasks[id].lastMessage
-      });
-      
-      logEvent(`Erreur check #${monitoringTasks[id].checkCount} pour ${url} - ${error.code || error.message}`);
-    }
-  };
-
-  await checkWebsite();
-  monitoringTasks[id].interval = setInterval(checkWebsite, intervalMinutes * 60000);
-};
-
-zokou({
-  nomCom: "monitor",
-  categorie: "MON-BOT",
-  reaction: "🌐",
-  description: "Surveille une URL web"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
-  const url = arg[0]?.match(/https?:\/\/[^ \s]+/)?.toString();
-  const intervalMinutes = parseInt(arg[1]) || 5;
-
-  if (!url) return repondre("❌ URL manquante !\nUsage : -monitor [url] [intervalle-en-min]\nExemple : -monitor https://monbot.com 10");
-  if (intervalMinutes < 1 || intervalMinutes > 1440) return repondre("❌ Intervalle invalide (1-1440 minutes)");
-  if (monitoringTasks[url]) return repondre("❌ Cette URL est déjà surveillée !");
-
-  await createMonitor(origineMessage, zk, url, intervalMinutes);
-  repondre(`✅ Surveillance activée pour ${url} (toutes les ${intervalMinutes} minutes)`);
-});
-
-zokou({
-  nomCom: "stopmonitor",
-  categorie: "MON-BOT",
-  reaction: "🛑",
-  description: "Arrête la surveillance d'une URL"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
-  const url = arg[0];
-
-  if (!url || !monitoringTasks[url]) return repondre("❌ Aucune surveillance active pour cette URL !");
-
-  clearInterval(monitoringTasks[url].interval);
-
-  const finalText = `🛑 *Surveillance arrêtée* 🛑\n━━━━━━━━━━━━━━━\n🔗 URL: ${monitoringTasks[url].url}\n📊 Vérifications: ${monitoringTasks[url].checkCount}\n🕒 Fin: ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━`;
-
-  await zk.sendMessage(origineMessage, {
-    text: finalText,
-    edit: monitoringTasks[url].lastMessage
-  });
-
-  delete monitoringTasks[url];
-  logEvent(`Surveillance arrêtée pour ${url}`);
-});
-
-zokou({
-  nomCom: "monitorstatus",
-  categorie: "MON-BOT",
-  reaction: "ℹ️",
-  description: "Affiche le statut de la surveillance d'une URL"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
-  const url = arg[0];
-  if (!url || !monitoringTasks[url]) return repondre("❌ Aucune surveillance active pour cette URL !");
-
-  const task = monitoringTasks[url];
-  const statusText = `🌐 *Surveillance active* 🌐\n━━━━━━━━━━━━━━━\n🔗 URL: ${task.url}\n⏱ Intervalle: ${task.intervalMinutes} min\n📊 Vérifications: ${task.checkCount}\n🕒 Prochain: ${new Date(Date.now() + task.intervalMinutes * 60000).toLocaleTimeString()}\n━━━━━━━━━━━━━━━`;
-  
-  repondre(statusText);
-});
-
-zokou({
-  nomCom: "monitorlogs",
-  categorie: "MON-BOT",
-  reaction: "📜",
-  description: "Affiche les derniers logs d'une URL"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
-  const url = arg[0];
-
-  if (!url || !monitoringTasks[url]) return repondre("❌ Aucune surveillance active pour cette URL !");
-
-  const logs = monitoringTasks[url].logs.slice(-5).map((log, i) => `${i + 1}. ${log.success ? "✅" : "❌"} | ${log.status || log.error} | ${log.responseTime || "-"}ms | ${log.time.toLocaleTimeString()}`).join("\n");
-
-  repondre(`📜 *Derniers logs* 📜\n━━━━━━━━━━━━━━━\n${logs}\n━━━━━━━━━━━━━━━`);
-});
-
-// -----------------------------
-// Casino interactif
-// -----------------------------
 const GAMES_CONFIG = {
   ROULETTE: {
-    name: "🎡 ROULETTE 🎡",
+    name: "  🎡 *ROULETTE* 🎡",
     min: 1000,
     aliases: ['roulette', 'roul']
   },
   DICE: {
-    name: "🎲 DICE 🎲",
+    name: "     🎲 *DICE* 🎲",
     min: 1000,
     aliases: ['des', 'dice', 'dé']
   },
   SLOTS: {
-    name: "🎰 MACHINE A SOUS 🎰",
+    name: "🎰 *MACHINE A SOUS* 🎰",
     min: 1000,
     aliases: ['slot', 'slots', 'machine']
   },
   BINGO: {
-    name: "🎱 BINGO/LOTO 🎱",
+    name: "   🎱 *BINGO/LOTO* 🎱",
     min: 1000,
     aliases: ['bingo', 'loto']
   },
   BLACKJACK: {
-    name: "🃏 BLACKJACK 🃏",
+    name: "    🃏 *BLACKJACK* 🃏",
     min: 1000,
     aliases: ['blackjack', 'bj', '21']
   },
   POKER: {
-    name: "♠️ POKER DICE ♠️",
+    name: "    ♠️ *POKER DICE* ♠️",
     min: 5000,
     aliases: ['poker', 'poker-dice']
   }
@@ -208,6 +51,10 @@ const encouragements = [
   "> Maître du hasard 🎲",
   "> Victoire ! 🥂",
 ];
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function randomProvocation() {
   return provocations[Math.floor(Math.random() * provocations.length)];
@@ -236,7 +83,7 @@ function buildCasinoMenu() {
 › recu (pour voir vos stats)
 
 *Jeux disponibles :*
-${Object.values(GAMES_CONFIG).map(game => `› ${game.name} (${game.aliases[0]})\n 💰 Mise min: ${game.min}🧭`).join('\n\n')}
+${Object.values(GAMES_CONFIG).map(game => `› ${game.name} (${game.aliases[0]})\n 💰 *Mise min:* ${game.min}🧭`).join('\n\n')}
 
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`.trim();
 }
@@ -247,7 +94,7 @@ function genererRecuCasino(stats, fin) {
   const ratioVictoire = stats.nbJeux > 0 ? ((stats.nbVictoires / stats.nbJeux) * 100).toFixed(1) : 0;
 
   return `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*🧾 RECAPITULATIF CASINO*
+     *🧾 REÇU DE CASINO*
 
 👤 *Joueur :* ${stats.joueur}
 ⏱️ *Durée :* ${duration} min
@@ -316,12 +163,13 @@ zokou({
   try {
     // Envoie message initial et stocke le message pour édition
     const initial = await zk.sendMessage(origineMessage, {
-      text: `⏳ *${gameConfig.name}* en cours...\nPréparation...`
+      text: `⏳ ${gameConfig.name} en cours...`
     });
     const lastMsg = initial.key;
 
     switch (gameConfig.name) {
-      // ---------------- Roulette (animation simple) ----------------
+
+      // ----------- Roulette (animation simple) -----------
       case GAMES_CONFIG.ROULETTE.name: {
         await zk.sendMessage(origineMessage, {
           text: `🎡 La roue tourne...`,
@@ -391,38 +239,38 @@ zokou({
         break;
       }
       
-      // ---------------- Slots (animation rouleaux) ----------------
+      // ----------- Slots (correction de l'animation) -----------
       case GAMES_CONFIG.SLOTS.name: {
         let r1 = '▫️', r2 = '▫️', r3 = '▫️';
         
+        // Message initial
         await zk.sendMessage(origineMessage, {
-          text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |`,
+          text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |\n⏳ Les rouleaux tournent...`,
           edit: lastMsg
         });
         
-        for (let i = 0; i < 5; i++) {
-          r1 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
-          await zk.sendMessage(origineMessage, {
-            text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |`,
-            edit: lastMsg
-          });
-          await wait(300 + Math.random() * 200);
-          
-          r2 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
-          await zk.sendMessage(origineMessage, {
-            text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |`,
-            edit: lastMsg
-          });
-          await wait(300 + Math.random() * 200);
-          
-          r3 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
-          await zk.sendMessage(origineMessage, {
-            text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |`,
-            edit: lastMsg
-          });
-          await wait(300 + Math.random() * 200);
-        }
+        // Animation simplifiée et plus fiable
+        const spinReel = async (reelIndex) => {
+          for (let i = 0; i < 4; i++) {
+            const tempSymbol = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+            if (reelIndex === 0) r1 = tempSymbol;
+            if (reelIndex === 1) r2 = tempSymbol;
+            if (reelIndex === 2) r3 = tempSymbol;
+            
+            await zk.sendMessage(origineMessage, {
+              text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |\n⏳ Les rouleaux tournent...`,
+              edit: lastMsg
+            });
+            await wait(300);
+          }
+        };
         
+        // Animation séquentielle pour éviter les conflits
+        await spinReel(0);
+        await spinReel(1);
+        await spinReel(2);
+        
+        // Résultat final
         let gain = 0;
         if (r1 === r2 && r2 === r3) {
           if (r1 === '💎') gain = mise * 50;
@@ -439,13 +287,13 @@ zokou({
         stats.totalGain += gain;
         
         await zk.sendMessage(origineMessage, {
-          text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |\n${gain>0? `*GAGNÉ ${gain}🧭*\n${randomEncouragement()}`: randomProvocation()}`,
+          text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |\n${gain>0? `🎉 GAGNÉ ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
           edit: lastMsg
         });
         break;
       }
       
-      // ---------------- Bingo (interactif, choix des numéros possible) ----------------
+      // ----------- Bingo (augmentation des chances) -----------
       case GAMES_CONFIG.BINGO.name: {
         // Syntaxe attendue: -casino bingo <mise> n1 n2 n3 n4 n5
         // ou: -casino bingo <mise> auto
@@ -486,9 +334,9 @@ zokou({
           edit: lastMsg
         });
         
-        // Tirage : on tire 10 numéros uniques entre 1 et 75
+        // Tirage : on tire 20 numéros uniques entre 1 et 75 (augmenté de 10 à 20)
         const draw = [];
-        while (draw.length < 10) {
+        while (draw.length < 20) {
           const n = Math.floor(Math.random() * 75) + 1;
           if (!draw.includes(n)) draw.push(n);
         }
@@ -506,16 +354,19 @@ zokou({
         let gain = 0;
         
         if (matches === 5) {
-          gain = mise * 50;
+          gain = mise * 30;  // Réduit de 50 à 30
           stats.nbVictoires++;
         } else if (matches === 4) {
-          gain = mise * 15;
+          gain = mise * 10;  // Réduit de 15 à 10
           stats.nbVictoires++;
         } else if (matches === 3) {
           gain = mise * 5;
           stats.nbVictoires++;
         } else if (matches === 2) {
           gain = mise * 2;
+          stats.nbVictoires++;
+        } else if (matches === 1) {
+          gain = Math.floor(mise * 0.5);  // NOUVEAU: gain même avec 1 match
           stats.nbVictoires++;
         } else {
           stats.nbDefaites++;
@@ -532,7 +383,7 @@ zokou({
         break;
       }
       
-      // ---------------- Blackjack (interaction simplifiée - choix tirer/rester) ----------------
+      // ---------------- Blackjack ----------------
       case GAMES_CONFIG.BLACKJACK.name: {
         // Création d'une session interactive pour le joueur
         casinoSessions[joueurId] = {
@@ -689,10 +540,5 @@ zokou({
     return;
   }
 
-  repondre("❌ Action inconnue. Utilisez tirer ou rester.");
+  repondre("❌ Action inconnue. Utilisez -casino-bj tirer ou rester.");
 });
-
-// -----------------------------
-// FIN
-// -----------------------------
-logEvent('Module Casino & Monitor chargé.');
