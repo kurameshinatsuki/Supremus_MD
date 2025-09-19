@@ -1,4 +1,4 @@
-const { zokou } = require("../framework/zokou");
+/*const { zokou } = require("../framework/zokou");
 const axios = require("axios");
 
 // Toutes les surveillances actives
@@ -185,4 +185,4 @@ zokou({
   }).join("\n");
 
   repondre(`📜 *Derniers logs* 📜\n━━━━━━━━━━━━━━━\n${logs}\n━━━━━━━━━━━━━━━`);
-});
+});*/
