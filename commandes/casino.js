@@ -1,41 +1,52 @@
 // -----------------------------
-// Casino interactif - CORRIGÉ
+// Casino interactif 
 // -----------------------------
 
 const { zokou } = require("../framework/zokou");
+const fs = require('fs');
+const axios = require('axios');
 
 const GAMES_CONFIG = {
   ROULETTE: {
     name: "  🎡 *ROULETTE* 🎡",
     min: 1000,
-    aliases: ['roulette', 'roul']
+    aliases: ['roulette', 'roul'],
+    image: "https://i.imgur.com/5Xr8Z2F.png"
   },
   DICE: {
     name: "     🎲 *DICE* 🎲",
     min: 1000,
-    aliases: ['des', 'dice', 'dé']
+    aliases: ['des', 'dice', 'dé'],
+    image: "https://i.imgur.com/8JZ3Q2X.png"
   },
   SLOTS: {
     name: "🎰 *MACHINE A SOUS* 🎰",
     min: 1000,
-    aliases: ['slot', 'slots', 'machine']
+    aliases: ['slot', 'slots', 'machine'],
+    image: "https://i.imgur.com/3Q7V9ZJ.png"
   },
   BINGO: {
     name: "   🎱 *BINGO/LOTO* 🎱",
     min: 1000,
-    aliases: ['bingo', 'loto']
+    aliases: ['bingo', 'loto'],
+    image: "https://i.imgur.com/9K4L2WX.png"
   },
   BLACKJACK: {
     name: "    🃏 *BLACKJACK* 🃏",
     min: 1000,
-    aliases: ['blackjack', 'bj', '21']
+    aliases: ['blackjack', 'bj', '21'],
+    image: "https://i.imgur.com/4M5V7Y2.png"
   },
   POKER: {
     name: "    ♠️ *POKER DICE* ♠️",
     min: 5000,
-    aliases: ['poker', 'poker-dice']
+    aliases: ['poker', 'poker-dice'],
+    image: "https://i.imgur.com/2R9L4Z8.png"
   }
 };
+
+// Image pour le menu principal
+const CASINO_MENU_IMAGE = "https://i.imgur.com/1B4V9ZJ.png";
 
 const slotSymbols = ['🍒', '🍋', '🍇', '🍊', '🔔', '⭐', '💎', '🃏'];
 const provocations = [
@@ -51,6 +62,22 @@ const encouragements = [
   "> Maître du hasard 🎲",
   "> Victoire ! 🥂",
 ];
+
+// Fonction pour télécharger une image depuis une URL
+async function downloadImage(url, filepath) {
+  const response = await axios({
+    url,
+    method: 'GET',
+    responseType: 'stream'
+  });
+  
+  return new Promise((resolve, reject) => {
+    const writer = fs.createWriteStream(filepath);
+    response.data.pipe(writer);
+    writer.on('finish', resolve);
+    writer.on('error', reject);
+  });
+}
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -135,7 +162,25 @@ zokou({
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, auteurMessage, arg, from } = commandeOptions;
 
-  if (!arg[0]) return repondre(buildCasinoMenu());
+  if (!arg[0]) {
+    // Envoi du menu avec image
+    try {
+      const imagePath = 'https://i.ibb.co/fzLp8wcx/image.jpg';
+      await downloadImage(CASINO_MENU_IMAGE, imagePath);
+      
+      await zk.sendMessage(origineMessage, {
+        image: { url: imagePath },
+        caption: buildCasinoMenu()
+      });
+      
+      // Nettoyer le fichier temporaire
+      fs.unlinkSync(imagePath);
+    } catch (error) {
+      // Fallback: envoyer juste le texte si l'image échoue
+      await repondre(buildCasinoMenu());
+    }
+    return;
+  }
 
   const gameAlias = arg[0].toLowerCase();
   const gameConfig = getGameByAlias(gameAlias);
@@ -161,11 +206,19 @@ zokou({
   stats.totalMise += mise;
 
   try {
-    // Envoie message initial et stocke le message pour édition
+    // Télécharger l'image du jeu
+    const imagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+    await downloadImage(gameConfig.image, imagePath);
+
+    // Envoie message initial avec image
     const initial = await zk.sendMessage(origineMessage, {
-      text: `⏳ ${gameConfig.name} en cours...`
+      image: { url: imagePath },
+      caption: `⏳ ${gameConfig.name} en cours...`
     });
     const lastMsg = initial.key;
+
+    // Nettoyer le fichier temporaire après envoi
+    fs.unlinkSync(imagePath);
 
     switch (gameConfig.name) {
 
@@ -202,10 +255,17 @@ zokou({
         if (gain > 0) stats.nbVictoires++;
         else stats.nbDefaites++;
         
+        // Télécharger à nouveau l'image pour le résultat
+        const resultImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, resultImagePath);
+        
         await zk.sendMessage(origineMessage, {
-          text: `🎡 *ROULETTE*\n💰 Mise: ${mise}🧭\n🧮 Résultat: ${resultat}\n${gain>0? `🎉 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
+          image: { url: resultImagePath },
+          caption: `🎡 *ROULETTE*\n💰 Mise: ${mise}🧭\n🧮 Résultat: ${resultat}\n${gain>0? `🎉 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(resultImagePath);
         break;
       }
       
@@ -232,10 +292,16 @@ zokou({
         
         stats.totalGain += gain;
         
+        const resultImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, resultImagePath);
+        
         await zk.sendMessage(origineMessage, {
-          text: `🎲 *DICE*\nVous: ${joueurDe} 🆚 Croupier: ${croupierDe}\n${gain>0? `🎉 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
+          image: { url: resultImagePath },
+          caption: `🎲 *DICE*\nVous: ${joueurDe} 🆚 Croupier: ${croupierDe}\n${gain>0? `🎉 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(resultImagePath);
         break;
       }
       
@@ -286,10 +352,16 @@ zokou({
         
         stats.totalGain += gain;
         
+        const resultImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, resultImagePath);
+        
         await zk.sendMessage(origineMessage, {
-          text: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |\n${gain>0? `🎉 GAGNÉ ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
+          image: { url: resultImagePath },
+          caption: `🎰 *MACHINE A SOUS*\n| ${r1} | ${r2} | ${r3} |\n${gain>0? `🎉 GAGNÉ ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(resultImagePath);
         break;
       }
       
@@ -321,18 +393,23 @@ zokou({
         } else {
           // Pas assez d'arguments -> message d'aide
           await zk.sendMessage(origineMessage, {
-            text: `🎱 *BINGO*\nUsage : -casino bingo <mise> <n1> <n2> <n3> <n4> <n5>\nOu : -casino bingo <mise> auto`,
+            text: `🎱 *BINGO*\n*Usage :* -casino bingo <mise> <n1> <n2> <n3> <n4> <n5>\nOu : -casino bingo <mise> auto`,
             edit: lastMsg
           });
           return;
         }
         
         // Envoie carte initiale
-        const cardText = `🎱 *BINGO*\nVos numéros: ${playerNumbers.join(', ')}\nTirage en cours...`;
+        const cardImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, cardImagePath);
+        
         await zk.sendMessage(origineMessage, {
-          text: cardText,
+          image: { url: cardImagePath },
+          caption: `🎱 *BINGO*\nVos numéros: ${playerNumbers.join(', ')}\nTirage en cours...`,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(cardImagePath);
         
         // Tirage : on tire 20 numéros uniques entre 1 et 75 (augmenté de 10 à 20)
         const draw = [];
@@ -374,12 +451,18 @@ zokou({
         
         stats.totalGain += gain;
         
+        const resultImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, resultImagePath);
+        
         const resultText = `🎱 *BINGO - Résultat*\nVos numéros: ${playerNumbers.join(', ')}\nTirage final: ${draw.join(', ')}\nMatches: ${matches}\n${gain>0? `🎉 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`;
         
         await zk.sendMessage(origineMessage, {
-          text: resultText,
+          image: { url: resultImagePath },
+          caption: resultText,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(resultImagePath);
         break;
       }
       
@@ -403,11 +486,17 @@ zokou({
         
         const calcTotal = cards => cards.reduce((a, b) => a + b, 0);
         
-        // Envoie état initial
+        // Envoie état initial avec image
+        const bjImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, bjImagePath);
+        
         await zk.sendMessage(origineMessage, {
-          text: `🃏 *BLACKJACK*\nVos cartes: ${casinoSessions[joueurId].playerCards.join(' + ')} = ${calcTotal(casinoSessions[joueurId].playerCards)}\nCroupier: ${casinoSessions[joueurId].dealerCards[0]} + ?\n\nRépondez par *tirer* ou *rester* pour continuer.`,
+          image: { url: bjImagePath },
+          caption: `🃏 *BLACKJACK*\nVos cartes: ${casinoSessions[joueurId].playerCards.join(' + ')} = ${calcTotal(casinoSessions[joueurId].playerCards)}\nCroupier: ${casinoSessions[joueurId].dealerCards[0]} + ?\n\nRépondez par *tirer* ou *rester* pour continuer.`,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(bjImagePath);
         
         // On attend que l'utilisateur envoie une commande 'tirer' ou 'rester'
         await wait(10); // pas bloquant
@@ -443,10 +532,16 @@ zokou({
           stats.nbDefaites++;
         }
         
+        const resultImagePath = `https://i.ibb.co/fzLp8wcx/image.jpg`;
+        await downloadImage(gameConfig.image, resultImagePath);
+        
         await zk.sendMessage(origineMessage, {
-          text: `♠️ *POKER DICE*\nMain: ${hand.join(' ')}\nCombinaison: ${found.name}\n${gain>0? `💰 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
+          image: { url: resultImagePath },
+          caption: `♠️ *POKER DICE*\nMain: ${hand.join(' ')}\nCombinaison: ${found.name}\n${gain>0? `💰 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
           edit: lastMsg
         });
+        
+        fs.unlinkSync(resultImagePath);
         break;
       }
     }
@@ -481,20 +576,31 @@ zokou({
       session.finished = true;
       sessionStats[`${from}_${auteurMessage}`].nbDefaites++;
       
+      // Télécharger l'image pour le résultat
+      const bjImagePath = 'https://i.ibb.co/fzLp8wcx/image.jpg';
+      await downloadImage(GAMES_CONFIG.BLACKJACK.image, bjImagePath);
+      
       await zk.sendMessage(origineMessage, {
-        text: `🃏 *BLACKJACK*\nVos cartes: ${session.playerCards.join(' + ')} = ${total}\n\n*VOUS BRÛLEZ !* 🔥\n${randomProvocation()}`,
+        image: { url: bjImagePath },
+        caption: `🃏 *BLACKJACK*\nVos cartes: ${session.playerCards.join(' + ')} = ${total}\n\n*VOUS BRÛLEZ !* 🔥\n${randomProvocation()}`,
         edit: session.lastMsg
       });
       
+      fs.unlinkSync(bjImagePath);
       delete casinoSessions[joueurId];
       return;
     }
     
+    const bjImagePath = 'https://i.ibb.co/fzLp8wcx/image.jpg';
+    await downloadImage(GAMES_CONFIG.BLACKJACK.image, bjImagePath);
+    
     await zk.sendMessage(origineMessage, {
-      text: `🃏 *BLACKJACK*\nVos cartes: ${session.playerCards.join(' + ')} = ${total}\nCroupier: ${session.dealerCards[0]} + ?\n\nRépondez par *tirer* ou *rester*.`,
+      image: { url: bjImagePath },
+      caption: `🃏 *BLACKJACK*\nVos cartes: ${session.playerCards.join(' + ')} = ${total}\nCroupier: ${session.dealerCards[0]} + ?\n\nRépondez par *tirer* ou *rester*.`,
       edit: session.lastMsg
     });
     
+    fs.unlinkSync(bjImagePath);
     return;
   }
 
@@ -531,11 +637,16 @@ zokou({
       stats.nbDefaites++;
     }
     
+    const bjImagePath = 'https://i.ibb.co/fzLp8wcx/image.jpg';
+    await downloadImage(GAMES_CONFIG.BLACKJACK.image, bjImagePath);
+    
     await zk.sendMessage(origineMessage, {
-      text: `🃏 *BLACKJACK - Résultat*\nVos cartes: ${session.playerCards.join(' + ')} = ${playerTotal}\nCroupier: ${session.dealerCards.join(' + ')} = ${dealerTotal}\n\n${resultText}\n${gain>0? `💰 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
+      image: { url: bjImagePath },
+      caption: `🃏 *BLACKJACK - Résultat*\nVos cartes: ${session.playerCards.join(' + ')} = ${playerTotal}\nCroupier: ${session.dealerCards.join(' + ')} = ${dealerTotal}\n\n${resultText}\n${gain>0? `💰 Vous gagnez ${gain}🧭 !\n${randomEncouragement()}`: randomProvocation()}`,
       edit: session.lastMsg
     });
     
+    fs.unlinkSync(bjImagePath);
     delete casinoSessions[joueurId];
     return;
   }
