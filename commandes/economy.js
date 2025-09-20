@@ -22,13 +22,13 @@ const axios = require("axios");
  * @description L'URL de l'API Supremus.
  * @docs https://supremus-api.vercel.app/api-doc Lien de la documentations de l'API Supremus.
  */
-const supremusApi = 'https://supremus-api.vercel.app/api';
+// const supremusApi = 'https://supremus-api.vercel.app/api';
 
 /**
  * @type {string}
  * @description Le token d'authentification pour l'API Supremus Necessaire pour s'authentifier a l'API.
  */
-const supremusToken = '64b71f3b-f718-44a6-9a6a-af63601cf073';
+// const supremusToken = '64b71f3b-f718-44a6-9a6a-af63601cf073';
 
 
 /**
