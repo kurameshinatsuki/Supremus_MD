@@ -42,7 +42,7 @@ const supremusToken = '64b71f3b-f718-44a6-9a6a-af63601cf073';
  * 
  * @returns {Promise<object>} - Les données de la requête.
  */
-const requestOnApi = async (path, method = 'GET', params = null, body = null) => {
+/*const requestOnApi = async (path, method = 'GET', params = null, body = null) => {
     try {
         let url = new URL(supremusApi + path);
 
