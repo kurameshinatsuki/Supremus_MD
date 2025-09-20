@@ -1,6 +1,6 @@
 // buypack.js
 const { zokou } = require('../framework/zokou');
-const { GAME_DATA } = require('./game_data');
+const { GAME_DATA } = require('../commandes/game_data');
 
 // Configuration des packs
 const PACK_CONFIG = {
