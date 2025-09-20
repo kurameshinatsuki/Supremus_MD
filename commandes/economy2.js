@@ -87,7 +87,7 @@ const GAME_DATA = {
       epic: [
         { name: 'Ferrari 488 Pista', description: 'Pur-sang italien' },
         { name: 'Lamborghini Huracan STO', description: 'Supercar extreme' },
-        { name: 'McLaren 720S', description: Engineering excellence' },
+        { name: 'McLaren 720S', description: 'Engineering excellence' },
         { name: 'Porsche 918 Spyder', description: 'Hybride hypercar' },
         { name: 'Ford GT', description: 'Héritage racing' }
       ],
