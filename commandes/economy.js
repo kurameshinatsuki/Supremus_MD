@@ -12,7 +12,7 @@
 // ============================================================
 
 
-const { createWriteStream, readFileSync, writeFileSync, unlinkSync } = require('fs');
+/*const { createWriteStream, readFileSync, writeFileSync, unlinkSync } = require('fs');
 const { zokou } = require('../framework/zokou');
 const { randomInt } = require('crypto');
 const axios = require("axios");
@@ -1115,4 +1115,4 @@ exchange <montant> <monnaie_source> <monnaie_cible>`
     catch (error) {
         return repondre(error.message);
     }
-});
+});*/
