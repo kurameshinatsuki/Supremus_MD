@@ -78,7 +78,7 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
         console.error("Erreur dans requestOnApi :", error);
         throw error;
     }
-};
+};*/
 
 // const requestOnApi = async (path, method = 'GET', params = null, body = null) => {
 //     try {
@@ -113,7 +113,7 @@ const requestOnApi = async (path, method = 'GET', params = null, body = null) =>
 
 
 
-zokou({
+/*zokou({
     nomCom: "addplayer",
     reaction: "👤",
     categorie: "DRPN",
@@ -532,7 +532,7 @@ zokou({
     }
 });
 
-/*zokou({
+zokou({
     nomCom: "buypack",
     reaction: "🎁",
     categorie: "TRANSACT",
@@ -653,7 +653,7 @@ zokou({
         console.error('Erreur lors de l\'achat:', error);
         return repondre('Une erreur s\'est produite lors de l\'achat. Veuillez réessayer.');
     }
-});*/
+});
 
 
 zokou({
