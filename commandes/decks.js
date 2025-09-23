@@ -3,32 +3,80 @@ const { decks } = require('../commandes/deck_manager');
 const { deck_cards } = require("../commandes/deck_cards");
 const { writeFileSync, readFileSync, unlinkSync } = require('fs');
 const { randomInt } = require('crypto');
+const db = require("../bdd/game_bdd"); // Import de la base de données
 
 // Fonction utilitaire : normalise les noms (sans majuscules ni accents)
 function normalize(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// Pour stocker les decks actifs des joueurs (en mémoire vive)
-const sessions = {};
+// Fonction pour générer un ID utilisateur unique à partir des infos du message
+function getUserId(zk, ms) {
+  return ms.key.participant || ms.key.remoteJid || 'unknown';
+}
 
-// commande : .deck <nom>
+// Fonction pour obtenir l'ID du groupe
+function getGroupId(dest) {
+  return dest;
+}
+
+// Fonction pour sauvegarder la session en base de données
+async function saveSessionToDB(zk, ms, dest, sessionData) {
+  const userId = getUserId(zk, ms);
+  const groupId = getGroupId(dest);
+  
+  try {
+    await db.saveDeckSession(
+      userId, 
+      groupId, 
+      sessionData.nom, 
+      sessionData.deck, 
+      sessionData.pioches || []
+    );
+    return true;
+  } catch (error) {
+    console.error('Erreur sauvegarde session DB:', error);
+    return false;
+  }
+}
+
+// Fonction pour récupérer la session depuis la base de données
+async function getSessionFromDB(zk, ms, dest) {
+  const userId = getUserId(zk, ms);
+  const groupId = getGroupId(dest);
+  
+  try {
+    const session = await db.getDeckSession(userId, groupId);
+    if (session) {
+      return {
+        nom: session.deck_name,
+        deck: session.deck_data,
+        pioches: session.pioches || []
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Erreur récupération session DB:', error);
+    return null;
+  }
+}
+
+// Commande : .deck <nom>
 zokou(
   { nomCom: 'deck', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
+    const { arg, ms, auteurMessage } = commandeOptions;
 
-    // Si aucun nom de deck n’est fourni, lister les decks disponibles
+    // Si aucun nom de deck n'est fourni, lister les decks disponibles
     if (!arg[0]) {
       const nomsDisponibles = Object.keys(decks)
         .map(n => `• ${n.charAt(0).toUpperCase() + n.slice(1)}`)
         .join('\n');
 
-     await zk.sendMessage(dest, {
-      image: { url: 'https://i.ibb.co/T907ppk/Whats-App-Image-2025-06-17-at-19-20-20-1.jpg' },
-      caption: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\n🔁 Tape la commande avec un nom de deck. Exemple : *.deck yami*`
-       }, { quoted: ms });
-
+      await zk.sendMessage(dest, {
+        image: { url: 'https://i.ibb.co/T907ppk/Whats-App-Image-2025-06-17-at-19-20-20-1.jpg' },
+        caption: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\n🔁 Tape la commande avec un nom de deck. Exemple : *.deck yami*`
+      }, { quoted: ms });
       return;
     }
 
@@ -52,11 +100,20 @@ zokou(
 
     const deckMelange = [...deckAvecIds].sort(() => Math.random() - 0.5);
 
-    sessions[dest] = {
+    const sessionData = {
       deck: deckMelange,
       pioches: [],
       nom: nomDeck
     };
+
+    // Sauvegarde en base de données
+    const saved = await saveSessionToDB(zk, ms, dest, sessionData);
+    if (!saved) {
+      await zk.sendMessage(dest, {
+        text: `❌ Erreur lors de la création du deck. Réessayez.`
+      }, { quoted: ms });
+      return;
+    }
 
     const contenu = `🧠 *Compétence :*\n• ${competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n` +
       deckMelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
@@ -77,7 +134,9 @@ zokou(
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
-    if (!sessions[dest] || !sessions[dest].deck) {
+    // Récupérer la session depuis la base de données
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session || !session.deck) {
       await zk.sendMessage(dest, {
         text: `❌ Aucun deck actif. Utilisez *.deck <nom>* avant de piocher.`
       }, { quoted: ms });
@@ -92,7 +151,6 @@ zokou(
     }
 
     const idCarte = parseInt(arg[0], 10);
-    const session = sessions[dest];
     const carteIndex = session.deck.findIndex(c => c.id === idCarte);
 
     if (carteIndex === -1) {
@@ -104,7 +162,15 @@ zokou(
 
     const cartePiochée = session.deck.splice(carteIndex, 1)[0];
     session.pioches.push(cartePiochée);
-    session.deck = session.deck; // Mise à jour
+
+    // Sauvegarder les modifications en base de données
+    const saved = await saveSessionToDB(zk, ms, dest, session);
+    if (!saved) {
+      await zk.sendMessage(dest, {
+        text: `❌ Erreur lors de la pioche. Réessayez.`
+      }, { quoted: ms });
+      return;
+    }
 
     await zk.sendMessage(dest, {
       text: `🃏 Vous avez pioché : *${cartePiochée.name}* (ID: ${cartePiochée.id})\n🗂️ Cartes restantes : ${session.deck.length}`
@@ -112,20 +178,20 @@ zokou(
   }
 );
 
-// Nouvelle commande : .mondeck
+// Commande : .mondeck
 zokou(
   { nomCom: 'mondeck', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
 
-    if (!sessions[dest]) {
+    // Récupérer la session depuis la base de données
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session) {
       await zk.sendMessage(dest, {
         text: `❌ Aucun deck actif. Commence avec *.deck <nom>*`
       }, { quoted: ms });
       return;
     }
-
-    const session = sessions[dest];
     
     const cartesRestantes = session.deck
       .map(c => `[${c.id}] ${c.name}`)
@@ -152,20 +218,31 @@ zokou(
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
 
-    if (!sessions[dest] || !sessions[dest].deck || !sessions[dest].nom) {
+    // Récupérer la session depuis la base de données
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session || !session.deck || !session.nom) {
       await zk.sendMessage(dest, {
         text: `❌ Aucun deck actif. Utilisez *.deck <nom>* avant de mélanger.`
       }, { quoted: ms });
       return;
     }
 
-    const nomDeck = sessions[dest].nom;
+    const nomDeck = session.nom;
     const deckOriginal = decks[nomDeck];
-    const cartesRestantes = [...sessions[dest].deck]; // Copie
+    const cartesRestantes = [...session.deck]; // Copie
 
     // Mélanger en conservant les IDs
     const deckMelange = cartesRestantes.sort(() => Math.random() - 0.5);
-    sessions[dest].deck = deckMelange;
+    session.deck = deckMelange;
+
+    // Sauvegarder les modifications en base de données
+    const saved = await saveSessionToDB(zk, ms, dest, session);
+    if (!saved) {
+      await zk.sendMessage(dest, {
+        text: `❌ Erreur lors du mélange. Réessayez.`
+      }, { quoted: ms });
+      return;
+    }
 
     const contenu = `🧠 *Compétence :*\n• ${deckOriginal.competence}\n\n🃏 *Deck Principal (${deckMelange.length}) :*\n` +
       deckMelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
@@ -178,7 +255,7 @@ zokou(
   }
 );
 
-// commande : .resetdeck
+// Commande : .resetdeck
 zokou(
   {
     nomCom: 'resetdeck',
@@ -187,14 +264,16 @@ zokou(
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
 
-    if (!sessions[dest] || !sessions[dest].nom) {
+    // Récupérer la session depuis la base de données
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session || !session.nom) {
       await zk.sendMessage(dest, {
         text: `❌ Aucun deck actif. Utilisez *.deck <nom>* avant de réinitialiser.`
       }, { quoted: ms });
       return;
     }
 
-    const nomDeck = sessions[dest].nom;
+    const nomDeck = session.nom;
     const deckData = decks[nomDeck];
 
     if (!deckData) {
@@ -211,11 +290,20 @@ zokou(
     })).sort(() => Math.random() - 0.5);
 
     // Mise à jour de la session
-    sessions[dest] = {
+    const newSession = {
       nom: nomDeck,
       deck: deckRemelange,
       pioches: []
     };
+
+    // Sauvegarder la nouvelle session en base de données
+    const saved = await saveSessionToDB(zk, ms, dest, newSession);
+    if (!saved) {
+      await zk.sendMessage(dest, {
+        text: `❌ Erreur lors de la réinitialisation. Réessayez.`
+      }, { quoted: ms });
+      return;
+    }
 
     const contenu = `🧠 *Compétence :*\n• ${deckData.competence}\n\n🃏 *Deck Principal (${deckRemelange.length}) :*\n` +
       deckRemelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
@@ -325,4 +413,76 @@ zokou(
   }
 );
 
-module.exports = { sessions };
+// Nouvelle commande : .cleanmydeck - Supprimer sa session
+zokou(
+  {
+    nomCom: 'cleanmydeck',
+    categorie: 'YU-GI-OH'
+  },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    
+    try {
+      const deleted = await db.deleteDeckSession(userId, groupId);
+      if (deleted) {
+        await zk.sendMessage(dest, {
+          text: `✅ Votre session de deck a été supprimée avec succès.`
+        }, { quoted: ms });
+      } else {
+        await zk.sendMessage(dest, {
+          text: `ℹ️ Aucune session de deck active à supprimer.`
+        }, { quoted: ms });
+      }
+    } catch (error) {
+      await zk.sendMessage(dest, {
+        text: `❌ Erreur lors de la suppression de la session.`
+      }, { quoted: ms });
+    }
+  }
+);
+
+// Nouvelle commande : .groupdecks - Voir les decks du groupe
+zokou(
+  {
+    nomCom: 'groupdecks',
+    categorie: 'YU-GI-OH'
+  },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    const groupId = getGroupId(dest);
+    
+    try {
+      const sessions = await db.getGroupDeckSessions(groupId);
+      if (sessions.length === 0) {
+        await zk.sendMessage(dest, {
+          text: `ℹ️ Aucun deck actif dans ce groupe.`
+        }, { quoted: ms });
+        return;
+      }
+
+      const message = `🗂️ *DECKS ACTIFS DU GROUPE*\n\n` +
+        sessions.map(session => 
+          `👤 Utilisateur: ${session.user_id}\n` +
+          `🃏 Deck: ${session.deck_name}\n` +
+          `🕐 Dernière activité: ${new Date(session.updated_at).toLocaleString()}\n` +
+          `────────────────`
+        ).join('\n');
+
+      await zk.sendMessage(dest, { text: message }, { quoted: ms });
+    } catch (error) {
+      await zk.sendMessage(dest, {
+        text: `❌ Erreur lors de la récupération des decks du groupe.`
+      }, { quoted: ms });
+    }
+  }
+);
+
+module.exports = { 
+  // Export des fonctions utilitaires pour un usage externe si nécessaire
+  getSessionFromDB,
+  saveSessionToDB
+};
