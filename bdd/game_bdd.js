@@ -2,7 +2,6 @@ require("dotenv").config();
 const { Pool } = require("pg");
 const s = require("../set");
 
-
 // Configuration de la base de données
 const dbUrl = s.SPDB;
 const proConfig = {
@@ -28,15 +27,16 @@ async function initializeDatabase() {
 
     // Créer les tables si elles n'existent pas
     await createTables();
+    await createDecksTables(); // Ajout des tables pour les decks
     console.log('✅ Tables initialisées avec succès');
-    
+
   } catch (error) {
     console.error('❌ Erreur lors de l\'initialisation de la base de données:', error);
     throw error;
   }
 }
 
-// Script de création des tables
+// Script de création des tables principales
 async function createTables() {
   const createTablesQuery = `
     -- Table pour les duels ABM (Anime Battle Multivers)
@@ -127,6 +127,148 @@ async function createTables() {
 }
 
 // =============================================================================
+// FONCTIONS POUR LES DECKS YU-GI-OH
+// =============================================================================
+
+/**
+ * Table pour les sessions de decks Yu-Gi-Oh
+ */
+async function createDecksTables() {
+  const createDecksTableQuery = `
+    -- Table pour les sessions de decks actives
+    CREATE TABLE IF NOT EXISTS yugioh_deck_sessions (
+      id SERIAL PRIMARY KEY,
+      user_id VARCHAR(255) NOT NULL,
+      group_id VARCHAR(255) NOT NULL,
+      deck_name VARCHAR(255) NOT NULL,
+      deck_data JSONB NOT NULL,
+      pioches JSONB DEFAULT '[]',
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(user_id, group_id)
+    );
+
+    -- Index pour améliorer les performances
+    CREATE INDEX IF NOT EXISTS idx_deck_sessions_user_group ON yugioh_deck_sessions(user_id, group_id);
+    CREATE INDEX IF NOT EXISTS idx_deck_sessions_group ON yugioh_deck_sessions(group_id);
+    CREATE INDEX IF NOT EXISTS idx_deck_sessions_updated ON yugioh_deck_sessions(updated_at);
+
+    -- Déclencheur pour updated_at
+    DROP TRIGGER IF EXISTS update_deck_sessions_updated_at ON yugioh_deck_sessions;
+    CREATE TRIGGER update_deck_sessions_updated_at
+        BEFORE UPDATE ON yugioh_deck_sessions
+        FOR EACH ROW
+        EXECUTE FUNCTION update_updated_at_column();
+  `;
+
+  await pool.query(createDecksTableQuery);
+}
+
+/**
+ * Sauvegarder ou mettre à jour une session de deck
+ */
+async function saveDeckSession(userId, groupId, deckName, deckData, pioches = []) {
+  try {
+    const query = `
+      INSERT INTO yugioh_deck_sessions (user_id, group_id, deck_name, deck_data, pioches) 
+      VALUES ($1, $2, $3, $4, $5) 
+      ON CONFLICT (user_id, group_id) DO UPDATE SET 
+        deck_name = $3,
+        deck_data = $4,
+        pioches = $5,
+        updated_at = CURRENT_TIMESTAMP
+      RETURNING *
+    `;
+    
+    const values = [
+      userId,
+      groupId,
+      deckName,
+      JSON.stringify(deckData),
+      JSON.stringify(pioches)
+    ];
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur saveDeckSession:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupérer une session de deck
+ */
+async function getDeckSession(userId, groupId) {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM yugioh_deck_sessions WHERE user_id = $1 AND group_id = $2',
+      [userId, groupId]
+    );
+    return result.rows[0] || null;
+  } catch (error) {
+    console.error('Erreur getDeckSession:', error);
+    throw error;
+  }
+}
+
+/**
+ * Supprimer une session de deck
+ */
+async function deleteDeckSession(userId, groupId) {
+  try {
+    const result = await pool.query(
+      'DELETE FROM yugioh_deck_sessions WHERE user_id = $1 AND group_id = $2 RETURNING *',
+      [userId, groupId]
+    );
+    return result.rows[0] || null;
+  } catch (error) {
+    console.error('Erreur deleteDeckSession:', error);
+    throw error;
+  }
+}
+
+/**
+ * Nettoyer les anciennes sessions de decks (plus de 24h)
+ */
+async function cleanOldDeckSessions(hoursOld = 24) {
+  try {
+    const cutoffDate = new Date();
+    cutoffDate.setHours(cutoffDate.getHours() - hoursOld);
+
+    const result = await pool.query(
+      'DELETE FROM yugioh_deck_sessions WHERE updated_at < $1 RETURNING *',
+      [cutoffDate]
+    );
+
+    return {
+      success: true,
+      message: `Nettoyage effectué: ${result.rowCount} anciennes sessions supprimées`,
+      deleted: result.rowCount
+    };
+  } catch (error) {
+    console.error('Erreur cleanOldDeckSessions:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupérer toutes les sessions d'un groupe
+ */
+async function getGroupDeckSessions(groupId) {
+  try {
+    const result = await pool.query(
+      'SELECT user_id, deck_name, updated_at FROM yugioh_deck_sessions WHERE group_id = $1 ORDER BY updated_at DESC',
+      [groupId]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error('Erreur getGroupDeckSessions:', error);
+    throw error;
+  }
+}
+
+// =============================================================================
 // FONCTIONS POUR ABM (ANIME BATTLE MULTIVERS)
 // =============================================================================
 
@@ -163,7 +305,7 @@ async function saveDuelABM(duelKey, data) {
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
     `;
-    
+
     const values = [
       duelKey,
       JSON.stringify(data.equipe1),
@@ -264,7 +406,7 @@ async function saveCourseSpeedRush(courseKey, data) {
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
     `;
-    
+
     const values = [
       courseKey,
       JSON.stringify(data.pilotes),
@@ -362,7 +504,7 @@ async function saveDuelYugi(duelKey, data) {
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
     `;
-    
+
     const values = [
       duelKey,
       JSON.stringify(data.joueurs),
@@ -401,7 +543,7 @@ async function getAllDuelsYugi() {
     const result = await pool.query(
       'SELECT duel_key, joueurs, tourneur, created_at FROM duels_yugi ORDER BY created_at DESC'
     );
-    
+
     // Formater les résultats pour correspondre à l'ancienne structure
     const duels = {};
     result.rows.forEach(row => {
@@ -410,7 +552,7 @@ async function getAllDuelsYugi() {
         tourneur: row.tourneur
       };
     });
-    
+
     return duels;
   } catch (error) {
     console.error('Erreur getAllDuelsYugi:', error);
@@ -447,11 +589,12 @@ async function cleanOldData(daysOld = 30) {
       pool.query('DELETE FROM duels_abm WHERE created_at < $1', [cutoffDate]),
       pool.query('DELETE FROM courses_speed_rush WHERE created_at < $1', [cutoffDate]),
       pool.query('DELETE FROM duels_yugi WHERE created_at < $1', [cutoffDate]),
-      pool.query('DELETE FROM historique_parties WHERE created_at < $1', [cutoffDate])
+      pool.query('DELETE FROM historique_parties WHERE created_at < $1', [cutoffDate]),
+      pool.query('DELETE FROM yugioh_deck_sessions WHERE created_at < $1', [cutoffDate])
     ]);
 
     const totalDeleted = results.reduce((sum, result) => sum + result.rowCount, 0);
-    
+
     return {
       success: true,
       message: `Nettoyage effectué: ${totalDeleted} anciennes entrées supprimées`,
@@ -459,7 +602,8 @@ async function cleanOldData(daysOld = 30) {
         duels_abm: results[0].rowCount,
         courses_speed_rush: results[1].rowCount,
         duels_yugi: results[2].rowCount,
-        historique: results[3].rowCount
+        historique: results[3].rowCount,
+        deck_sessions: results[4].rowCount
       }
     };
   } catch (error) {
@@ -479,9 +623,11 @@ async function getDatabaseStats() {
         (SELECT COUNT(*) FROM courses_speed_rush) as total_courses_sr,
         (SELECT COUNT(*) FROM duels_yugi) as total_duels_yugi,
         (SELECT COUNT(*) FROM historique_parties) as total_historique,
+        (SELECT COUNT(*) FROM yugioh_deck_sessions) as total_deck_sessions,
         (SELECT MAX(created_at) FROM duels_abm) as dernier_duel_abm,
         (SELECT MAX(created_at) FROM courses_speed_rush) as derniere_course_sr,
-        (SELECT MAX(created_at) FROM duels_yugi) as dernier_duel_yugi
+        (SELECT MAX(created_at) FROM duels_yugi) as dernier_duel_yugi,
+        (SELECT MAX(updated_at) FROM yugioh_deck_sessions) as derniere_session_deck
     `;
 
     const result = await pool.query(statsQuery);
@@ -502,7 +648,7 @@ async function saveToHistorique(typeJeu, participants, gagnant = null, duree = n
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
-    
+
     const values = [
       typeJeu,
       JSON.stringify(participants),
@@ -544,32 +690,39 @@ async function testConnection() {
 module.exports = {
   // Pool de connexion
   pool,
-  
+
   // Initialisation
   initializeDatabase,
   testConnection,
-  
+
   // Fonctions ABM
   getDuelABM,
   saveDuelABM,
   deleteDuelABM,
   getAllDuelsABM,
   resetAllDuelsABM,
-  
+
   // Fonctions Speed Rush
   getCourseSpeedRush,
   saveCourseSpeedRush,
   deleteCourseSpeedRush,
   getAllCoursesSpeedRush,
   resetAllCoursesSpeedRush,
-  
+
   // Fonctions Yu-Gi-Oh
   getDuelYugi,
   saveDuelYugi,
   deleteDuelYugi,
   getAllDuelsYugi,
   resetAllDuelsYugi,
-  
+
+  // Nouvelles fonctions pour les decks
+  saveDeckSession,
+  getDeckSession,
+  deleteDeckSession,
+  cleanOldDeckSessions,
+  getGroupDeckSessions,
+
   // Fonctions générales
   cleanOldData,
   getDatabaseStats,
