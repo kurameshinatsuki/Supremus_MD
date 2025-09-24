@@ -414,12 +414,12 @@ zokou({
   "❌ Utilisation incorrecte. Syntaxe:\n" +
   "*sell [nom_article] [rareté] [prix] [jeu]*\n\n" +
   "Exemple:\n" +
-  "*sell Naruto commun 6000 ABM*\n\n" +
+  "*sell Naruto common 6000 ABM*\n\n" +
   "📌 Tarifs autorisés selon la rareté :\n" +
-  "• Communs = 5.000 à 10.000\n" +
-  "• Rares = 10.000 à 15.000\n" +
-  "• Épiques = 15.000 à 20.000\n" +
-  "• Légendaires = 20.000 à 30.000\n\n" +
+  "• common = 5.000 à 10.000\n" +
+  "• rare = 10.000 à 15.000\n" +
+  "• epic = 15.000 à 20.000\n" +
+  "• legendary = 20.000 à 30.000\n\n" +
   "⚠️ Dépasser ces seuils entraîne une sanction sévère (réquisition du contenu)."
 );
 }
