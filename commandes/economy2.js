@@ -941,9 +941,8 @@ zokou({
     // Vérifier les arguments minimum
     if (arg.length < 3) {
       return repondre("❌ Utilisation: *newbet [type] [mise_min] [titre]*\n\n" +
-        "Types: *simple* (×2) ou *conditionnel* (×4)\n" +
-        "Exemple: *newbet simple 50 "Victoire de l'équipe A"*");
-    }
+  "Types: *simple* (×2) ou *conditionnel* (×4)\n" +
+  "Exemple: *newbet simple 50 'Victoire de l'équipe A'*");
 
     const typePari = arg[0].toLowerCase();
     const miseMin = parseInt(arg[1]);
