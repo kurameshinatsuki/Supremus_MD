@@ -5,15 +5,13 @@ const {
   getMarketItem, 
   removeMarketItem, 
   getMarketItems, 
-  addMarketItem, 
-  getSellerItems 
+  addMarketItem 
 } = require('../bdd/market_bdd');
 const { 
   createNewBet, 
   getOpenBets, 
   getBet, 
   placeBet, 
-  getPlayerBet, 
   closeBet 
 } = require('../bdd/bets_bdd');
 const { insertTransaction } = require('../bdd/transactions_bdd');
@@ -24,7 +22,10 @@ const parisEnCours = new Map();
 const misesEnCours = new Map();     
 const ventesEnCours = new Map();    
 
+// Constantes de configuration
 const TAXE_VENTE = 0.25; // 25% de taxe
+const TIMEOUT_TRANSACTION = 60000; // 60 secondes
+const DELAI_EXPIRATION = 300000; // 5 minutes
 
 // Prix des packs
 const PACK_PRICES = {
@@ -67,6 +68,10 @@ function randomInRange(min, max) {
 // Fonction pour générer le contenu d'un pack
 function generatePackContents(gameKey, grade) {
     const game = GAME_DATA[gameKey];
+    if (!game) {
+        throw new Error(`Jeu non trouvé: ${gameKey}`);
+    }
+    
     const probabilities = PACK_PROBABILITIES[grade];
     const bonus = PACK_BONUS[grade];
     
@@ -84,6 +89,9 @@ function generatePackContents(gameKey, grade) {
     for (let i = 0; i < contentCount; i++) {
         const rarity = chooseRarity(probabilities);
         const rarityContents = game.contents[rarity];
+        if (!rarityContents || rarityContents.length === 0) {
+            continue; // Skip si pas de contenu pour cette rareté
+        }
         const randomContent = rarityContents[Math.floor(Math.random() * rarityContents.length)];
         
         contents.push({
@@ -97,13 +105,15 @@ function generatePackContents(gameKey, grade) {
     // Bonus pour les packs or et special (chance d'avoir un contenu commun bonus)
     if ((grade === 'or' || grade === 'special') && Math.random() < 0.3) {
         const commonContents = game.contents.common;
-        const bonusContent = commonContents[Math.floor(Math.random() * commonContents.length)];
-        contents.push({
-            name: bonusContent.name,
-            rarity: 'common',
-            description: bonusContent.description,
-            type: 'bonus_content'
-        });
+        if (commonContents && commonContents.length > 0) {
+            const bonusContent = commonContents[Math.floor(Math.random() * commonContents.length)];
+            contents.push({
+                name: bonusContent.name,
+                rarity: 'common',
+                description: bonusContent.description,
+                type: 'bonus_content'
+            });
+        }
     }
     
     // Générer les bonus (coupons et gemmes)
@@ -120,7 +130,7 @@ function generatePackContents(gameKey, grade) {
 }
 
 // Fonction pour formater le reçu
-function formatReceipt(transactionId, playerName, gameName, packType, packContents, price, newBalance = 0) {
+function formatReceipt(transactionId, playerName, gameName, packType, packContents, price) {
     const gainsText = packContents.contents.map(content => 
         `> - ${content.name} | ${content.rarity}`
     ).join('\n') + `\n> - ${packContents.bonuses.coupons} Coupons\n> - ${packContents.bonuses.gemmes} Supremus Gemmes`;
@@ -142,7 +152,6 @@ function formatReceipt(transactionId, playerName, gameName, packType, packConten
 > *📦 Gain(s) reçu(s) :*
 ${gainsText}
 > *💸 Montant débité :* -${price} coupons
-> *💰 Nouveau solde :* ${newBalance} coupons
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 📅 *Date :* ${date}
 🕛 *Heure :* ${time}
@@ -152,12 +161,22 @@ ${gainsText}
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
 }
 
+// Fonction utilitaire pour nettoyer les transactions expirées
+function nettoyerTransactionsExpirees(map) {
+    const maintenant = Date.now();
+    for (const [userId, transaction] of map.entries()) {
+        if (maintenant - transaction.timestamp > DELAI_EXPIRATION) {
+            map.delete(userId);
+        }
+    }
+}
+
 zokou({
     nomCom: "buypack",
     reaction: "🎁",
     categorie: "TRANSACT",
 }, async (dest, zk, commandOptions) => {
-    const { repondre, ms, arg, superUser, auteurMessage } = commandOptions;
+    const { repondre, ms, arg, auteurMessage } = commandOptions;
 
     try {
         // Vérifier si l'utilisateur a déjà une transaction en cours
@@ -173,6 +192,11 @@ zokou({
 
         // Étape 1: Afficher les jeux disponibles
         const games = Object.keys(GAME_DATA);
+        
+        if (games.length === 0) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre("❌ Aucun jeu n'est disponible pour le moment.");
+        }
         
         let texte = `*🎮 PACKS DISPONIBLES - CHOISISSEZ UN JEU *\n\n`;
         
@@ -201,11 +225,12 @@ zokou({
             gameResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
-                timeout: 60000,
+                timeout: TIMEOUT_TRANSACTION,
                 filter: (m) => {
                     const text = m.message?.extendedTextMessage?.text?.trim() || 
                                m.message?.conversation?.trim();
-                    return !isNaN(text) && parseInt(text) >= 1 && parseInt(text) <= games.length;
+                    const num = parseInt(text);
+                    return !isNaN(num) && num >= 1 && num <= games.length;
                 }
             });
         } catch (error) {
@@ -221,7 +246,12 @@ zokou({
         const gameIndex = parseInt(gameResponse.message?.extendedTextMessage?.text?.trim() || 
                                   gameResponse.message?.conversation?.trim()) - 1;
         const selectedGameKey = games[gameIndex];
-        const selectedGameName = GAME_DATA[selectedGameKey].name;
+        const selectedGameName = GAME_DATA[selectedGameKey]?.name;
+
+        if (!selectedGameName) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre('❌ Jeu non trouvé, achat annulé.');
+        }
 
         // Mettre à jour avec le jeu choisi
         transactionsEnCours.set(auteurMessage, {
@@ -249,7 +279,7 @@ zokou({
             gradeResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
-                timeout: 60000,
+                timeout: TIMEOUT_TRANSACTION,
                 filter: (m) => {
                     const text = (m.message?.extendedTextMessage?.text?.trim() || 
                                 m.message?.conversation?.trim()).toLowerCase();
@@ -270,6 +300,11 @@ zokou({
                              gradeResponse.message?.conversation?.trim().toLowerCase();
         const price = PACK_PRICES[selectedGrade];
 
+        if (!price) {
+            transactionsEnCours.delete(auteurMessage);
+            return repondre('❌ Type de pack invalide, achat annulé.');
+        }
+
         // Mettre à jour avec le grade choisi
         transactionsEnCours.set(auteurMessage, {
             etape: "confirmation",
@@ -289,7 +324,7 @@ zokou({
             confirmResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
-                timeout: 60000,
+                timeout: TIMEOUT_TRANSACTION,
                 filter: (m) => {
                     const text = (m.message?.extendedTextMessage?.text?.trim() || 
                                 m.message?.conversation?.trim()).toLowerCase();
@@ -317,12 +352,9 @@ zokou({
         // Étape 4: Générer le pack et enregistrer la transaction
         const packContents = generatePackContents(selectedGameKey, selectedGrade);
         
-        // Générer un solde fictif (puisque la gestion réelle est manuelle)
-        const fictionalBalance = Math.floor(Math.random() * 1000) + 500;
-        
         // Enregistrer la transaction dans la base de données
         const transactionRecord = await insertTransaction({
-            player_name: auteurMessage.split('@')[0], // Juste le nom sans le @s.whatsapp.net
+            player_name: auteurMessage.split('@')[0],
             type: 'Achat Pack',
             details: `Achat d'un pack ${selectedGameName} de type ${selectedGrade}`,
             gains: packContents.contents.map(c => `${c.name} | ${c.rarity}`).join('; ') + 
@@ -343,8 +375,7 @@ zokou({
             selectedGameName,
             selectedGrade,
             packContents,
-            price,
-            fictionalBalance
+            price
         );
 
         // Envoyer le reçu avec image
@@ -358,23 +389,11 @@ zokou({
         // Nettoyer en cas d'erreur
         transactionsEnCours.delete(auteurMessage);
         console.error('Erreur lors de l\'achat:', error);
-        return repondre('❌ Une erreur s\'est produite. Veuillez réessayer.');
+        return repondre(`❌ Erreur: ${error.message}`);
     }
 });
 
-// Nettoyage automatique des transactions expirées (5 minutes)
-setInterval(() => {
-    const maintenant = Date.now();
-    for (const [userId, transaction] of transactionsEnCours.entries()) {
-        if (maintenant - transaction.timestamp > 300000) { // 5 minutes
-            transactionsEnCours.delete(userId);
-        }
-    }
-}, 60000); // Vérifie toutes les minutes
-
-module.exports = { transactionsEnCours };
-
-// ===============
+// =============== COMMANDE SELL ===============
 zokou({
     nomCom: "sell",
     reaction: "💰",
@@ -393,10 +412,10 @@ zokou({
             return repondre("❌ Utilisation incorrecte. Syntaxe:\n*sell [nom_article] [rareté] [prix] [jeu]*\n\nExemple:\n*sell Naruto epic 500 ABM*");
         }
 
-        const nomArticle = arg[0];
-        const rarete = arg[1].toLowerCase();
+        const nomArticle = arg[0].trim();
+        const rarete = arg[1].toLowerCase().trim();
         const prix = parseInt(arg[2]);
-        const jeu = arg[3] || "Divers";
+        const jeu = arg.slice(3).join(' ').trim() || "Divers";
 
         // Validation de la rareté
         const raretesValides = ['common', 'rare', 'epic', 'legendary'];
@@ -413,7 +432,7 @@ zokou({
             return repondre("❌ Le prix maximum autorisé est de 100 000 coupons.");
         }
 
-        // Calcul de la taxe
+        // Calcul de la taxe (25%)
         const taxe = Math.floor(prix * TAXE_VENTE);
         const prixNet = prix - taxe;
 
@@ -434,9 +453,9 @@ zokou({
             `🎯 *Rareté:* ${rarete}\n` +
             `💰 *Prix de vente:* ${prix}🎟️\n` +
             `🏪 *Jeu:* ${jeu}\n` +
-            `📊 *Taxe (5%):* ${taxe}🎟️\n` +
+            `📊 *Taxe (25%):* ${taxe}🎟️\n` +
             `💵 *Prix net:* ${prixNet}🎟️\n\n` +
-            `*Veuillez maintenant entrer une description pour votre article:*`;
+            `*Veuillez maintenant entrer une description pour votre article (max 200 caractères):*`;
 
         await repondre(messageDescription);
 
@@ -446,7 +465,7 @@ zokou({
             descResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
-                timeout: 60000,
+                timeout: TIMEOUT_TRANSACTION,
                 filter: (m) => {
                     const text = m.message?.extendedTextMessage?.text?.trim() || 
                                m.message?.conversation?.trim();
@@ -478,7 +497,7 @@ zokou({
             `🎯 *Rareté:* ${venteData.rarete}\n` +
             `💰 *Prix de vente:* ${venteData.prix}🎟️\n` +
             `🏪 *Jeu:* ${venteData.jeu}\n` +
-            `📊 *Taxe (5%):* ${venteData.taxe}🎟️\n` +
+            `📊 *Taxe (25%):* ${venteData.taxe}🎟️\n` +
             `💵 *Prix net:* ${venteData.prixNet}🎟️\n\n` +
             `*Confirmez-vous la mise en vente ? (oui/non)*`;
 
@@ -490,7 +509,7 @@ zokou({
             confirmResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
-                timeout: 60000,
+                timeout: TIMEOUT_TRANSACTION,
                 filter: (m) => {
                     const text = (m.message?.extendedTextMessage?.text?.trim() || 
                                 m.message?.conversation?.trim()).toLowerCase();
@@ -532,7 +551,7 @@ zokou({
             type: 'Mise en vente Market',
             details: `Mise en vente de ${venteData.nomArticle} (${venteData.rarete}) sur le marché`,
             gains: `Article mis en vente au prix de ${venteData.prix} coupons`,
-            montant: 0, // Pas de débit pour la mise en vente
+            montant: 0,
             date: new Date().toLocaleDateString('fr-FR'),
             heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
             statut: 'valider'
@@ -560,21 +579,11 @@ zokou({
         // Nettoyer en cas d'erreur
         ventesEnCours.delete(auteurMessage);
         console.error('Erreur commande sell:', error);
-        return repondre('❌ Une erreur s\'est produite lors de la mise en vente.');
+        return repondre(`❌ Erreur lors de la mise en vente: ${error.message}`);
     }
 });
 
-// Nettoyage automatique des ventes expirées
-setInterval(() => {
-    const maintenant = Date.now();
-    for (const [userId, vente] of ventesEnCours.entries()) {
-        if (maintenant - vente.timestamp > 300000) { // 5 minutes
-            ventesEnCours.delete(userId);
-        }
-    }
-}, 60000);
-
-// ==========
+// ========== COMMANDE BUY ==========
 zokou({
     nomCom: "buy",
     reaction: "🛒",
@@ -593,7 +602,7 @@ zokou({
             return repondre("❌ Utilisation incorrecte. Syntaxe:\n*buy [ID_article]*\n\nExemple:\n*buy a1b2c3d4*\n\nUtilisez *market* pour voir les articles disponibles.");
         }
 
-        const itemId = arg[0];
+        const itemId = arg[0].trim().toLowerCase();
         const buyerName = auteurMessage.split('@')[0];
 
         // Récupérer l'article du marché
@@ -612,9 +621,15 @@ zokou({
             return repondre("❌ Vous ne pouvez pas acheter votre propre article.");
         }
 
-        // Calculer la taxe et le prix final
+        // Calculer la taxe (25%) et le prix final
         const taxe = Math.floor(marketItem.price * TAXE_VENTE);
         const prixFinal = marketItem.price;
+
+        // Vérifier que l'article est toujours disponible avant de continuer
+        const itemStillAvailable = await getMarketItem(itemId);
+        if (!itemStillAvailable || itemStillAvailable.status !== 'en_vente') {
+            return repondre('❌ Cet article a été vendu entre-temps. Veuillez vérifier le marché.');
+        }
 
         // Afficher les détails de l'article et demander confirmation
         achatsEnCours.set(auteurMessage, {
@@ -632,7 +647,7 @@ zokou({
             `🎮 *Jeu:* ${marketItem.game_type}\n` +
             `👤 *Vendeur:* ${marketItem.seller_name}\n` +
             `💰 *Prix affiché:* ${marketItem.price}🎟️\n` +
-            `📊 *Taxe de marché (5%):* ${taxe}🎟️\n` +
+            `📊 *Taxe de marché (25%):* ${taxe}🎟️\n` +
             `💵 *Montant total:* ${prixFinal}🎟️\n\n` +
             `*Confirmez-vous l'achat ? (oui/non)*\n\n` +
             `💡 *Note:* Présentez ce reçu à un administrateur pour la transaction réelle.`;
@@ -645,7 +660,7 @@ zokou({
             confirmResponse = await zk.awaitForMessage({
                 sender: auteurMessage,
                 chatJid: dest,
-                timeout: 60000,
+                timeout: TIMEOUT_TRANSACTION,
                 filter: (m) => {
                     const text = (m.message?.extendedTextMessage?.text?.trim() || 
                                 m.message?.conversation?.trim()).toLowerCase();
@@ -670,11 +685,11 @@ zokou({
             return repondre('❌ Achat annulé.');
         }
 
-        // Vérifier que l'article est toujours disponible
-        const itemStillAvailable = await getMarketItem(itemId);
-        if (!itemStillAvailable || itemStillAvailable.status !== 'en_vente') {
+        // Vérifier une dernière fois que l'article est disponible
+        const finalCheck = await getMarketItem(itemId);
+        if (!finalCheck || finalCheck.status !== 'en_vente') {
             achatsEnCours.delete(auteurMessage);
-            return repondre('❌ Cet article a été vendu entre-temps. Veuillez vérifier le marché.');
+            return repondre('❌ Cet article a été vendu pendant votre confirmation. Veuillez vérifier le marché.');
         }
 
         // Marquer l'article comme vendu (le retirer du marché)
@@ -684,9 +699,6 @@ zokou({
             achatsEnCours.delete(auteurMessage);
             return repondre('❌ Erreur lors de l\'achat. L\'article peut avoir été déjà vendu.');
         }
-
-        // Générer un solde fictif pour le reçu
-        const fictionalBalance = Math.floor(Math.random() * 1000) + 500;
 
         // Enregistrer la transaction d'achat
         const transactionRecord = await insertTransaction({
@@ -733,32 +745,6 @@ zokou({
 > *🎮 Jeu :* ${soldItem.game_type}
 > *📊 Taxe marché :* -${taxe} coupons
 > *💸 Montant débité :* -${prixFinal} coupons
-> *💰 Nouveau solde :* ${fictionalBalance} coupons
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-📅 *Date :* ${new Date().toLocaleDateString('fr-FR')}
-🕛 *Heure :* ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-🔄 *Statut :* valider
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓[TRAITEMENT...]▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-
-        // Générer le reçu du vendeur (pour information)
-        const receiptSeller = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓▓[SRPN - REÇU DE VENTE]▓▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-*🆔 Transact ID :* ${transactionRecord.id}_V
-
-> *📌 Type :* 💰 Vente Market  
-> *👤 Vendeur :* ${soldItem.seller_name}
-> *👤 Acheteur :* ${buyerName}
-> *🎯 Transaction :* Vente de ${soldItem.item_name}
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*💰 Détails de la transaction :*
-> *📦 Article vendu :*
-> - ${soldItem.item_name} | ${soldItem.rarity}
-> *💰 Prix de vente :* ${soldItem.price} coupons
-> *📊 Taxe marché (5%) :* -${taxe} coupons
-> *💵 Montant crédité :* +${prixFinal - taxe} coupons
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 📅 *Date :* ${new Date().toLocaleDateString('fr-FR')}
 🕛 *Heure :* ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
@@ -776,15 +762,15 @@ zokou({
 
         // Informer le vendeur (si possible)
         try {
-            const sellerJid = soldItem.seller_name + '@s.whatsapp.net';
-            await zk.sendMessage(sellerJid, {
-                text: `🎉 *VOTRE ARTICLE A ÉTÉ VENDU!*\n\n` +
+            await zk.sendMessage(dest, {
+                text: `@${soldItem.seller_name} 🎉 *VOTRE ARTICLE A ÉTÉ VENDU!*\n\n` +
                       `📦 *Article:* ${soldItem.item_name}\n` +
                       `👤 *Acheteur:* ${buyerName}\n` +
                       `💰 *Prix de vente:* ${soldItem.price}🎟️\n` +
-                      `📊 *Taxe:* ${taxe}🎟️\n` +
+                      `📊 *Taxe (25%):* ${taxe}🎟️\n` +
                       `💵 *Gain net:* ${prixFinal - taxe}🎟️\n\n` +
-                      `Présentez ce reçu à un administrateur pour recevoir votre paiement.`
+                      `Présentez ce message à un administrateur pour recevoir votre paiement.`,
+                mentions: [auteurMessage]
             });
         } catch (error) {
             console.log('Impossible de notifier le vendeur:', error);
@@ -796,22 +782,11 @@ zokou({
         // Nettoyer en cas d'erreur
         achatsEnCours.delete(auteurMessage);
         console.error('Erreur commande buy:', error);
-        return repondre('❌ Une erreur s\'est produite lors de l\'achat.');
+        return repondre(`❌ Erreur lors de l'achat: ${error.message}`);
     }
 });
 
-// Nettoyage automatique des achats expirés
-setInterval(() => {
-    const maintenant = Date.now();
-    for (const [userId, achat] of achatsEnCours.entries()) {
-        if (maintenant - achat.timestamp > 300000) { // 5 minutes
-            achatsEnCours.delete(userId);
-        }
-    }
-}, 60000);
-
-// ===========
-
+// ========== COMMANDES MARKET ET MARCHÉ ==========
 // Émojis pour les raretés
 const RARITY_EMOJIS = {
   common: '⚪',
@@ -849,7 +824,7 @@ zokou({
   reaction: "🏪",
   categorie: "Market",
 }, async (dest, zk, commandOptions) => {
-  const { repondre, arg, auteurMessage } = commandOptions;
+  const { repondre, arg, ms } = commandOptions;
 
   try {
     // Déterminer la page demandée
@@ -870,15 +845,15 @@ zokou({
     const marketMessage = formatMarketList(marketData.items, page, marketData.totalPages);
     
     // Envoyer avec une image d'en-tête
-    const imageUrl = "https://i.ibb.co/0Q8LZz4T/market-header.jpg"; // Remplacez par votre image
+    const imageUrl = "https://i.ibb.co/0Q8LZz4T/market-header.jpg";
     await zk.sendMessage(dest, {
       image: { url: imageUrl },
       caption: marketMessage,
-    }, { quoted: commandOptions.ms });
+    }, { quoted: ms });
 
   } catch (error) {
     console.error('Erreur commande market:', error);
-    return repondre('❌ Une erreur s\'est produite lors de l\'accès au marché.');
+    return repondre(`❌ Erreur lors de l'accès au marché: ${error.message}`);
   }
 });
 
@@ -889,7 +864,7 @@ zokou({
   categorie: "Market",
 }, async (dest, zk, commandOptions) => {
   // Réutiliser la même logique que la commande market
-  const { repondre, arg } = commandOptions;
+  const { repondre, arg, ms } = commandOptions;
   
   try {
     const page = parseInt(arg[0]) || 1;
@@ -910,15 +885,15 @@ zokou({
     await zk.sendMessage(dest, {
       image: { url: imageUrl },
       caption: marketMessage,
-    }, { quoted: commandOptions.ms });
+    }, { quoted: ms });
 
   } catch (error) {
     console.error('Erreur commande marché:', error);
-    return repondre('❌ Une erreur s\'est produite lors de l\'accès au marché.');
+    return repondre(`❌ Erreur lors de l'accès au marché: ${error.message}`);
   }
 });
 
-// ==========
+// ========== COMMANDES DE PARIS ==========
 zokou({
   nomCom: "newbet",
   reaction: "🎲",
@@ -941,8 +916,9 @@ zokou({
     // Vérifier les arguments minimum
     if (arg.length < 3) {
       return repondre("❌ Utilisation: *newbet [type] [mise_min] [titre]*\n\n" +
-  "Types: *simple* (×2) ou *conditionnel* (×4)\n" +
-  "Exemple: *newbet simple 50 'Victoire de l'équipe A'*");
+        "Types: *simple* (×2) ou *conditionnel* (×4)\n" +
+        "Exemple: *newbet simple 50 Victoire de l'équipe A*");
+    }
 
     const typePari = arg[0].toLowerCase();
     const miseMin = parseInt(arg[1]);
@@ -954,8 +930,13 @@ zokou({
     }
 
     // Validation de la mise minimum
-    if (isNaN(miseMin) || miseMin < 10) {
-      return repondre("❌ La mise minimum doit être un nombre ≥ 10 coupons.");
+    if (isNaN(miseMin) || miseMin < 10 || miseMin > 10000) {
+      return repondre("❌ La mise minimum doit être un nombre entre 10 et 10 000 coupons.");
+    }
+
+    // Validation du titre
+    if (titrePari.length > 100) {
+      return repondre("❌ Le titre est trop long (max 100 caractères).");
     }
 
     // Démarrer le processus de création
@@ -974,13 +955,13 @@ zokou({
       `📝 *Titre:* ${titrePari}\n\n`;
 
     if (typePari === 'conditionnel') {
-      message += `*Veuillez entrer la condition spéciale:*\n` +
+      message += `*Veuillez entrer la condition spéciale (max 150 caractères):*\n` +
         `Exemple: "Victoire de John par KO au 2ème round"\n\n` +
         `*Répondez avec la condition:*`;
       
       parisEnCours.get(auteurMessage).etape = "condition";
     } else {
-      message += `*Veuillez entrer les options (2 options minimum, séparées par des /):*\n` +
+      message += `*Veuillez entrer les options (2-5 options, séparées par des /):*\n` +
         `Exemple: Équipe A / Équipe B / Match nul\n\n` +
         `*Répondez avec les options:*`;
       
@@ -1018,12 +999,18 @@ zokou({
     const pariData = parisEnCours.get(auteurMessage);
 
     if (pariData.etape === "condition") {
+      // Validation de la condition
+      if (reponseText.length > 150) {
+        parisEnCours.delete(auteurMessage);
+        return repondre('❌ La condition est trop longue (max 150 caractères).');
+      }
+
       // Stocker la condition et demander les options
       pariData.condition = reponseText;
       pariData.etape = "options_conditionnel";
       
       await repondre(`✅ *Condition enregistrée:* ${reponseText}\n\n` +
-        `*Veuillez entrer les options (2 options minimum, séparées par des /):*\n` +
+        `*Veuillez entrer les options (2-5 options, séparées par des /):*\n` +
         `Exemple: Oui / Non\n\n` +
         `*Répondez avec les options:*`);
       
@@ -1069,6 +1056,14 @@ zokou({
       return repondre('❌ Maximum 5 options autorisées.');
     }
 
+    // Valider chaque option
+    for (const option of pariData.options) {
+      if (option.length === 0 || option.length > 50) {
+        parisEnCours.delete(auteurMessage);
+        return repondre('❌ Chaque option doit contenir entre 1 et 50 caractères.');
+      }
+    }
+
     pariData.etape = "confirmation";
 
     // Afficher le récapitulatif final
@@ -1096,7 +1091,7 @@ zokou({
       confirmResponse = await zk.awaitForMessage({
         sender: auteurMessage,
         chatJid: dest,
-        timeout: 60000,
+        timeout: TIMEOUT_TRANSACTION,
         filter: (m) => {
           const text = (m.message?.extendedTextMessage?.text?.trim() || 
                       m.message?.conversation?.trim()).toLowerCase();
@@ -1153,18 +1148,18 @@ zokou({
   } catch (error) {
     parisEnCours.delete(auteurMessage);
     console.error('Erreur commande newbet:', error);
-    return repondre(`❌ Erreur: ${error.message}`);
+    return repondre(`❌ Erreur lors de la création du pari: ${error.message}`);
   }
 });
 
-// ==================== COMMANDE BETLIST ====================
+// ========== COMMANDE BETLIST ==========
 zokou({
   nomCom: "betlist",
   reaction: "📋",
   categorie: "Paris",
   desc: "Voir la liste des paris ouverts"
 }, async (dest, zk, commandOptions) => {
-  const { repondre, arg, auteurMessage, ms } = commandOptions;
+  const { repondre, arg, ms } = commandOptions;
 
   try {
     const page = parseInt(arg[0]) || 1;
@@ -1174,7 +1169,7 @@ zokou({
     }
 
     // Récupérer les paris ouverts
-    const betsData = await getOpenBets(page, 5); // 5 paris par page
+    const betsData = await getOpenBets(page, 5);
     
     if (betsData.bets.length === 0) {
       if (page > 1) {
@@ -1194,8 +1189,8 @@ zokou({
       message += `   🆔 *ID:* ${bet.id}\n`;
       message += `   ⚡ *Type:* ${bet.bet_type} (${rapport})\n`;
       message += `   💰 *Mise min:* ${bet.min_bet} coupons\n`;
-      message += `   👥 *Participants:* ${bet.participants_count}\n`;
-      message += `   🏦 *Pot total:* ${bet.total_pot} coupons\n`;
+      message += `   👥 *Participants:* ${bet.participants_count || 0}\n`;
+      message += `   🏦 *Pot total:* ${bet.total_pot || 0} coupons\n`;
       
       if (bet.condition) {
         message += `   📌 *Condition:* ${bet.condition}\n`;
@@ -1205,7 +1200,8 @@ zokou({
       bet.options.forEach((option, optIndex) => {
         const stat = bet.bet_stats?.find(s => s.option_index === optIndex);
         const miseTotale = stat ? parseInt(stat.total_amount) : 0;
-        message += `      ${optIndex + 1}. ${option} (${miseTotale} coupons)\n`;
+        const pourcentage = bet.total_pot > 0 ? Math.round((miseTotale / bet.total_pot) * 100) : 0;
+        message += `      ${optIndex + 1}. ${option} (${miseTotale} coupons - ${pourcentage}%)\n`;
       });
       
       message += `\n`;
@@ -1223,11 +1219,11 @@ zokou({
 
   } catch (error) {
     console.error('Erreur commande betlist:', error);
-    return repondre('❌ Une erreur s\'est produite lors de la récupération des paris.');
+    return repondre(`❌ Erreur lors de la récupération des paris: ${error.message}`);
   }
 });
 
-// ==================== COMMANDE BET ====================
+// ========== COMMANDE BET ==========
 zokou({
   nomCom: "bet",
   reaction: "💰",
@@ -1250,7 +1246,7 @@ zokou({
     }
 
     const betId = arg[0].toUpperCase();
-    const optionIndex = parseInt(arg[1]) - 1; // -1 car les options commencent à 0
+    const optionIndex = parseInt(arg[1]) - 1;
     const montant = parseInt(arg[2]);
 
     // Validation de base
@@ -1258,8 +1254,8 @@ zokou({
       return repondre("❌ Numéro d'option invalide. Utilisez 1, 2, 3...");
     }
 
-    if (isNaN(montant) || montant <= 0) {
-      return repondre("❌ Le montant doit être un nombre positif.");
+    if (isNaN(montant) || montant <= 0 || montant > 50000) {
+      return repondre("❌ Le montant doit être un nombre entre 1 et 50 000 coupons.");
     }
 
     // Récupérer les informations du pari
@@ -1281,6 +1277,12 @@ zokou({
     // Vérifier la mise minimum
     if (montant < bet.min_bet) {
       return repondre(`❌ Mise trop faible. Minimum requis: ${bet.min_bet} coupons`);
+    }
+
+    // Vérifier si le joueur a déjà misé sur ce pari
+    const existingBet = await getPlayerBet(betId, auteurMessage.split('@')[0]);
+    if (existingBet) {
+      return repondre(`❌ Vous avez déjà misé ${existingBet.amount} coupons sur ce pari.`);
     }
 
     // Calculer le gain potentiel
@@ -1313,7 +1315,7 @@ zokou({
       confirmResponse = await zk.awaitForMessage({
         sender: auteurMessage,
         chatJid: dest,
-        timeout: 60000,
+        timeout: TIMEOUT_TRANSACTION,
         filter: (m) => {
           const text = (m.message?.extendedTextMessage?.text?.trim() || 
                       m.message?.conversation?.trim()).toLowerCase();
@@ -1336,6 +1338,13 @@ zokou({
     if (confirmation !== 'oui' && confirmation !== 'o') {
       misesEnCours.delete(auteurMessage);
       return repondre('❌ Mise annulée.');
+    }
+
+    // Vérifier que le pari est toujours ouvert
+    const betStillOpen = await getBet(betId);
+    if (!betStillOpen || betStillOpen.status !== 'open') {
+      misesEnCours.delete(auteurMessage);
+      return repondre('❌ Ce pari a été fermé pendant votre confirmation.');
     }
 
     // Placer la mise
@@ -1371,8 +1380,8 @@ zokou({
       `📊 *Option:* ${miseData.optionName}\n` +
       `💵 *Montant:* ${miseData.montant} coupons\n` +
       `🎰 *Gain potentiel:* ${miseData.gainPotentiel} coupons\n` +
-      `👥 *Total participants:* ${bet.participants_count + 1}\n` +
-      `🏦 *Nouveau pot total:* ${bet.total_pot + miseData.montant} coupons\n\n` +
+      `👥 *Total participants:* ${(bet.participants_count || 0) + 1}\n` +
+      `🏦 *Nouveau pot total:* ${(bet.total_pot || 0) + miseData.montant} coupons\n\n` +
       `Bonne chance! 🍀`;
 
     await repondre(successMessage);
@@ -1380,72 +1389,7 @@ zokou({
   } catch (error) {
     misesEnCours.delete(auteurMessage);
     console.error('Erreur commande bet:', error);
-    return repondre(`❌ Erreur: ${error.message}`);
+    return repondre(`❌ Erreur lors de la mise: ${error.message}`);
   }
 });
 
-// ==================== COMMANDE CLOSEBET (ADMIN) ====================
-zokou({
-  nomCom: "closebet",
-  reaction: "🏁",
-  categorie: "Paris",
-  desc: "Fermer un pari et déclarer un gagnant (admin)"
-}, async (dest, zk, commandOptions) => {
-  const { repondre, arg, auteurMessage, superUser, ms } = commandOptions;
-
-  try {
-    if (!superUser) {
-      return repondre("❌ Cette commande est réservée aux administrateurs.");
-    }
-
-    if (arg.length < 2) {
-      return repondre("❌ Utilisation: *closebet [ID_du_pari] [numéro_option_gagnante]*\n\n" +
-        "Exemple: *closebet A1B2C3D4 2*");
-    }
-
-    const betId = arg[0].toUpperCase();
-    const winningOption = parseInt(arg[1]) - 1;
-
-    // Fermer le pari
-    const result = await closeBet({
-      bet_id: betId,
-      winning_option: winningOption,
-      winning_option_name: `Option ${winningOption + 1}`,
-      closed_by: auteurMessage.split('@')[0]
-    });
-
-    const successMessage = `🏁 *PARI FERMÉ AVEC SUCCÈS!*\n\n` +
-      `🎯 *Pari:* ${result.bet.title}\n` +
-      `🏆 *Option gagnante:* Option ${winningOption + 1}\n` +
-      `👑 *Nombre de gagnants:* ${result.result.total_winners}\n` +
-      `💰 *Gains distribués:* ${result.result.total_payout} coupons\n` +
-      `🏦 *Pot total:* ${result.bet.total_pot} coupons\n\n` +
-      `Les gagnants ont été notifiés.`;
-
-    await repondre(successMessage);
-
-  } catch (error) {
-    console.error('Erreur commande closebet:', error);
-    return repondre(`❌ Erreur: ${error.message}`);
-  }
-});
-
-// ==================== NETTOYAGE AUTOMATIQUE ====================
-// Nettoyage des processus expirés
-setInterval(() => {
-  const maintenant = Date.now();
-  
-  // Nettoyer les créations de paris expirées
-  for (const [userId, pari] of parisEnCours.entries()) {
-    if (maintenant - pari.timestamp > 300000) { // 5 minutes
-      parisEnCours.delete(userId);
-    }
-  }
-  
-  // Nettoyer les mises expirées
-  for (const [userId, mise] of misesEnCours.entries()) {
-    if (maintenant - mise.timestamp > 300000) { // 5 minutes
-      misesEnCours.delete(userId);
-    }
-  }
-}, 60000); // Vérifie toutes les minutes
