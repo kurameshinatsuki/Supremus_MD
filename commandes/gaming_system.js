@@ -12,31 +12,58 @@ zokou(
     <meta charset="UTF-8">
     <title>ABM SYSTEM – SRPN</title>
     <style>
-        body {
-            background-color: #1e1e1e;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #f39c12;
-        }
-        h3 {
-            color: #00aced;
-            margin-top: 40px;
-        }
-        p {
-            background: #2e2e2e;
-            padding: 15px;
-            border-left: 4px solid #f39c12;
-            overflow-x: auto;
-            white-space: pre-wrap;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-    </style>
+    body {
+        background-color: #121212; /* Fond plus profond */
+        color: #e6e6e6;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #ffcc00; /* Or lumineux type aura shonen */
+        text-shadow: 0 0 8px #ff6b00, 0 0 15px #ffcc00;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: #1da1f2; /* Bleu shonen dynamique */
+        margin-top: 40px;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #1da1f2;
+        padding-bottom: 5px;
+    }
+
+    p {
+        background: #1e1e1e;
+        padding: 15px 20px;
+        border-left: 4px solid #ffcc00;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        overflow-x: auto;
+        white-space: pre-wrap;
+        font-size: 15px;
+        color: #f5f5f5;
+    }
+
+    .section {
+        margin-bottom: 45px;
+    }
+
+    strong {
+        color: #ff4d4d; /* Texte important ressort en rouge vif */
+        font-weight: 700;
+        text-shadow: 0 0 4px #ff9999;
+    }
+
+    /* Ajout effet “carte” sur hover pour dynamiser */
+    p:hover {
+        transform: translateY(-2px);
+        transition: 0.2s ease-in-out;
+        box-shadow: 0 4px 12px rgba(255,204,0,0.3);
+    }
+</style>
 </head>
 <body>
     <h1>🆚 ABM - SYSTÈME DE COMBAT 🌐</h1>
