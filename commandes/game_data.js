@@ -4,65 +4,156 @@ const GAME_DATA = {
     name: 'Anime Battle Multivers',
     contents: {
       common: [
-        { name: 'Naruto: Mode Sage', description: 'Maîtrise des techniques senjutsu' },
-        { name: 'Goku: Base Form', description: 'Forme de combat standard' },
-        { name: 'Luffy: Gear Second', description: 'Augmentation de la vitesse' },
-        { name: 'Ichigo: Shikai', description: 'Forme initiale de Zanpakutō' },
-        { name: 'Saitama: Normal Punch', description: 'Coup normal mais puissant' }
+        { name: 'Silva', description: 'Hunter X Hunter : Rang C' },
+        { name: 'Hisoka', description: 'Hunter X Hunter : Rang C' },
+        { name: 'Nami', description: 'One Piece : Rang C' },
+        { name: 'Sanji', description: 'One Piece : Rang C' },
+        { name: 'Robin', description: 'One Piece : Rang C' },
+        { name: 'Brooks', description: 'One Piece : Rang C' },
+        { name: 'Atomic_Samurai', description: 'One Punch Man : Rang C' },
+        { name: 'Tanktop_Marcel', description: 'One Punch Man : Rang C' },
+        { name: 'Suiryu', description: 'One Punch Man : Rang C' },
+        { name: 'Magna', description: 'Black Clover : Rang C' },
+        { name: 'Gauche', description: 'Black Clover : Rang C' },
+        { name: 'Vanessa', description: 'Black Clover : Rang C' },
+        { name: 'Zora', description: 'Black Clover : Rang C' },
+        { name: 'Leopold', description: 'Black Clover : Rang C' },
+        { name: 'Luck', description: 'Black Clover : Rang C' },
+        { name: 'Rogue', description: 'Fairy Tail : Rang C' },
+        { name: 'Lyon', description: 'Fairy Tail : Rang C' },
+        { name: 'Gajeel', description: 'Fairy Tail : Rang C' },
+        { name: 'Lucy', description: 'Fairy Tail : Rang C' },
+        { name: 'Fumikage', description: 'MHA : Rang C' },
+        { name: 'Mirko', description: 'MHA : Rang C' },
+        { name: 'Hawks', description: 'MHA : Rang C' },
+        { name: 'Himiko', description: 'MHA : Rang C' },
+        { name: 'Ochaco', description: 'MHA : Rang C' },
+        { name: 'Momo', description: 'MHA : Rang C' },
+        { name: 'Bakugo', description: 'MHA : Rang C' },
+        { name: 'Inojin', description: 'Boruto : Rang C' },
+        { name: 'Shikadai', description: 'Boruto : Rang C' },
+        { name: 'Shin', description: 'Boruto : Rang C' },
+        { name: 'Metal_Lee', description: 'Boruto : Rang C' },
+        { name: 'Tanjiro_WB', description: 'Demon Slayer : Rang C' },
+        { name: 'Inosuke', description: 'Demon Slayer : Rang C' },
+        { name: 'Yahaba', description: 'Demon Slayer : Rang C' },
+        { name: 'Susamaru', description: 'Demon Slayer : Rang C' },
+        { name: 'Riu', description: 'Demon Slayer : Rang C' },
+        { name: 'Enmu', description: 'Demon Slayer : Rang C' },
+        { name: 'Aoi', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Nobara', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Nanami', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Maki', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Miwa', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Mai', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Choso', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Mechamaru', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Ino', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Sakura', description: 'Naruto : Rang C' },
+        { name: 'Chiyo', description: 'Naruto : Rang C' },
+        { name: 'Sai', description: 'Naruto : Rang C' },
+        { name: 'Kabuto', description: 'Naruto : Rang C' },
+        { name: 'Obito', description: 'Naruto : Rang C' },
+        { name: 'Kankuro', description: 'Naruto : Rang C' },
+        { name: 'Hinata', description: 'Naruto : Rang C' },
+        { name: 'Ino', description: 'Naruto : Rang C' },
+        { name: 'Tenten', description: 'Naruto : Rang C' },
+        { name: 'Omoi', description: 'Naruto : Rang C' },
+        { name: 'Kiba', description: 'Naruto : Rang C' }
       ],
       rare: [
-        { name: 'Naruto: Mode Kurama', description: 'Contrôle partiel du renard à neuf queues' },
-        { name: 'Goku: Super Saiyan', description: 'Transformation légendaire' },
-        { name: 'Luffy: Gear Fourth', description: 'Forme de combat avancée' },
-        { name: 'Ichigo: Bankai', description: 'Forme ultime de Zanpakutō' },
-        { name: 'Saitama: Serious Punch', description: 'Coup sérieux extrêmement puissant' }
+        { name: 'Kurapika', description: 'Hunter X Hunter : Rang C' },
+        { name: 'Law', description: 'One Piece : Rang C' },
+        { name: 'Genos', description: 'One Punch Man : Rang C' },
+        { name: 'Bang', description: 'One Punch Man : Rang C' },
+        { name: 'Metal_Bat', description: 'One Punch Man : Rang C' },
+        { name: 'Sonic', description: 'One Punch Man : Rang C' },
+        { name: 'Garou', description: 'One Punch Man : Rang C' },
+        { name: 'Asta', description: 'Black Clover : Rang C' },
+        { name: 'Noelle', description: 'Black Clover : Rang C' },
+        { name: 'Yuno', description: 'Black Clover : Rang C' },
+        { name: 'Langris', description: 'Black Clover : Rang C' },
+        { name: 'Luck', description: 'Black Clover : Rang C' },
+        { name: 'Sting', description: 'Fairy Tail : Rang C' },
+        { name: 'Gray', description: 'Fairy Tail : Rang C' },
+        { name: 'Dabi', description: 'MHA : Rang C' },
+        { name: 'Shoto', description: 'MHA : Rang C' },
+        { name: 'Overhaul', description: 'MHA : Rang C' },
+        { name: 'Lemillion', description: 'MHA : Rang C' },
+        { name: 'Shinki', description: 'Boruto : Rang C' },
+        { name: 'Kawaki', description: 'Boruto : Rang C' },
+        { name: 'Sarada', description: 'Boruto : Rang C' },
+        { name: 'Mitsuki', description: 'Boruto : Rang C' },
+        { name: 'Boruto', description: 'Boruto : Rang C' },
+        { name: 'Nezuko', description: 'Demon Slayer : Rang C' },
+        { name: 'Zenitsu', description: 'Demon Slayer : Rang C' },
+        { name: 'Tanjiro_SB', description: 'Demon Slayer : Rang C' },
+        { name: 'Kanao', description: 'Demon Slayer : Rang C' },
+        { name: 'Yuji', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Megumi', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Mahito', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Toge', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Geto', description: 'Jujutsu Kaisen : Rang C' },
+        { name: 'Kilua', description: 'Hunter X Hunter : Rang B' },
+        { name: 'Gaara', description: 'Naruto : Rang C' },
+        { name: 'Jugo', description: 'Naruto : Rang C' },
+        { name: 'Suigetsu', description: 'Naruto : Rang C' },
+        { name: 'Shikamaru', description: 'Naruto : Rang C' },
+        { name: 'Kakashi', description: 'Naruto : Rang C' },
+        { name: 'Danzo', description: 'Naruto : Rang C' },
+        { name: 'Choji', description: 'Naruto : Rang C' },
+        { name: 'Shino', description: 'Naruto : Rang C' },
+        { name: 'Konan', description: 'Naruto : Rang C' },
+        { name: 'Neji', description: 'Naruto : Rang C' },
+        { name: 'Temari', description: 'Naruto : Rang C' }
       ],
       epic: [
-        { name: 'Naruto: Mode Baryon', description: 'Fusion d\'énergie avec Kurama' },
-        { name: 'Goku: Ultra Instinct', description: 'Technique divine de combat' },
-        { name: 'Luffy: Gear Fifth', description: 'Forme mythique de libération' },
-        { name: 'Ichigo: Full Hollow', description: 'Forme hollow complète' },
-        { name: 'Saitama: Ultimate Technique', description: 'Technique ultime imprévisible' }
+        { name: 'Deku', description: 'MHA : Rang C' },
+        { name: 'Natsu', description: 'Fairy Tail : Rang B' },
+        { name: 'Erza', description: 'Fairy Tail : Rang B' },
+        { name: 'Luffy', description: 'One Piece : Rang B' },
+        { name: 'Zoro', description: 'One Piece : Rang B' },
+        { name: 'Gon', description: 'Hunter X Hunter : Rang B' },
+        { name: 'Gojo_CG', description: 'Jujutsu Kaisen : Rang A' },
+        { name: 'Sukuna_CG', description: 'Jujutsu Kaisen : Rang A' },
+        { name: 'Naruto', description: 'Naruto : Rang C' },
+        { name: 'Lee', description: 'Naruto : Rang C' }
       ],
-      legendary: [
-        { name: 'Naruto: Six Paths Sage Mode', description: 'Mode sage des six chemins' },
-        { name: 'Goku: Ultra Instinct Mastered', description: 'Maîtrise complète de l\'instinct ultime' },
-        { name: 'Luffy: Sun God Nika', description: 'Forme divine de libération' },
-        { name: 'Ichigo: True Bankai', description: 'Forme véritable de Zanpakutō' },
-        { name: 'Saitama: Cosmic Fear', description: 'Puissance cosmique illimitée' }
-      ]
+      legendary: []
     }
   },
   'Speed Rush': {
     name: 'Speed Rush',
     contents: {
       common: [
-        { name: 'Toyota AE86', description: 'Légendaire coureur des montagnes' },
-        { name: 'Nissan Skyline R34', description: 'Icône de la culture JDM' },
-        { name: 'Mazda RX-7', description: 'Voiture à moteur rotatif' },
-        { name: 'Honda Civic Type R', description: 'Compacte performante' },
-        { name: 'Subaru Impreza WRX STI', description: 'Traction intégrale rallye' }
+        { name: 'PORSCHE_911_TURBO_S', description: 'Supercars Standard' },
+        { name: 'AUDI_R8_V10_PLUS', description: 'Supercars Standard' },
+        { name: 'NISSAN_GT-R_R35', description: 'Supercars Standard' },
+        { name: 'CHEVROLET_CORVETTE_C8', description: 'Supercars Standard' },
+        { name: 'YAMAHA_YZF-R1', description: 'Motos Standard' },
+        { name: 'BMW_S1000RR', description: 'Motos Standard' },
+        { name: 'DUCATI_PANIGALE_V4', description: 'Motos Standard' },
+        { name: 'HONDA_CBR1000RR-R', description: 'Motos Standard' },
+        { name: 'APRILIA_RSV4', description: 'Motos Standard' },
+        { name: 'KTM_RC_8C', description: 'Motos Standard' },
+        { name: 'SUZUKI_GSX-R1000', description: 'Motos Standard' }
       ],
       rare: [
-        { name: 'Nissan GT-R R35', description: 'Supercar japonaise' },
-        { name: 'Porsche 911 GT3', description: 'Précision allemande' },
-        { name: 'Chevrolet Corvette C8', description: 'Sportive américaine' },
-        { name: 'BMW M4 GTS', description: 'Performance track-focused' },
-        { name: 'Audi R8 V10', description: 'Supercar quotidienne' }
+        { name: 'MCLAREN_P1', description: 'Supercars Premium' },
+        { name: 'KOENIGSEGG_JESKO', description: 'Supercars Premium' },
+        { name: 'ASTON_MARTIN_VALKYRIE', description: 'Supercars Premium' },
+        { name: 'FERRARI_SF90_STRADALE', description: 'Supercars Premium' },
+        { name: 'DUCATI_1199_SUPERLEGGERA', description: 'Motos Premium' }
       ],
       epic: [
-        { name: 'Ferrari 488 Pista', description: 'Pur-sang italien' },
-        { name: 'Lamborghini Huracan STO', description: 'Supercar extreme' },
-        { name: 'McLaren 720S', description: 'Engineering excellence' },
-        { name: 'Porsche 918 Spyder', description: 'Hybride hypercar' },
-        { name: 'Ford GT', description: 'Héritage racing' }
+        { name: 'LAMBORGHINI_AVENTADOR', description: 'Supercars Rare' },
+        { name: 'Custom ⛽', description: 'Amélioration de la réserve de carburant (10% à 50%)' },
+        { name: 'Custom 🛢️', description: 'Amélioration de la réserve de nitro (10% à 50%)' },
+        { name: 'Custom 🚘', description: 'Amélioration de la résistance du véhicule (1 à 5)' }
       ],
       legendary: [
-        { name: 'Bugatti Chiron Super Sport', description: 'Ultimate speed machine' },
-        { name: 'Koenigsegg Jesko Absolut', description: 'Hypercar suédoise' },
-        { name: 'Pagani Huayra BC', description: 'Œuvre d\'art mécanique' },
-        { name: 'Aston Martin Valkyrie', description: 'Hypercar F1-inspired' },
-        { name: 'McLaren Speedtail', description: 'Hyper-GT ultime' }
+        { name: 'BUGATTI_CHIRON', description: 'Supercars Légendaire' },
+        { name: 'KAWASAKI_NINJA_H2R', description: 'Motos Légendaire' }
       ]
     }
   },
@@ -70,66 +161,69 @@ const GAME_DATA = {
     name: 'Yu-Gi-Oh Speed Duel',
     contents: {
       common: [
-        { name: 'Dark Magician', description: 'Magicien sombre légendaire' },
-        { name: 'Blue-Eyes White Dragon', description: 'Dragon blanc aux yeux bleus' },
-        { name: 'Red-Eyes Black Dragon', description: 'Dragon noir aux yeux rouges' },
-        { name: 'Summoned Skull', description: 'Démon invoqué' },
-        { name: 'Celtic Guardian', description: 'Garde celte' }
+        { name: 'Cran', description: 'Carte Compétence Commune' },
+        { name: 'Direct Dans La Tombe', description: 'Carte Compétence Commune' },
+        { name: 'Synergie Tribale', description: 'Carte Compétence Commune' },
+        { name: 'Sort Des Protecteurs Du Tombeau', description: 'Carte Compétence Commune' },
+        { name: 'Fortification Ectoplasmique', description: 'Carte Compétence Commune' },
+        { name: 'Pote-à-moi-risaton', description: 'Carte Compétence Commune' },
+        { name: 'Stratégie Du Parfum', description: 'Carte Compétence Commune' },
+        { name: 'Télépathie', description: 'Carte Compétence Commune' },
+        { name: 'Collier Du Millenium', description: 'Carte Compétence Commune' },
+        { name: 'Pioche De La Destinée', description: 'Carte Compétence Commune' }
       ],
       rare: [
-        { name: 'Dark Magician Girl', description: 'Apprentie magicienne' },
-        { name: 'Blue-Eyes Ultimate Dragon', description: 'Fusion ultime' },
-        { name: 'Red-Eyes Darkness Dragon', description: 'Évolution ténébreuse' },
-        { name: 'Buster Blader', description: 'Pourfendeur de dragons' },
-        { name: 'Gaia The Fierce Knight', description: 'Chevalier féroce' }
+        { name: 'Mai', description: 'Deck Préconstruit' },
+        { name: 'Bonz', description: 'Deck Préconstruit' },
+        { name: 'Joey', description: 'Deck Préconstruit' },
+        { name: 'Yami', description: 'Deck Préconstruit' },
+        { name: 'Appel Du Dragon', description: 'Carte Compétence Rare' },
+        { name: 'Vol Des Harpies', description: 'Carte Compétence Rare' },
+        { name: 'Pic De Performance', description: 'Carte Compétence Rare' },
+        { name: 'Prescience', description: 'Carte Compétence Rare' },
+        { name: 'Pouvoir Des Ténèbres', description: 'Carte Compétence Rare' },
+        { name: 'Appel De L\'être Hanté', description: 'Carte Compétence Rare' },
+        { name: 'Tombe Du Pharaon', description: 'Carte Compétence Rare' },
+        { name: 'Dans Le Monde Des Toons', description: 'Carte Compétence Rare' },
+        { name: 'Quinte Flush Royale', description: 'Carte Compétence Rare' }
       ],
       epic: [
-        { name: 'Slifer the Sky Dragon', description: 'Dragon divin égyptien' },
-        { name: 'Obelisk the Tormentor', description: 'Dieu égyptien du jugement' },
-        { name: 'The Winged Dragon of Ra', description: 'Dieu égyptien suprême' },
-        { name: 'Exodia the Forbidden One', description: 'Créature scellée' },
-        { name: 'Black Luster Soldier', description: 'Soldat du chaos' }
+        { name: 'Pegasus', description: 'Deck Préconstruit' },
+        { name: 'Kaiba', description: 'Deck Préconstruit' },
+        { name: 'Ishizu', description: 'Deck Préconstruit' },
+        { name: 'Dernier Pari', description: 'Carte Compétence Épique' },
+        { name: 'Pioche Finale', description: 'Carte Compétence Épique' },
+        { name: 'Œil Du Millenium', description: 'Carte Compétence Épique' },
+        { name: 'Raclée', description: 'Carte Compétence Épique' }
       ],
-      legendary: [
-        { name: 'Stardust Dragon', description: 'Dragon des souhaits' },
-        { name: 'Number 39: Utopia', description: 'Guerrier de l\'espoir' },
-        { name: 'Firewall Dragon', description: 'Dragon cyberse' },
-        { name: 'Ash Blossom & Joyous Spring', description: 'Spirit hand trap' },
-        { name: 'Accesscode Talker', description: 'Final boss cyberse' }
-      ]
+      legendary: []
     }
   },
   'Origamy World': {
     name: 'Origamy World',
     contents: {
       common: [
-        { name: 'Paper Crane', description: 'Grue en papier traditionnelle' },
-        { name: 'Paper Samurai', description: 'Guerrier japonais en papier' },
-        { name: 'Paper Dragon', description: 'Dragon légendaire en papier' },
-        { name: 'Paper Phoenix', description: 'Phénix renaissant en papier' },
-        { name: 'Paper Ninja', description: 'Assassin silencieux en papier' }
+        { name: 'Kairo', description: 'Skin Rang C' },
+        { name: 'Aëron', description: 'Skin Rang C' },
+        { name: 'Ryu', description: 'Skin Rang C' },
+        { name: 'Hydron', description: 'Skin Rang C' },
+        { name: 'Flora', description: 'Skin Rang C' }
       ],
       rare: [
-        { name: 'Origami Beast', description: 'Créature mythique en papier' },
-        { name: 'Paper Elemental', description: 'Être élémentaire en papier' },
-        { name: 'Folding Guardian', description: 'Protecteur en papier plié' },
-        { name: 'Paper Sorcerer', description: 'Mage manipulant le papier' },
-        { name: 'Crane Warrior', description: 'Guerrier-grue en papier' }
+        { name: 'Natsuki', description: 'Skin Rare' },
+        { name: 'Luna', description: 'Skin Rare' },
+        { name: 'Thorne', description: 'Skin Rare' },
+        { name: 'Fulgura', description: 'Skin Rare' },
+        { name: 'Aelis', description: 'Skin Rare' },
+        { name: 'Félysombre 🐈‍⬛', description: 'Familier Rare' },
+        { name: 'Aéroplume 🦜', description: 'Familier Rare' },
+        { name: 'Brikotor 🛡️', description: 'Familier Rare' },
+        { name: 'Pyrobec 🦉', description: 'Familier Rare' },
+        { name: 'Nyméther 🧚‍♀️', description: 'Familier Rare' },
+        { name: 'Lours 🐺', description: 'Familier Rare' }
       ],
-      epic: [
-        { name: 'Thousand Paper Cranes', description: 'Armée de grues en papier' },
-        { name: 'Origami Dragon Lord', description: 'Seigneur dragon en papier' },
-        { name: 'Paper Kingdom', description: 'Royaume entier en papier' },
-        { name: 'Folding Titan', description: 'Géant de papier plié' },
-        { name: 'Origami Deity', description: 'Divinité du papier plié' }
-      ],
-      legendary: [
-        { name: 'Infinite Fold', description: 'Technique de pliage infinie' },
-        { name: 'Paper Universe', description: 'Univers complet en papier' },
-        { name: 'Origami Creator', description: 'Créateur de réalités en papier' },
-        { name: 'Eternal Crane', description: 'Grue éternelle en papier' },
-        { name: 'World Folder', description: 'Maître du pliage mondial' }
-      ]
+      epic: [],
+      legendary: []
     }
   }
 };
