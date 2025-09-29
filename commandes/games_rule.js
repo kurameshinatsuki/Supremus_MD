@@ -437,7 +437,7 @@ zokou(
             }
         }
 
-        // Gestion des stats
+        // Gestion des stats - CORRIGÉ
         try {
             const processPlayerUpdates = async (inputStr) => {
                 const joueursInputs = inputStr.split(';').map(j => j.trim()).filter(j => j);
@@ -486,6 +486,13 @@ zokou(
                     }
 
                     if (duelTrouve) {
+                        // S'assurer que la structure arene est correcte avant sauvegarde
+                        if (!duelTrouve.arene && duelTrouve.arene_nom) {
+                            duelTrouve.arene = {
+                                nom: duelTrouve.arene_nom,
+                                image: duelTrouve.arene_image
+                            };
+                        }
                         await db.saveDuelABM(duelTrouve.duel_key, duelTrouve);
                     }
                 }
@@ -751,7 +758,7 @@ zokou(
       }
     }
 
-    // Gestion des stats
+    // Gestion des stats - CORRIGÉ
     try {
       if (input.includes(';')) {
         // Mode multi-pilotes
@@ -801,6 +808,13 @@ zokou(
           }
 
           if (courseTrouvee) {
+            // S'assurer que la structure circuit est correcte avant sauvegarde
+            if (!courseTrouvee.circuit && courseTrouvee.circuit_nom) {
+              courseTrouvee.circuit = {
+                nom: courseTrouvee.circuit_nom,
+                image: courseTrouvee.circuit_image
+              };
+            }
             await db.saveCourseSpeedRush(courseTrouvee.course_key, courseTrouvee);
           }
         }
@@ -815,13 +829,13 @@ zokou(
             master: updatedCourse.master,
             conditions: updatedCourse.conditions,
             depart: updatedCourse.depart,
-            circuit: {
+            circuit: updatedCourse.circuit || {
               nom: updatedCourse.circuit_nom,
               image: updatedCourse.circuit_image
             }
           };
           return zk.sendMessage(dest, {
-            image: { url: updatedCourse.circuit_image },
+            image: { url: updatedCourse.circuit.image || updatedCourse.circuit_image },
             caption: generateFicheCourseSpeedRush(courseObj)
           }, { quoted: ms });
         }
@@ -864,6 +878,13 @@ zokou(
 
         if (results.length > 0) await repondre(results.join('\n'));
         if (courseTrouvee) {
+          // S'assurer que la structure circuit est correcte avant sauvegarde
+          if (!courseTrouvee.circuit && courseTrouvee.circuit_nom) {
+            courseTrouvee.circuit = {
+              nom: courseTrouvee.circuit_nom,
+              image: courseTrouvee.circuit_image
+            };
+          }
           await db.saveCourseSpeedRush(courseTrouvee.course_key, courseTrouvee);
           const courseObj = {
             pilote1: courseTrouvee.pilotes[0],
@@ -873,13 +894,13 @@ zokou(
             master: courseTrouvee.master,
             conditions: courseTrouvee.conditions,
             depart: courseTrouvee.depart,
-            circuit: {
+            circuit: courseTrouvee.circuit || {
               nom: courseTrouvee.circuit_nom,
               image: courseTrouvee.circuit_image
             }
           };
           return zk.sendMessage(dest, {
-            image: { url: courseTrouvee.circuit_image },
+            image: { url: courseTrouvee.circuit.image || courseTrouvee.circuit_image },
             caption: generateFicheCourseSpeedRush(courseObj)
           }, { quoted: ms });
         }
