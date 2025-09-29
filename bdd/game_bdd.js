@@ -269,11 +269,11 @@ async function getGroupDeckSessions(groupId) {
 }
 
 // =============================================================================
-// FONCTIONS POUR ABM (ANIME BATTLE MULTIVERS)
+// FONCTIONS POUR ABM (ANIME BATTLE MULTIVERS) - CORRIGÉES
 // =============================================================================
 
 /**
- * Récupérer un duel ABM par sa clé
+ * Récupérer un duel ABM par sa clé - CORRIGÉ
  */
 async function getDuelABM(duelKey) {
   try {
@@ -281,7 +281,26 @@ async function getDuelABM(duelKey) {
       'SELECT * FROM duels_abm WHERE duel_key = $1',
       [duelKey]
     );
-    return result.rows[0] || null;
+    
+    if (!result.rows[0]) return null;
+    
+    const duel = result.rows[0];
+    
+    // Reconstruire l'objet avec la structure attendue
+    return {
+      duel_key: duel.duel_key,
+      equipe1: duel.equipe1,
+      equipe2: duel.equipe2,
+      statsCustom: duel.stats_custom,
+      arene: {
+        nom: duel.arene_nom,
+        image: duel.arene_image
+      },
+      arene_nom: duel.arene_nom,
+      arene_image: duel.arene_image,
+      created_at: duel.created_at,
+      updated_at: duel.updated_at
+    };
   } catch (error) {
     console.error('Erreur getDuelABM:', error);
     throw error;
@@ -289,7 +308,7 @@ async function getDuelABM(duelKey) {
 }
 
 /**
- * Sauvegarder ou mettre à jour un duel ABM
+ * Sauvegarder ou mettre à jour un duel ABM - CORRIGÉ
  */
 async function saveDuelABM(duelKey, data) {
   try {
@@ -306,13 +325,26 @@ async function saveDuelABM(duelKey, data) {
       RETURNING *
     `;
 
+    // Vérifier si data.arene existe et a la structure attendue
+    let areneNom = 'Arène par défaut';
+    let areneImage = 'https://i.ibb.co/XxzW23W7/Image-2025-03-21-14-41-20-0.jpg';
+    
+    if (data.arene && data.arene.nom) {
+      areneNom = data.arene.nom;
+      areneImage = data.arene.image || areneImage;
+    } else if (data.arene_nom) {
+      // Si les données viennent de la base de données
+      areneNom = data.arene_nom;
+      areneImage = data.arene_image || areneImage;
+    }
+
     const values = [
       duelKey,
       JSON.stringify(data.equipe1),
       JSON.stringify(data.equipe2),
-      data.statsCustom || 'Non defini',
-      data.arene.nom,
-      data.arene.image
+      data.statsCustom || data.stats_custom || 'Non defini',
+      areneNom,
+      areneImage
     ];
 
     const result = await pool.query(query, values);
@@ -340,14 +372,24 @@ async function deleteDuelABM(duelKey) {
 }
 
 /**
- * Récupérer tous les duels ABM
+ * Récupérer tous les duels ABM - CORRIGÉ
  */
 async function getAllDuelsABM() {
   try {
     const result = await pool.query(
-      'SELECT duel_key, equipe1, equipe2, arene_nom, created_at FROM duels_abm ORDER BY created_at DESC'
+      'SELECT duel_key, equipe1, equipe2, arene_nom, arene_image, stats_custom, created_at FROM duels_abm ORDER BY created_at DESC'
     );
-    return result.rows;
+    
+    // Reconstruire les objets avec la structure attendue
+    return result.rows.map(row => ({
+      duel_key: row.duel_key,
+      equipe1: row.equipe1,
+      equipe2: row.equipe2,
+      arene_nom: row.arene_nom,
+      arene_image: row.arene_image,
+      stats_custom: row.stats_custom,
+      created_at: row.created_at
+    }));
   } catch (error) {
     console.error('Erreur getAllDuelsABM:', error);
     throw error;
@@ -368,11 +410,11 @@ async function resetAllDuelsABM() {
 }
 
 // =============================================================================
-// FONCTIONS POUR SPEED RUSH
+// FONCTIONS POUR SPEED RUSH - CORRIGÉES
 // =============================================================================
 
 /**
- * Récupérer une course Speed Rush par sa clé
+ * Récupérer une course Speed Rush par sa clé - CORRIGÉ
  */
 async function getCourseSpeedRush(courseKey) {
   try {
@@ -380,7 +422,28 @@ async function getCourseSpeedRush(courseKey) {
       'SELECT * FROM courses_speed_rush WHERE course_key = $1',
       [courseKey]
     );
-    return result.rows[0] || null;
+    
+    if (!result.rows[0]) return null;
+    
+    const course = result.rows[0];
+    
+    // Reconstruire l'objet avec la structure attendue
+    return {
+      course_key: course.course_key,
+      pilotes: course.pilotes,
+      tourneur: course.tourneur,
+      master: course.master,
+      conditions: course.conditions,
+      depart: course.depart,
+      circuit: {
+        nom: course.circuit_nom,
+        image: course.circuit_image
+      },
+      circuit_nom: course.circuit_nom,
+      circuit_image: course.circuit_image,
+      created_at: course.created_at,
+      updated_at: course.updated_at
+    };
   } catch (error) {
     console.error('Erreur getCourseSpeedRush:', error);
     throw error;
@@ -388,7 +451,7 @@ async function getCourseSpeedRush(courseKey) {
 }
 
 /**
- * Sauvegarder ou mettre à jour une course Speed Rush
+ * Sauvegarder ou mettre à jour une course Speed Rush - CORRIGÉ
  */
 async function saveCourseSpeedRush(courseKey, data) {
   try {
@@ -407,6 +470,19 @@ async function saveCourseSpeedRush(courseKey, data) {
       RETURNING *
     `;
 
+    // Vérifier si data.circuit existe et a la structure attendue
+    let circuitNom = 'Circuit par défaut';
+    let circuitImage = 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg';
+    
+    if (data.circuit && data.circuit.nom) {
+      circuitNom = data.circuit.nom;
+      circuitImage = data.circuit.image || circuitImage;
+    } else if (data.circuit_nom) {
+      // Si les données viennent de la base de données
+      circuitNom = data.circuit_nom;
+      circuitImage = data.circuit_image || circuitImage;
+    }
+
     const values = [
       courseKey,
       JSON.stringify(data.pilotes),
@@ -414,8 +490,8 @@ async function saveCourseSpeedRush(courseKey, data) {
       data.master || 'Auto',
       data.conditions || 'Normales',
       data.depart || 'Ligne de départ',
-      data.circuit.nom,
-      data.circuit.image
+      circuitNom,
+      circuitImage
     ];
 
     const result = await pool.query(query, values);
@@ -443,14 +519,22 @@ async function deleteCourseSpeedRush(courseKey) {
 }
 
 /**
- * Récupérer toutes les courses Speed Rush
+ * Récupérer toutes les courses Speed Rush - CORRIGÉ
  */
 async function getAllCoursesSpeedRush() {
   try {
     const result = await pool.query(
-      'SELECT course_key, pilotes, circuit_nom, created_at FROM courses_speed_rush ORDER BY created_at DESC'
+      'SELECT course_key, pilotes, circuit_nom, circuit_image, created_at FROM courses_speed_rush ORDER BY created_at DESC'
     );
-    return result.rows;
+    
+    // Reconstruire les objets avec la structure attendue
+    return result.rows.map(row => ({
+      course_key: row.course_key,
+      pilotes: row.pilotes,
+      circuit_nom: row.circuit_nom,
+      circuit_image: row.circuit_image,
+      created_at: row.created_at
+    }));
   } catch (error) {
     console.error('Erreur getAllCoursesSpeedRush:', error);
     throw error;
@@ -471,7 +555,7 @@ async function resetAllCoursesSpeedRush() {
 }
 
 // =============================================================================
-// FONCTIONS POUR YU-GI-OH
+// FONCTIONS POUR YU-GI-OH - CORRIGÉES
 // =============================================================================
 
 /**
@@ -536,7 +620,7 @@ async function deleteDuelYugi(duelKey) {
 }
 
 /**
- * Récupérer tous les duels Yu-Gi-Oh
+ * Récupérer tous les duels Yu-Gi-Oh - CORRIGÉ
  */
 async function getAllDuelsYugi() {
   try {
