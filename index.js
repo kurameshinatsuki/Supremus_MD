@@ -32,6 +32,67 @@ const { reagir } = require("./framework/app");
 const getJid = require("./framework/cacheJid");
 
 // ==============================
+// SYSTÈME ANTI-DOUBLON
+// ==============================
+
+const processedEvents = new Map();
+const EVENT_TIMEOUT = 30000; // 30 secondes
+const MAX_CACHE_SIZE = 2000;
+
+/**
+ * Vérifie si un événement est un doublon avec journalisation
+ */
+function isDuplicateEvent(msg) {
+    if (!msg.key || !msg.key.id) return false;
+    
+    const eventId = msg.key.id;
+    const now = Date.now();
+    
+    // Vérifier si l'événement existe déjà
+    if (processedEvents.has(eventId)) {
+        const originalTime = processedEvents.get(eventId);
+        const age = now - originalTime;
+        console.log(`🚫 Événement dupliqué détecté: ${eventId} (âge: ${age}ms)`);
+        return true;
+    }
+    
+    // Ajouter le nouvel événement
+    processedEvents.set(eventId, now);
+    
+    // Nettoyage automatique si le cache devient trop grand
+    if (processedEvents.size > MAX_CACHE_SIZE) {
+        console.log(`🧹 Nettoyage cache événements (${processedEvents.size} entrées)`);
+        // Garder seulement les 1000 entrées les plus récentes
+        const entries = Array.from(processedEvents.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 1000);
+        processedEvents.clear();
+        entries.forEach(([id, timestamp]) => processedEvents.set(id, timestamp));
+    }
+    
+    return false;
+}
+
+/**
+ * Nettoyage périodique des anciens événements
+ */
+setInterval(() => {
+    const now = Date.now();
+    let cleanedCount = 0;
+    
+    for (const [eventId, timestamp] of processedEvents.entries()) {
+        if (now - timestamp > EVENT_TIMEOUT) {
+            processedEvents.delete(eventId);
+            cleanedCount++;
+        }
+    }
+    
+    if (cleanedCount > 0) {
+        console.log(`🧹 Nettoyage auto: ${cleanedCount} anciens événements supprimés`);
+    }
+}, 30000); // Nettoyer toutes les 30 secondes
+
+// ==============================
 // CONFIGURATION GLOBALE
 // ==============================
 
@@ -115,6 +176,12 @@ class MessageProcessor extends WhatsAppBot {
             const ms = messages[0];
             
             if (!ms.message) return;
+
+            // ⭐⭐ VÉRIFICATION ANTI-DOUBLON ⭐⭐
+            if (isDuplicateEvent(ms)) {
+                console.log('🚫 Événement dupliqué ignoré:', ms.key.id);
+                return;
+            }
 
             const messageInfo = await this.extractMessageInfo(ms);
             await this.executeMessageActions(messageInfo);
