@@ -177,7 +177,7 @@ class MessageProcessor extends WhatsAppBot {
             
             if (!ms.message) return;
 
-            // ⭐⭐ VÉRIFICATION ANTI-DOUBLON ⭐⭐
+            // VÉRIFICATION ANTI-DOUBLON
             if (isDuplicateEvent(ms)) {
                 console.log('🚫 Événement dupliqué ignoré:', ms.key.id);
                 return;
@@ -861,18 +861,19 @@ async function initializeBot() {
         const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth");
 
         const sockOptions = {
-            logger: pino({ level: "silent" }),
-            browser: BROWSER_CONFIG,
-            syncFullHistory: false,
-            generateHighQualityLinkPreview: true,
-            markOnlineOnConnect: true,
-            auth: {
-                creds: state.creds,
-                keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
-            },
-        };
+    logger: pino({ level: "silent" }),
+    browser: BROWSER_CONFIG,
+    version: [2, 3000, 1025190524],
+    syncFullHistory: false,
+    generateHighQualityLinkPreview: true,
+    markOnlineOnConnect: true,
+    auth: {
+        creds: state.creds,
+        keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
+    },
+};
 
-        const zk = makeWASocket(sockOptions);
+const zk = makeWASocket(sockOptions);
         
         await handlePairing(zk);
         setupEventHandlers(zk, saveCreds);
