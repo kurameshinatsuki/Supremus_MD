@@ -26,7 +26,7 @@ zokou({
 
     // Connexion à la base de données avec SSL
     const client = new Client({
-      connectionString: 'postgresql://supremia_db_yv1w_user:48VSmOe9pnw4hlfpHJ6TAqFvOYibaAlw@dpg-d322aaemcj7s7397equg-a.oregon-postgres.render.com/supremia_db_yv1w',
+      connectionString: 'postgresql://postgres.ljfkkbvxgflluphnibhp:U.*pF.tueSKb7r3@aws-1-eu-north-1.pooler.supabase.com:6543/postgres',
       ssl: {
         rejectUnauthorized: false // Nécessaire pour Supabase
       }
@@ -85,7 +85,7 @@ zokou({
     await repondre("🧹 Nettoyage de toutes les tables...");
 
     const client = new Client({
-      connectionString: 'postgresql://supremia_db_yv1w_user:48VSmOe9pnw4hlfpHJ6TAqFvOYibaAlw@dpg-d322aaemcj7s7397equg-a.oregon-postgres.render.com/supremia_db_yv1w',
+      connectionString: 'postgresql://postgres.ljfkkbvxgflluphnibhp:U.*pF.tueSKb7r3@aws-1-eu-north-1.pooler.supabase.com:6543/postgres',
       ssl: { rejectUnauthorized: false }
     });
 
