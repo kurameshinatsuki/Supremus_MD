@@ -956,6 +956,21 @@ async function handleSuccessfulConnection(zk) {
     console.log("✅ Connexion réussie !");
     await displayConnectionAnimation();
     
+    // AFFICHER LA SESSION - FORCER L'AFFICHAGE
+    console.log('\n🛜 CONNEXION WHATSAPP RÉUSSIE !');
+    console.log('📋 SESSION PERSISTANTE À COPIER :');
+    
+    // Attendre un peu que les credentials soient chargés
+    await delay(1000);
+    
+    if (zk.authState && zk.authState.creds) {
+        const sessionText = Buffer.from(JSON.stringify(zk.authState.creds)).toString('base64');
+        console.log(sessionText);
+        console.log('💾 Garde ce texte précieusement pour restaurer la session !\n');
+    } else {
+        console.log('❌ Impossible de récupérer les credentials');
+    }
+    
     console.log("📦 Chargement des commandes...");
     await loadCommands();
     
