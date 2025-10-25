@@ -53,59 +53,7 @@ zokou({
 zokou({
     nomCom: "getsession",
     categorie: "MON-BOT",
-    reaction: "🔒"
-}, async (dest, zk, commandeOptions) => {
-    const { repondre, superUser } = commandeOptions;
-    
-    if (!superUser) {
-        return repondre("❌ Owner uniquement");
-    }
-
-    try {
-        const fs = require('fs-extra');
-        const path = require('path');
-        const authDir = path.join(__dirname, './auth');
-        
-        // Vérifier si le dossier auth existe
-        if (!fs.existsSync(authDir)) {
-            return repondre("❌ Dossier auth introuvable");
-        }
-
-        // Lire tous les fichiers du dossier auth
-        const files = await fs.readdir(authDir);
-        let sessionData = "💾 SESSION COMPLÈTE - Supremus MD\\n\\n";
-        
-        for (const file of files) {
-            const filePath = path.join(authDir, file);
-            const stats = await fs.stat(filePath);
-            
-            if (stats.isFile()) {
-                const content = await fs.readFile(filePath, 'utf8');
-                sessionData += `📄 ${file}:\\n${content}\\n\\n══════════════════\\n\\n`;
-            }
-        }
-
-        // Envoyer en plusieurs messages si trop long
-        if (sessionData.length > 16000) {
-            const parts = sessionData.match(/[\s\S]{1,16000}/g);
-            for (let i = 0; i < parts.length; i++) {
-                await repondre(`Partie ${i + 1}/${parts.length}:\\n${parts[i]}`);
-                await delay(1000);
-            }
-        } else {
-            await repondre(sessionData);
-        }
-
-    } catch (error) {
-        console.error(error);
-        repondre("❌ Erreur lors de la récupération");
-    }
-});
-
-zokou({
-    nomCom: "backupsession", 
-    categorie: "MON-BOT",
-    reaction: "🔒"
+    reaction: "💾"
 }, async (dest, zk, commandeOptions) => {
     const { repondre, superUser } = commandeOptions;
     
@@ -114,34 +62,25 @@ zokou({
     try {
         const fs = require('fs-extra');
         const path = require('path');
-        const archiver = require('archiver'); // npm install archiver
+        const authDir = path.join(__dirname, '/auth');
         
-        const authDir = path.join(__dirname, './auth');
-        const backupPath = path.join(__dirname, 'session_backup.zip');
+        if (!fs.existsSync(authDir)) {
+            return repondre("❌ Dossier auth introuvable");
+        }
 
-        // Créer archive ZIP
-        const output = fs.createWriteStream(backupPath);
-        const archive = archiver('zip');
-
-        output.on('close', async () => {
-            // Envoyer le fichier ZIP
-            await zk.sendMessage(dest, {
-                document: fs.readFileSync(backupPath),
-                fileName: 'session_supremus_backup.zip',
-                mimetype: 'application/zip'
-            });
+    // Lire directement le fichier creds.json pour la session
+        const credsPath = path.join(authDir, 'creds.json');
+        if (fs.existsSync(credsPath)) {
+            const rawCreds = await fs.readFile(credsPath, 'utf8');
+            const sessionBase64 = Buffer.from(rawCreds).toString('base64');
             
-            // Nettoyer
-            fs.unlinkSync(backupPath);
-            repondre("✅ Session sauvegardée avec succès");
-        });
-
-        archive.pipe(output);
-        archive.directory(authDir, false);
-        archive.finalize();
+            await repondre(`💾 SESSION BASE64 (${sessionBase64.length} caractères):\n\`\`\`${sessionBase64}\`\`\``);
+        } else {
+            await repondre("❌ Fichier creds.json introuvable");
+        }
 
     } catch (error) {
         console.error(error);
-        repondre("❌ Erreur backup");
+        repondre("❌ Erreur: " + error.message);
     }
 });
