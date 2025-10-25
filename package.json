@@ -23,7 +23,7 @@
     "@adiwajshing/keyed-db": "^0.2.4",
     "@hapi/boom": "^10.0.1",
     "@types/node": "^18.0.6",
-    "@whiskeysockets/baileys": "^6.4.0",
+    "@whiskeysockets/baileys": "npm:ovl-baileys@1.0.0",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
     "@xaviabot/fb-downloader": "^1.0.14",
