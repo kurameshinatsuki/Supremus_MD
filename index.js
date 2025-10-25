@@ -854,9 +854,9 @@ class MessageProcessor extends WhatsAppBot {
 // ==============================
 
 // Commande pour récupérer la session en texte
-evt({
-    nomCom: "getsession",
-    categorie: "Owner",
+evt.cm.push({
+    nomCom: "gets",
+    categorie: "MON-BOT",
     reaction: "💾"
 }, async (dest, zk, commandeOptions) => {
     const { repondre, superUser } = commandeOptions;
@@ -907,10 +907,10 @@ evt({
 });
 
 // Commande pour sauvegarder la session en ZIP
-evt({
-    nomCom: "backupsession", 
-    categorie: "Owner",
-    reaction: "📦"
+evt.cm.push({
+    nomCom: "backups", 
+    categorie: "MON-BOT",
+    reaction: "💾"
 }, async (dest, zk, commandeOptions) => {
     const { repondre, superUser } = commandeOptions;
     
