@@ -19,6 +19,7 @@ if (!SPDB) {
 
 module.exports = {
     session: process.env.SESSION_ID || 'zokk',
+    SESSION: process.env.SESSION || "",
     PREFIXE: process.env.PREFIX || "-",
     OWNER_NAME: process.env.OWNER_NAME || "Supremus-Prod",
     NUMERO_OWNER : process.env.NUMERO_OWNER || "22554191184",
@@ -65,3 +66,4 @@ fs.watchFile(fichier, () => {
     delete require.cache[fichier];
     require(fichier);
 });
+
