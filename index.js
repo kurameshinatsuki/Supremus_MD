@@ -32,65 +32,89 @@ const { reagir } = require("./framework/app");
 const getJid = require("./framework/cacheJid");
 
 // ==============================
+// SYSTÈME DE SESSION PERMANENTE
+// ==============================
+
+class StringSession {
+    constructor() {
+        this.session = '';
+    }
+
+    deCrypt(string) {
+        if (!string || typeof string !== 'string') {
+            return null;
+        }
+        try {
+            const decoded = Buffer.from(string, 'base64').toString('utf-8');
+            return JSON.parse(decoded);
+        } catch (error) {
+            console.log('❌ Erreur décryptage session:', error.message);
+            return null;
+        }
+    }
+
+    createStringSession(authInfo) {
+        if (!authInfo) return '';
+        try {
+            const string = JSON.stringify(authInfo);
+            return Buffer.from(string).toString('base64');
+        } catch (error) {
+            console.log('❌ Erreur création session:', error.message);
+            return '';
+        }
+    }
+}
+
+// ==============================
 // SYSTÈME ANTI-DOUBLON
 // ==============================
 
 const processedEvents = new Map();
-const EVENT_TIMEOUT = 30000; // 30 secondes
+const EVENT_TIMEOUT = 30000;
 const MAX_CACHE_SIZE = 2000;
 
-/**
- * Vérifie si un événement est un doublon avec journalisation
- */
 function isDuplicateEvent(msg) {
     if (!msg.key || !msg.key.id) return false;
-
+    
     const eventId = msg.key.id;
     const now = Date.now();
-
-    // Vérifier si l'événement existe déjà
+    
     if (processedEvents.has(eventId)) {
         const originalTime = processedEvents.get(eventId);
         const age = now - originalTime;
         console.log(`🚫 Événement dupliqué détecté: ${eventId} (âge: ${age}ms)`);
         return true;
     }
-
-    // Ajouter le nouvel événement
+    
     processedEvents.set(eventId, now);
-
-    // Nettoyage automatique si le cache devient trop grand
+    
     if (processedEvents.size > MAX_CACHE_SIZE) {
         console.log(`🧹 Nettoyage cache événements (${processedEvents.size} entrées)`);
-        // Garder seulement les 1000 entrées les plus récentes
         const entries = Array.from(processedEvents.entries())
             .sort((a, b) => b[1] - a[1])
             .slice(0, 1000);
         processedEvents.clear();
         entries.forEach(([id, timestamp]) => processedEvents.set(id, timestamp));
     }
-
+    
     return false;
 }
 
-/**
- * Nettoyage périodique des anciens événements
- */
 setInterval(() => {
     const now = Date.now();
     let cleanedCount = 0;
-
+    
     for (const [eventId, timestamp] of processedEvents.entries()) {
         if (now - timestamp > EVENT_TIMEOUT) {
             processedEvents.delete(eventId);
             cleanedCount++;
         }
     }
-
+    
     if (cleanedCount > 0) {
         console.log(`🧹 Nettoyage auto: ${cleanedCount} anciens événements supprimés`);
     }
-}, 30000); // Nettoyer toutes les 30 secondes
+}, 30000);
 
 // ==============================
 // CONFIGURATION GLOBALE
@@ -113,9 +137,6 @@ class WhatsAppBot {
         this.isConnected = false;
     }
 
-    /**
-     * Décode un JID WhatsApp
-     */
     static decodeJid(jid) {
         if (!jid) return jid;
         if (/:\d+@/gi.test(jid)) {
@@ -126,12 +147,9 @@ class WhatsAppBot {
         return jid;
     }
 
-    /**
-     * Extrait le texte d'un message selon son type
-     */
     static extractText(message) {
         const mtype = getContentType(message);
-
+        
         switch (mtype) {
             case "conversation":
                 return message.conversation || "";
@@ -150,9 +168,6 @@ class WhatsAppBot {
         }
     }
 
-    /**
-     * Gestionnaire d'erreurs centralisé
-     */
     static handleError(error, context = "Général") {
         console.error(`❌ Erreur [${context}]:`, error.message);
         if (conf.DEBUG_MODE) {
@@ -167,17 +182,13 @@ class MessageProcessor extends WhatsAppBot {
         this.zk = zk;
     }
 
-    /**
-     * Traite un message entrant
-     */
     async processMessage(m) {
         try {
             const { messages } = m;
             const ms = messages[0];
-
+            
             if (!ms.message) return;
 
-            // VÉRIFICATION ANTI-DOUBLON
             if (isDuplicateEvent(ms)) {
                 console.log('🚫 Événement dupliqué ignoré:', ms.key.id);
                 return;
@@ -185,15 +196,12 @@ class MessageProcessor extends WhatsAppBot {
 
             const messageInfo = await this.extractMessageInfo(ms);
             await this.executeMessageActions(messageInfo);
-
+            
         } catch (error) {
             WhatsAppBot.handleError(error, "Traitement message");
         }
     }
 
-    /**
-     * Exécute les actions pour un message
-     */
     async executeMessageActions(messageInfo) {
         const {
             ms,
@@ -211,48 +219,35 @@ class MessageProcessor extends WhatsAppBot {
             mentions
         } = messageInfo;
 
-        // Log du message
         await this.logMessage(messageInfo);
-
-        // Gestion de l'état de présence
         await this.handlePresenceStatus(messageInfo);
-
-        // Vérification des commandes
         await this.checkAndExecuteCommand(messageInfo);
-
-        // Systèmes de sécurité
         await this.runSecurityChecks(messageInfo);
     }
 
-    /**
-     * Log les informations du message
-     */
     async logMessage(messageInfo) {
         const { verifGroupe, nomGroupe, nomAuteurMessage, auteurMessage, mtype, texte } = messageInfo;
-
+        
         console.log("\t [][]...{Supremus-Md}...[][]");
         console.log("=========== Nouveau message ===========");
-
+        
         if (verifGroupe) {
             console.log("Groupe: " + nomGroupe);
         }
-
+        
         console.log("De: [" + nomAuteurMessage + " : " + auteurMessage.split("@s.whatsapp.net")[0] + "]");
         console.log("Type: " + mtype);
-
+        
         if (texte) {
             console.log("Contenu: " + texte);
         }
     }
 
-    /**
-     * Gère l'état de présence du bot
-     */
     async handlePresenceStatus(messageInfo) {
         const { origineMessage } = messageInfo;
-
+        
         if (!conf.ETAT) return;
-
+        
         switch(conf.ETAT) {
             case 1:
                 await this.zk.sendPresenceUpdate("available", origineMessage);
@@ -266,35 +261,27 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Vérifie et exécute les commandes
-     */
     async checkAndExecuteCommand(messageInfo) {
         const { texte, origineMessage, ms, auteurMessage, verifGroupe } = messageInfo;
-
+        
         if (!texte || !texte.startsWith(prefixe)) return;
 
         const com = texte.slice(1).trim().split(/ +/).shift().toLowerCase();
         const arg = texte.trim().split(/ +/).slice(1);
-
+        
         const cd = evt.cm.find((zokou) => zokou.nomCom === com);
         if (!cd) return;
 
-        // Vérifications de sécurité
         if (!await this.checkCommandPermissions(messageInfo, com)) return;
 
         try {
-            // Réaction avant exécution
             if (cd.reaction) {
                 await reagir(origineMessage, this.zk, ms, cd.reaction);
             }
-
-            // Préparation des options de commande
+            
             const commandeOptions = await this.prepareCommandOptions(messageInfo, arg);
-
-            // Exécution de la commande
             cd.fonction(origineMessage, this.zk, commandeOptions);
-
+            
         } catch (error) {
             console.log("❌ Erreur commande:", error);
             await this.zk.sendMessage(origineMessage, { 
@@ -303,13 +290,9 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Vérifie les permissions pour l'exécution de commande
-     */
     async checkCommandPermissions(messageInfo, command) {
         const { auteurMessage, origineMessage, verifGroupe } = messageInfo;
 
-        // Récupération des super utilisateurs
         const { getAllSudoNumbers } = require("./bdd/sudo");
         const sudo = await getAllSudoNumbers();
         const superUserNumbers = [this.zk.user.id.split('@')[0], 
@@ -317,15 +300,13 @@ class MessageProcessor extends WhatsAppBot {
                                 '22554191184', '2250545697604', conf.NUMERO_OWNER]
             .map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net")
             .concat(sudo);
-
+        
         const superUser = superUserNumbers.includes(auteurMessage);
 
-        // Vérification mode maintenance
         if (conf.MODE != 'yes' && !superUser) {
             return false;
         }
 
-        // Vérification bannissement utilisateur
         if (!superUser) {
             const { isUserBanned } = require("./bdd/banUser");
             if (await isUserBanned(auteurMessage)) {
@@ -336,7 +317,6 @@ class MessageProcessor extends WhatsAppBot {
             }
         }
 
-        // Vérification bannissement groupe
         if (verifGroupe && !superUser) {
             const { isGroupBanned } = require("./bdd/banGroup");
             if (await isGroupBanned(origineMessage)) {
@@ -344,7 +324,6 @@ class MessageProcessor extends WhatsAppBot {
             }
         }
 
-        // Vérification mode admin seulement
         if (verifGroupe && !superUser) {
             const { isGroupOnlyAdmin } = require("./bdd/onlyAdmin");
             if (await isGroupOnlyAdmin(origineMessage)) {
@@ -356,20 +335,14 @@ class MessageProcessor extends WhatsAppBot {
         return true;
     }
 
-    /**
-     * Vérifie si l'utilisateur est admin
-     */
     async checkIfUserIsAdmin(messageInfo) {
         const { infosGroupe, auteurMessage } = messageInfo;
         if (!infosGroupe || !infosGroupe.participants) return false;
-
+        
         const participant = infosGroupe.participants.find(p => p.id === auteurMessage);
         return participant && participant.admin !== null;
     }
 
-    /**
-     * Prépare les options pour les commandes
-     */
     async prepareCommandOptions(messageInfo, arg) {
         const {
             verifGroupe,
@@ -388,13 +361,11 @@ class MessageProcessor extends WhatsAppBot {
 
         const extendedInfo = await this.getExtendedMessageInfo(messageInfo);
 
-        // Fonction de réponse
         const repondre = (mes) => this.zk.sendMessage(origineMessage, 
             { text: mes }, 
             { quoted: ms }
         );
 
-        // Image aléatoire du bot
         const mybotpic = () => {
             const liens = conf.URL ? conf.URL.split(',') : [];
             return liens.length > 0 ? liens[Math.floor(Math.random() * liens.length)] : '';
@@ -427,26 +398,21 @@ class MessageProcessor extends WhatsAppBot {
         };
     }
 
-    /**
-     * Obtient les informations étendues du message
-     */
     async getExtendedMessageInfo(messageInfo) {
         const { verifGroupe, infosGroupe, auteurMessage, idBot } = messageInfo;
-
-        // Vérification admin
+        
         let verifAdmin = false;
         let verifZokouAdmin = false;
-
+        
         if (verifGroupe && infosGroupe && infosGroupe.participants) {
             const admins = this.getGroupAdmins(infosGroupe.participants);
             verifAdmin = admins.includes(auteurMessage);
             verifZokouAdmin = admins.includes(idBot);
         }
 
-        // Vérification superUser/dev
         const devNumbers = ['22540718560', '2250140718560', '22545697604', '22554191184', '2250545697604']
             .map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net");
-
+        
         const dev = devNumbers.includes(auteurMessage);
         const ownerJid = conf.NUMERO_OWNER ? conf.NUMERO_OWNER.replace(/[^0-9]/g) + "@s.whatsapp.net" : '';
         const superUser = dev || auteurMessage === ownerJid;
@@ -459,9 +425,6 @@ class MessageProcessor extends WhatsAppBot {
         };
     }
 
-    /**
-     * Récupère la liste des admins d'un groupe
-     */
     getGroupAdmins(participants) {
         if (!participants) return [];
         return participants
@@ -469,48 +432,35 @@ class MessageProcessor extends WhatsAppBot {
             .map(p => p.id);
     }
 
-    /**
-     * Exécute les vérifications de sécurité
-     */
     async runSecurityChecks(messageInfo) {
-        // Anti-lien
         await this.checkAntiLink(messageInfo);
-
-        // Anti-bot
         await this.checkAntiBot(messageInfo);
-
-        // Mentions du bot
         await this.checkBotMentions(messageInfo);
-
-        // Status auto
         await this.checkAutoStatus(messageInfo);
     }
 
-    /**
-     * Vérification anti-lien
-     */
     async checkAntiLink(messageInfo) {
         try {
             const { texte, origineMessage, verifGroupe, auteurMessage, ms } = messageInfo;
-
+            
             if (!texte || !verifGroupe) return;
-
+            
             const { verifierEtatJid, recupererActionJid } = require("./bdd/antilien");
             const yes = await verifierEtatJid(origineMessage);
-
+            
             if ((texte.includes('https://') || texte.includes('http://')) && yes) {
                 console.log("🔗 Lien détecté");
-
+                
                 const { getGroupAdmins } = this;
                 const admins = messageInfo.infosGroupe ? getGroupAdmins(messageInfo.infosGroupe.participants) : [];
                 const verifZokAdmin = admins.includes(messageInfo.idBot);
                 const extendedInfo = await this.getExtendedMessageInfo(messageInfo);
-
+                
                 if (extendedInfo.superUser || extendedInfo.verifAdmin || !verifZokAdmin) {
                     console.log('✅ Lien autorisé (admin/superUser)');
                     return;
                 }
-
+                
                 await this.handleAntiLinkAction(messageInfo);
             }
         } catch (error) {
@@ -518,14 +468,11 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Gère l'action anti-lien
-     */
     async handleAntiLinkAction(messageInfo) {
         const { origineMessage, auteurMessage, ms } = messageInfo;
         const { recupererActionJid } = require("./bdd/antilien");
         const action = await recupererActionJid(origineMessage);
-
+        
         const key = {
             remoteJid: origineMessage,
             fromMe: false,
@@ -542,31 +489,28 @@ class MessageProcessor extends WhatsAppBot {
                 await this.zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-
+                
             case 'supp':
                 txt += `Message supprimé \n @${auteurMessage.split("@")[0]} évitez les liens.`;
                 await this.zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-
+                
             case 'warn':
                 await this.handleWarnAction(messageInfo, "lien");
                 break;
         }
     }
 
-    /**
-     * Vérification anti-bot
-     */
     async checkAntiBot(messageInfo) {
         try {
             const { ms, origineMessage, auteurMessage, verifGroupe, idBot } = messageInfo;
-
+            
             if (!verifGroupe) return;
-
+            
             const botMsg = ms.key?.id?.startsWith('BAES') && ms.key?.id?.length === 16;
             const baileysMsg = ms.key?.id?.startsWith('BAE5') && ms.key?.id?.length === 16;
-
+            
             if (!botMsg && !baileysMsg) return;
             if (messageInfo.mtype === 'reactionMessage') return;
 
@@ -583,14 +527,11 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Gère l'action anti-bot
-     */
     async handleAntiBotAction(messageInfo) {
         const { origineMessage, auteurMessage, ms } = messageInfo;
         const { atbrecupererActionJid } = require("./bdd/antibot");
         const action = await atbrecupererActionJid(origineMessage);
-
+        
         const key = {
             remoteJid: origineMessage,
             fromMe: false,
@@ -607,26 +548,23 @@ class MessageProcessor extends WhatsAppBot {
                 await this.zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-
+                
             case 'supp':
                 txt += `Message supprimé \n @${auteurMessage.split("@")[0]} évitez les bots.`;
                 await this.zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-
+                
             case 'warn':
                 await this.handleWarnAction(messageInfo, "bot");
                 break;
         }
     }
 
-    /**
-     * Gère le système d'avertissement
-     */
     async handleWarnAction(messageInfo, type) {
         const { origineMessage, auteurMessage, ms } = messageInfo;
         const { getWarnCountByJID, ajouterUtilisateurAvecWarnCount } = require('./bdd/warn');
-
+        
         let warn = await getWarnCountByJID(auteurMessage);
         let warnlimit = conf.WARN_COUNT || 3;
 
@@ -642,15 +580,12 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Vérification des mentions du bot
-     */
     async checkBotMentions(messageInfo) {
         try {
             const { ms, mtype, origineMessage, idBot } = messageInfo;
-
+            
             if (!ms.message || !ms.message[mtype] || !ms.message[mtype].contextInfo) return;
-
+            
             const mentionedJid = ms.message[mtype].contextInfo.mentionedJid;
             if (!mentionedJid || !mentionedJid.includes(idBot)) return;
 
@@ -665,31 +600,25 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Gère les mentions du bot
-     */
     async handleBotMention(messageInfo) {
         const { origineMessage, ms } = messageInfo;
         const mbd = require('./bdd/mention');
         const alldata = await mbd.recupererToutesLesValeurs();
-
+        
         if (!alldata || alldata.length === 0) return;
-
+        
         const data = alldata[0];
         if (data.status === 'non') return;
 
         await this.sendMentionResponse(messageInfo, data);
     }
 
-    /**
-     * Envoie la réponse à la mention
-     */
     async sendMentionResponse(messageInfo, data) {
         const { origineMessage, ms } = messageInfo;
         const { Sticker, StickerTypes } = require('wa-sticker-formatter');
-
+        
         let msg = {};
-
+        
         switch (data.type.toLowerCase()) {
             case 'image':
                 msg = { image: { url: data.url }, caption: data.message };
@@ -713,16 +642,13 @@ class MessageProcessor extends WhatsAppBot {
             default:
                 msg = { text: data.message || '👋 Bonjour !' };
         }
-
+        
         await this.zk.sendMessage(origineMessage, msg, { quoted: ms });
     }
 
-    /**
-     * Vérification auto-status
-     */
     async checkAutoStatus(messageInfo) {
         const { ms } = messageInfo;
-
+        
         if (ms.key && ms.key.remoteJid === "status@broadcast") {
             if (conf.LECTURE_AUTO_STATUS === "oui") {
                 await this.zk.readMessages([ms.key]);
@@ -733,12 +659,9 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Gère le téléchargement auto des status
-     */
     async handleAutoStatusDownload(messageInfo) {
         const { ms, idBot } = messageInfo;
-
+        
         if (ms.message.extendedTextMessage) {
             const stTxt = ms.message.extendedTextMessage.text;
             await this.zk.sendMessage(idBot, { text: stTxt }, { quoted: ms });
@@ -753,17 +676,14 @@ class MessageProcessor extends WhatsAppBot {
         }
     }
 
-    /**
-     * Télécharge et sauvegarde un média
-     */
     async downloadAndSaveMediaMessage(message, filename = '') {
         let quoted = message.msg ? message.msg : message;
         let mime = (message.msg || message).mimetype || '';
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
-
+        
         const stream = await downloadContentFromMessage(quoted, messageType);
         let buffer = Buffer.from([]);
-
+        
         for await (const chunk of stream) {
             buffer = Buffer.concat([buffer, chunk]);
         }
@@ -771,15 +691,12 @@ class MessageProcessor extends WhatsAppBot {
         const FileType = require('file-type');
         let type = await FileType.fromBuffer(buffer);
         let trueFileName = `./media/${filename || 'temp'}.${type.ext}`;
-
+        
         await fs.ensureDir('./media');
         await fs.writeFileSync(trueFileName, buffer);
         return trueFileName;
     }
 
-    /**
-     * Extrait toutes les informations d'un message
-     */
     async extractMessageInfo(ms) {
         const mtype = getContentType(ms.message);
         const texte = WhatsAppBot.extractText(ms.message);
@@ -788,7 +705,6 @@ class MessageProcessor extends WhatsAppBot {
         const servBot = idBot.split('@')[0];
         const verifGroupe = origineMessage?.endsWith("@g.us");
 
-        // Métadonnées du groupe
         let infosGroupe = "";
         let nomGroupe = "";
         if (verifGroupe) {
@@ -800,11 +716,9 @@ class MessageProcessor extends WhatsAppBot {
             }
         }
 
-        // Auteur du message
         const auteurMessage = await this.getAuthorInfo(ms, origineMessage, idBot, verifGroupe);
         const nomAuteurMessage = ms.pushName;
 
-        // Message répondu
         const msgRepondu = ms.message.extendedTextMessage?.contextInfo?.quotedMessage;
         let auteurMsgRepondu = '';
         if (msgRepondu) {
@@ -833,9 +747,6 @@ class MessageProcessor extends WhatsAppBot {
         };
     }
 
-    /**
-     * Obtient les informations de l'auteur du message
-     */
     async getAuthorInfo(ms, origineMessage, idBot, verifGroupe) {
         let auteur = WhatsAppBot.decodeJid(
             verifGroupe ? (ms.key.participant || ms.participant) : origineMessage
@@ -850,67 +761,6 @@ class MessageProcessor extends WhatsAppBot {
 }
 
 // ==============================
-// FONCTIONS AMÉLIORÉES POUR L'AFFICHAGE DE LA SESSION
-// ==============================
-
-/**
- * Affiche la session complète sans troncature
- */
-async function displaySessionProperly(sessionText) {
-    console.log('═'.repeat(80));
-    console.log('💾 SESSION COMPLÈTE - COPIEZ TOUT CE QUI SUIT :');
-    console.log('═'.repeat(80));
-    
-    // Méthode 1 : Écriture directe dans stdout sans limitation
-    process.stdout.write(sessionText);
-    process.stdout.write('\n');
-    
-    console.log('═'.repeat(80));
-    console.log('📝 Fin de la session - Gardez ce texte précieusement !');
-    console.log('═'.repeat(80));
-    
-    // Méthode 2 : Sauvegarde dans un fichier en parallèle
-    await backupSessionToFile(sessionText);
-}
-
-/**
- * Sauvegarde la session dans un fichier
- */
-async function backupSessionToFile(sessionText) {
-    try {
-        const backupDir = './session_backups';
-        await fs.ensureDir(backupDir);
-        
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `${backupDir}/session_${timestamp}.txt`;
-        
-        await fs.writeFile(filename, sessionText);
-        console.log(`💾 Backup session sauvegardé: ${filename}`);
-    } catch (error) {
-        console.log('⚠️ Impossible de sauvegarder la session dans un fichier');
-    }
-}
-
-/**
- * Vérifie l'état des credentials
- */
-function checkAuthState(zk) {
-    if (!zk.authState || !zk.authState.creds) {
-        console.log('❌ Aucun état d\'authentification trouvé');
-        return false;
-    }
-
-    const creds = zk.authState.creds;
-    console.log('🔐 État de la session:');
-    console.log(`   - Registered: ${creds.registered}`);
-    console.log(`   - Logged in: ${creds.me ? 'Oui' : 'Non'}`);
-    console.log(`   - Noise key: ${creds.noiseKey ? 'Présent' : 'Absent'}`);
-    console.log(`   - Pairing key: ${creds.pairingEphemeralKeyPair ? 'Présent' : 'Absent'}`);
-
-    return creds.registered && creds.me;
-}
-
-// ==============================
 // INITIALISATION DU BOT
 // ==============================
 
@@ -918,42 +768,59 @@ async function initializeBot() {
     try {
         console.log("🚀 Initialisation du bot Supremus-MD...");
 
-        const { version, isLatest } = await fetchLatestBaileysVersion();
-        const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth");
+        const { isLatest } = await fetchLatestBaileysVersion();
+        
+        // SYSTÈME DE SESSION PERMANENTE
+        let state;
+        let usingStringSession = false;
+        let saveCredsFunction = null;
+        
+        // Vérifier si une session string existe dans la configuration
+        if (conf.SESSION && conf.SESSION.trim() !== '') {
+            console.log("🔑 Tentative de connexion avec session permanente...");
+            const Session = new StringSession();
+            const authInfo = Session.deCrypt(conf.SESSION);
+            
+            if (authInfo && authInfo.creds) {
+                usingStringSession = true;
+                state = {
+                    creds: authInfo.creds,
+                    keys: authInfo.keys || {}
+                };
+                console.log("✅ Session permanente chargée");
+            } else {
+                console.log("❌ Session invalide, utilisation du pairing code...");
+            }
+        }
+        
+        // Fallback: système de fichiers
+        if (!state) {
+            console.log("📁 Utilisation du système d'auth par fichiers...");
+            const fileState = await useMultiFileAuthState(__dirname + "/auth");
+            state = fileState;
+            saveCredsFunction = fileState.saveCreds;
+        }
 
         const sockOptions = {
             logger: pino({ level: "silent" }),
             browser: BROWSER_CONFIG,
-            version: version,
+            version: [2, 3000, 1025190524],
             syncFullHistory: false,
             generateHighQualityLinkPreview: true,
             markOnlineOnConnect: true,
-            printQRInTerminal: false, // Désactivé car vous utilisez le pairing code
             auth: {
                 creds: state.creds,
                 keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
             },
-            // Options de connexion améliorées
-            connectTimeoutMs: 60000,
-            keepAliveIntervalMs: 25000,
-            retryRequestDelayMs: 2000,
-            maxRetries: 5,
-            // Optimisations mémoire
-            transactionOpts: {
-                maxCommitRetries: 10,
-                delayBetweenTriesMs: 3000
-            },
-            // Gestion des messages
-            msgRetryCounterCache: new Map(),
-            getMessage: async (key) => {
-                return null;
-            }
         };
 
         const zk = makeWASocket(sockOptions);
-
+        
+        // Configuration de la sauvegarde de session
+        setupSessionSaving(zk, state, saveCredsFunction, usingStringSession);
+        
         await handlePairing(zk);
-        setupEventHandlers(zk, saveCreds);
+        setupEventHandlers(zk, saveCredsFunction);
 
         return zk;
 
@@ -964,33 +831,81 @@ async function initializeBot() {
 }
 
 /**
+ * Configure la sauvegarde automatique des sessions
+ */
+function setupSessionSaving(zk, state, saveCredsFunction, usingStringSession) {
+    zk.ev.on("creds.update", async () => {
+        try {
+            // Sauvegarde dans les fichiers (système existant)
+            if (saveCredsFunction) {
+                await saveCredsFunction();
+            }
+            
+            // Génération de la session string permanente
+            if (!usingStringSession && state.creds.registered) {
+                const Session = new StringSession();
+                const authInfo = {
+                    creds: state.creds,
+                    keys: state.keys
+                };
+                
+                const sessionString = Session.createStringSession(authInfo);
+                
+                if (sessionString) {
+                    console.log('\n' + '='.repeat(60));
+                    console.log('🔑 SESSION PERMANENTE GÉNÉRÉE :');
+                    console.log('='.repeat(60));
+                    console.log(sessionString);
+                    console.log('='.repeat(60));
+                    console.log('📝 Copiez cette session dans votre config.env comme:');
+                    console.log(`SESSION="${sessionString}"`);
+                    console.log('💡 Cette session permettra une reconnexion automatique');
+                    console.log('='.repeat(60) + '\n');
+                    
+                    // Sauvegarde automatique dans un fichier
+                    try {
+                        const sessionFile = __dirname + '/session.txt';
+                        await fs.writeFile(sessionFile, sessionString);
+                        console.log('💾 Session sauvegardée dans: ' + sessionFile);
+                    } catch (fileError) {
+                        console.log('❌ Impossible de sauvegarder la session dans un fichier');
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('❌ Erreur sauvegarde session:', error.message);
+        }
+    });
+}
+
+/**
  * Gère le processus de pairing
  */
 async function handlePairing(zk) {
+    // Vérifier si déjà enregistré
+    if (zk.authState.creds.registered) {
+        console.log("✅ Compte déjà enregistré - Pas besoin de pairing");
+        return;
+    }
+    
+    // Vérifier si pairing déjà en cours
+    if (pair) {
+        return;
+    }
+
     if (!zk.authState.creds.registered && !pair) {
         try {
-            await delay(3000);
-            console.log('📱 Démarrage du processus de pairing...');
-            
+            await delay(5000);
+            console.log('\n' + '🔗'.repeat(25));
+            console.log("🔄 Génération du code de pairing...");
             const code = await zk.requestPairingCode(conf.NUMERO_PAIR);
-            
-            console.log('═'.repeat(50));
-            console.log('🔗 CODE DE PAIRAGE WHATSAPP :');
-            console.log('═'.repeat(50));
-            console.log(`📋 ${code}`);
-            console.log('═'.repeat(50));
-            console.log('📝 Instructions:');
-            console.log('1. Ouvrez WhatsApp sur votre téléphone');
-            console.log('2. Allez dans Paramètres → Appareils liés → Lier un appareil');
-            console.log('3. Entrez le code ci-dessus');
-            console.log('═'.repeat(50));
-            
+            console.log("✅ CODE DE PAIRAGE : ", code);
+            console.log('🔗'.repeat(25));
+            console.log("📱 Utilisez ce code dans WhatsApp > Appareils liés");
+            console.log('🔗'.repeat(25) + '\n');
             pair = true;
         } catch (err) {
             console.error("❌ Erreur lors du pairage :", err.message);
-            console.log('🔄 Nouvelle tentative dans 10 secondes...');
-            await delay(10000);
-            await handlePairing(zk);
         }
     }
 }
@@ -1000,7 +915,9 @@ async function handlePairing(zk) {
  */
 function setupEventHandlers(zk, saveCreds) {
     // Événement de mise à jour des credentials
-    zk.ev.on("creds.update", saveCreds);
+    if (saveCreds) {
+        zk.ev.on("creds.update", saveCreds);
+    }
 
     // Événement de connexion
     zk.ev.on("connection.update", (con) => handleConnectionUpdate(con, zk));
@@ -1021,89 +938,53 @@ function setupEventHandlers(zk, saveCreds) {
 // GESTIONNAIRES D'ÉVÉNEMENTS
 // ==============================
 
-/**
- * Gère les mises à jour de connexion
- */
 async function handleConnectionUpdate(con, zk) {
     const { lastDisconnect, connection } = con;
-
+    
     switch (connection) {
         case "connecting":
             console.log("ℹ️ Connexion en cours...");
             break;
-
+            
         case "open":
             await handleSuccessfulConnection(zk);
             break;
-
+            
         case "close":
-            await handleConnectionClose(lastDisconnect);
+            await handleConnectionClose(lastDisconnect, zk);
             break;
     }
 }
 
-/**
- * Gère une connexion réussie
- */
 async function handleSuccessfulConnection(zk) {
     console.log("✅ Connexion réussie !");
-    
-    // Vérifier l'état de l'authentification
-    if (!checkAuthState(zk)) {
-        console.log('⚠️ Session incomplète, nouvelle authentification nécessaire');
-        return;
-    }
-    
     await displayConnectionAnimation();
-
-    // AFFICHER LA SESSION - VERSION AMÉLIORÉE
-    console.log('\n🛜 CONNEXION WHATSAPP RÉUSSIE !');
-    console.log('📋 SESSION PERSISTANTE À COPIER :');
-
-    // Attendre un peu que les credentials soient chargés
-    await delay(1000);
-
-    if (zk.authState && zk.authState.creds) {
-        const sessionText = Buffer.from(JSON.stringify(zk.authState.creds)).toString('base64');
-        
-        // AFFICHAGE ROBUSTE DE LA SESSION
-        await displaySessionProperly(sessionText);
-        
-    } else {
-        console.log('❌ Impossible de récupérer les credentials');
-    }
-
+    
     console.log("📦 Chargement des commandes...");
     await loadCommands();
-
+    
     await activateCrons(zk);
     await sendStartupMessage(zk);
 }
 
-/**
- * Affiche une animation de connexion
- */
 async function displayConnectionAnimation() {
     const steps = ["🚀 Démarrage...", "📡 Connexion...", "✅ Connecté !"];
-
+    
     for (const step of steps) {
         console.log(step);
         await delay(500);
     }
 }
 
-/**
- * Gère la fermeture de connexion
- */
-async function handleConnectionClose(lastDisconnect) {
+async function handleConnectionClose(lastDisconnect, zk) {
     const raisonDeconnexion = new Boom(lastDisconnect?.error)?.output.statusCode;
-
+    
     const raisons = {
-        [DisconnectReason.badSession]: "Session invalide - Rescanner le QR code",
+        [DisconnectReason.badSession]: "Session invalide - Regénération du pairing code...",
         [DisconnectReason.connectionClosed]: "Connexion fermée - Reconnexion...",
         [DisconnectReason.connectionLost]: "Connexion perdue - Reconnexion...",
         [DisconnectReason.connectionReplaced]: "Connexion remplacée - Fermer l'autre session",
-        [DisconnectReason.loggedOut]: "Déconnecté - Rescanner le QR code",
+        [DisconnectReason.loggedOut]: "Déconnecté - Regénération du pairing code...",
         [DisconnectReason.restartRequired]: "Redémarrage requis..."
     };
 
@@ -1113,20 +994,22 @@ async function handleConnectionClose(lastDisconnect) {
         console.log(`🔌 Redémarrage (erreur ${raisonDeconnexion})`);
     }
 
-    // Reconnexion automatique pour certaines erreurs
-    if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.restartRequired].includes(raisonDeconnexion)) {
+    // Gestion spécifique des sessions invalides
+    if ([DisconnectReason.badSession, DisconnectReason.loggedOut].includes(raisonDeconnexion)) {
+        console.log("🔄 Passage en mode pairing pour nouvelle authentification...");
+    }
+
+    // Reconnexion automatique
+    if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.restartRequired, DisconnectReason.badSession, DisconnectReason.loggedOut].includes(raisonDeconnexion)) {
         await delay(5000);
         main();
     }
 }
 
-/**
- * Gère les mises à jour des groupes
- */
 async function handleGroupUpdate(group, zk) {
     try {
         console.log(`👥 Mise à jour groupe: ${group.action} dans ${group.id}`);
-
+        
         let ppgroup;
         try {
             ppgroup = await zk.profilePictureUrl(group.id, 'image');
@@ -1142,9 +1025,6 @@ async function handleGroupUpdate(group, zk) {
     }
 }
 
-/**
- * Exécute les actions selon le type de mise à jour du groupe
- */
 async function executeGroupAction(group, zk, metadata, ppgroup) {
     const { recupevents } = require('./bdd/welcome');
     const actionHandlers = {
@@ -1158,9 +1038,6 @@ async function executeGroupAction(group, zk, metadata, ppgroup) {
     if (handler) await handler();
 }
 
-/**
- * Gère l'arrivée de nouveaux membres
- */
 async function handleNewMember(group, zk, metadata, ppgroup, recupevents) {
     const eventType = await recupevents(group.id, "welcome");
     const neoEventType = await recupevents(group.id, "neowelcome");
@@ -1172,9 +1049,6 @@ async function handleNewMember(group, zk, metadata, ppgroup, recupevents) {
     }
 }
 
-/**
- * Envoie un message de bienvenue classique
- */
 async function sendWelcomeMessage(group, zk, metadata, ppgroup) {
     let msg = `╔════◇◇◇═════╗
 ║ Souhaitons la bienvenue au(x) nouveau(x) membre(s)
@@ -1197,9 +1071,6 @@ ${metadata.desc || "Aucune description"}`;
     });
 }
 
-/**
- * Envoie un message de bienvenue NEO
- */
 async function sendNeoWelcomeMessage(group, zk) {
     for (let membre of group.participants) {
         const msg = `@${membre.split("@")[0]} Bienvenue🙂 💙 : *Remplis les 3️⃣ Étapes en conditions dans la description*, puis après passe prendre ta première card de combat
@@ -1216,9 +1087,6 @@ async function sendNeoWelcomeMessage(group, zk) {
     }
 }
 
-/**
- * Gère le départ des membres
- */
 async function handleMemberLeave(group, zk, recupevents) {
     if (await recupevents(group.id, "goodbye") === 'oui') {
         let msg = `Un ou des membres vient(nent) de quitter le groupe;\n`;
@@ -1229,12 +1097,9 @@ async function handleMemberLeave(group, zk, recupevents) {
     }
 }
 
-/**
- * Gère les promotions/démotions avec système anti-abuse
- */
 async function handlePromoteDemote(group, zk, metadata, eventType, action) {
     const { recupevents } = require('./bdd/welcome');
-
+    
     if (await recupevents(group.id, eventType) !== 'oui') return;
 
     const authorJid = WhatsAppBot.decodeJid(group.author);
@@ -1242,13 +1107,11 @@ async function handlePromoteDemote(group, zk, metadata, eventType, action) {
     const botJid = WhatsAppBot.decodeJid(zk.user.id);
     const ownerJid = conf.NUMERO_OWNER ? conf.NUMERO_OWNER.replace(/[^0-9]/g) + '@s.whatsapp.net' : '';
 
-    // Vérifier les permissions
     if ([metadata.owner, ownerJid, botJid, targetJid].includes(authorJid)) {
         console.log('✅ Action autorisée (superUser)');
         return;
     }
 
-    // Appliquer les sanctions
     if (action === 'promote') {
         await zk.groupParticipantsUpdate(group.id, [authorJid, targetJid], "demote");
         await zk.sendMessage(group.id, {
@@ -1271,7 +1134,7 @@ async function handlePromoteDemote(group, zk, metadata, eventType, action) {
 
 async function loadCommands() {
     const commandesDir = __dirname + "/commandes";
-
+    
     if (!fs.existsSync(commandesDir)) {
         console.log("❌ Dossier 'commandes' introuvable");
         return;
@@ -1282,7 +1145,7 @@ async function loadCommands() {
     );
 
     let commandesChargees = 0;
-
+    
     for (const fichier of fichiers) {
         try {
             require(path.join(commandesDir, fichier));
@@ -1293,7 +1156,7 @@ async function loadCommands() {
             console.log(`❌ ${fichier} - Erreur: ${error.message}`);
         }
     }
-
+    
     console.log(`📊 ${commandesChargees}/${fichiers.length} commandes chargées`);
 }
 
@@ -1443,17 +1306,14 @@ function startExpressServer() {
 async function main() {
     try {
         const zk = await initializeBot();
-
-        // Ajout des fonctions utilitaires à l'instance
+        
         zk.downloadAndSaveMediaMessage = (message, filename) => {
             const processor = new MessageProcessor(zk);
             return processor.downloadAndSaveMediaMessage(message, filename);
         };
 
-        // Démarrage du serveur web
         startExpressServer();
 
-        // Surveillance des changements de fichier (hot reload)
         setupFileWatcher();
 
         return zk;
@@ -1478,7 +1338,6 @@ function setupFileWatcher() {
 // DÉMARRAGE DE L'APPLICATION
 // ==============================
 
-// Délai initial avant démarrage
 setTimeout(() => {
     main().catch(error => {
         console.error('💥 Erreur critique:', error);
@@ -1486,7 +1345,6 @@ setTimeout(() => {
     });
 }, 3000);
 
-// Gestion propre de la fermeture
 process.on('SIGINT', () => {
     console.log('\n🛑 Arrêt propre du bot...');
     process.exit(0);
