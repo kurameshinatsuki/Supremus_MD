@@ -44,10 +44,10 @@ const MAX_CACHE_SIZE = 2000;
  */
 function isDuplicateEvent(msg) {
     if (!msg.key || !msg.key.id) return false;
-    
+
     const eventId = msg.key.id;
     const now = Date.now();
-    
+
     // Vérifier si l'événement existe déjà
     if (processedEvents.has(eventId)) {
         const originalTime = processedEvents.get(eventId);
@@ -55,10 +55,10 @@ function isDuplicateEvent(msg) {
         console.log(`🚫 Événement dupliqué détecté: ${eventId} (âge: ${age}ms)`);
         return true;
     }
-    
+
     // Ajouter le nouvel événement
     processedEvents.set(eventId, now);
-    
+
     // Nettoyage automatique si le cache devient trop grand
     if (processedEvents.size > MAX_CACHE_SIZE) {
         console.log(`🧹 Nettoyage cache événements (${processedEvents.size} entrées)`);
@@ -69,7 +69,7 @@ function isDuplicateEvent(msg) {
         processedEvents.clear();
         entries.forEach(([id, timestamp]) => processedEvents.set(id, timestamp));
     }
-    
+
     return false;
 }
 
@@ -79,14 +79,14 @@ function isDuplicateEvent(msg) {
 setInterval(() => {
     const now = Date.now();
     let cleanedCount = 0;
-    
+
     for (const [eventId, timestamp] of processedEvents.entries()) {
         if (now - timestamp > EVENT_TIMEOUT) {
             processedEvents.delete(eventId);
             cleanedCount++;
         }
     }
-    
+
     if (cleanedCount > 0) {
         console.log(`🧹 Nettoyage auto: ${cleanedCount} anciens événements supprimés`);
     }
@@ -131,7 +131,7 @@ class WhatsAppBot {
      */
     static extractText(message) {
         const mtype = getContentType(message);
-        
+
         switch (mtype) {
             case "conversation":
                 return message.conversation || "";
@@ -174,7 +174,7 @@ class MessageProcessor extends WhatsAppBot {
         try {
             const { messages } = m;
             const ms = messages[0];
-            
+
             if (!ms.message) return;
 
             // VÉRIFICATION ANTI-DOUBLON
@@ -185,7 +185,7 @@ class MessageProcessor extends WhatsAppBot {
 
             const messageInfo = await this.extractMessageInfo(ms);
             await this.executeMessageActions(messageInfo);
-            
+
         } catch (error) {
             WhatsAppBot.handleError(error, "Traitement message");
         }
@@ -229,17 +229,17 @@ class MessageProcessor extends WhatsAppBot {
      */
     async logMessage(messageInfo) {
         const { verifGroupe, nomGroupe, nomAuteurMessage, auteurMessage, mtype, texte } = messageInfo;
-        
+
         console.log("\t [][]...{Supremus-Md}...[][]");
         console.log("=========== Nouveau message ===========");
-        
+
         if (verifGroupe) {
             console.log("Groupe: " + nomGroupe);
         }
-        
+
         console.log("De: [" + nomAuteurMessage + " : " + auteurMessage.split("@s.whatsapp.net")[0] + "]");
         console.log("Type: " + mtype);
-        
+
         if (texte) {
             console.log("Contenu: " + texte);
         }
@@ -250,9 +250,9 @@ class MessageProcessor extends WhatsAppBot {
      */
     async handlePresenceStatus(messageInfo) {
         const { origineMessage } = messageInfo;
-        
+
         if (!conf.ETAT) return;
-        
+
         switch(conf.ETAT) {
             case 1:
                 await this.zk.sendPresenceUpdate("available", origineMessage);
@@ -271,12 +271,12 @@ class MessageProcessor extends WhatsAppBot {
      */
     async checkAndExecuteCommand(messageInfo) {
         const { texte, origineMessage, ms, auteurMessage, verifGroupe } = messageInfo;
-        
+
         if (!texte || !texte.startsWith(prefixe)) return;
 
         const com = texte.slice(1).trim().split(/ +/).shift().toLowerCase();
         const arg = texte.trim().split(/ +/).slice(1);
-        
+
         const cd = evt.cm.find((zokou) => zokou.nomCom === com);
         if (!cd) return;
 
@@ -288,13 +288,13 @@ class MessageProcessor extends WhatsAppBot {
             if (cd.reaction) {
                 await reagir(origineMessage, this.zk, ms, cd.reaction);
             }
-            
+
             // Préparation des options de commande
             const commandeOptions = await this.prepareCommandOptions(messageInfo, arg);
-            
+
             // Exécution de la commande
             cd.fonction(origineMessage, this.zk, commandeOptions);
-            
+
         } catch (error) {
             console.log("❌ Erreur commande:", error);
             await this.zk.sendMessage(origineMessage, { 
@@ -317,7 +317,7 @@ class MessageProcessor extends WhatsAppBot {
                                 '22554191184', '2250545697604', conf.NUMERO_OWNER]
             .map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net")
             .concat(sudo);
-        
+
         const superUser = superUserNumbers.includes(auteurMessage);
 
         // Vérification mode maintenance
@@ -362,7 +362,7 @@ class MessageProcessor extends WhatsAppBot {
     async checkIfUserIsAdmin(messageInfo) {
         const { infosGroupe, auteurMessage } = messageInfo;
         if (!infosGroupe || !infosGroupe.participants) return false;
-        
+
         const participant = infosGroupe.participants.find(p => p.id === auteurMessage);
         return participant && participant.admin !== null;
     }
@@ -432,11 +432,11 @@ class MessageProcessor extends WhatsAppBot {
      */
     async getExtendedMessageInfo(messageInfo) {
         const { verifGroupe, infosGroupe, auteurMessage, idBot } = messageInfo;
-        
+
         // Vérification admin
         let verifAdmin = false;
         let verifZokouAdmin = false;
-        
+
         if (verifGroupe && infosGroupe && infosGroupe.participants) {
             const admins = this.getGroupAdmins(infosGroupe.participants);
             verifAdmin = admins.includes(auteurMessage);
@@ -446,7 +446,7 @@ class MessageProcessor extends WhatsAppBot {
         // Vérification superUser/dev
         const devNumbers = ['22540718560', '2250140718560', '22545697604', '22554191184', '2250545697604']
             .map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net");
-        
+
         const dev = devNumbers.includes(auteurMessage);
         const ownerJid = conf.NUMERO_OWNER ? conf.NUMERO_OWNER.replace(/[^0-9]/g) + "@s.whatsapp.net" : '';
         const superUser = dev || auteurMessage === ownerJid;
@@ -475,13 +475,13 @@ class MessageProcessor extends WhatsAppBot {
     async runSecurityChecks(messageInfo) {
         // Anti-lien
         await this.checkAntiLink(messageInfo);
-        
+
         // Anti-bot
         await this.checkAntiBot(messageInfo);
-        
+
         // Mentions du bot
         await this.checkBotMentions(messageInfo);
-        
+
         // Status auto
         await this.checkAutoStatus(messageInfo);
     }
@@ -492,25 +492,25 @@ class MessageProcessor extends WhatsAppBot {
     async checkAntiLink(messageInfo) {
         try {
             const { texte, origineMessage, verifGroupe, auteurMessage, ms } = messageInfo;
-            
+
             if (!texte || !verifGroupe) return;
-            
+
             const { verifierEtatJid, recupererActionJid } = require("./bdd/antilien");
             const yes = await verifierEtatJid(origineMessage);
-            
+
             if ((texte.includes('https://') || texte.includes('http://')) && yes) {
                 console.log("🔗 Lien détecté");
-                
+
                 const { getGroupAdmins } = this;
                 const admins = messageInfo.infosGroupe ? getGroupAdmins(messageInfo.infosGroupe.participants) : [];
                 const verifZokAdmin = admins.includes(messageInfo.idBot);
                 const extendedInfo = await this.getExtendedMessageInfo(messageInfo);
-                
+
                 if (extendedInfo.superUser || extendedInfo.verifAdmin || !verifZokAdmin) {
                     console.log('✅ Lien autorisé (admin/superUser)');
                     return;
                 }
-                
+
                 await this.handleAntiLinkAction(messageInfo);
             }
         } catch (error) {
@@ -525,7 +525,7 @@ class MessageProcessor extends WhatsAppBot {
         const { origineMessage, auteurMessage, ms } = messageInfo;
         const { recupererActionJid } = require("./bdd/antilien");
         const action = await recupererActionJid(origineMessage);
-        
+
         const key = {
             remoteJid: origineMessage,
             fromMe: false,
@@ -542,13 +542,13 @@ class MessageProcessor extends WhatsAppBot {
                 await this.zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-                
+
             case 'supp':
                 txt += `Message supprimé \n @${auteurMessage.split("@")[0]} évitez les liens.`;
                 await this.zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-                
+
             case 'warn':
                 await this.handleWarnAction(messageInfo, "lien");
                 break;
@@ -561,12 +561,12 @@ class MessageProcessor extends WhatsAppBot {
     async checkAntiBot(messageInfo) {
         try {
             const { ms, origineMessage, auteurMessage, verifGroupe, idBot } = messageInfo;
-            
+
             if (!verifGroupe) return;
-            
+
             const botMsg = ms.key?.id?.startsWith('BAES') && ms.key?.id?.length === 16;
             const baileysMsg = ms.key?.id?.startsWith('BAE5') && ms.key?.id?.length === 16;
-            
+
             if (!botMsg && !baileysMsg) return;
             if (messageInfo.mtype === 'reactionMessage') return;
 
@@ -590,7 +590,7 @@ class MessageProcessor extends WhatsAppBot {
         const { origineMessage, auteurMessage, ms } = messageInfo;
         const { atbrecupererActionJid } = require("./bdd/antibot");
         const action = await atbrecupererActionJid(origineMessage);
-        
+
         const key = {
             remoteJid: origineMessage,
             fromMe: false,
@@ -607,13 +607,13 @@ class MessageProcessor extends WhatsAppBot {
                 await this.zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-                
+
             case 'supp':
                 txt += `Message supprimé \n @${auteurMessage.split("@")[0]} évitez les bots.`;
                 await this.zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
                 await this.zk.sendMessage(origineMessage, { delete: key });
                 break;
-                
+
             case 'warn':
                 await this.handleWarnAction(messageInfo, "bot");
                 break;
@@ -626,7 +626,7 @@ class MessageProcessor extends WhatsAppBot {
     async handleWarnAction(messageInfo, type) {
         const { origineMessage, auteurMessage, ms } = messageInfo;
         const { getWarnCountByJID, ajouterUtilisateurAvecWarnCount } = require('./bdd/warn');
-        
+
         let warn = await getWarnCountByJID(auteurMessage);
         let warnlimit = conf.WARN_COUNT || 3;
 
@@ -648,9 +648,9 @@ class MessageProcessor extends WhatsAppBot {
     async checkBotMentions(messageInfo) {
         try {
             const { ms, mtype, origineMessage, idBot } = messageInfo;
-            
+
             if (!ms.message || !ms.message[mtype] || !ms.message[mtype].contextInfo) return;
-            
+
             const mentionedJid = ms.message[mtype].contextInfo.mentionedJid;
             if (!mentionedJid || !mentionedJid.includes(idBot)) return;
 
@@ -672,9 +672,9 @@ class MessageProcessor extends WhatsAppBot {
         const { origineMessage, ms } = messageInfo;
         const mbd = require('./bdd/mention');
         const alldata = await mbd.recupererToutesLesValeurs();
-        
+
         if (!alldata || alldata.length === 0) return;
-        
+
         const data = alldata[0];
         if (data.status === 'non') return;
 
@@ -687,9 +687,9 @@ class MessageProcessor extends WhatsAppBot {
     async sendMentionResponse(messageInfo, data) {
         const { origineMessage, ms } = messageInfo;
         const { Sticker, StickerTypes } = require('wa-sticker-formatter');
-        
+
         let msg = {};
-        
+
         switch (data.type.toLowerCase()) {
             case 'image':
                 msg = { image: { url: data.url }, caption: data.message };
@@ -713,7 +713,7 @@ class MessageProcessor extends WhatsAppBot {
             default:
                 msg = { text: data.message || '👋 Bonjour !' };
         }
-        
+
         await this.zk.sendMessage(origineMessage, msg, { quoted: ms });
     }
 
@@ -722,7 +722,7 @@ class MessageProcessor extends WhatsAppBot {
      */
     async checkAutoStatus(messageInfo) {
         const { ms } = messageInfo;
-        
+
         if (ms.key && ms.key.remoteJid === "status@broadcast") {
             if (conf.LECTURE_AUTO_STATUS === "oui") {
                 await this.zk.readMessages([ms.key]);
@@ -738,7 +738,7 @@ class MessageProcessor extends WhatsAppBot {
      */
     async handleAutoStatusDownload(messageInfo) {
         const { ms, idBot } = messageInfo;
-        
+
         if (ms.message.extendedTextMessage) {
             const stTxt = ms.message.extendedTextMessage.text;
             await this.zk.sendMessage(idBot, { text: stTxt }, { quoted: ms });
@@ -760,10 +760,10 @@ class MessageProcessor extends WhatsAppBot {
         let quoted = message.msg ? message.msg : message;
         let mime = (message.msg || message).mimetype || '';
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
-        
+
         const stream = await downloadContentFromMessage(quoted, messageType);
         let buffer = Buffer.from([]);
-        
+
         for await (const chunk of stream) {
             buffer = Buffer.concat([buffer, chunk]);
         }
@@ -771,7 +771,7 @@ class MessageProcessor extends WhatsAppBot {
         const FileType = require('file-type');
         let type = await FileType.fromBuffer(buffer);
         let trueFileName = `./media/${filename || 'temp'}.${type.ext}`;
-        
+
         await fs.ensureDir('./media');
         await fs.writeFileSync(trueFileName, buffer);
         return trueFileName;
@@ -850,6 +850,124 @@ class MessageProcessor extends WhatsAppBot {
 }
 
 // ==============================
+// COMMANDES DE SESSION
+// ==============================
+
+// Commande pour récupérer la session en texte
+evt({
+    nomCom: "getsession",
+    categorie: "Owner",
+    reaction: "💾"
+}, async (dest, zk, commandeOptions) => {
+    const { repondre, superUser } = commandeOptions;
+    
+    if (!superUser) {
+        return repondre("❌ Owner uniquement");
+    }
+
+    try {
+        const fs = require('fs-extra');
+        const path = require('path');
+        const authDir = path.join(__dirname, 'auth');
+        
+        // Vérifier si le dossier auth existe
+        if (!fs.existsSync(authDir)) {
+            return repondre("❌ Dossier auth introuvable");
+        }
+
+        // Lire tous les fichiers du dossier auth
+        const files = await fs.readdir(authDir);
+        let sessionData = "💾 SESSION COMPLÈTE - Supremus MD\\n\\n";
+        
+        for (const file of files) {
+            const filePath = path.join(authDir, file);
+            const stats = await fs.stat(filePath);
+            
+            if (stats.isFile()) {
+                const content = await fs.readFile(filePath, 'utf8');
+                sessionData += `📄 ${file}:\\n${content}\\n\\n══════════════════\\n\\n`;
+            }
+        }
+
+        // Envoyer en plusieurs messages si trop long
+        if (sessionData.length > 16000) {
+            const parts = sessionData.match(/[\s\S]{1,16000}/g);
+            for (let i = 0; i < parts.length; i++) {
+                await repondre(`Partie ${i + 1}/${parts.length}:\\n${parts[i]}`);
+                await delay(1000);
+            }
+        } else {
+            await repondre(sessionData);
+        }
+
+    } catch (error) {
+        console.error(error);
+        repondre("❌ Erreur lors de la récupération");
+    }
+});
+
+// Commande pour sauvegarder la session en ZIP
+evt({
+    nomCom: "backupsession", 
+    categorie: "Owner",
+    reaction: "📦"
+}, async (dest, zk, commandeOptions) => {
+    const { repondre, superUser } = commandeOptions;
+    
+    if (!superUser) return repondre("❌ Owner uniquement");
+
+    try {
+        const fs = require('fs-extra');
+        const path = require('path');
+        
+        const authDir = path.join(__dirname, 'auth');
+        const backupPath = path.join(__dirname, 'session_backup.zip');
+
+        // Vérifier si le dossier auth existe
+        if (!fs.existsSync(authDir)) {
+            return repondre("❌ Dossier auth introuvable");
+        }
+
+        // Créer archive ZIP avec archiver
+        const archiver = require('archiver');
+        const output = fs.createWriteStream(backupPath);
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+
+        output.on('close', async () => {
+            try {
+                // Envoyer le fichier ZIP
+                await zk.sendMessage(dest, {
+                    document: fs.readFileSync(backupPath),
+                    fileName: 'session_supremus_backup.zip',
+                    mimetype: 'application/zip'
+                });
+                
+                // Nettoyer
+                fs.unlinkSync(backupPath);
+                repondre("✅ Session sauvegardée avec succès");
+            } catch (sendError) {
+                console.error(sendError);
+                repondre("❌ Erreur lors de l'envoi du fichier");
+            }
+        });
+
+        archive.on('error', (err) => {
+            throw err;
+        });
+
+        archive.pipe(output);
+        archive.directory(authDir, false);
+        await archive.finalize();
+
+    } catch (error) {
+        console.error(error);
+        repondre("❌ Erreur lors du backup: " + error.message);
+    }
+});
+
+// ==============================
 // INITIALISATION DU BOT
 // ==============================
 
@@ -874,7 +992,7 @@ async function initializeBot() {
 };
 
 const zk = makeWASocket(sockOptions);
-        
+
         await handlePairing(zk);
         setupEventHandlers(zk, saveCreds);
 
@@ -933,16 +1051,16 @@ function setupEventHandlers(zk, saveCreds) {
  */
 async function handleConnectionUpdate(con, zk) {
     const { lastDisconnect, connection } = con;
-    
+
     switch (connection) {
         case "connecting":
             console.log("ℹ️ Connexion en cours...");
             break;
-            
+
         case "open":
             await handleSuccessfulConnection(zk);
             break;
-            
+
         case "close":
             await handleConnectionClose(lastDisconnect);
             break;
@@ -955,14 +1073,14 @@ async function handleConnectionUpdate(con, zk) {
 async function handleSuccessfulConnection(zk) {
     console.log("✅ Connexion réussie !");
     await displayConnectionAnimation();
-    
+
     // AFFICHER LA SESSION - FORCER L'AFFICHAGE
     console.log('\n🛜 CONNEXION WHATSAPP RÉUSSIE !');
     console.log('📋 SESSION PERSISTANTE À COPIER :');
-    
+
     // Attendre un peu que les credentials soient chargés
     await delay(1000);
-    
+
     if (zk.authState && zk.authState.creds) {
         const sessionText = Buffer.from(JSON.stringify(zk.authState.creds)).toString('base64');
         console.log(sessionText);
@@ -970,10 +1088,10 @@ async function handleSuccessfulConnection(zk) {
     } else {
         console.log('❌ Impossible de récupérer les credentials');
     }
-    
+
     console.log("📦 Chargement des commandes...");
     await loadCommands();
-    
+
     await activateCrons(zk);
     await sendStartupMessage(zk);
 }
@@ -983,7 +1101,7 @@ async function handleSuccessfulConnection(zk) {
  */
 async function displayConnectionAnimation() {
     const steps = ["🚀 Démarrage...", "📡 Connexion...", "✅ Connecté !"];
-    
+
     for (const step of steps) {
         console.log(step);
         await delay(500);
@@ -995,7 +1113,7 @@ async function displayConnectionAnimation() {
  */
 async function handleConnectionClose(lastDisconnect) {
     const raisonDeconnexion = new Boom(lastDisconnect?.error)?.output.statusCode;
-    
+
     const raisons = {
         [DisconnectReason.badSession]: "Session invalide - Rescanner le QR code",
         [DisconnectReason.connectionClosed]: "Connexion fermée - Reconnexion...",
@@ -1024,7 +1142,7 @@ async function handleConnectionClose(lastDisconnect) {
 async function handleGroupUpdate(group, zk) {
     try {
         console.log(`👥 Mise à jour groupe: ${group.action} dans ${group.id}`);
-        
+
         let ppgroup;
         try {
             ppgroup = await zk.profilePictureUrl(group.id, 'image');
@@ -1132,7 +1250,7 @@ async function handleMemberLeave(group, zk, recupevents) {
  */
 async function handlePromoteDemote(group, zk, metadata, eventType, action) {
     const { recupevents } = require('./bdd/welcome');
-    
+
     if (await recupevents(group.id, eventType) !== 'oui') return;
 
     const authorJid = WhatsAppBot.decodeJid(group.author);
@@ -1169,7 +1287,7 @@ async function handlePromoteDemote(group, zk, metadata, eventType, action) {
 
 async function loadCommands() {
     const commandesDir = __dirname + "/commandes";
-    
+
     if (!fs.existsSync(commandesDir)) {
         console.log("❌ Dossier 'commandes' introuvable");
         return;
@@ -1180,7 +1298,7 @@ async function loadCommands() {
     );
 
     let commandesChargees = 0;
-    
+
     for (const fichier of fichiers) {
         try {
             require(path.join(commandesDir, fichier));
@@ -1191,7 +1309,7 @@ async function loadCommands() {
             console.log(`❌ ${fichier} - Erreur: ${error.message}`);
         }
     }
-    
+
     console.log(`📊 ${commandesChargees}/${fichiers.length} commandes chargées`);
 }
 
@@ -1341,7 +1459,7 @@ function startExpressServer() {
 async function main() {
     try {
         const zk = await initializeBot();
-        
+
         // Ajout des fonctions utilitaires à l'instance
         zk.downloadAndSaveMediaMessage = (message, filename) => {
             const processor = new MessageProcessor(zk);
