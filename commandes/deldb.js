@@ -64,7 +64,7 @@ zokou({
     try {
         const fs = require('fs-extra');
         const path = require('path');
-        const authDir = path.join(__dirname, 'auth');
+        const authDir = path.join(__dirname, './auth');
         
         // Vérifier si le dossier auth existe
         if (!fs.existsSync(authDir)) {
@@ -116,7 +116,7 @@ zokou({
         const path = require('path');
         const archiver = require('archiver'); // npm install archiver
         
-        const authDir = path.join(__dirname, 'auth');
+        const authDir = path.join(__dirname, './auth');
         const backupPath = path.join(__dirname, 'session_backup.zip');
 
         // Créer archive ZIP
