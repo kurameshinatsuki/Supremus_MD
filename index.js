@@ -850,6 +850,67 @@ class MessageProcessor extends WhatsAppBot {
 }
 
 // ==============================
+// FONCTIONS AMÉLIORÉES POUR L'AFFICHAGE DE LA SESSION
+// ==============================
+
+/**
+ * Affiche la session complète sans troncature
+ */
+async function displaySessionProperly(sessionText) {
+    console.log('═'.repeat(80));
+    console.log('💾 SESSION COMPLÈTE - COPIEZ TOUT CE QUI SUIT :');
+    console.log('═'.repeat(80));
+    
+    // Méthode 1 : Écriture directe dans stdout sans limitation
+    process.stdout.write(sessionText);
+    process.stdout.write('\n');
+    
+    console.log('═'.repeat(80));
+    console.log('📝 Fin de la session - Gardez ce texte précieusement !');
+    console.log('═'.repeat(80));
+    
+    // Méthode 2 : Sauvegarde dans un fichier en parallèle
+    await backupSessionToFile(sessionText);
+}
+
+/**
+ * Sauvegarde la session dans un fichier
+ */
+async function backupSessionToFile(sessionText) {
+    try {
+        const backupDir = './session_backups';
+        await fs.ensureDir(backupDir);
+        
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `${backupDir}/session_${timestamp}.txt`;
+        
+        await fs.writeFile(filename, sessionText);
+        console.log(`💾 Backup session sauvegardé: ${filename}`);
+    } catch (error) {
+        console.log('⚠️ Impossible de sauvegarder la session dans un fichier');
+    }
+}
+
+/**
+ * Vérifie l'état des credentials
+ */
+function checkAuthState(zk) {
+    if (!zk.authState || !zk.authState.creds) {
+        console.log('❌ Aucun état d\'authentification trouvé');
+        return false;
+    }
+
+    const creds = zk.authState.creds;
+    console.log('🔐 État de la session:');
+    console.log(`   - Registered: ${creds.registered}`);
+    console.log(`   - Logged in: ${creds.me ? 'Oui' : 'Non'}`);
+    console.log(`   - Noise key: ${creds.noiseKey ? 'Présent' : 'Absent'}`);
+    console.log(`   - Pairing key: ${creds.pairingEphemeralKeyPair ? 'Présent' : 'Absent'}`);
+
+    return creds.registered && creds.me;
+}
+
+// ==============================
 // INITIALISATION DU BOT
 // ==============================
 
@@ -857,23 +918,39 @@ async function initializeBot() {
     try {
         console.log("🚀 Initialisation du bot Supremus-MD...");
 
-        const { isLatest } = await fetchLatestBaileysVersion();
+        const { version, isLatest } = await fetchLatestBaileysVersion();
         const { state, saveCreds } = await useMultiFileAuthState(__dirname + "/auth");
 
         const sockOptions = {
-    logger: pino({ level: "silent" }),
-    browser: BROWSER_CONFIG,
-    version: [2, 3000, 1025190524],
-    syncFullHistory: false,
-    generateHighQualityLinkPreview: true,
-    markOnlineOnConnect: true,
-    auth: {
-        creds: state.creds,
-        keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
-    },
-};
+            logger: pino({ level: "silent" }),
+            browser: BROWSER_CONFIG,
+            version: version,
+            syncFullHistory: false,
+            generateHighQualityLinkPreview: true,
+            markOnlineOnConnect: true,
+            printQRInTerminal: false, // Désactivé car vous utilisez le pairing code
+            auth: {
+                creds: state.creds,
+                keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
+            },
+            // Options de connexion améliorées
+            connectTimeoutMs: 60000,
+            keepAliveIntervalMs: 25000,
+            retryRequestDelayMs: 2000,
+            maxRetries: 5,
+            // Optimisations mémoire
+            transactionOpts: {
+                maxCommitRetries: 10,
+                delayBetweenTriesMs: 3000
+            },
+            // Gestion des messages
+            msgRetryCounterCache: new Map(),
+            getMessage: async (key) => {
+                return null;
+            }
+        };
 
-const zk = makeWASocket(sockOptions);
+        const zk = makeWASocket(sockOptions);
 
         await handlePairing(zk);
         setupEventHandlers(zk, saveCreds);
@@ -893,11 +970,27 @@ async function handlePairing(zk) {
     if (!zk.authState.creds.registered && !pair) {
         try {
             await delay(3000);
+            console.log('📱 Démarrage du processus de pairing...');
+            
             const code = await zk.requestPairingCode(conf.NUMERO_PAIR);
-            console.log("🔗 CODE DE PAIRAGE : ", code);
+            
+            console.log('═'.repeat(50));
+            console.log('🔗 CODE DE PAIRAGE WHATSAPP :');
+            console.log('═'.repeat(50));
+            console.log(`📋 ${code}`);
+            console.log('═'.repeat(50));
+            console.log('📝 Instructions:');
+            console.log('1. Ouvrez WhatsApp sur votre téléphone');
+            console.log('2. Allez dans Paramètres → Appareils liés → Lier un appareil');
+            console.log('3. Entrez le code ci-dessus');
+            console.log('═'.repeat(50));
+            
             pair = true;
         } catch (err) {
             console.error("❌ Erreur lors du pairage :", err.message);
+            console.log('🔄 Nouvelle tentative dans 10 secondes...');
+            await delay(10000);
+            await handlePairing(zk);
         }
     }
 }
@@ -954,9 +1047,16 @@ async function handleConnectionUpdate(con, zk) {
  */
 async function handleSuccessfulConnection(zk) {
     console.log("✅ Connexion réussie !");
+    
+    // Vérifier l'état de l'authentification
+    if (!checkAuthState(zk)) {
+        console.log('⚠️ Session incomplète, nouvelle authentification nécessaire');
+        return;
+    }
+    
     await displayConnectionAnimation();
 
-    // AFFICHER LA SESSION - FORCER L'AFFICHAGE
+    // AFFICHER LA SESSION - VERSION AMÉLIORÉE
     console.log('\n🛜 CONNEXION WHATSAPP RÉUSSIE !');
     console.log('📋 SESSION PERSISTANTE À COPIER :');
 
@@ -965,8 +1065,10 @@ async function handleSuccessfulConnection(zk) {
 
     if (zk.authState && zk.authState.creds) {
         const sessionText = Buffer.from(JSON.stringify(zk.authState.creds)).toString('base64');
-        console.log(sessionText);
-        console.log('💾 Garde ce texte précieusement pour restaurer la session !\n');
+        
+        // AFFICHAGE ROBUSTE DE LA SESSION
+        await displaySessionProperly(sessionText);
+        
     } else {
         console.log('❌ Impossible de récupérer les credentials');
     }
