@@ -761,14 +761,15 @@ class MessageProcessor extends WhatsAppBot {
 }
 
 // ==============================
-// INITIALISATION DU BOT
+// INITIALISATION DU BOT - CORRIGÉE
 // ==============================
 
 async function initializeBot() {
     try {
         console.log("🚀 Initialisation du bot Supremus-MD...");
 
-        const { isLatest } = await fetchLatestBaileysVersion();
+        // Récupérer la dernière version de Baileys
+        const { version } = await fetchLatestBaileysVersion();
         
         // SYSTÈME DE SESSION PERMANENTE
         let state;
@@ -804,7 +805,7 @@ async function initializeBot() {
         const sockOptions = {
             logger: pino({ level: "silent" }),
             browser: BROWSER_CONFIG,
-            version: [2, 3000, 1025190524],
+            version: version, // Utiliser la version récupérée
             syncFullHistory: false,
             generateHighQualityLinkPreview: true,
             markOnlineOnConnect: true,
@@ -812,6 +813,7 @@ async function initializeBot() {
                 creds: state.creds,
                 keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
             },
+            printQRInTerminal: false, // Désactiver le QR code
         };
 
         const zk = makeWASocket(sockOptions);
@@ -826,7 +828,10 @@ async function initializeBot() {
 
     } catch (error) {
         WhatsAppBot.handleError(error, "Initialisation bot");
-        process.exit(1);
+        // Au lieu de quitter, on relance après un délai
+        console.log("🔄 Redémarrage dans 5 secondes...");
+        await delay(5000);
+        return initializeBot();
     }
 }
 
@@ -898,6 +903,13 @@ async function handlePairing(zk) {
             await delay(5000);
             console.log('\n' + '🔗'.repeat(25));
             console.log("🔄 Génération du code de pairing...");
+            
+            // Vérifier que NUMERO_PAIR est défini
+            if (!conf.NUMERO_PAIR || conf.NUMERO_PAIR.trim() === '') {
+                console.log("❌ NUMERO_PAIR non défini dans la configuration");
+                return;
+            }
+            
             const code = await zk.requestPairingCode(conf.NUMERO_PAIR);
             console.log("✅ CODE DE PAIRAGE : ", code);
             console.log('🔗'.repeat(25));
@@ -906,6 +918,9 @@ async function handlePairing(zk) {
             pair = true;
         } catch (err) {
             console.error("❌ Erreur lors du pairage :", err.message);
+            // Réessayer après un délai
+            await delay(10000);
+            return handlePairing(zk);
         }
     }
 }
@@ -1000,11 +1015,11 @@ async function handleConnectionClose(lastDisconnect, zk) {
     }
 
     // Reconnexion automatique
-    if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.restartRequired, DisconnectReason.badSession, DisconnectReason.loggedOut].includes(raisonDeconnexion)) {
-        await delay(5000);
-        main();
-    }
+    await delay(5000);
+    main();
 }
+
+// [Le reste du code reste identique...]
 
 async function handleGroupUpdate(group, zk) {
     try {
@@ -1314,24 +1329,15 @@ async function main() {
 
         startExpressServer();
 
-        setupFileWatcher();
-
         return zk;
 
     } catch (error) {
         WhatsAppBot.handleError(error, "Fonction principale");
-        process.exit(1);
+        // Redémarrage automatique
+        console.log("🔄 Redémarrage dans 10 secondes...");
+        await delay(10000);
+        return main();
     }
-}
-
-function setupFileWatcher() {
-    const fichier = require.resolve(__filename);
-    fs.watchFile(fichier, () => {
-        console.log(`🔄 Mise à jour détectée: ${__filename}`);
-        fs.unwatchFile(fichier);
-        delete require.cache[fichier];
-        require(fichier);
-    });
 }
 
 // ==============================
@@ -1341,7 +1347,11 @@ function setupFileWatcher() {
 setTimeout(() => {
     main().catch(error => {
         console.error('💥 Erreur critique:', error);
-        process.exit(1);
+        // Redémarrage même en cas d'erreur critique
+        setTimeout(() => {
+            console.log("🔄 Redémarrage après erreur critique...");
+            process.exit(1);
+        }, 10000);
     });
 }, 3000);
 
