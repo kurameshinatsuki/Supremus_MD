@@ -11,57 +11,162 @@ zokou(
 <head>
     <meta charset="UTF-8">
     <title>ABM SYSTEM – SRPN</title>
-    <style>
+<style>
     body {
-        background-color: #121212; /* Fond plus profond */
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
         color: #e6e6e6;
-        font-family: 'Segoe UI', Arial, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         line-height: 1.6;
         padding: 20px;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Effet de particules cosmiques en arrière-plan */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+            radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px);
+        background-size: 550px 550px, 350px 350px;
+        background-position: 0 0, 40px 60px;
+        z-index: -1;
+        opacity: 0.3;
     }
 
     h1, h2 {
         text-align: center;
-        color: #ffcc00; /* Or lumineux type aura shonen */
-        text-shadow: 0 0 8px #ff6b00, 0 0 15px #ffcc00;
-        margin-bottom: 20px;
+        color: #ffcc00;
+        text-shadow: 0 0 10px #ff6b00, 0 0 20px #ffcc00, 0 0 30px #ff6b00;
+        margin-bottom: 25px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    h1::after, h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #ffcc00, transparent);
+        border-radius: 50%;
     }
 
     h3 {
-        color: #1da1f2; /* Bleu shonen dynamique */
+        color: #1da1f2;
         margin-top: 40px;
         margin-bottom: 15px;
-        border-bottom: 2px solid #1da1f2;
-        padding-bottom: 5px;
+        border-bottom: 2px solid transparent;
+        border-image: linear-gradient(90deg, transparent, #1da1f2, transparent) 1;
+        padding-bottom: 8px;
+        font-weight: 700;
+        text-shadow: 0 0 8px rgba(29, 161, 242, 0.4);
+    }
+
+    .section {
+        margin-bottom: 50px;
+        position: relative;
     }
 
     p {
-        background: #1e1e1e;
-        padding: 15px 20px;
+        background: linear-gradient(145deg, #1e1e1e 0%, #2d2d2d 100%);
+        padding: 18px 22px;
         border-left: 4px solid #ffcc00;
-        border-radius: 6px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3),
+                    inset 0 1px 0 rgba(255,255,255,0.1);
         overflow-x: auto;
         white-space: pre-wrap;
         font-size: 15px;
         color: #f5f5f5;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .section {
-        margin-bottom: 45px;
+    /* Effet de surbrillance au survol */
+    p:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255,204,0,0.2),
+                    0 4px 15px rgba(0,0,0,0.4),
+                    inset 0 1px 0 rgba(255,255,255,0.15);
+        border-left: 4px solid #ff6b00;
+    }
+
+    /* Animation d'énergie shonen */
+    p::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -4px;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #ffcc00, #ff6b00, #ffcc00);
+        border-radius: 2px;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+
+    p:hover::before {
+        opacity: 1;
+        box-shadow: 0 0 10px #ffcc00, 0 0 20px #ff6b00;
     }
 
     strong {
-        color: #ff4d4d; /* Texte important ressort en rouge vif */
+        color: #ff4d4d;
         font-weight: 700;
-        text-shadow: 0 0 4px #ff9999;
+        text-shadow: 0 0 6px #ff4d4d;
+        background: linear-gradient(45deg, #ff4d4d, #ff9999);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        padding: 0 2px;
     }
 
-    /* Ajout effet “carte” sur hover pour dynamiser */
-    p:hover {
-        transform: translateY(-2px);
-        transition: 0.2s ease-in-out;
-        box-shadow: 0 4px 12px rgba(255,204,0,0.3);
+    /* Animation d'entrée subtile pour les sections */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .section {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Scrollbar stylisée */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #ffcc00, #ff6b00);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #ff6b00, #ffcc00);
     }
 </style>
 </head>
@@ -200,52 +305,245 @@ zokou(
 <head>
   <meta charset="UTF-8">
   <title>ORIGAMY SYSTEM – SRPN</title>
-  <style>
+ <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f8f9fa;
-      color: #111;
-      margin: 2rem;
-      padding: 1rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1c1c2e 0%, #2d1b33 50%, #1e2a3a 100%);
+        color: #e8e6e3;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
     }
-    h2, h3 {
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 0.2em;
+
+    /* Effet de ciel étoilé et vaporeux comme dans Genshin */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(119, 198, 255, 0.05) 0%, transparent 50%);
+        background-size: 100% 100%;
+        z-index: -1;
     }
+
+    /* Container principal avec effet de carte ancienne */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: rgba(30, 33, 48, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Effet de bordure lumineuse */
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            transparent, 
+            #ffd700, 
+            #ff6b35, 
+            #ffd700, 
+            transparent
+        );
+        border-radius: 16px 16px 0 0;
+    }
+
     h1 {
-      text-align: center;
+        text-align: center;
+        color: #ffd700;
+        font-size: 2.8rem;
+        font-weight: 700;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 1rem;
     }
+
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        height: 3px;
+        background: linear-gradient(90deg, 
+            transparent, 
+            #ffd700, 
+            #ff6b35, 
+            #ffd700, 
+            transparent
+        );
+        border-radius: 2px;
+    }
+
+    h2, h3 {
+        color: #ffa500;
+        border-bottom: 2px solid transparent;
+        padding-bottom: 0.5em;
+        margin-top: 2.5rem;
+        font-weight: 600;
+        text-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
+        border-image: linear-gradient(90deg, transparent, #ffa500, transparent) 1;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
     section {
-      margin-bottom: 2rem;
+        margin-bottom: 3rem;
+        padding: 1.5rem;
+        background: rgba(40, 44, 62, 0.6);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
     }
+
+    section:hover {
+        background: rgba(50, 54, 72, 0.8);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
     .highlight {
-      background-color: #e9ecef;
-      padding: 0.5em;
-      border-radius: 0.4em;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%);
+        padding: 1em 1.2em;
+        border-radius: 8px;
+        border-left: 4px solid #ffd700;
+        margin: 1rem 0;
+        font-weight: 500;
+        border: 1px solid rgba(255, 215, 0, 0.2);
     }
+
     pre {
-      background: #f1f1f1;
-      padding: 0.8em;
-      border-radius: 6px;
-      overflow-x: auto;
+        background: rgba(25, 28, 42, 0.9);
+        padding: 1.2em;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-family: 'Courier New', Monaco, monospace;
+        color: #e8e6e3;
+        position: relative;
+        margin: 1.5rem 0;
     }
+
+    /* Effet de code avec numérotation subtile */
+    pre::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: linear-gradient(to bottom, #ffd700, #ff6b35);
+        border-radius: 8px 0 0 8px;
+    }
+
     code {
-      font-family: 'Courier New', monospace;
+        font-family: 'Courier New', Monaco, monospace;
+        background: rgba(255, 215, 0, 0.1);
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        color: #ffd700;
+        font-weight: 500;
     }
+
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1.5rem;
+        background: rgba(40, 44, 62, 0.8);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
-    table th, table td {
-      border: 1px solid #ccc;
-      padding: 0.5em;
-      text-align: center;
+
+    table th {
+        background: linear-gradient(135deg, #ff6b35, #ffd700);
+        color: #1c1c2e;
+        padding: 1em;
+        font-weight: 600;
+        text-align: center;
     }
+
+    table td {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.8em;
+        text-align: center;
+        transition: background 0.3s ease;
+    }
+
+    table tr:hover td {
+        background: rgba(255, 215, 0, 0.05);
+    }
+
     .emojis {
-      font-size: 1.2em;
+        font-size: 1.3em;
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
     }
-  </style>
+
+    /* Animation d'entrée pour les sections */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    section, h1, h2, h3 {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Scrollbar stylisée */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(40, 44, 62, 0.5);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #ffd700, #ff6b35);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #ff6b35, #ffd700);
+    }
+</style>
 </head>
 <body>
   <h1>🌐 ORIGAMY WORLD – SYSTEM SRPN 🌐</h1>
@@ -560,55 +858,220 @@ zokou(
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YU-GI-OH! SPEED DUEL – GAMEPLAY SRPN</title>
-  <style>
+ <style>
   body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #121212;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a1a 100%);
     color: #f8f8f8;
     padding: 1rem;
     line-height: 1.5;
     font-size: 14px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Effet de terrain de duel énergétique */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(255, 230, 0, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 0, 128, 0.05) 0%, transparent 50%);
+    background-size: 100% 100%;
+    z-index: -1;
+    opacity: 0.4;
+  }
+
+  /* Effet de grille de terrain de duel */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(255, 230, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 230, 0, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    z-index: -1;
+    pointer-events: none;
   }
 
   h1, h2, h3 {
     color: #ffe600;
     text-align: center;
-    margin: 0.5rem 0;
-    font-size: 18px;
+    margin: 1rem 0;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 230, 0, 0.5),
+                 0 0 20px rgba(255, 230, 0, 0.3);
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Effet de barre énergétique sous les titres */
+  h1::after, h2::after, h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      #ffe600, 
+      #ffcc00, 
+      #ffe600, 
+      transparent
+    );
+    border-radius: 2px;
   }
 
   .section {
-    margin: 1rem 0;
-    padding: 0.75rem 1rem;
-    background-color: #1f1f1f;
+    margin: 1.5rem 0;
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(145deg, #1a1a1a 0%, #2a1a2a 100%);
     border-left: 4px solid #ffcc00;
-    border-radius: 4px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 204, 0, 0.1);
+  }
+
+  /* Effet de carte qui se lève */
+  .section:hover {
+    transform: translateY(-5px) rotateX(2deg);
+    box-shadow: 0 8px 25px rgba(255, 204, 0, 0.2),
+                0 4px 15px rgba(0, 0, 0, 0.5);
+    border-left: 4px solid #ffaa00;
+  }
+
+  /* Effet de brillance énergétique sur le bord */
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -4px;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+      #ffcc00, 
+      #ffe600, 
+      #ffcc00
+    );
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .section:hover::before {
+    box-shadow: 0 0 10px #ffcc00,
+                0 0 20px rgba(255, 204, 0, 0.5);
   }
 
   code {
-    background: #333;
-    padding: 0.15rem 0.3rem;
+    background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+    padding: 0.2rem 0.5rem;
     border-radius: 4px;
     font-size: 13px;
+    color: #00ffff;
+    font-weight: 600;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    font-family: 'Courier New', Monaco, monospace;
   }
 
   ul {
-    padding-left: 1.1rem;
-    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    margin: 0.8rem 0;
   }
 
   li {
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    position: relative;
+  }
+
+  /* Points de liste stylisés */
+  li::before {
+    content: '✦';
+    color: #ffcc00;
+    position: absolute;
+    left: -1rem;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
   }
 
   .highlight {
     color: #00ffff;
     font-weight: bold;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    background: linear-gradient(45deg, #00ffff, #00ccff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 0 2px;
   }
 
   .small {
     font-size: 12px;
     opacity: 0.85;
+    color: #cccccc;
+    font-style: italic;
+  }
+
+  /* Animation d'entrée des sections */
+  @keyframes cardDraw {
+    from {
+      opacity: 0;
+      transform: translateY(30px) rotateX(-10deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+  }
+
+  .section {
+    animation: cardDraw 0.6s ease-out;
+  }
+
+  /* Effet de particules magiques */
+  .section::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ffe600, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .section:hover::after {
+    opacity: 0.3;
   }
 </style>
 </head>
@@ -801,31 +1264,251 @@ zokou(
 <head>
     <meta charset="UTF-8">
     <title>SPEED RUSH SYSTEM – SRPN</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            padding: 20px;
+   <style>
+    body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #2d1a1a 100%);
+        color: #f0f0f0;
+        font-family: 'Arial', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+        margin: 0;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Effet de route nocturne avec lumières de ville */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(90deg, 
+                transparent 45%, 
+                rgba(243, 156, 18, 0.1) 50%, 
+                transparent 55%
+            ),
+            radial-gradient(circle at 20% 80%, rgba(0, 172, 237, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(243, 156, 18, 0.1) 0%, transparent 50%);
+        background-size: 100% 100%, 200% 200%, 200% 200%;
+        z-index: -1;
+        animation: cityLights 20s linear infinite;
+    }
+
+    @keyframes cityLights {
+        0% { background-position: 0 0, 0 0, 0 0; }
+        100% { background-position: 100px 0, 200px 100px, -100px 200px; }
+    }
+
+    /* Effet de lignes de route qui défilent */
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(90deg, transparent 49%, rgba(243, 156, 18, 0.3) 50%, transparent 51%),
+            linear-gradient(90deg, transparent 49%, rgba(243, 156, 18, 0.3) 50%, transparent 51%);
+        background-size: 100px 100px;
+        background-position: 0 50%, 50px 50%;
+        z-index: -1;
+        animation: roadLines 0.8s linear infinite;
+        opacity: 0.4;
+    }
+
+    @keyframes roadLines {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-100px); }
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #f39c12;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 800;
+        text-shadow: 0 0 20px rgba(243, 156, 18, 0.7),
+                     0 0 40px rgba(243, 156, 18, 0.4),
+                     0 0 60px rgba(243, 156, 18, 0.2);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 3rem;
+        margin-top: 1rem;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+        color: #00aced;
+    }
+
+    /* Effet de phare sous les titres */
+    h1::after, h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 3px;
+        background: linear-gradient(90deg, 
+            transparent, 
+            #f39c12, 
+            #00aced, 
+            #f39c12, 
+            transparent
+        );
+        border-radius: 2px;
+        box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+
+    h3 {
+        color: #00aced;
+        margin-top: 40px;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-shadow: 0 0 10px rgba(0, 172, 237, 0.5);
+        border-bottom: 2px solid transparent;
+        border-image: linear-gradient(90deg, transparent, #00aced, transparent) 1;
+        padding-bottom: 0.5rem;
+    }
+
+    .section {
+        margin-bottom: 50px;
+        padding: 2rem;
+        background: rgba(30, 30, 30, 0.8);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    /* Effet de vitesse au survol */
+    .section:hover {
+        transform: translateX(5px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(243, 156, 18, 0.3);
+        border-left: 4px solid #f39c12;
+    }
+
+    /* Effet de bande de course sur le côté */
+    .section::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: linear-gradient(to bottom, 
+            #f39c12, 
+            #00aced, 
+            #f39c12
+        );
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+
+    .section:hover::before {
+        width: 6px;
+        box-shadow: 0 0 15px #f39c12,
+                    0 0 30px rgba(243, 156, 18, 0.5);
+    }
+
+    pre {
+        background: linear-gradient(135deg, #222 0%, #2a2a2a 100%);
+        padding: 1.5rem;
+        border-left: 4px solid #f39c12;
+        overflow-x: auto;
+        border-radius: 8px;
+        font-family: 'Courier New', Monaco, monospace;
+        color: #e0e0e0;
+        position: relative;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Effet de vitesse sur le code */
+    pre::before {
+        content: '⚡';
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: #f39c12;
+        font-size: 1.2rem;
+        opacity: 0.6;
+    }
+
+    /* Animation d'entrée des sections */
+    @keyframes accelerateIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50px) scale(0.95);
         }
-        h1, h2 {
-            text-align: center;
-            color: #f39c12;
+        to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
         }
-        h3 {
-            color: #00aced;
-            margin-top: 40px;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        pre {
-            background: #222;
-            padding: 15px;
-            border-left: 4px solid #f39c12;
-            overflow-x: auto;
-        }
-    </style>
+    }
+
+    .section {
+        animation: accelerateIn 0.6s ease-out;
+    }
+
+    /* Effet de compteur de vitesse */
+    .section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #f39c12);
+        transition: width 0.3s ease;
+    }
+
+    .section:hover::after {
+        width: 100%;
+    }
+
+    /* Scrollbar style tuning */
+    ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+        border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #f39c12, #00aced);
+        border-radius: 6px;
+        border: 2px solid #1a1a1a;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #00aced, #f39c12);
+    }
+
+    /* Effet de nitro optionnel */
+    .nitro {
+        background: linear-gradient(45deg, #ff0000, #ff6b00, #ff0000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+</style>
 </head>
 <body>
     <h1>🏁 SPEED RUSH SYSTEM 🏁</h1>
