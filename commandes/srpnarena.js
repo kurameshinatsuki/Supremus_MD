@@ -1,8 +1,14 @@
 const { zokou } = require('../framework/zokou');
 
-zokou( { nomCom: 'circuit', categorie: 'SPEED-RUSH' }, async (dest, zk, commandeOptions) => { const { repondre, arg, ms } = commandeOptions;
+zokou(
+    { 
+        nomCom: 'circuit', 
+        categorie: 'SPEED-RUSH' 
+    }, 
+    async (dest, zk, commandeOptions) => { 
+        const { repondre, arg, ms } = commandeOptions;
 
-const circuits = {
+        const circuits = {
   volcan: `//    *🌋 CIRCUIT DES VOLCANS 🌋*   //
 
 > *Longueur :* 20 km (échelle réduite)
@@ -71,7 +77,7 @@ const circuits = {
 > - Chutes de pierres (-20🚘 à -40🚘)
 > - Trous volcaniques (-30🚘 à -60🚘)
 > - Dégâts proportionnels à la vitesse
-> *MJ :* Génération aléatoire d’obstacles, maniabilité réduite.
+> *MJ :* Génération aléatoire d'obstacles, maniabilité réduite.
 
 *7. Descente Finale – Tout pour la vitesse*
 
@@ -84,14 +90,15 @@ const circuits = {
 > Risque de sortie de piste en cas de dérapage
 > *MJ :* Attention à ceux qui ne contrôlent pas leur bolide à haute vitesse.
 
-*8. Ligne d’Arrivée – Sprint final*
+*8. Ligne d'Arrivée – Sprint final*
 
 > *Distance :* 1 km
 > *Voie :* Grande voie
 
 *Effets :*
 > - Dernière ligne droite pour les dépassements
-> *MJ :* Mettre l’accent sur la tension dramatique jusqu’à la dernière seconde.`,
+> *MJ :* Mettre l'accent sur la tension dramatique jusqu'à la dernière seconde.`,
+
   givre: `//  *❄️ CIRCUIT DU PIC DE GIVRE ❄️*  //
 
 > *Longueur :* 18 km (échelle réduite)
@@ -107,7 +114,7 @@ const circuits = {
 > *Voie :* Grande voie (6 lignes)
 > *Vitesse recommandée :* 200 à 250 km/h
 > *Effets spéciaux :* Risque de glissade au démarrage
-> *Conseils MJ :* Test de départ (maniabilité ou contrôle). En cas d’échec : micro-glissade = perte de temps légère. Ajoutez un rival qui patine légèrement pour une touche de réalisme.
+> *Conseils MJ :* Test de départ (maniabilité ou contrôle). En cas d'échec : micro-glissade = perte de temps légère. Ajoutez un rival qui patine légèrement pour une touche de réalisme.
 
 *2. Virage Miroir – Tournant gelé*
 
@@ -164,14 +171,15 @@ const circuits = {
 > *Vitesse max autorisée :* 270 km/h
 > - Très faible adhérence
 > - Possibilité de fissures dans la glace
-> *MJ :* Les joueurs rapides gagnent +50 km/h s’ils gardent le contrôle. Mais >270 km/h = risque de perte totale de contrôle ou crash.
+> *MJ :* Les joueurs rapides gagnent +50 km/h s'ils gardent le contrôle. Mais >270 km/h = risque de perte totale de contrôle ou crash.
 
-*8. Ligne d’Arrivée – Brèche du Sommet*
+*8. Ligne d'Arrivée – Brèche du Sommet*
 
 > *Distance :* 1 km
 > *Voie :* Moyenne voie (4 lignes)
 > *Effets :* Montée progressive, neige compacte
 > *MJ :* Dernière ligne dramatique. Ajoutez des effets visuels (traces dans la neige, moteurs rugissants) pour une arrivée cinématique.`,
+
   metropole: `//   *🌃 CIRCUIT DE MÉTROPOLE 🌃*  //
 
 > *Longueur :* 19 km (échelle réduite)
@@ -210,7 +218,7 @@ const circuits = {
 > - Vent latéral léger
 > *MJ :* Parfait pour les dépassements. Bonus de +50 km/h si le joueur reste stable deux tours consécutifs. Mais attention aux collisions à haute vitesse.
 
-*4. Tunnel Digital – Zone d’interférences*
+*4. Tunnel Digital – Zone d'interférences*
 
 > *Distance :* 1,5 km
 > *Voie :* Moyenne voie (4 lignes)
@@ -218,7 +226,7 @@ const circuits = {
 *Effets :*
 > - Perturbations visuelles (clignotements de néons)
 > - Réduction temporaire de précision
-> *MJ :* Tout joueur activant un gadget ici peut subir une interférence (échec ou effet altéré). Ajouter une voix automatique du tunnel pour l’ambiance.
+> *MJ :* Tout joueur activant un gadget ici peut subir une interférence (échec ou effet altéré). Ajouter une voix automatique du tunnel pour l'ambiance.
 
 *5. Virages Laser – Séquence rythmée*
 
@@ -249,7 +257,7 @@ const circuits = {
 > *MJ :* Peut causer confusion de perspective. Proposez un test de concentration ou perception.
 Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 
-*8. Ligne d’Arrivée – Écran géant*
+*8. Ligne d'Arrivée – Écran géant*
 
 > *Distance :* 1,5 km
 > *Voie :* Moyenne voie (4 lignes)
@@ -258,12 +266,13 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > - Chrono visible sur écran géant
 > - Applaudissements sonores en fonction du classement
 > *MJ :* Accentuer la tension avec des effets sonores et holographiques. Les joueurs peuvent tenter un dépassement final avec turbo, mais attention à la surchauffe.`,
+
   bois: `//  *🌲 CIRCUIT BOIS SOMBRES 🌲*  //
 
 > *Longueur :* 18 km (échelle réduite)
 > *Difficulté :* Moyenne à élevée
 > *Environnement :* Forêt maudite, brume épaisse, créatures nocturnes
-> *Type de circuit :* Technique & piégeux, mettant à l’épreuve les réflexes, la maniabilité et le courage
+> *Type de circuit :* Technique & piégeux, mettant à l'épreuve les réflexes, la maniabilité et le courage
 
 *🗺️ STRUCTURE DU CIRCUIT :*
 
@@ -284,7 +293,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 *Effets :* 
 > -Obstacle racines (dégâts -20🚘 si mal négocié)
 > - Perte de maniabilité (-VR) temporaire
-> *MJ :* Demander un test de contrôle : échec = secousses, ralentissement ou perte d’équilibre.
+> *MJ :* Demander un test de contrôle : échec = secousses, ralentissement ou perte d'équilibre.
 
 *3. Pont de Bois Pourri – Passage risqué*
 
@@ -293,7 +302,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 
 *Effets :*
 > *Vitesse max forcée :* 120 km/h
-> - Risque d’effondrement si passage à plus de 150 km/h
+> - Risque d'effondrement si passage à plus de 150 km/h
 > *MJ :* Une mauvaise vitesse ou un choc = effondrement partiel, détour forcé (+1 tour de retard possible).
 
 *4. Lac Maudit – Route sur berge glissante*
@@ -315,7 +324,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 *Effets :*
 > - Visibilité réduite
 > - Accélérations interdites
-> *MJ :* Ajouter bruitages de créatures inquiétantes pour l’ambiance. Risques accrus de collision en cas d’excès de vitesse.
+> *MJ :* Ajouter bruitages de créatures inquiétantes pour l'ambiance. Risques accrus de collision en cas d'excès de vitesse.
 
 *6. Zone des Feux Follets – Gadgets & mirages*
 
@@ -337,7 +346,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > - Dénivelé brutal = risque de décollage non contrôlé
 > *MJ :* Un saut est possible à la fin. Mauvais angle ou vitesse = réception instable (-contrôle ou dégâts).
 
-*8. Ligne d’Arrivée – Clairière Sombre*
+*8. Ligne d'Arrivée – Clairière Sombre*
 
 > *Distance :* 1,5 km
 > *Voie :* Moyenne voie (4 lignes)
@@ -346,6 +355,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > - Zone plus claire, fin de la brume
 > - Possibilité de dernier gadget surprise
 > *MJ :* Idéal pour un sprint final avec un piège ou un bonus dramatique. Amplifier la tension avec bruit de tambours ou créatures en chasse.`,
+
   sanctuaire: `//*⛩️ CIRCUIT SANCTUAIRE PERDU ⛩️*//
 
 > *Longueur :* 19 km (échelle réduite)
@@ -402,7 +412,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 *Effets :*
 > - Sections glissantes si la mauvaise dalle est empruntée
 > - Quelques mosaïques donnent un bonus de vitesse
-> *MJ :* Faites choisir une couleur/direction aux joueurs : certains gagnent un petit boost, d’autres dérapent. (Choix tactique + chance)
+> *MJ :* Faites choisir une couleur/direction aux joueurs : certains gagnent un petit boost, d'autres dérapent. (Choix tactique + chance)
 
 *6. Passage Souterrain – Vibration antique*
 
@@ -424,7 +434,7 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > - Gadget mystique possible en hauteur
 > *MJ :* Un saut mystique peut propulser le joueur vers un bonus, ou au contraire le faire atterrir mal (test turbo ou VR).
 
-*8. Ligne d’Arrivée – Autel Céleste*
+*8. Ligne d'Arrivée – Autel Céleste*
 
 > *Distance :* 1 km
 > *Voie :* Grande voie
@@ -435,16 +445,46 @@ Un joueur désorienté = trajectoire instable (-Vitesse ou risque de dérapage).
 > *MJ :* Roulement de dés pour un dernier événement divin (bonus, malus ou changement soudain dans le classement).`
 };
 
-const lien = 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg';
-const key = (arg[0] || '').toLowerCase();
+        const lien = 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg';
+        const key = (arg[0] || '').toLowerCase();
 
-if (!circuits[key]) {
-  return repondre(`*Usage :* -circuit volcan | givre | metropole | bois | sanctuaire.`);
-}
+        if (!circuits[key]) {
+            return repondre(`*Usage :* -circuit volcan | givre | metropole | bois | sanctuaire.`);
+        }
 
-zk.sendMessage(dest, { image: { url: lien }, caption: circuits[key] }, { quoted: ms });
+        // Message initial avec chargement
+        const messageInitial = await zk.sendMessage(dest, { 
+            image: { url: lien },
+            caption: "*⏳ Chargement du circuit...*\n0% [░░░░░░░░░░░░░░░░]"
+        }, { quoted: ms });
 
-} );
+        // Simulation du chargement (5 secondes)
+        const etapes = 5;
+        for (let i = 1; i <= etapes; i++) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1s par étape
+            
+            const pourcentage = i * 20;
+            const barre = '███'.repeat(i) + '░░░'.repeat(etapes - i);
+            
+            try {
+                await zk.sendMessage(dest, { 
+                    image: { url: lien },
+                    caption: `*⏳ Chargement du circuit...*\n   ${pourcentage}% [${barre}]`,
+                    edit: messageInitial.key 
+                });
+            } catch (e) {
+                console.error("Erreur modification message:", e);
+            }
+        }
+
+        // Envoi du message final avec le circuit sélectionné
+        await zk.sendMessage(dest, { 
+            image: { url: lien },
+            caption: circuits[key],
+            edit: messageInitial.key 
+        });
+    }
+);
 
 // Jeu de pile ou face simple
 zokou(
