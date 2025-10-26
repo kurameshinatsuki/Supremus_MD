@@ -3,6 +3,11 @@ const { writeFileSync, readFileSync, unlinkSync } = require('fs');
 const { randomInt } = require('crypto');
 
 // Commande pour envoyer le système ABM en HTML
+const { zokou } = require('../framework/zokou');
+const { writeFileSync, readFileSync, unlinkSync } = require('fs');
+const { randomInt } = require('crypto');
+
+// Commande pour envoyer le système ABM en HTML
 zokou(
   { nomCom: 'abm_system', categorie: 'ABM' },
   async (dest, zk, { ms }) => {
@@ -23,7 +28,6 @@ zokou(
         overflow-x: hidden;
     }
 
-    /* Effet de particules cosmiques en arrière-plan */
     body::before {
         content: '';
         position: fixed;
@@ -94,9 +98,9 @@ zokou(
         position: relative;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.05);
+        line-height: 1.6;
     }
 
-    /* Effet de surbrillance au survol */
     p:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(255,204,0,0.2),
@@ -105,7 +109,6 @@ zokou(
         border-left: 4px solid #ff6b00;
     }
 
-    /* Animation d'énergie shonen */
     p::before {
         content: '';
         position: absolute;
@@ -134,7 +137,6 @@ zokou(
         padding: 0 2px;
     }
 
-    /* Animation d'entrée subtile pour les sections */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -150,7 +152,6 @@ zokou(
         animation: fadeInUp 0.6s ease-out;
     }
 
-    /* Scrollbar stylisée */
     ::-webkit-scrollbar {
         width: 8px;
     }
@@ -172,74 +173,87 @@ zokou(
 </head>
 <body>
     <h1>🆚 ABM - SYSTÈME DE COMBAT 🌐</h1>
-<div class="section"><h3>BASIC RULE</h3><p><strong>PAV&Eacute; :</strong> Le pav&eacute; est divis&eacute; en sections et vous pouvez ex&eacute;cuter que (1) action max par section ou simultan&eacute;es si coh&eacute;rentes (une action qui se d&eacute;roule durant une autre action sans d&eacute;fier la physique, ex: d&eacute;gainer une arme durant son d&eacute;placement / donner un coup de pied durant un saut / etc.) d&eacute;crire l&#39;action avec pr&eacute;cision (le membre utilis&eacute;, le mouvement d&#39;ex&eacute;cution, la zone cibl&eacute;e et l&#39;intention).<br><br>
+    
+    <div class="section">
+        <h3>BASIC RULE</h3>
+        <p><strong>PAVÉ :</strong> Le pavé est divisé en sections et vous pouvez exécuter que (1) action max par section ou simultanées si cohérentes (une action qui se déroule durant une autre action sans défier la physique, ex: dégainer une arme durant son déplacement / donner un coup de pied durant un saut / etc.) décrire l'action avec précision (le membre utilisé, le mouvement d'exécution, la zone ciblée et l'intention).
 
-Les techniques peuvent &ecirc;tre ex&eacute;cut&eacute;es en une section et doivent respecter leur description. Vous devez pr&eacute;ciser la technique utilis&eacute;e, son niveau et la distance entre vous et l&#39;adversit&eacute;.<br><br>
+Les techniques peuvent être exécutées en une section et doivent respecter leur description. Vous devez préciser la technique utilisée, son niveau et la distance entre vous et l'adversité.
 
-<strong>ARMES :</strong> Les armes classiques causent 20💥 de d&eacute;g&acirc;ts. La section d&#39;un membre ou un coup critique cause 30💥 de d&eacute;g&acirc;ts, avec risque de saignement. Une attaque vitale peut &ecirc;tre mortelle. La vitesse normale d&#39;un projectile est de 5 m&egrave;tres par section (5m/s🎯) pour une port&eacute;e de 20 m&egrave;tres (20m⭕).<br><br>
+<strong>ARMES :</strong> Les armes classiques causent 20💥 de dégâts. La section d'un membre ou un coup critique cause 30💥 de dégâts, avec risque de saignement. Une attaque vitale peut être mortelle. La vitesse normale d'un projectile est de 5 mètres par section (5m/s🎯) pour une portée de 20 mètres (20m⭕).
 
-<strong>ALT&Eacute;RATIONS D&#39;&Eacute;TAT :</strong> un Saignement l&eacute;ger : -20❤️ par section. un Saignement grave : -40❤️ par section. un &Eacute;tourdissement : r&eacute;action ralentie de +200ms⚡. une Douleur Intense : vitesse et force physique r&eacute;duites de 50%. la Paralysie : immobilit&eacute; temporaire. les Br&ucirc;lures : effets saignement + douleur intense. l&#39;Empoisonnement : Effet variable selon le poison. Froid Intense : -20❤️ par tour.<br><br>
+<strong>ALTÉRATIONS D'ÉTAT :</strong> un Saignement léger : -20❤️ par section. un Saignement grave : -40❤️ par section. un Étourdissement : réaction ralentie de +200ms⚡. une Douleur Intense : vitesse et force physique réduites de 50%. la Paralysie : immobilité temporaire. les Brûlures : effets saignement + douleur intense. l'Empoisonnement : Effet variable selon le poison. Froid Intense : -20❤️ par tour.
 
-<strong>R&Eacute;G&Eacute;N&Eacute;RATION :</strong> Les personnages pouvant se r&eacute;g&eacute;n&eacute;rer instantan&eacute;ment (ex: d&eacute;mon, attribut...) ne peuvent &ecirc;tre tu&eacute;s que par d&eacute;capitation ou r&eacute;duction de la sant&eacute; &agrave; 0❤️. Ils ne restaurent pas la sant&eacute; sauf si la comp&eacute;tence mentionne le contraire. Vous r&eacute;cup&eacute;rez +20🌀 une section immobile &agrave; accumuler de l&#39;&eacute;nergie et +10🫀 au repos.</p></div><div class="section"><h3>CLOSE COMBAT</h3><p><strong>FORCE PHYSIQUE :</strong> 🟤Brown &lt; ⚪Gray &lt; 🟡Yellow &lt; 🔵Blue &lt; 🟢Green. Les coups de personnage de force Brown causent 10💥 de d&eacute;g&acirc;ts et peuvent repousser un adversaire &eacute;gal jusqu&#39;&agrave; 5m mais chaque niveau suppl&eacute;mentaire ajoute plus 10💥 de d&eacute;g&acirc;ts.<br>
-Briser un membre ou frapper une zone sensible (c&ocirc;te, colonne vert&eacute;brale, etc...) cause plus 10💥 de d&eacute;g&acirc;ts suppl&eacute;mentaires. Les coups de personnage de force Gray peuvent envoyer un adversaire &eacute;gal ou inf&eacute;rieur valser &agrave; 10m et sup&eacute;rieur &agrave; 5m, mais ceux de force Yellow ou plus peuvent litt&eacute;ralement envoyer l&#39;adversaire voler dans le d&eacute;cor et m&ecirc;me briser des membres ou perforer le corps humain.<br>
-Se lib&eacute;rer d&#39;une saisie vous co&ucirc;te 10🫀 mais les personnages plus forts ne perdent rien.<br><br>
+<strong>RÉGÉNÉRATION :</strong> Les personnages pouvant se régénérer instantanément (ex: démon, attribut...) ne peuvent être tués que par décapitation ou réduction de la santé à 0❤️. Ils ne restaurent pas la santé sauf si la compétence mentionne le contraire. Vous récupérez +20🌀 une section immobile à accumuler de l'énergie et +10🫀 au repos.</p>
+    </div>
 
-<strong>VITESSE :</strong> R&eacute;action (V.R) : mesur&eacute;e en millisecondes (ms ou ⚡). D&eacute;placement (V.D) : mesur&eacute; en m&egrave;tres par section (m/s ou 🎯). Se d&eacute;placer &agrave; vitesse maximale vous co&ucirc;te 10🫀.<br><br>
+    <div class="section">
+        <h3>CLOSE COMBAT</h3>
+        <p><strong>FORCE PHYSIQUE :</strong> 🟤Brown < ⚪Gray < 🟡Yellow < 🔵Blue < 🟢Green. Les coups de personnage de force Brown causent 10💥 de dégâts et peuvent repousser un adversaire égal jusqu'à 5m mais chaque niveau supplémentaire ajoute plus 10💥 de dégâts.
+Briser un membre ou frapper une zone sensible (côte, colonne vertébrale, etc...) cause plus 10💥 de dégâts supplémentaires. Les coups de personnage de force Gray peuvent envoyer un adversaire égal ou inférieur valser à 10m et supérieur à 5m, mais ceux de force Yellow ou plus peuvent littéralement envoyer l'adversaire voler dans le décor et même briser des membres ou perforer le corps humain.
+Se libérer d'une saisie vous coûte 10🫀 mais les personnages plus forts ne perdent rien.
 
-- Le personnage r&eacute;agissant avec 500ms⚡ de retard ne peut que mettre sa garde (bloquer) ce qui l'expose &agrave; plus de 500ms⚡, ne peut pas r&eacute;agir.<br>
-- Le personnage r&eacute;agissant avec 400ms⚡ de retard peut seulement bloquer ou esquiver.<br>
-- Le personnage r&eacute;agissant avec 300ms⚡ de retard peut bloquer, esquiver ou m&ecirc;me riposter (attaquer simultan&eacute;ment, mais peut s'exposer &agrave; l'attaque adverse.)<br>
-- Le personnage r&eacute;agissant avec 100ms⚡ ou 200ms⚡ de retard peut r&eacute;agir normalement.<br>
-- Si le personnage n'est pas affect&eacute; par le retard de r&eacute;action, il peut attaquer avant m&ecirc;me que l'adversaire puisse ex&eacute;cuter son action.<br><br>
+<strong>VITESSE :</strong> Réaction (V.R) : mesurée en millisecondes (ms ou ⚡). Déplacement (V.D) : mesurée en mètres par section (m/s ou 🎯). Se déplacer à vitesse maximale vous coûte 10🫀.
 
-<strong>TEMPO :</strong> Le retard de r&eacute;action normal en position d&eacute;fensive est de 200ms⚡. R&eacute;agir au lancement d&#39;un coup &agrave; close distance augmente le temps de r&eacute;action de +100ms⚡ : vous devez donc r&eacute;agir &agrave; la pr&eacute;pa du coup (mouvement) afin de contrer normalement.<br>
-Vous ne pouvez pas r&eacute;agir &agrave; une attaque que vous ne voyez pas (de profil ou de dos), vous devez donc r&eacute;agir &agrave; ce que vous ressentez (perception sensorielle). Cela aussi augmente le temps de r&eacute;action de +100ms⚡.<br>
-Vous ne pouvez pas annuler une action en cours, mais la modifier pour 10🫀 ou ex&eacute;cuter une action simultan&eacute;e. Idem pour les techniques. Les personnages capables d&#39;anticiper ou avec un potentiel de vitesse sup&eacute;rieure peuvent r&eacute;agir normalement.<br><br>
+- Le personnage réagissant avec 500ms⚡ de retard ne peut que mettre sa garde (bloquer) ce qui l'expose à plus de 500ms⚡, ne peut pas réagir.
+- Le personnage réagissant avec 400ms⚡ de retard peut seulement bloquer ou esquiver.
+- Le personnage réagissant avec 300ms⚡ de retard peut bloquer, esquiver ou même riposter (attaquer simultanément, mais peut s'exposer à l'attaque adverse.)
+- Le personnage réagissant avec 100ms⚡ ou 200ms⚡ de retard peut réagir normalement.
+- Si le personnage n'est pas affecté par le retard de réaction, il peut attaquer avant même que l'adversaire puisse exécuter son action.
 
-Le personnage en position d&eacute;fensive doit r&eacute;agir section par section aux attaques adverses. S&#39;il esquive, l&#39;attaquant le suit automatiquement pour placer son attaque suivante, mais seulement si la cible reste dans son champ de vision et sa port&eacute;e sensorielle.<br>
-Si le personnage d&eacute;fensif quitte la zone de perception adverse, il peut riposter sans &ecirc;tre suivi.<br>
-Un contre ne signifie pas une annulation totale de l&#39;offensive adverse, mais juste une r&eacute;ponse &agrave; la section en cours.<br>
-Vous pouvez encha&icirc;ner un combo de 3 coups max en 1 section. Le personnage d&eacute;fensif peut aussi contrer avec un combo.<br>
-Vous ne pouvez ex&eacute;cuter un combo qu&#39;une fois par tour et il ne peut pas &ecirc;tre ex&eacute;cut&eacute; dans la m&ecirc;me section qu&#39;une action simultan&eacute;e.<br>
-Seul un personnage plus rapide en (V.D🎯) peut encha&icirc;ner d&eacute;placement et coup sans casser l&#39;encha&icirc;nement.<br><br>
+<strong>TEMPO :</strong> Le retard de réaction normal en position défensive est de 200ms⚡. Réagir au lancement d'un coup à close distance augmente le temps de réaction de +100ms⚡ : vous devez donc réagir à la prépa du coup (mouvement) afin de contrer normalement.
+Vous ne pouvez pas réagir à une attaque que vous ne voyez pas (de profil ou de dos), vous devez donc réagir à ce que vous ressentez (perception sensorielle). Cela aussi augmente le temps de réaction de +100ms⚡.
+Vous ne pouvez pas annuler une action en cours, mais la modifier pour 10🫀 ou exécuter une action simultanée. Idem pour les techniques. Les personnages capables d'anticiper ou avec un potentiel de vitesse supérieure peuvent réagir normalement.
 
-Si un personnage se d&eacute;place plus vite que l&#39;adversaire, celui-ci r&eacute;agit avec +100ms⚡ de retard.<br>
-Dans le cas o&ugrave; le personnage plus rapide se repositionne dans l&#39;angle mort de l&#39;adversaire (hors du champ de vision : 180&deg; pour les deux yeux et 90&deg; pour un &oelig;il), l&#39;adversaire r&eacute;agit avec +200ms⚡ de retard.<br>
-Les personnages plus r&eacute;actifs verront leur retard r&eacute;duit selon la diff&eacute;rence de r&eacute;action entre eux et leur adversaire.<br><br>
+Le personnage en position défensive doit réagir section par section aux attaques adverses. S'il esquive, l'attaquant le suit automatiquement pour placer son attaque suivante, mais seulement si la cible reste dans son champ de vision et sa portée sensorielle.
+Si le personnage défensif quitte la zone de perception adverse, il peut riposter sans être suivi.
+Un contre ne signifie pas une annulation totale de l'offensive adverse, mais juste une réponse à la section en cours.
+Vous pouvez enchaîner un combo de 3 coups max en 1 section. Le personnage défensif peut aussi contrer avec un combo.
+Vous ne pouvez exécuter un combo qu'une fois par tour et il ne peut pas être exécuté dans la même section qu'une action simultanée.
+Seul un personnage plus rapide en (V.D🎯) peut enchaîner déplacement et coup sans casser l'enchaînement.
 
-<strong>OVERDRIVE :</strong> L&#39;Overdrive, utilisable seulement en position d&eacute;fensive et 1 fois toutes les 4 sections, permet de r&eacute;agir face &agrave; une attaque impossible &agrave; r&eacute;agir normalement.<br>
-Mais cela co&ucirc;te -20🫀 de hearts et aussi la possibilit&eacute; de contrer une technique, variable selon le niveau de la technique :<br><br>
+Si un personnage se déplace plus vite que l'adversaire, celui-ci réagit avec +100ms⚡ de retard.
+Dans le cas où le personnage plus rapide se repositionne dans l'angle mort de l'adversaire (hors du champ de vision : 180° pour les deux yeux et 90° pour un œil), l'adversaire réagit avec +200ms⚡ de retard.
+Les personnages plus réactifs verront leur retard réduit selon la différence de réaction entre eux et leur adversaire.
 
-Niv B = -20🫀 &nbsp;|&nbsp; Niv A = -30🫀 &nbsp;|&nbsp; Niv S = -40🫀</p></div><div class="section"><h3>FULL POWER</h3><p><strong>CLASSIFICATION DES PERSONNAGES :</strong><br>
-Les personnages sont class&eacute;s par rang d&eacute;finissant leur capacit&eacute; physique comme : vitesse de r&eacute;action (V.R), vitesse de d&eacute;placement (V.D) et potentiels (Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green)<br><br>
+<strong>OVERDRIVE :</strong> L'Overdrive, utilisable seulement en position défensive et 1 fois toutes les 4 sections, permet de réagir face à une attaque impossible à réagir normalement.
+Mais cela coûte -20🫀 de hearts et aussi la possibilité de contrer une technique, variable selon le niveau de la technique :
 
-<strong>D&eacute;finition des valeurs par rang :</strong><br>
-- Rang C : V.D = 05m/s🎯 | V.R = 500ms⚡<br>
-- Rang B : V.D = 06m/s🎯 | V.R = 400ms⚡<br>
-- Rang A : V.D = 07m/s🎯 | V.R = 300ms⚡<br>
-- Rang S : V.D = 08m/s🎯 | V.R = 200ms⚡<br>
-- Rang Z : V.D = 10m/s🎯 | V.R = 100ms⚡<br><br>
+Niv B = -20🫀 | Niv A = -30🫀 | Niv S = -40🫀</p>
+    </div>
 
-Le potentiel est un syst&egrave;me hi&eacute;rarchique variable. Un personnage de Rang C pourrait avoir une grande force physique, une grande r&eacute;sistance ou une grande durabilit&eacute; (Gray) ou sup&eacute;rieure (peu probable), ce qui le rend unique et lui offre un atout propre.<br><br>
+    <div class="section">
+        <h3>FULL POWER</h3>
+        <p><strong>CLASSIFICATION DES PERSONNAGES :</strong>
+Les personnages sont classés par rang définissant leur capacité physique comme : vitesse de réaction (V.R), vitesse de déplacement (V.D) et potentiels (Brown < Gray < Yellow < Blue < Green)
 
-Par exemple :<br>
-- Un personnage avec une force brute Gray causera 20💥 de d&eacute;g&acirc;ts alors qu&#39;un Brown causera 10💥 de d&eacute;g&acirc;ts.<br>
-- Un personnage de durabilit&eacute; Gray pourrait continuer &agrave; se battre normalement malgr&eacute; une douleur intense.<br>
-- Un personnage de r&eacute;sistance Yellow pourrait r&eacute;duire les d&eacute;g&acirc;ts des coups de niveau inf&eacute;rieur de 50%.<br><br>
+<strong>Définition des valeurs par rang :</strong>
+- Rang C : V.D = 05m/s🎯 | V.R = 500ms⚡
+- Rang B : V.D = 06m/s🎯 | V.R = 400ms⚡
+- Rang A : V.D = 07m/s🎯 | V.R = 300ms⚡
+- Rang S : V.D = 08m/s🎯 | V.R = 200ms⚡
+- Rang Z : V.D = 10m/s🎯 | V.R = 100ms⚡
 
-Le potentiel normal des personnages est Brown sauf si sa description indique le contraire.<br><br>
+Le potentiel est un système hiérarchique variable. Un personnage de Rang C pourrait avoir une grande force physique, une grande résistance ou une grande durabilité (Gray) ou supérieure (peu probable), ce qui le rend unique et lui offre un atout propre.
 
-<strong>CLASSEMENT DES TECHNIQUES :</strong><br>
-Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon leur efficacit&eacute; gr&acirc;ce au nombre d&#39;effets qu&#39;elles peuvent avoir.</p><br><br>
+Par exemple :
+- Un personnage avec une force brute Gray causera 20💥 de dégâts alors qu'un Brown causera 10💥 de dégâts.
+- Un personnage de durabilité Gray pourrait continuer à se battre normalement malgré une douleur intense.
+- Un personnage de résistance Yellow pourrait réduire les dégâts des coups de niveau inférieur de 50%.
+
+Le potentiel normal des personnages est Brown sauf si sa description indique le contraire.
+
+<strong>CLASSEMENT DES TECHNIQUES :</strong>
+Les techniques sont classées en 3 niveaux de puissance mais aussi selon leur efficacité grâce au nombre d'effets qu'elles peuvent avoir.</p>
 
 <table border="1" cellpadding="5" cellspacing="0">
   <thead>
     <tr>
       <th>Niveau</th>
-      <th>Port&eacute;e</th>
-      <th>D&eacute;g&acirc;ts</th>
+      <th>Portée</th>
+      <th>Dégâts</th>
       <th>Vitesse</th>
-      <th>Cout</th>
+      <th>Coût</th>
     </tr>
   </thead>
   <tbody>
@@ -265,19 +279,21 @@ Les techniques sont class&eacute;es en 3 niveaux de puissance mais aussi selon l
       <td>50💠</td>
     </tr>
   </tbody>
-</table><br>
+</table>
 
-<p><strong>R&egrave;gles de sup&eacute;riorit&eacute; :</strong><br>
-- Une attaque de niveau sup&eacute;rieur brise la d&eacute;fense de niveau inf&eacute;rieur mais voit sa puissance r&eacute;duite de 50%.<br>
-- Si l&#39;&eacute;cart est de 2 niveaux ou plus, l&#39;attaque garde sa puissance initiale.<br>
-- Certaines techniques peuvent &ecirc;tre efficaces en raison de leur nature (ex : d&eacute;mat&eacute;rialisation, distorsion spatiale, etc.).<br>
-- Les techniques de grande port&eacute;e (t&eacute;l&eacute;portation, invocations...) affectent toute la zone de combat. Une technique &agrave; grande &eacute;chelle verra sa port&eacute;e convertie en kilom&egrave;tres (X m = X km).<br>
-- Combinaison de techniques possible pour cr&eacute;er des attaques ou d&eacute;fenses avanc&eacute;es, par exemple : combiner deux attaques de niveau A pourrait contrer une attaque de niveau S.<br><br>
+<p><strong>Règles de supériorité :</strong>
+- Une attaque de niveau supérieur brise la défense de niveau inférieur mais voit sa puissance réduite de 50%.
+- Si l'écart est de 2 niveaux ou plus, l'attaque garde sa puissance initiale.
+- Certaines techniques peuvent être efficaces en raison de leur nature (ex : dématérialisation, distorsion spatiale, etc.).
+- Les techniques de grande portée (téléportation, invocations...) affectent toute la zone de combat. Une technique à grande échelle verra sa portée convertie en kilomètres (X m = X km).
+- Combinaison de techniques possible pour créer des attaques ou défenses avancées, par exemple : combiner deux attaques de niveau A pourrait contrer une attaque de niveau S.
 
-<strong>Exemples de hi&eacute;rarchie (plus petit que &lt;) :</strong><br>
-- Brown &lt; Gray &lt; Yellow &lt; Blue &lt; Green<br>
-- Rang C &lt; Rang B &lt; Rang A &lt; Rang S &lt; Rang Z<br>
-- Niveau B &lt; Niveau A &lt; Niveau S</p></div>
+<strong>Exemples de hiérarchie (plus petit que <) :</strong>
+- Brown < Gray < Yellow < Blue < Green
+- Rang C < Rang B < Rang A < Rang S < Rang Z
+- Niveau B < Niveau A < Niveau S</p>
+    </div>
+    
     <h2>SRPN - ABM v1</h2>
 </body>
 </html>`;
