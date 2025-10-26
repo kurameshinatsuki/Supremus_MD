@@ -256,7 +256,7 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`
 };
 
-  const lien = 'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg';
+  const lien = 'https://i.ibb.co/cKGZRtXX/20250911-193010.jpg';
   const key = (arg[0] || '').toLowerCase();
   const zonesValides = ['centre', 'nord', 'sud', 'est', 'ouest', 'capital'];
 
@@ -297,48 +297,6 @@ Un abri sommaire pour les voyageurs piégés par les blizzards.
     edit: messageInitial.key 
   });
 });
-
-zokou(
-    {
-        nomCom: 'character',
-        categorie: 'ORIGAMY'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, arg, ms } = commandeOptions;
-
-        if (!arg || arg.length === 0)  {
-            // const lien = '';
-            const msg = `▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-*RANG : C | Normal*
-
-> *NOM :* 
-> *DESCRIPTION :* 
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*POTENTIELS*
-
-> *FORCE :* Brown
-> *VITESSE (V.D) :* 5m/s🎯
-> *VITESSE (V.R) :* 500ms⚡
-> *RÉSISTANCE :* Brown
-> *DURABILITÉ :* Brown
-> *SENSORIALITÉ :* 2,5m🎯 de rayon.
-═══════════════════
-*COMPÉTENCES*
-
-> *NIV B :* [Nom + Description de la technique]
-
-> *NIV A :* [Nom + Description de la technique]
-
-> *NIV S :* [Nom + Description de la technique]
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
-           // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
-   repondre(msg);
-        }
-    }
-);
 
 zokou(
     {
@@ -435,96 +393,468 @@ zokou( { nomCom: 'origamy_visuel', categorie: 'CENTRAL' }, async (dest, zk, comm
   }
 
   const liens = [
-    'https://i.ibb.co/LtFzy6j/Image-2024-10-05-12-16-43.jpg',
-    'https://i.ibb.co/G3ztCpW/20240927-230914.jpg',
-    'https://i.ibb.co/vmN0SSr/20240927-231229.jpg',
-    'https://i.ibb.co/mBqrG20/20240927-233225.jpg',
-    'https://i.ibb.co/G5jPJN8/20240927-233347.jpg',
-    'https://i.ibb.co/51qmnJJ/20240927-233900.jpg',
-    'https://i.ibb.co/bJPbxW2/20240927-230107.jpg',
-    'https://i.ibb.co/4m005vx/20240927-233715.jpg',
-    'https://i.ibb.co/0YkNDvc/20240927-230702.jpg',
-    'https://i.ibb.co/HGhxgDs/20240928-001444.jpg',
-    'https://i.ibb.co/jv8q587/20240927-234214.jpg',
-    'https://i.ibb.co/QmMF8B6/20240927-223830.jpg',
-    'https://i.ibb.co/VgCPhyd/20240928-000526.jpg',
-    'https://i.ibb.co/zX3NZrR/20240927-234341.jpg',
-    'https://i.ibb.co/nBZ08Lh/20240927-224242.jpg',
-    'https://i.ibb.co/sj9z6jC/20240928-000853.jpg',
-    'https://i.ibb.co/fCRgqwy/20240928-001305.jpg',
-    'https://i.ibb.co/MpxhHrd/20240927-212108.jpg',
-    'https://i.ibb.co/RCpMXYj/20240927-234545.jpg',
-    'https://i.ibb.co/5WjszYy/20240927-221021.jpg',
-    'https://i.ibb.co/5Tr77gw/20240927-235428.jpg',
-    'https://i.ibb.co/L091WtQ/20240927-222537.jpg',
-    'https://i.ibb.co/j8R23mF/20240927-235952.jpg',
-    'https://i.ibb.co/0MXQjcy/20240927-222739.jpg',
-    'https://i.ibb.co/t2Txdd8/20240928-000303.jpg',
-    'https://i.ibb.co/QYzgXNg/20240928-001822.jpg',
-    'https://i.ibb.co/WvfbbgK/20240927-223020.jpg',
-    'https://i.ibb.co/3mcQzpb/20240927-235656.jpg',
-    'https://i.ibb.co/4dKMmWq/20240927-224809.jpg',
-    'https://i.ibb.co/MVFJzh1/20240927-223321.jpg',
-    'https://i.ibb.co/thkwBjn/20240927-234927.jpg',
-    'https://i.ibb.co/Kh3JdMK/20240927-221342.jpg',
-    'https://i.ibb.co/tKQCYHb/20240927-223933.jpg',
-    'https://i.ibb.co/3mpGZhf/20240927-221704.jpg',
-    'https://i.ibb.co/2YMF9QC/20240927-235106.jpg',
-    'https://i.ibb.co/RBPVVNz/20240927-222034.jpg',
-    'https://i.ibb.co/k4ZSCtD/20240927-235254.jpg',
-    'https://i.ibb.co/2N3ZKtr/20240927-224604.jpg',
-    'https://i.ibb.co/SnqSzGk/20240927-222306.jpg',
-    'https://i.ibb.co/CwZk2nF/20240927-235758.jpg',
-    'https://i.ibb.co/Qd80mx4/20240927-225101.jpg',
-    'https://i.ibb.co/hRpgVLP/20240927-225518.jpg',
-    'https://i.ibb.co/sWt3HFh/20240927-225230.jpg'
-  ];
-
+    'https://i.ibb.co/GQ2w5CgQ/astoria-vue-panoramique-nuit.jpg',
+    'https://i.ibb.co/rKLYLXS8/astoria-vue-panoramique-jour.jpg',
+    'https://i.ibb.co/fYmzBdp4/atelier-auriel-exterieur-jour.jpg',
+    'https://i.ibb.co/v45V7qPX/atelier-auriel-exterieur-nuit.jpg',
+    'https://i.ibb.co/NdRRFDhV/atelier-auriel-interieur-jour.jpg',
+    'https://i.ibb.co/VcDBFhWv/atelier-auriel-interieur-nuit.jpg',
+    'https://i.ibb.co/ynv5d54L/autel-chos-jour.jpg',
+    'https://i.ibb.co/5gLvN8YZ/autel-chos-nuit.jpg',
+    'https://i.ibb.co/Yqh4jn9/bastion-frigelance-exterieur-jour.jpg',
+    'https://i.ibb.co/bM1QSKD7/bastion-frigelance-exterieur-nuit.jpg',
+    'https://i.ibb.co/0j5cmV0r/bastion-frigelance-interieur.jpg',
+    'https://i.ibb.co/Rp8qG8rZ/camp-prospecteurs-jour.jpg',
+    'https://i.ibb.co/F4RC7TPB/camp-prospecteurs-nuit.jpg',
+    'https://i.ibb.co/PyHZqDr/camp-sables-ardents-jour.jpg',
+    'https://i.ibb.co/spqXmyhp/camp-sables-ardents-nuit.jpg',
+    'https://i.ibb.co/bjwM1ycZ/camp-veilleurs-jour.jpg',
+    'https://i.ibb.co/tMzHMzgc/camp-veilleurs-nuit.jpg',
+    'https://i.ibb.co/7tvJJ92f/canyon-feu-jour.jpg',
+    'https://i.ibb.co/x8q7kr0Y/canyon-feu-nuit.jpg',
+    'https://i.ibb.co/V0QnH3Jm/canyon-feu-soleil-couchant.jpg',
+    'https://i.ibb.co/j94d1VvP/cha-ne-brisecimes-jour.jpg',
+    'https://i.ibb.co/TqLSQhQt/cha-ne-brisecimes-nuit.jpg',
+    'https://i.ibb.co/XxnxsYx3/champs-dor-s-jour.jpg',
+    'https://i.ibb.co/gL1qdJpL/champs-dor-s-nuit.jpg',
+    'https://i.ibb.co/27QLzFhQ/chantier-naval-jour.jpg',
+    'https://i.ibb.co/TDVQbFxL/chantier-naval-nuit.jpg',
+    'https://i.ibb.co/rTFWrMP/citadelle-al-zahir-exterieur-jour.jpg',
+    'https://i.ibb.co/pjqZg8wR/citadelle-al-zahir-exterieur-nuit.jpg',
+    'https://i.ibb.co/YBwvVjZB/citadelle-al-zahir-interieur-jour.jpg',
+    'https://i.ibb.co/4ZLZB5Kd/citadelle-al-zahir-interieur-nuit.jpg',
+    'https://i.ibb.co/Y7bnFCdg/cit-velmira-jour.jpg',
+    'https://i.ibb.co/zTnJHH9L/cit-velmira-nuit.jpg',
+    'https://i.ibb.co/RG1r4xHD/cit-velmira-vue-panoramique-jour.jpg',
+    'https://i.ibb.co/Q3YKrpfY/cit-velmira-vue-panoramique-nuit.jpg',
+    'https://i.ibb.co/0jq4pnxs/clairi-re-anciens-jour.jpg',
+    'https://i.ibb.co/jP1mp40p/clairi-re-anciens-nuit.jpg',
+    'https://i.ibb.co/3PDDWDn/d-sert-sablechant-jour.jpg',
+    'https://i.ibb.co/yb0vH22/d-sert-sablechant-nuit.jpg',
+    'https://i.ibb.co/gbfpp6gN/ferme-eldrin-jour.jpg',
+    'https://i.ibb.co/QvGpZ4wq/ferme-eldrin-nuit.jpg',
+    'https://i.ibb.co/qM7Ng4rg/for-t-bor-ale-jour.jpg',
+    'https://i.ibb.co/SDr3YWNj/for-t-bor-ale-nuit.jpg',
+    'https://i.ibb.co/KxskLr73/for-t-sylvara-jour.jpg',
+    'https://i.ibb.co/1GWv2ng8/for-t-sylvara-nuit.jpg',
+    'https://i.ibb.co/Jwc89XNN/fort-givrec-ur-jour.jpg',
+    'https://i.ibb.co/v4jRSByd/fort-givrec-ur-nuit.jpg',
+    'https://i.ibb.co/SDhbpDwF/forteresse-durnholm-place-centrale-jour.jpg',
+    'https://i.ibb.co/Xf7Qy07P/forteresse-durnholm-place-centrale-nuit.jpg',
+    'https://i.ibb.co/Z6QNYrgx/forteresse-durnholm-seigneurie.jpg',
+    'https://i.ibb.co/TqFkzhyN/forteresse-durnholm-vue-panoramique-jour.jpg',
+    'https://i.ibb.co/0R5nf97Q/forteresse-durnholm-vue-panoramique-nuit.jpg',
+    'https://i.ibb.co/sp3zwNZL/garnison-glaces-jour.jpg',
+    'https://i.ibb.co/FLb5sp8m/garnison-glaces-nuit.jpg',
+    'https://i.ibb.co/q3fYnSsj/garnison-nord-jour.jpg',
+    'https://i.ibb.co/WvhYPDWh/garnison-nord-nuit.jpg',
+    'https://i.ibb.co/yBddFXCn/garnison-sables-jour.jpg',
+    'https://i.ibb.co/TMMV4FRf/garnison-sables-nuit.jpg',
+    'https://i.ibb.co/39SX467r/hameau-alderon-jour.jpg',
+    'https://i.ibb.co/qLNFvQrT/hameau-alderon-nuit.jpg',
+    'https://i.ibb.co/qL3CNKvx/lac-c-leste-jour.jpg',
+    'https://i.ibb.co/pvpqCsd9/lac-c-leste-nuit.jpg',
+    'https://i.ibb.co/mfkyxHV/marais-s-l-ne-jour.jpg',
+    'https://i.ibb.co/27jLNghJ/marais-s-l-ne-nuit.jpg',
+    'https://i.ibb.co/zTcYQ65S/mine-onyx-exterieur-jour.jpg',
+    'https://i.ibb.co/pBHQ04sk/mine-onyx-exterieur-nuit.jpg',
+    'https://i.ibb.co/xS244gbk/mine-onyx-interieur.jpg',
+    'https://i.ibb.co/Z1WWhkZQ/monts-glacepierre-jour.jpg',
+    'https://i.ibb.co/p6KR1r3X/monts-glacepierre-nuit.jpg',
+    'https://i.ibb.co/YBtYtQyK/oasis-kherem-jour.jpg',
+    'https://i.ibb.co/Jj1nNGmw/oasis-kherem-nuit.jpg',
+    'https://i.ibb.co/dsT9V34K/oasis-kherem-soleil-couchant.jpg',
+    'https://i.ibb.co/vNzLdZ7/plaine-eldoria-jour.jpg',
+    'https://i.ibb.co/S4pnH3XS/plaine-eldoria-nuit.jpg',
+    'https://i.ibb.co/BKyt4T2d/pont-alliance-jour.jpg',
+    'https://i.ibb.co/mr0m3B8T/pont-alliance-nuit.jpg',
+    'https://i.ibb.co/NgffYYTY/port-vaeloria-jour.jpg',
+    'https://i.ibb.co/d0Y96ZF9/port-vaeloria-nuit.jpg',
+    'https://i.ibb.co/DfhGHGDd/quartier-dockers-jour.jpg',
+    'https://i.ibb.co/pj7xDB6k/quartier-dockers-nuit.jpg',
+    'https://i.ibb.co/yBQfbw3y/refuge-ourse-jour.jpg',
+    'https://i.ibb.co/9HVqnZ3Q/refuge-ourse-nuit.jpg',
+    'https://i.ibb.co/q3T351RQ/rivi-re-azurine-jour.jpg',
+    'https://i.ibb.co/Z6d4HySR/rivi-re-azurine-nuit.jpg',
+    'https://i.ibb.co/tP2vSzfg/ruines-valmora-jour.jpg',
+    'https://i.ibb.co/m5YYnY5D/ruines-valmora-nuit.jpg',
+    'https://i.ibb.co/d0t0cFSN/scierie-garn-jour.jpg',
+    'https://i.ibb.co/BVmNt9qt/scierie-garn-nuit.jpg',
+    'https://i.ibb.co/bZVT1nf/sommet-titan-jour.jpg',
+    'https://i.ibb.co/RkKS70xV/sommet-titan-nuit.jpg',
+    'https://i.ibb.co/7dLjxqRt/taverne-voyageur-exterieur-jour.jpg',
+    'https://i.ibb.co/DDjGdQMs/taverne-voyageur-exterieur-nuit.jpg',
+    'https://i.ibb.co/LDVFKXdZ/taverne-voyageur-interieur.jpg',
+    'https://i.ibb.co/R4CLk67N/th-tre-opaline-exterieur-jour.jpg',
+    'https://i.ibb.co/TMnpdh42/th-tre-opaline-exterieur-nuit.jpg',
+    'https://i.ibb.co/BHV3vBJd/th-tre-opaline-interieur-jour.jpg',
+    'https://i.ibb.co/h1Y9Rzt3/th-tre-opaline-interieur-nuit.jpg',
+    'https://i.ibb.co/hR1cN2Tv/toundra-givrebrume-jour.jpg',
+    'https://i.ibb.co/k642Pr6h/toundra-givrebrume-nuit.jpg',
+    'https://i.ibb.co/tw4tJ9Xm/vall-e-brumes-jour.jpg',
+    'https://i.ibb.co/SDTfSqv9/vall-e-brumes-nuit.jpg',
+    'https://i.ibb.co/pBcFHSyP/village-icethorn-jour.jpg',
+    'https://i.ibb.co/8LhKGTqg/village-icethorn-nuit.jpg',
+    'https://i.ibb.co/zTPSqQk4/village-loryn-jour.jpg',
+    'https://i.ibb.co/pjPCqwyH/village-loryn-nuit.jpg',
+    'https://i.ibb.co/V08N4vYP/village-loryn-soleil-couchant.jpg',
+    'https://i.ibb.co/jmYXVX1/village-nymir-jour.jpg',
+    'https://i.ibb.co/hF81y0BS/village-nymir-nuit.jpg',
+    'https://i.ibb.co/tPbXH82x/Image-2025-09-11-15-24-21-0.jpg',
+    'https://i.ibb.co/JwkzW3LY/Image-2025-09-11-15-24-21-1.jpg',
+    'https://i.ibb.co/1YJ1cH54/Image-2025-09-11-15-24-21-10.jpg',
+    'https://i.ibb.co/5X2zPF9d/Image-2025-09-11-15-24-21-11.jpg',
+    'https://i.ibb.co/LDK9wtZc/Image-2025-09-11-15-24-21-12.jpg',
+    'https://i.ibb.co/JjvB1nMw/Image-2025-09-11-15-24-21-13.jpg',
+    'https://i.ibb.co/ccYhg08t/Image-2025-09-11-15-24-21-14.jpg',
+    'https://i.ibb.co/tw6t0ncZ/Image-2025-09-11-15-24-21-15.jpg',
+    'https://i.ibb.co/nN8rvRzF/Image-2025-09-11-15-24-21-16.jpg',
+    'https://i.ibb.co/bMpRWdL9/Image-2025-09-11-15-24-21-17.jpg',
+    'https://i.ibb.co/tp9d11qT/Image-2025-09-11-15-24-21-18.jpg',
+    'https://i.ibb.co/TDBjkznL/Image-2025-09-11-15-24-21-19.jpg',
+    'https://i.ibb.co/8gjdVX6Y/Image-2025-09-11-15-24-21-20.jpg',
+    'https://i.ibb.co/6RmBGvvv/Image-2025-09-11-15-24-21-21.jpg',
+    'https://i.ibb.co/ZzLdS4q9/Image-2025-09-11-15-24-21-2.jpg',
+    'https://i.ibb.co/3yw3HyDq/Image-2025-09-11-15-24-21-22.jpg',
+    'https://i.ibb.co/7NyqdZ0v/Image-2025-09-11-15-24-21-23.jpg',
+    'https://i.ibb.co/cXDjhmj2/Image-2025-09-11-15-24-21-24.jpg',
+    'https://i.ibb.co/wTbz7zq/Image-2025-09-11-15-24-21-25.jpg',
+    'https://i.ibb.co/n8N2DZTP/Image-2025-09-11-15-24-21-27.jpg',
+    'https://i.ibb.co/WdVq3KT/Image-2025-09-11-15-24-21-26.jpg',
+    'https://i.ibb.co/HpH0HxTh/Image-2025-09-11-15-24-21-28.jpg',
+    'https://i.ibb.co/8nSTzQPR/Image-2025-09-11-15-24-21-29.jpg',
+    'https://i.ibb.co/Qvr8B9Fx/Image-2025-09-11-15-24-21-30.jpg',
+    'https://i.ibb.co/7JwDjJrB/Image-2025-09-11-15-24-21-31.jpg',
+    'https://i.ibb.co/f3wxfN3/Image-2025-09-11-15-24-21-32.jpg',
+    'https://i.ibb.co/HD4kjMNd/Image-2025-09-11-15-24-21-36.jpg',
+    'https://i.ibb.co/wFkstW5x/Image-2025-09-11-15-24-21-33.jpg',
+    'https://i.ibb.co/fdj90WJP/Image-2025-09-11-15-24-21-34.jpg',
+    'https://i.ibb.co/JjWG7Rvy/Image-2025-09-11-15-24-21-35.jpg',
+    'https://i.ibb.co/tpLjV95V/Image-2025-09-11-15-24-21-37.jpg',
+    'https://i.ibb.co/FL783jcW/Image-2025-09-11-15-24-21-38.jpg',
+    'https://i.ibb.co/wZ9421s7/Image-2025-09-11-15-24-21-39.jpg',
+    'https://i.ibb.co/s9c5ybDm/Image-2025-09-11-15-24-21-4.jpg',
+    'https://i.ibb.co/zhTsrrwF/Image-2025-09-11-15-24-21-40.jpg',
+    'https://i.ibb.co/2r4d3T8/Image-2025-09-11-15-24-21-41.jpg',
+    'https://i.ibb.co/vxQy5Q4z/Image-2025-09-11-15-24-21-42.jpg',
+    'https://i.ibb.co/Kzs0dxhK/Image-2025-09-11-15-24-21-44.jpg',
+    'https://i.ibb.co/gZs6WpKY/Image-2025-09-11-15-24-21-45.jpg',
+    'https://i.ibb.co/Ld361vnn/Image-2025-09-11-15-24-21-43.jpg',
+    'https://i.ibb.co/d4ZWSYX6/Image-2025-09-11-15-24-21-46.jpg',
+    'https://i.ibb.co/8DTphcQq/Image-2025-09-11-15-24-21-47.jpg',
+    'https://i.ibb.co/XrbhczVb/Image-2025-09-11-15-24-21-49.jpg',
+    'https://i.ibb.co/V0ZPHwgp/Image-2025-09-11-15-24-21-48.jpg',
+    'https://i.ibb.co/d0d02qv7/Image-2025-09-11-15-24-21-5.jpg',
+    'https://i.ibb.co/VY6fThHH/Image-2025-09-11-15-24-21-51.jpg',
+    'https://i.ibb.co/dsyR6sb8/Image-2025-09-11-15-24-21-50.jpg',
+    'https://i.ibb.co/XrkhPDCm/Image-2025-09-11-15-24-21-52.jpg',
+    'https://i.ibb.co/35M6zMqC/Image-2025-09-11-15-24-21-53.jpg',
+    'https://i.ibb.co/zHbHQFWY/Image-2025-09-11-15-24-21-54.jpg',
+    'https://i.ibb.co/BHnK4K1m/Image-2025-09-11-15-24-21-55.jpg',
+    'https://i.ibb.co/QjPTXx2H/Image-2025-09-11-15-24-21-56.jpg',
+    'https://i.ibb.co/cGSdBg3/Image-2025-09-11-15-24-21-57.jpg',
+    'https://i.ibb.co/5XK9QZwh/Image-2025-09-11-15-24-21-58.jpg',
+    'https://i.ibb.co/Fbpx51Bz/Image-2025-09-11-15-24-21-59.jpg',
+    'https://i.ibb.co/b58Bh1p7/Image-2025-09-11-15-24-21-6.jpg',
+    'https://i.ibb.co/fZnhDr6/Image-2025-09-11-15-24-21-61.jpg',
+    'https://i.ibb.co/N2XnmP3b/Image-2025-09-11-15-24-21-60.jpg',
+    'https://i.ibb.co/tMqyxmCt/Image-2025-09-11-15-24-21-62.jpg',
+    'https://i.ibb.co/JWqg27Dk/Image-2025-09-11-15-24-21-7.jpg',
+    'https://i.ibb.co/Gf5XcgQw/Image-2025-09-11-15-24-21-8.jpg',
+    'https://i.ibb.co/qvjkNC7/Image-2025-09-11-15-24-21-9.jpg',
+    'https://i.ibb.co/fzrqgQpg/Image-2025-09-11-15-24-22-100.jpg',
+    'https://i.ibb.co/bgZM7r0w/Image-2025-09-11-15-24-22-101.jpg',
+    'https://i.ibb.co/LzKG3qTK/Image-2025-09-11-15-24-22-103.jpg',
+    'https://i.ibb.co/zVbs6jxV/Image-2025-09-11-15-24-22-104.jpg',
+    'https://i.ibb.co/pBDVwsyT/Image-2025-09-11-15-24-22-102.jpg',
+    'https://i.ibb.co/LhsQjbkj/Image-2025-09-11-15-24-22-105.jpg',
+    'https://i.ibb.co/rGy7wfRj/Image-2025-09-11-15-24-22-106.jpg',
+    'https://i.ibb.co/N2sC7vzr/Image-2025-09-11-15-24-22-107.jpg',
+    'https://i.ibb.co/8LYvGrJR/Image-2025-09-11-15-24-22-108.jpg',
+    'https://i.ibb.co/SLnSQQW/Image-2025-09-11-15-24-22-109.jpg',
+    'https://i.ibb.co/ZR0yVmdh/Image-2025-09-11-15-24-22-110.jpg',
+    'https://i.ibb.co/LhQWR2tp/Image-2025-09-11-15-24-22-111.jpg',
+    'https://i.ibb.co/ch67MdfY/Image-2025-09-11-15-24-22-112.jpg',
+    'https://i.ibb.co/GQR2nDyC/Image-2025-09-11-15-24-22-113.jpg',
+    'https://i.ibb.co/KjQfV01f/Image-2025-09-11-15-24-22-114.jpg',
+    'https://i.ibb.co/BHLdcnTN/Image-2025-09-11-15-24-22-116.jpg',
+    'https://i.ibb.co/dJG6td2w/Image-2025-09-11-15-24-22-115.jpg',
+    'https://i.ibb.co/fzCQqMdG/Image-2025-09-11-15-24-22-117.jpg',
+    'https://i.ibb.co/Q7BLF1h9/Image-2025-09-11-15-24-22-118.jpg',
+    'https://i.ibb.co/WNQyYgzJ/Image-2025-09-11-15-24-22-119.jpg',
+    'https://i.ibb.co/n83NZcxN/Image-2025-09-11-15-24-22-120.jpg',
+    'https://i.ibb.co/SDn9c2fj/Image-2025-09-11-15-24-22-121.jpg',
+    'https://i.ibb.co/7FyTcK3/Image-2025-09-11-15-24-22-122.jpg',
+    'https://i.ibb.co/hFWmwjNx/Image-2025-09-11-15-24-22-123.jpg',
+    'https://i.ibb.co/5hTTGqhC/Image-2025-09-11-15-24-22-124.jpg',
+    'https://i.ibb.co/pBbx1gf2/Image-2025-09-11-15-24-22-125.jpg',
+    'https://i.ibb.co/fYsz8kbQ/Image-2025-09-11-15-24-22-126.jpg',
+    'https://i.ibb.co/v48GKb51/Image-2025-09-11-15-24-22-63.jpg',
+    'https://i.ibb.co/DP5kgLCq/Image-2025-09-11-15-24-22-64.jpg',
+    'https://i.ibb.co/kRyx0Xb/Image-2025-09-11-15-24-22-65.jpg',
+    'https://i.ibb.co/k2nFPLpn/Image-2025-09-11-15-24-22-66.jpg',
+    'https://i.ibb.co/G3nP0yQw/Image-2025-09-11-15-24-22-68.jpg',
+    'https://i.ibb.co/6JFBWrpY/Image-2025-09-11-15-24-22-67.jpg',
+    'https://i.ibb.co/1tZCV9Bc/Image-2025-09-11-15-24-22-69.jpg',
+    'https://i.ibb.co/xthvcsxC/Image-2025-09-11-15-24-22-71.jpg',
+    'https://i.ibb.co/mCZXRXWX/Image-2025-09-11-15-24-22-72.jpg',
+    'https://i.ibb.co/whnJ0YYs/Image-2025-09-11-15-24-22-70.jpg',
+    'https://i.ibb.co/hJDLW7wH/Image-2025-09-11-15-24-22-73.jpg',
+    'https://i.ibb.co/nsS5Jvzv/Image-2025-09-11-15-24-22-77.jpg',
+    'https://i.ibb.co/vCkYch48/Image-2025-09-11-15-24-22-74.jpg',
+    'https://i.ibb.co/tM8vg2zn/Image-2025-09-11-15-24-22-75.jpg',
+    'https://i.ibb.co/qMWvVFVh/Image-2025-09-11-15-24-22-76.jpg',
+    'https://i.ibb.co/rfQs5dmd/Image-2025-09-11-15-24-22-78.jpg',
+    'https://i.ibb.co/sd2mLHtN/Image-2025-09-11-15-24-22-79.jpg',
+    'https://i.ibb.co/mV3Vkvh2/Image-2025-09-11-15-24-22-80.jpg',
+    'https://i.ibb.co/1f1jdHWB/Image-2025-09-11-15-24-22-81.jpg',
+    'https://i.ibb.co/Kx6FgY2t/Image-2025-09-11-15-24-22-82.jpg',
+    'https://i.ibb.co/gLXcbrQ8/Image-2025-09-11-15-24-22-83.jpg',
+    'https://i.ibb.co/dsTxxkPc/Image-2025-09-11-15-24-22-84.jpg',
+    'https://i.ibb.co/2YfT4RFG/Image-2025-09-11-15-24-22-85.jpg',
+    'https://i.ibb.co/xPkQmzF/Image-2025-09-11-15-24-22-86.jpg',
+    'https://i.ibb.co/5gqPyLMh/Image-2025-09-11-15-24-22-87.jpg',
+    'https://i.ibb.co/bj8Nrp9Z/Image-2025-09-11-15-24-22-88.jpg',
+    'https://i.ibb.co/WpFDSrFM/Image-2025-09-11-15-24-22-89.jpg',
+    'https://i.ibb.co/F4PPkmd7/Image-2025-09-11-15-24-22-90.jpg',
+    'https://i.ibb.co/zhXjXVQ9/Image-2025-09-11-15-24-22-91.jpg',
+    'https://i.ibb.co/VpgNBH6K/Image-2025-09-11-15-24-22-93.jpg',
+    'https://i.ibb.co/sdgwbCDq/Image-2025-09-11-15-24-22-92.jpg',
+    'https://i.ibb.co/1fN13Wsh/Image-2025-09-11-15-24-22-95.jpg',
+    'https://i.ibb.co/HTTWGsnJ/Image-2025-09-11-15-24-22-94.jpg',
+    'https://i.ibb.co/3yJrNKL1/Image-2025-09-11-15-24-22-96.jpg',
+    'https://i.ibb.co/pj623JPD/Image-2025-09-11-15-24-22-97.jpg',
+    'https://i.ibb.co/XxSQxW3D/Image-2025-09-11-15-24-22-98.jpg',
+    'https://i.ibb.co/DdFrn72/Image-2025-09-11-15-24-22-99.jpg',
+    'https://i.ibb.co/cKGZRtXX/20250911-193010.jpg',
+    'https://i.ibb.co/Vpzs1NZV/belle-etoile-chambre-eco-nuit.jpg',
+    'https://i.ibb.co/N6hvdc3R/belle-etoile-chambre-eco-jour.jpg',
+    'https://i.ibb.co/TMc7LzrR/belle-etoile-chambre-luxe.jpg',
+    'https://i.ibb.co/N28BmT46/belle-etoile-chambre-standard.jpg',
+    'https://i.ibb.co/8D1h6hxz/belle-etoile-exterieur-nuit.jpg',
+    'https://i.ibb.co/cX7MCdgL/belle-etoile-interieur.jpg',
+    'https://i.ibb.co/60xbZK0r/belle-etoile-exterieur-jour.jpg'
+];
+  
   let html = `
   <html>
   <head>
     <meta charset="UTF-8">
     <title>Galerie Origamy World</title>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+      
       body {
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #1a1a1a;
-        color: #fff;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        font-family: 'Noto Sans SC', sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e0e0e0;
+        margin: 0;
         padding: 20px;
+        min-height: 100vh;
       }
-      .image {
-        margin: 10px;
-        border-radius: 12px;
+      
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: linear-gradient(90deg, rgba(74, 107, 156, 0.3) 0%, rgba(107, 74, 156, 0.3) 100%);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+      
+      .title {
+        font-size: 2.5em;
+        font-weight: 700;
+        background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        margin-bottom: 10px;
+      }
+      
+      .subtitle {
+        font-size: 1.1em;
+        color: #b8b8b8;
+        font-weight: 500;
+      }
+      
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      
+      .image-card {
+        background: linear-gradient(145deg, rgba(40, 40, 60, 0.8) 0%, rgba(30, 30, 50, 0.9) 100%);
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 0 10px #000;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
       }
-      .image img {
-        max-width: 300px;
-        border-radius: 12px;
+      
+      .image-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #ffd700, #ff6b6b, #4ecdc4);
+        z-index: 2;
+      }
+      
+      .image-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        border-color: rgba(255, 215, 0, 0.3);
+      }
+      
+      .image-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+      }
+      
+      .image-card:hover img {
+        transform: scale(1.1);
+      }
+      
+      .image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px 15px 15px;
+        transform: translateY(100%);
         transition: transform 0.3s ease;
       }
-      .image img:hover {
-        transform: scale(1.05);
+      
+      .image-card:hover .image-overlay {
+        transform: translateY(0);
+      }
+      
+      .image-name {
+        font-size: 0.9em;
+        color: #ffd700;
+        font-weight: 500;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        color: #888;
+        font-size: 0.9em;
+      }
+      
+      .element-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #ffd700;
+        z-index: 3;
+      }
+      
+      /* Animation d'entrée */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .image-card {
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+      }
+      
+      .image-card:nth-child(odd) {
+        animation-delay: 0.1s;
+      }
+      
+      .image-card:nth-child(even) {
+        animation-delay: 0.2s;
+      }
+      
+      /* Scrollbar personnalisée */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: rgba(30, 30, 50, 0.8);
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #ffd700, #ff6b6b);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(45deg, #ffed4e, #ff8a8a);
       }
     </style>
   </head>
   <body>
-    ${liens.map(url => `<div class="image"><img src="${url}" alt="Origamy" /></div>`).join('')}
+    <div class="header">
+      <div class="title">Origamy World Gallery</div>
+      <div class="subtitle">Explore le monde fantastique de Origamy World</div>
+    </div>
+    
+    <div class="gallery">
+      ${liens.map((url, index) => {
+        const fileName = url.split('/').pop().split('.')[0];
+        const elementIcons = ['⚡', '🔥', '💧', '❄️', '🌪️', '🌱', '🪨'];
+        const randomElement = elementIcons[Math.floor(Math.random() * elementIcons.length)];
+        
+        return `
+          <div class="image-card">
+            <div class="element-icon">${randomElement}</div>
+            <img src="${url}" alt="Origamy World ${index + 1}" />
+            <div class="image-overlay">
+              <div class="image-name">${fileName.replace(/-/g, ' ')}</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    
+    <div class="footer">
+      © 2025 Origamy World • Developer by SUPREMUS PROD
+    </div>
   </body>
   </html>`;
 
-  const fileName = `origamy_galerie_${randomInt(10000)}.html`;
-  writeFileSync(fileName, html);
+const fileName = `origamy_galerie_genshin_${randomInt(10000)}.html`;
+writeFileSync(fileName, html);
 
-  await zk.sendMessage(dest, {
-    document: readFileSync(fileName),
-    mimetype: 'text/html',
-    fileName: 'origamy_galerie.html',
-    caption: '*📸 GALERIE ORIGAMY WORLD*'
-  }, { quoted: ms });
+await zk.sendMessage(dest, {
+  document: readFileSync(fileName),
+  mimetype: 'text/html',
+  fileName: 'origamy_galerie.html',
+  caption: '*🖼 GALERIE ORIGAMY WORLD 🖼*'
+}, { quoted: ms });
 
-  unlinkSync(fileName);
-});
+unlinkSync(fileName);
