@@ -859,5 +859,3 @@ await zk.sendMessage(dest, {
 
 unlinkSync(fileName);
 }); 
-
-}; 
