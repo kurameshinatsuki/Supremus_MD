@@ -3,11 +3,6 @@ const { writeFileSync, readFileSync, unlinkSync } = require('fs');
 const { randomInt } = require('crypto');
 
 // Commande pour envoyer le système ABM en HTML
-const { zokou } = require('../framework/zokou');
-const { writeFileSync, readFileSync, unlinkSync } = require('fs');
-const { randomInt } = require('crypto');
-
-// Commande pour envoyer le système ABM en HTML
 zokou(
   { nomCom: 'abm_system', categorie: 'ABM' },
   async (dest, zk, { ms }) => {
