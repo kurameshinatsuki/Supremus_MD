@@ -858,3 +858,6 @@ await zk.sendMessage(dest, {
 }, { quoted: ms });
 
 unlinkSync(fileName);
+}); 
+
+}; 
