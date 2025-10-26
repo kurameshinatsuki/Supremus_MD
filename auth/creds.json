@@ -1,6 +1,3 @@
-Voici le fichier `creds.json` extrait dans le format exact demandé :
-
-```json
 {
   "noiseKey": {
     "private": {
@@ -118,3 +115,4 @@ Voici le fichier `creds.json` extrait dans le format exact demandé :
   "myAppStateKeyId": "AAAAAKJ5"
 }
 ```
+
