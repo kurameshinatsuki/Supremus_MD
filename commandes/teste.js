@@ -169,10 +169,11 @@ zokou({ nomCom: "latence", categorie: "MON-BOT", reaction: "⏱️" }, async (or
         try {
             const response = await axios.get("https://zokouscan-din3.onrender.com");
             console.log(`[PING] ${new Date().toLocaleTimeString()} - Statut : ${response.status}`);
-            await zk.sendMessage(origineMessage, { text: `*_⌛ Intervalle écoulé ${dernierDelaiMinutes} min._*` });
+            
+            repondre(`*_⌛ Intervalle écoulé ${dernierDelaiMinutes} min._*`);
         } catch (err) {
             console.error(`[PING] Erreur : ${err.message}`);
-            await zk.sendMessage(origineMessage, { text: `Erreur : ${err.message}` });
+            repondre(`Erreur : ${err.message}`);
         }
     }, minutes * 60 * 1000); // Conversion minutes -> millisecondes
 
