@@ -560,24 +560,9 @@ zokou(
   <h1>🌐 ORIGAMY WORLD – SYSTEM SRPN 🌐</h1>
 
   <section>
-    <h2>🔹 STRUCTURE DU PAVÉ RP STORY</h2>
-    <div class="highlight">
-  <p><br>
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
-*▓▓▓▓[ORIGAMY  STORY]▓▓▓▓*<br>
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br>
-*[PLAYER NAME] :*<br><br>
-
-&gt; *Section 1:*<br><br>
-
-&gt; *Section 2:*<br>
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
-*💠 POUVOIR :* Aucun<br>
-*🌐 POSITION :*<br>
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁<br>
-*▓▓▓▓[ CHARGEMENT... ]▓▓▓▓*<br>
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔<br></p>
-    </div><strong>R&Egrave;GLES DE JEU RP STORY</strong><br><br>
+    <h2>🔹 STRUCTURE RP STORY</h2>
+    
+<strong>R&Egrave;GLES DE JEU RP STORY</strong><br><br>
 
 <div class="highlight">
       <p><strong>ORIGAMY SERVEURS :</strong> Origamy World est divis&eacute; en plusieurs serveurs repr&eacute;sentant une zone chacune. Il est important de respecter les r&egrave;gles suivantes : pas de spam [message, stickers, etc.], juste vos pav&eacute;s et questions ; apr&egrave;s 3⚠️ avertissements c&#39;est -30 XP et -3 000🧭. Vous ne pouvez pas &ecirc;tre dans plusieurs serveurs &agrave; la fois ; si vous changez de zone vous devez rejoindre le serveur de cette zone et quitter le pr&eacute;c&eacute;dent, sous peine de sanction. Veuillez rester r&eacute;aliste, respecter le syst&egrave;me de jeu et les lois de la physique.</p>
@@ -864,390 +849,528 @@ zokou(
     async (dest, zk, commandeOptions) => {
         const { ms } = commandeOptions;
 
-        const html = `<!DOCTYPE html><html lang="fr">
+        const html = `<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YU-GI-OH! SPEED DUEL – GAMEPLAY SRPN</title>
- <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a1a 100%);
-    color: #f8f8f8;
-    padding: 1rem;
-    line-height: 1.5;
-    font-size: 14px;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-  }
+  <title>YU-GI-OH! SPEED DUEL – GUIDE OFFICIEL SRPN</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a1a 100%);
+      color: #f8f8f8;
+      padding: 1rem;
+      line-height: 1.5;
+      font-size: 14px;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-  /* Effet de terrain de duel énergétique */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(circle at 20% 30%, rgba(255, 230, 0, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(255, 0, 128, 0.05) 0%, transparent 50%);
-    background-size: 100% 100%;
-    z-index: -1;
-    opacity: 0.4;
-  }
+    /* Effet de terrain de duel énergétique */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 230, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 0, 128, 0.05) 0%, transparent 50%);
+      background-size: 100% 100%;
+      z-index: -1;
+      opacity: 0.4;
+    }
 
-  /* Effet de grille de terrain de duel */
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-      linear-gradient(rgba(255, 230, 0, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 230, 0, 0.03) 1px, transparent 1px);
-    background-size: 30px 30px;
-    z-index: -1;
-    pointer-events: none;
-  }
+    /* Effet de grille de terrain de duel */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 230, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 230, 0, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      z-index: -1;
+      pointer-events: none;
+    }
 
-  h1, h2, h3 {
-    color: #ffe600;
-    text-align: center;
-    margin: 1rem 0;
-    font-weight: 700;
-    text-shadow: 0 0 10px rgba(255, 230, 0, 0.5),
-                 0 0 20px rgba(255, 230, 0, 0.3);
-    position: relative;
-    padding-bottom: 0.5rem;
-  }
+h1, h2, h3 {
+  color: #ffe600;
+  text-align: center;
+  margin: 1rem 0;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 230, 0, 0.5),
+               0 0 20px rgba(255, 230, 0, 0.3);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
 
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Pour les écrans mobiles */
+@media (max-width: 768px) {
   h1 {
-    font-size: 2.2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.2rem;
-  }
-
-  h3 {
-    font-size: 1.4rem;
+    font-size: 1.8rem; /* Taille réduite sur mobile */
     margin-bottom: 1rem;
   }
-
-  /* Effet de barre énergétique sous les titres */
-  h1::after, h2::after, h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 2px;
-    background: linear-gradient(90deg, 
-      transparent, 
-      #ffe600, 
-      #ffcc00, 
-      #ffe600, 
-      transparent
-    );
-    border-radius: 2px;
+  
+  /* Optionnel : ajuster aussi h2 et h3 */
+  h2 {
+    font-size: 1.5rem;
   }
-
-  .section {
-    margin: 1.5rem 0;
-    padding: 1.2rem 1.5rem;
-    background: linear-gradient(145deg, #1a1a1a 0%, #2a1a2a 100%);
-    border-left: 4px solid #ffcc00;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255, 204, 0, 0.1);
+  
+  h3 {
+    font-size: 1.3rem;
   }
+}
 
-  /* Effet de carte qui se lève */
-  .section:hover {
-    transform: translateY(-5px) rotateX(2deg);
-    box-shadow: 0 8px 25px rgba(255, 204, 0, 0.2),
-                0 4px 15px rgba(0, 0, 0, 0.5);
-    border-left: 4px solid #ffaa00;
+/* Pour les très petits écrans */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
   }
+}
 
-  /* Effet de brillance énergétique sur le bord */
-  .section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -4px;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(to bottom, 
-      #ffcc00, 
-      #ffe600, 
-      #ffcc00
-    );
-    border-radius: 2px;
-    transition: all 0.3s ease;
-  }
+    /* Effet de barre énergétique sous les titres */
+    h1::after, h2::after, h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        #ffe600, 
+        #ffcc00, 
+        #ffe600, 
+        transparent
+      );
+      border-radius: 2px;
+    }
 
-  .section:hover::before {
-    box-shadow: 0 0 10px #ffcc00,
-                0 0 20px rgba(255, 204, 0, 0.5);
-  }
+    .section {
+      margin: 1.5rem 0;
+      padding: 1.2rem 1.5rem;
+      background: linear-gradient(145deg, #1a1a1a 0%, #2a1a2a 100%);
+      border-left: 4px solid #ffcc00;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 204, 0, 0.1);
+    }
 
-  code {
-    background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-size: 13px;
-    color: #00ffff;
-    font-weight: 600;
-    border: 1px solid rgba(0, 255, 255, 0.2);
-    font-family: 'Courier New', Monaco, monospace;
-  }
+    /* Effet de carte qui se lève */
+    .section:hover {
+      transform: translateY(-5px) rotateX(2deg);
+      box-shadow: 0 8px 25px rgba(255, 204, 0, 0.2),
+                  0 4px 15px rgba(0, 0, 0, 0.5);
+      border-left: 4px solid #ffaa00;
+    }
 
-  ul {
-    padding-left: 1.5rem;
-    margin: 0.8rem 0;
-  }
+    /* Effet de brillance énergétique sur le bord */
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -4px;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, 
+        #ffcc00, 
+        #ffe600, 
+        #ffcc00
+      );
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
 
-  li {
-    margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
-    position: relative;
-  }
+    .section:hover::before {
+      box-shadow: 0 0 10px #ffcc00,
+                  0 0 20px rgba(255, 204, 0, 0.5);
+    }
 
-  /* Points de liste stylisés */
-  li::before {
-    content: '✦';
-    color: #ffcc00;
-    position: absolute;
-    left: -1rem;
-    text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
-  }
+    code {
+      background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #00ffff;
+      font-weight: 600;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      font-family: 'Courier New', Monaco, monospace;
+    }
 
-  .highlight {
-    color: #00ffff;
-    font-weight: bold;
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
-    background: linear-gradient(45deg, #00ffff, #00ccff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    padding: 0 2px;
-  }
+    ul {
+      padding-left: 1.5rem;
+      margin: 0.8rem 0;
+    }
 
-  .small {
-    font-size: 12px;
-    opacity: 0.85;
-    color: #cccccc;
-    font-style: italic;
-  }
+    li {
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+      position: relative;
+    }
 
-  /* Animation d'entrée des sections */
-  @keyframes cardDraw {
-    from {
+    /* Points de liste stylisés */
+    li::before {
+      content: '✦';
+      color: #ffcc00;
+      position: absolute;
+      left: -1rem;
+      text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+    }
+
+    .highlight {
+      color: #00ffff;
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+      background: linear-gradient(45deg, #00ffff, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding: 0 2px;
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: 0.85;
+      color: #cccccc;
+      font-style: italic;
+    }
+
+    /* Animation d'entrée des sections */
+    @keyframes cardDraw {
+      from {
+        opacity: 0;
+        transform: translateY(30px) rotateX(-10deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+
+    .section {
+      animation: cardDraw 0.6s ease-out;
+    }
+
+    /* Effet de particules magiques */
+    .section::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, #ffe600, transparent 70%);
       opacity: 0;
-      transform: translateY(30px) rotateX(-10deg);
+      transition: opacity 0.3s ease;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0) rotateX(0);
+
+    .section:hover::after {
+      opacity: 0.3;
     }
-  }
 
-  .section {
-    animation: cardDraw 0.6s ease-out;
-  }
-
-  /* Effet de particules magiques */
-  .section::after {
-    content: '';
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle, #ffe600, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .section:hover::after {
-    opacity: 0.3;
-  }
-</style>
+    .rule-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    
+    .rule-table th, .rule-table td {
+      border: 1px solid rgba(255, 204, 0, 0.3);
+      padding: 0.5rem;
+      text-align: left;
+    }
+    
+    .rule-table th {
+      background: rgba(255, 204, 0, 0.1);
+      color: #ffcc00;
+    }
+    
+    .rule-table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .example-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 3px solid #00ffff;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+    
+    .phase-box {
+      background: rgba(255, 204, 0, 0.1);
+      border: 1px solid rgba(255, 204, 0, 0.3);
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .phase-title {
+      color: #ffcc00;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body>
   <h1>🎴 YU-GI-OH! SPEED DUEL 🎴</h1>
-  <h2>— GAMEPLAY SRPN —</h2>  <div class="section">
-   <p>
-    Le Speed Duel est une version simplifi&eacute;e de Yu-Gi-Oh! avec les r&egrave;gles suivantes :
-  </p>
-
-  <h3>D&Eacute;BUT DU DUEL</h3>
-  <p>
-    Chaque joueur pioche 4 cartes pour sa main de d&eacute;part. Le premier joueur ne pioche pas lors de son premier tour.
-    Vous pouvez directement jou&eacute; vos cartes en mentionnant comment vous les utiliser (face cach&eacute;, pose, invocation, attaque, etc.).
-    Utiliser une carte face cach&eacute;e pour vos actions cach&eacute;es. Certaines cartes ou comp&eacute;tences peuvent &ecirc;tre activ&eacute;es durant le tour adverse
-    et les actions cach&eacute;es doivent &ecirc;tre divulgu&eacute;es &agrave; l&#39;arbitre avant leur lancement.
-  </p>
-
-  <h3>TERRAIN DE JEU</h3>
-  <p>
-    Votre terrain de jeu compte 6 sections qui sont :
-    le Deck Principal (20 &agrave; 30 cartes), l&#39;Extra Deck (0 &agrave; 5 cartes), le Cimeti&egrave;re,
-    la Zone Magie de Terrain, la Zone Monstre (3 max) et la Zone Magies et Pi&egrave;ges (3 max).
-  </p>
-
-  <h3>POINTS DE VIE (LP)</h3>
-  <p>
-    Chaque joueur commence avec 4000 LP. La d&eacute;faite survient si les LP tombent &agrave; z&eacute;ro ou si le joueur ne peut plus piocher de cartes.
-  </p>
-
-  <h3>EXTRA DECK</h3>
-  <p>
-    Contient les Monstres Fusion (cartes violettes, comme &quot;Dragon Mill&eacute;naire&quot;). Il peut contenir entre 0 et 5 cartes.
-  </p>
-
-  <h3>MAIN DECK</h3>
-  <p>
-    Doit contenir entre 20 et 30 cartes. Les cartes doivent &ecirc;tre m&eacute;lang&eacute;es avant le duel.
-    Maximum 3 exemplaires de la m&ecirc;me carte.
-  </p>
-
-  <h3>CARTE COMP&Eacute;TENCE</h3>
-  <p>
-    Chaque joueur choisit une carte comp&eacute;tence face cach&eacute;e avant le duel.
-  </p>
-
-  <h3>TOUR DE JEU</h3>
-  <p>
-    Piocher une carte, puis poser des Pi&egrave;ges, jouer des Magies et invoquer un monstre dans l&#39;ordre souhait&eacute;. Ensuite, le joueur peut attaquer.
-  </p>
-
-  <h3>INVOCATION ET POSE</h3>
-  <ul>
-    <li>Invoquer un monstre en Position d&#39;Attaque (verticale) ou le Poser face verso en Position de D&eacute;fense (horizontale).</li>
-    <li>Le nombre d&#39;&eacute;toiles indique le niveau :</li>
+  <h2>— GUIDE OFFICIEL SRPN —</h2>
+  
+  <div class="section">
+    <h3>📋 PRÉSENTATION DU SPEED DUEL</h3>
+    <p>Le <span class="highlight">Speed Duel</span> est un format de jeu Yu-Gi-Oh! simplifié conçu pour des parties rapides et intenses. Il conserve l'essence du jeu classique avec des règles adaptées pour une expérience plus accessible.</p>
+    
+    <table class="rule-table">
+      <tr>
+        <th>Élément</th>
+        <th>Speed Duel</th>
+      </tr>
+      <tr>
+        <td>Points de Vie</td>
+        <td>4000 LP</td>
+      </tr>
+      <tr>
+        <td>Main de départ</td>
+        <td>4 cartes</td>
+      </tr>
+      <tr>
+        <td>Zones Monstre</td>
+        <td>3 zones</td>
+      </tr>
+      <tr>
+        <td>Zones Magie/Piège</td>
+        <td>3 zones</td>
+      </tr>
+      <tr>
+        <td>Taille du Deck</td>
+        <td>20-30 cartes</td>
+      </tr>
+      <tr>
+        <td>Extra Deck</td>
+        <td>Max 6 cartes</td>
+      </tr>
+      <tr>
+        <td>Compétences</td>
+        <td>✅ OUI</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="section">
+    <h3>⚙️ CONFIGURATION DU DUEL</h3>
+    
+    <h4>Structure du Deck</h4>
     <ul>
-      <li>Niveau 1 &agrave; 4 : Pas de tribut.</li>
-      <li>Niveau 5 et 6 : 1 tribut.</li>
-      <li>Niveau 7 ou plus : 2 tributs.</li>
-      <li>Les Invocations Sp&eacute;ciales ne n&eacute;cessitent pas de tributs.</li>
+      <li><span class="highlight">Deck Principal</span> : 20 à 30 cartes (maximum 3 exemplaires de la même carte)</li>
+      <li><span class="highlight">Extra Deck</span> : 0 à 5 cartes (Monstres Fusion uniquement)</li>
+      <li><span class="highlight">Compétence</span> : Chaque joueur choisit une carte Compétence avant le duel</li>
     </ul>
-  </ul>
-
-  <h3>CARTES MAGIE ET PI&Egrave;GE</h3>
-  <p>
-    Les Magies peuvent &ecirc;tre jou&eacute;es directement depuis la main. Les Magies de Terrain sont plac&eacute;es dans la Zone Terrain.
-    Les Magies et Pi&egrave;ges d&#39;&Eacute;quipement restent en jeu. Les autres vont au cimeti&egrave;re.
-  </p>
-
-  <h3>CARTES PI&Egrave;GE</h3>
-  <p>
-    Doivent &ecirc;tre pos&eacute;es face verso et ne peuvent pas &ecirc;tre activ&eacute;es le tour o&ugrave; elles sont pos&eacute;es, sauf indication contraire.
-    Elles vont au cimeti&egrave;re apr&egrave;s usage.
-  </p>
-
-  <h3>PHASE DE COMBAT</h3>
-  <p>
-    Chaque monstre en Position d&#39;Attaque peut attaquer une fois par tour. Si l&#39;adversaire n&#39;a pas de monstre, les LP peuvent &ecirc;tre attaqu&eacute;s directement.<br>
-    Si un monstre face verso est attaqu&eacute;, il est retourn&eacute; face recto. Si le monstre attaqu&eacute; survit, il reste face recto en Position de D&eacute;fense.<br>
-    Aucun LP n&#39;est perdu si la DEF du monstre attaqu&eacute; est sup&eacute;rieure &agrave; l&#39;ATK du monstre attaquant.
-  </p>
-  </div>  <div class="section">
-  <h2>1. <strong>PR&Eacute;PARATION DU DUEL</strong></h2>
-  <ul>
-    <li>Chaque joueur choisit son deck via <code>.deck [nom]</code>. <em>Ex :</em> ~deck yami, ~deck kaiba, etc.</li>
-    <li>Le duel se joue sous la supervision d&rsquo;un arbitre (<em>modo</em>).</li>
-    <li>Chaque joueur commence avec <strong>4 cartes en main</strong>.</li>
-  </ul>
-
-  <h2>2. <strong>D&Eacute;ROULEMENT DU TOUR</strong></h2>
-  <ul>
-    <li>Le joueur divise ses actions en 3 pav&eacute;s, correspondant aux phases du tour.</li>
-    <li>Apr&egrave;s chaque pav&eacute;, il attend la validation de l&rsquo;arbitre et une &eacute;ventuelle r&eacute;action de l&rsquo;adversaire (cartes pi&egrave;ge, contre, etc.).</li>
-  </ul>
-
-  <h3>&#128221; Structure du Tour &#128221;</h3>
-
-  <h4>Phase 1 : Pioche &amp; Main Phase 1</h4>
-  <p>Je pioche une carte.<br>
-  J&rsquo;invoque [Monstre] en mode [Position].<br>
-  Je pose 1 carte face cach&eacute;e.</p>
-  <p><em>➡️ Attendre la validation ou interruption avant de continuer.</em></p>
-
-  <h4>Phase 2 : Battle Phase</h4>
-  <p>[Monstre] attaque [Monstre adverse ou Joueur].<br>
-  Dommages : [si calcul connu]</p>
-  <p><em>➡️ Attendre la validation ou interruption.</em></p>
-
-  <h4>Phase 3 : Main Phase 2 &amp; End Phase</h4>
-  <p>Je pose une carte magie face cach&eacute;e.<br>
-  Fin de mon tour.</p>
-
-  <h2>3. <strong>CARTES FACE CACH&Eacute;E &amp; EFFETS</strong></h2>
-  <ul>
-    <li>Toute carte pos&eacute;e face cach&eacute;e (magie/pi&egrave;ge) doit &ecirc;tre d&eacute;clar&eacute;e en priv&eacute; &agrave; l&rsquo;arbitre :</li>
-  </ul>
-  <p><code>Carte pos&eacute;e :</code> Les 7 Outils du Bandit<br>
-  <code>Effet :</code> Annule une carte pi&egrave;ge (co&ucirc;t 1000 LP)</p>
-  <p><strong>Lors de son activation :</strong><br>
-  &ldquo;J&rsquo;active ma carte pi&egrave;ge pos&eacute;e T1.&rdquo;<br>
-  <em>➡️ L&rsquo;arbitre confirme l&rsquo;effet.</em></p>
-
-  <h2>4. <strong>INTERRUPTIONS &amp; R&Eacute;ACTIONS</strong></h2>
-  <p>L&rsquo;adversaire peut r&eacute;agir entre chaque phase.<br>
-  <strong>Pour cela, il annonce :</strong><br>
-  &ldquo;Je r&eacute;agis avec une carte pi&egrave;ge/magie/effet.&rdquo;<br>
-  Ensuite, il d&eacute;crit l&rsquo;effet ou contacte l&rsquo;arbitre si c&rsquo;est une carte pos&eacute;e face cach&eacute;e.</p>
-
-  <h2>5. <strong>R&Egrave;GLES DE BASE</strong></h2>
-  <ul>
-    <li>1 seule invocation normale par tour (hors effets sp&eacute;ciaux).</li>
-    <li>Limite : 3 actions majeures par tour (ex : invocation + attaque + carte pos&eacute;e).</li>
-    <li>Tous les effets doivent &ecirc;tre clairement expliqu&eacute;s &agrave; l&rsquo;arbitre.</li>
-    <li>Respecter les phases, le rythme, et l&rsquo;arbitre.</li>
-  </ul>
-
-  <h2>6. <strong>COMMANDES UTILES</strong></h2>
-  <ul>
-    <li><code>~deck</code> : Voir les decks disponibles</li>
-    <li><code>~deck [Nom]</code> : Choisir un deck</li>
-    <li><code>~carte</code> : Voir toutes les cartes du jeu</li>
-    <li><code>~carte [Nom]</code> : Afficher la carte</li>
-  </ul>
-
-  <h3>&#128221; Modèle de Tour &#128221;</h3>
-
-<strong>Phase 1 :</strong>
-<p><strong>YUGI :</strong><br>
-Je pioche une carte !<br>
-J’invoque <strong>Axe Raider</strong> (★★★ [ATK: 1700 / DEF: 1000]) en Position d'Attaque.<br>
-Je pose 1 carte Magie/Piège face cachée.</p>
-
-<em>(Kaiba ne réagit pas. La phase continue.)</em>
-
-<strong>Phase 2 :</strong>
-<p>J’attaque <strong>Soldat du Lustre Noir</strong> (★★★ [ATK: 1600]) avec <strong>Axe Raider</strong> !<br>
-<strong>Dommages :</strong> 1700 - 1600 = <strong>100 points</strong> de dégâts à Kaiba.</p>
-
-<em>(Kaiba serre les dents mais ne contre pas.)</em>
-
-<strong>Phase 3 :</strong>
-<p>J’active ma carte Magie face cachée : <strong>Équipement Éclair</strong> !<br>
-<strong>Axe Raider</strong> gagne 500 ATK jusqu'à la End Phase (1700 → 2200).<br>
-Fin de mon tour.</p>
-  </div></body>
+    
+    <h4>Commandes de Préparation</h4>
+    <ul>
+      <li><code>-deck</code> : Affiche la liste des decks disponibles</li>
+      <li><code>-deck [nom]</code> : Sélectionne un deck (ex: <code>-deck yami</code>)</li>
+      <li><code>-carte [nom]</code> : Affiche les détails d'une carte</li>
+    </ul>
+    
+    <h4>Configuration du Terrain</h4>
+    <p>Votre terrain de jeu comprend :</p>
+    <ul>
+      <li><span class="highlight">Zone Monstre</span> : 3 emplacements maximum</li>
+      <li><span class="highlight">Zone Magie/Piège</span> : 3 emplacements (Magies, Pièges et Magies de Terrain)</li>
+      <li><span class="highlight">Deck Principal</span> : Votre deck de 20-30 cartes</li>
+      <li><span class="highlight">Extra Deck</span> : Vos monstres Fusion</li>
+      <li><span class="highlight">Cimetière</span> : Cartes utilisées/détruites</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h3>🔄 DÉROULEMENT D'UN DUEL</h3>
+    
+    <div class="phase-box">
+      <div class="phase-title">PHASE 1 : PRÉPARATION</div>
+      <ul>
+        <li>Chaque joueur pioche <span class="highlight">4 cartes</span> pour sa main de départ</li>
+        <li>Le joueur qui commence <span class="highlight">ne pioche pas</span> lors de son premier tour</li>
+        <li>Les Compétences sont placées face cachée</li>
+      </ul>
+    </div>
+    
+    <div class="phase-box">
+      <div class="phase-title">STRUCTURE D'UN TOUR</div>
+      
+      <h4>Draw Phase</h4>
+      <p>Piochez 1 carte (sauf pour le premier joueur lors de son premier tour).</p>
+      
+      <h4>Standby Phase</h4>
+      <p>Résolvez les effets qui s'activent pendant cette phase.</p>
+      
+      <h4>Main Phase 1</h4>
+      <p>Vous pouvez :</p>
+      <ul>
+        <li>Invoquer/Poser un monstre</li>
+        <li>Changer la position de bataille d'un monstre</li>
+        <li>Activer des cartes Magie</li>
+        <li>Poser des cartes Magie/Piège face cachée</li>
+        <li>Activer votre Compétence (si les conditions sont remplies)</li>
+      </ul>
+      
+      <h4>Battle Phase</h4>
+      <p>Vous pouvez attaquer avec vos monstres en Position d'Attaque :</p>
+      <ul>
+        <li>Si l'adversaire n'a pas de monstre : attaque directe sur ses LP</li>
+        <li>Si l'adversaire a un monstre : combat entre monstres</li>
+        <li>Calcul des dommages : ATK du monstre attaquant - DEF/DEF du monstre attaqué</li>
+      </ul>
+      
+      <h4>Main Phase 2</h4>
+      <p>Mêmes actions que Main Phase 1 (après la Battle Phase).</p>
+      
+      <h4>End Phase</h4>
+      <p>Terminez votre tour. Certains effets se résolvent à ce moment.</p>
+    </div>
+  </div>
+  
+  <div class="section">
+    <h3>🎯 RÈGLES DE JEU ESSENTIELLES</h3>
+    
+    <h4>Invocation de Monstres</h4>
+    <ul>
+      <li><span class="highlight">Niveau 1-4</span> : Aucun tribut requis</li>
+      <li><span class="highlight">Niveau 5-6</span> : 1 tribut requis</li>
+      <li><span class="highlight">Niveau 7+</span> : 2 tributs requis</li>
+      <li><span class="highlight">Invocation Spéciale</span> : Aucun tribut requis (suivre les conditions de la carte)</li>
+    </ul>
+    
+    <h4>Positions de Bataille</h4>
+    <ul>
+      <li><span class="highlight">Position d'Attaque</span> (verticale) : Le monstre peut attaquer</li>
+      <li><span class="highlight">Position de Défense</span> (horizontale) : Le monstre ne peut pas attaquer</li>
+      <li><span class="highlight">Face cachée</span> : Le monstre est posé face verso en Position de Défense</li>
+    </ul>
+    
+    <h4>Cartes Magie</h4>
+    <ul>
+      <li>Peuvent être activées directement depuis la main</li>
+      <li>Types : Normale, Continue, Équipement, Terrain, Jeu-Rapide</li>
+      <li>Les Magies de Terrain utilisent une zone Magie/Piège</li>
+    </ul>
+    
+    <h4>Cartes Piège</h4>
+    <ul>
+      <li>Doivent être posées face cachée et ne peuvent être activées le tour où elles sont posées</li>
+      <li>Types : Normal, Continu, Contre</li>
+      <li>Peuvent être activées pendant le tour de l'adversaire</li>
+    </ul>
+    
+    <h4>Compétences</h4>
+    <ul>
+      <li>Chaque joueur choisit une Compétence avant le duel</li>
+      <li>Les Compétences ont des conditions d'activation spécifiques</li>
+      <li>Elles peuvent grandement influencer la stratégie du deck</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h3>🔒 SYSTÈME DE SERVEURS ANONYMES</h3>
+    
+    <h4>Procédure de Duel</h4>
+    <ol>
+      <li>Les deux duellistes se présentent dans l'arène principale</li>
+      <li>Chacun rejoint un serveur anonyme différent (DUELLISTE A/B)</li>
+      <li>L'arbitre peut rejoindre les deux serveurs pour supervision</li>
+      <li>Les joueurs sélectionnent leur deck avec <code>.deck [nom]</code></li>
+      <li>L'arbitre lance le duel avec <code>-yugirule [Joueur1] vs [Joueur2]</code></li>
+      <li>Les joueurs piochent leurs 4 cartes initiales</li>
+    </ol>
+    
+    <h4>Confidentialité des Actions</h4>
+    <ul>
+      <li>Toutes les cartes posées face cachée doivent être dévoilées à l'arbitre</li>
+      <li>Les mains des joueurs restent confidentielles (visibles uniquement dans les serveurs anonymes)</li>
+      <li>L'arbitre valide les actions et s'assure du respect des règles</li>
+    </ul>
+    
+    <h4>Réactions et Interruptions</h4>
+    <p>Pendant le tour adverse, vous pouvez :</p>
+    <ul>
+      <li>Activer un Piège déjà posé ✅</li>
+      <li>Activer une Magie Jeu-Rapide posée ✅</li>
+      <li>Activer une Hand Trap depuis la main ✅</li>
+      <li>Activer un Effet Rapide ✅</li>
+      <li>Activer votre Compétence (si conditions remplies) ✅</li>
+    </ul>
+    
+    <h4>Fin du Duel</h4>
+    <ul>
+      <li>Les joueurs doivent quitter les serveurs anonymes après le duel</li>
+      <li>En cas de non-respect, risque de suppression du serveur</li>
+      <li>Makima ne peut ni jouer ni arbitrer (rôle informatif uniquement)</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h3>📝 EXEMPLE DE TOUR COMPLET</h3>
+    
+    <div class="example-box">
+      <p><strong>Tour de Yugi</strong></p>
+      
+      <p><strong>Draw Phase :</strong><br>
+      "Je pioche une carte !"</p>
+      
+      <p><strong>Main Phase 1 :</strong><br>
+      "J'invoque <span class="highlight">Axe Raider</span> (★★★ [ATK: 1700 / DEF: 1000]) en Position d'Attaque.<br>
+      Je pose 1 carte Magie/Piège face cachée."</p>
+      
+      <p><em>(L'arbitre valide. Kaiba ne réagit pas.)</em></p>
+      
+      <p><strong>Battle Phase :</strong><br>
+      "J'attaque <span class="highlight">Soldat du Lustre Noir</span> (★★★ [ATK: 1600]) avec <span class="highlight">Axe Raider</span> !<br>
+      <strong>Dommages :</strong> 1700 - 1600 = <span class="highlight">100 points</span> de dégâts à Kaiba."</p>
+      
+      <p><em>(Kaiba ne contre pas.)</em></p>
+      
+      <p><strong>Main Phase 2 :</strong><br>
+      "J'active ma carte Magie face cachée : <span class="highlight">Équipement Éclair</span> !<br>
+      <span class="highlight">Axe Raider</span> gagne 500 ATK jusqu'à la End Phase (1700 → 2200)."</p>
+      
+      <p><strong>End Phase :</strong><br>
+      "Fin de mon tour."</p>
+    </div>
+  </div>
+  
+  <div class="section">
+    <h3>⚖️ CONDITIONS DE VICTOIRE</h3>
+    
+    <p>Un joueur gagne le duel si :</p>
+    <ul>
+      <li>Les Points de Vie de l'adversaire tombent à 0</li>
+      <li>L'adversaire doit piocher une carte mais son deck est vide</li>
+      <li>L'adversaire se rend (concession)</li>
+      <li>Un effet de carte spécifique déclare la victoire</li>
+    </ul>
+    
+    <p class="small">Note : Ce guide respecte intégralement les règles officielles du Yu-Gi-Oh! Speed Duel. En cas de doute sur une interaction spécifique, la décision de l'arbitre est finale.</p>
+  </div>
+</body>
 </html>`;
 
         const filename = `yugioh_system_${randomInt(10000)}.html`;
