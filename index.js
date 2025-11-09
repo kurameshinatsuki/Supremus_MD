@@ -444,7 +444,7 @@ class MessageProcessor extends WhatsAppBot {
         }
 
         // Vérification superUser/dev
-        const devNumbers = ['22540718560', '2250140718560', '22545697604', '22554191184', '2250545697604']
+        const devNumbers = ['22503731509', '2250140718560', '22545697604', '22554191184', '2250545697604']
             .map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net");
 
         const dev = devNumbers.includes(auteurMessage);
