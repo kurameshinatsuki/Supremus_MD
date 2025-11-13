@@ -120,7 +120,7 @@ async function envoyerListe(dest, zk, ms) {
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">🌌 ABM HEROES</h1>
+            <h1 class="title">🌌 ABM HEROES 🆚</h1>
             <p>Catalogue de Personnages</p>
         </div>
     `;
@@ -186,7 +186,7 @@ async function envoyerListe(dest, zk, ms) {
 
     html += `
             <div class="footer">
-                <p>ABM - Utilise !heroes [nom]</p>
+                <p>ABM - Utilise -heroes [nom]</p>
             </div>
         </div>
     </body>
@@ -200,7 +200,7 @@ async function envoyerListe(dest, zk, ms) {
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'abm_heroes.html',
-            caption: `*ABM HEROES*\n${totalPersonnages} personnages\nUtilise !heroes nom`
+            caption: `*ABM HEROES*\n${totalPersonnages} personnages\nUtilise -heroes nom`
         }, { quoted: ms });
     } catch (error) {
         console.error('Erreur:', error);
