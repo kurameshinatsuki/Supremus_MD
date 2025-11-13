@@ -167,7 +167,7 @@ zokou(
 </style>
 </head>
 <body>
-    <h1>🆚 ABM - SYSTÈME DE COMBAT 🌐</h1>
+    <h1>🆚 ABM - SYSTÈME DE COMBAT 🆚</h1>
     
     <div class="section">
         <h3>BASIC RULE</h3>
@@ -289,7 +289,7 @@ Les techniques sont classées en 3 niveaux de puissance mais aussi selon leur ef
 - Niveau B < Niveau A < Niveau S</p>
     </div>
     
-    <h2>SRPN - ABM v1</h2>
+    <h2>SRPN - ABM v2.5</h2>
 </body>
 </html>`;
 
@@ -299,7 +299,7 @@ Les techniques sont classées en 3 niveaux de puissance mais aussi selon leur ef
     await zk.sendMessage(dest, {
       document: readFileSync(filename),
       mimetype: 'text/html',
-      filename: 'systeme_abm.html',
+      filename: 'abm_systeme.html',
       caption: '*🆚 ABM SYSTEM – RP COMBAT*'
     }, { quoted: ms });
 
@@ -557,7 +557,7 @@ zokou(
 </style>
 </head>
 <body>
-  <h1>🌐 ORIGAMY WORLD – SYSTEM SRPN 🌐</h1>
+  <h1>🌐 ORIGAMY WORLD – SYSTEM RP AVENTURE 🌐</h1>
 
   <section>
     <h2>🔹 STRUCTURE RP STORY</h2>
@@ -835,7 +835,7 @@ La progression en rang permet d&#39;acc&eacute;der &agrave; des comp&eacute;tenc
     await zk.sendMessage(dest, {
       document: readFileSync(filename),
       mimetype: 'text/html',
-      filename: 'systeme_origamy.html',
+      filename: 'origamy_systeme.html',
       caption: '*🌍 ORIGAMY WORLD – RP AVENTURE*'
     }, { quoted: ms });
 
@@ -1733,7 +1733,7 @@ Pièges, obstacles, explosions imprévisibles.
 ♾️ PHOENIX REBORN : Résurrection avec stats d’origine.
 </pre></div>
 
-    <h2 style="text-align:center;">SRPN - Speed Rush v1</h2>
+    <h2 style="text-align:center;">SRPN - Speed Rush v2.0</h2>
 </body>
 </html>`;
 
