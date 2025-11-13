@@ -11,9 +11,6 @@ const {generatepp} = require('../framework/mesfonctions')
 //const { uploadImageToImgur } = require('../framework/imgur');
 
 
-
-
-
 zokou({ nomCom: "call", categorie: 'GROUP', reaction: "☎️" }, async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions;
 
@@ -40,7 +37,7 @@ zokou({ nomCom: "call", categorie: 'GROUP', reaction: "☎️" }, async (dest, z
 
     // Liste d'emojis pour rendre les tags aléatoires
     const emojis = ['🦴', '👀', '😮‍💨', '❌', '✔️', '😇', '⚙️', '🔧', '🎊', '😡', '🙏🏿', '⛔️', '$', '😟', '🥵', '🐅'];
-    
+
     // Générer les tags pour chaque membre
     for (const membre of membresGroupe) {
         let randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -78,7 +75,7 @@ Lien :${lien}`
 zokou({ nomCom: "nom", categorie: 'GROUP', reaction: "🔺" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
-  if (!verifGroupe) { return repondre("For groups only"); }
+  if (!verifGroupe) { return repondre("Uniquement pour les groupes"); }
 
 
   const verifMember = (user) => {
@@ -122,14 +119,14 @@ zokou({ nomCom: "nom", categorie: 'GROUP', reaction: "🔺" }, async (dest, zk, 
                       il/elle est désormais nommé administrateur de ce groupe.`
               await zk.groupParticipantsUpdate(dest, [auteurMsgRepondu], "promote");
               zk.sendMessage(dest, { text: txt, mentions: [auteurMsgRepondu] })
-            } else { return repondre("This member is already an administrator of the group.") }
+            } else { return repondre("Ce membre est déjà administrateur du groupe.") }
 
-          } else { return repondre("This user is not part of the group."); }
+          } else { return repondre("Cet utilisateur ne fait pas partie du groupe."); }
         }
-        else { return repondre("Sorry, I cannot perform this action because I am not an administrator of the group.") }
+        else { return repondre("Désolé, je ne peux pas effectuer cette action car je ne suis pas administrateur du groupe.") }
 
-      } else { repondre("please tag the member to be nominated"); }
-    } else { return repondre("Sorry I cannot perform this action because you are not an administrator of the group.") }
+      } else { repondre("Veuillez taguer le membre à nommer"); }
+    } else { return repondre("Désolé, je ne peux pas effectuer cette action car vous n'êtes pas administrateur du groupe.") }
   } catch (e) { repondre("oups " + e) }
 
 })
@@ -140,7 +137,7 @@ zokou({ nomCom: "nom", categorie: 'GROUP', reaction: "🔺" }, async (dest, zk, 
 zokou({ nomCom: "denom", categorie: 'GROUP', reaction: "🔻" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
-  if (!verifGroupe) { return repondre("For groups only"); }
+  if (!verifGroupe) { return repondre("Uniquement pour les groupes"); }
 
 
   const verifMember = (user) => {
@@ -181,7 +178,7 @@ zokou({ nomCom: "denom", categorie: 'GROUP', reaction: "🔻" }, async (dest, zk
           if (membre) {
             if (admin == false) {
 
-              repondre("This member is not a group administrator.")
+              repondre("Ce membre n'est pas administrateur du groupe.")
 
             } else {
               var txt = `@${auteurMsgRepondu.split("@")[0]} à été révoquer des droits administrateur de ce groupe\n`
@@ -189,12 +186,12 @@ zokou({ nomCom: "denom", categorie: 'GROUP', reaction: "🔻" }, async (dest, zk
               zk.sendMessage(dest, { text: txt, mentions: [auteurMsgRepondu] })
             }
 
-          } else { return repondre("This user is not part of the group."); }
+          } else { return repondre("Cet utilisateur ne fait pas partie du groupe."); }
         }
-        else { return repondre("Sorry I cannot perform this action because I am not an administrator of the group.") }
+        else { return repondre("Désolé, je ne peux pas effectuer cette action car je ne suis pas administrateur du groupe.") }
 
-      } else { repondre("please tag the member to be removed"); }
-    } else { return repondre("Sorry I cannot perform this action because you are not an administrator of the group.") }
+      } else { repondre("Veuillez taguer le membre à démettre"); }
+    } else { return repondre("Désolé, je ne peux pas effectuer cette action car vous n'êtes pas administrateur du groupe.") }
   } catch (e) { repondre("oups " + e) }
 
 })
@@ -206,7 +203,7 @@ zokou({ nomCom: "denom", categorie: 'GROUP', reaction: "🔻" }, async (dest, zk
 zokou({ nomCom: "vire", categorie: 'GROUP', reaction: "👋" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, nomAuteurMessage, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
-  if (!verifGroupe) { return repondre("for groups only"); }
+  if (!verifGroupe) { return repondre("Uniquement pour les groupes"); }
 
 
   const verifMember = (user) => {
@@ -258,19 +255,19 @@ zokou({ nomCom: "vire", categorie: 'GROUP', reaction: "👋" }, async (dest, zk,
               });
 
               await sticker.toFile("st.webp")
-              var txt = `@${auteurMsgRepondu.split("@")[0]} was removed from the group.\n`
+              var txt = `@${auteurMsgRepondu.split("@")[0]} a été retiré du groupe.\n`
             /*  zk.sendMessage(dest, { sticker: fs.readFileSync("st.webp") }, { quoted: ms.message.extendedTextMessage.contextInfo.stanzaId})*/
               await zk.groupParticipantsUpdate(dest, [auteurMsgRepondu], "remove");
               zk.sendMessage(dest, { text: txt, mentions: [auteurMsgRepondu] })
 
-            } else { repondre("This member cannot be removed because he is an administrator of the group.") }
+            } else { repondre("Ce membre ne peut pas être retiré car il est administrateur du groupe.") }
 
-          } else { return repondre("This user is not part of the group."); }
+          } else { return repondre("Cet utilisateur ne fait pas partie du groupe."); }
         }
-        else { return repondre("Sorry, I cannot perform this action because I am not an administrator of the group.") }
+        else { return repondre("Désolé, je ne peux pas effectuer cette action car je ne suis pas administrateur du groupe.") }
 
-      } else { repondre("please tag the member to be removed"); }
-    } else { return repondre("Sorry I cannot perform this action because you are not an administrator of the group .") }
+      } else { repondre("Veuillez taguer le membre à retirer"); }
+    } else { return repondre("Désolé, je ne peux pas effectuer cette action car vous n'êtes pas administrateur du groupe.") }
   } catch (e) { repondre("oups " + e) }
 
 })
@@ -282,14 +279,14 @@ zokou({ nomCom: "vire", categorie: 'GROUP', reaction: "👋" }, async (dest, zk,
 zokou({ nomCom: "supp", categorie: 'GROUP',reaction:"🧹" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, verifGroupe,auteurMsgRepondu,idBot, msgRepondu, verifAdmin, superUser} = commandeOptions;
-  
+
   if (!msgRepondu) {
-    repondre("Please mention the message to delete.");
+    repondre("Veuillez mentionner le message à supprimer.");
     return;
   }
   if(superUser && auteurMsgRepondu==idBot )
   {
-    
+
        if(auteurMsgRepondu==idBot)
        {
          const key={
@@ -305,10 +302,10 @@ zokou({ nomCom: "supp", categorie: 'GROUP',reaction:"🧹" }, async (dest, zk, c
           {
                if(verifAdmin || superUser)
                {
-                    
+
                          try{
-                
-      
+
+
             const key=   {
                remoteJid : dest,
                id : ms.message.extendedTextMessage.contextInfo.stanzaId ,
@@ -316,20 +313,20 @@ zokou({ nomCom: "supp", categorie: 'GROUP',reaction:"🧹" }, async (dest, zk, c
                participant : ms.message.extendedTextMessage.contextInfo.participant
 
             }        
-         
+
          await zk.sendMessage(dest,{delete:key});return;
 
-             }catch(e){repondre( "I need admin rights.")}
-                    
-                      
-               }else{repondre("Sorry, you are not an administrator of the group.")}
+             }catch(e){repondre( "J'ai besoin des droits administrateur.")}
+
+
+               }else{repondre("Désolé, vous n'êtes pas administrateur du groupe.")}
           }
 
 });
 
 zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, verifGroupe } = commandeOptions;
-  if (!verifGroupe) { repondre("order reserved for the group only"); return };
+  if (!verifGroupe) { repondre("Commande réservée uniquement aux groupes"); return };
 
  try { ppgroup = await zk.profilePictureUrl(dest ,'image') ; } catch { ppgroup = conf.IMAGE_MENU}
 
@@ -340,13 +337,12 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
     let mess = {
       image: { url: ppgroup },
-      caption:  `*━━━━『Info du groupe』━━━━*\n\n*🎐Name:* ${info.subject}\n\n*🔩Group's ID:* ${dest}\n\n*🔍Desc:* \n\n${info.desc}`
+      caption:  `*━━━━『Info du groupe』━━━━*\n\n*🎐Nom:* ${info.subject}\n\n*🔩ID du groupe:* ${dest}\n\n*🔍Description:* \n\n${info.desc}`
     }
 
 
     zk.sendMessage(dest, mess, { quoted: ms })
   });
-
 
 
  //------------------------------------antilien-------------------------------
@@ -355,39 +351,39 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
 
   var { repondre, arg, verifGroupe, superUser, verifAdmin } = commandeOptions;
-  
 
-  
+
+
   if (!verifGroupe) {
-    return repondre("*for groups only*");
+    return repondre("*Uniquement pour les groupes*");
   }
-  
+
   if( superUser || verifAdmin) {
     const enetatoui = await verifierEtatJid(dest)
     try {
-      if (!arg || !arg[0] || arg === ' ') { repondre("antilink on to activate the anti-link feature\nantilink off to deactivate the anti-link feature\nantilink action/remove to directly remove the link without notice\nantilink action/warn to give warnings\nantilink action/delete to remove the link without any sanctions\n\nPlease note that by default, the anti-link feature is set to delete.") ; return};
-     
+      if (!arg || !arg[0] || arg === ' ') { repondre("antilink on pour activer la fonction anti-lien\nantilink off pour désactiver la fonction anti-lien\nantilink action/remove pour retirer directement le lien sans avertissement\nantilink action/warn pour donner des avertissements\nantilink action/delete pour supprimer le lien sans aucune sanction\n\nVeuillez noter que par défaut, la fonction anti-lien est réglée sur delete.") ; return};
+
       if(arg[0] === 'on') {
 
-      
-       if(enetatoui ) { repondre("the antilink is already activated for this group")
+
+       if(enetatoui ) { repondre("L'antilien est déjà activé pour ce groupe")
                     } else {
                   await ajouterOuMettreAJourJid(dest,"oui");
-                
-              repondre("the antilink is activated successfully") }
-     
+
+              repondre("L'antilien a été activé avec succès") }
+
             } else if (arg[0] === "off") {
 
               if (enetatoui) { 
                 await ajouterOuMettreAJourJid(dest , "non");
 
-                repondre("The antilink has been successfully deactivated");
-                
+                repondre("L'antilien a été désactivé avec succès");
+
               } else {
-                repondre("antilink is not activated for this group");
+                repondre("L'antilien n'est pas activé pour ce groupe");
               }
             } else if (arg.join('').split("/")[0] === 'action') {
-                            
+
 
               let action = (arg.join('').split("/")[1]).toLowerCase() ;
 
@@ -395,26 +391,24 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
                 await mettreAJourAction(dest,action);
 
-                repondre(`The anti-link action has been updated to ${arg.join('').split("/")[1]}`);
+                repondre(`L'action anti-lien a été mise à jour vers ${arg.join('').split("/")[1]}`);
 
               } else {
-                  repondre("The only actions available are warn, remove, and delete") ;
+                  repondre("Les seules actions disponibles sont warn, remove et delete") ;
               }
-            
 
-            } else repondre("antilink on to activate the anti-link feature\nantilink off to deactivate the anti-link feature\nantilink action/remove to directly remove the link without notice\nantilink action/warn to give warnings\nantilink action/delete to remove the link without any sanctions\n\nPlease note that by default, the anti-link feature is set to delete.")
 
-      
+            } else repondre("antilink on pour activer la fonction anti-lien\nantilink off pour désactiver la fonction anti-lien\nantilink action/remove pour retirer directement le lien sans avertissement\nantilink action/warn pour donner des avertissements\nantilink action/delete pour supprimer le lien sans aucune sanction\n\nVeuillez noter que par défaut, la fonction anti-lien est réglée sur delete.")
+
+
     } catch (error) {
        repondre(error)
     }
 
-  } else { repondre('You are not entitled to this order') ;
+  } else { repondre('Vous n\'êtes pas autorisé à utiliser cette commande') ;
   }
 
 });
-
-
 
 
  //------------------------------------antibot-------------------------------
@@ -423,36 +417,36 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
 
   var { repondre, arg, verifGroupe, superUser, verifAdmin } = commandeOptions;
-  
 
-  
+
+
   if (!verifGroupe) {
-    return repondre("*for groups only*");
+    return repondre("*Uniquement pour les groupes*");
   }
-  
+
   if( superUser || verifAdmin) {
     const enetatoui = await atbverifierEtatJid(dest)
     try {
-      if (!arg || !arg[0] || arg === ' ') { repondre('antibot on to activate the anti-bot feature\nantibot off to deactivate the antibot feature\nantibot action/remove to directly remove the bot without notice\nantibot action/warn to give warnings\nantilink action/delete to remove the bot message without any sanctions\n\nPlease note that by default, the anti-bot feature is set to delete.') ; return};
-     
+      if (!arg || !arg[0] || arg === ' ') { repondre('antibot on pour activer la fonction anti-bot\nantibot off pour désactiver la fonction antibot\nantibot action/remove pour retirer directement le bot sans avertissement\nantibot action/warn pour donner des avertissements\nantibot action/delete pour supprimer le message du bot sans aucune sanction\n\nVeuillez noter que par défaut, la fonction anti-bot est réglée sur delete.') ; return};
+
       if(arg[0] === 'on') {
 
-      
-       if(enetatoui ) { repondre("the antibot is already activated for this group")
+
+       if(enetatoui ) { repondre("L'antibot est déjà activé pour ce groupe")
                     } else {
                   await atbajouterOuMettreAJourJid(dest,"oui");
-                
-              repondre("the antibot is successfully activated") }
-     
+
+              repondre("L'antibot a été activé avec succès") }
+
             } else if (arg[0] === "off") {
 
               if (enetatoui) { 
                 await atbajouterOuMettreAJourJid(dest , "non");
 
-                repondre("The antibot has been successfully deactivated");
-                
+                repondre("L'antibot a été désactivé avec succès");
+
               } else {
-                repondre("antibot is not activated for this group");
+                repondre("L'antibot n'est pas activé pour ce groupe");
               }
             } else if (arg.join('').split("/")[0] === 'action') {
 
@@ -462,22 +456,22 @@ zokou({ nomCom: "info", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
 
                 await mettreAJourAction(dest,action);
 
-                repondre(`The anti-bot action has been updated to ${arg.join('').split("/")[1]}`);
+                repondre(`L'action anti-bot a été mise à jour vers ${arg.join('').split("/")[1]}`);
 
               } else {
-                  repondre("The only actions available are warn, remove, and delete") ;
+                  repondre("Les seules actions disponibles sont warn, remove et delete") ;
               }
-            
+
 
             } else {  
-              repondre('antibot on to activate the anti-bot feature\nantibot off to deactivate the antibot feature\nantibot action/remove to directly remove the bot without notice\nantibot action/warn to give warnings\nantilink action/delete to remove the bot message without any sanctions\n\nPlease note that by default, the anti-bot feature is set to delete.') ;
+              repondre('antibot on pour activer la fonction anti-bot\nantibot off pour désactiver la fonction antibot\nantibot action/remove pour retirer directement le bot sans avertissement\nantibot action/warn pour donner des avertissements\nantibot action/delete pour supprimer le message du bot sans aucune sanction\n\nVeuillez noter que par défaut, la fonction anti-bot est réglée sur delete.') ;
 
                             }
     } catch (error) {
        repondre(error)
     }
 
-  } else { repondre('You are not entitled to this order') ;
+  } else { repondre('Vous n\'êtes pas autorisé à utiliser cette commande') ;
 
   }
 
@@ -489,42 +483,42 @@ zokou({ nomCom: "group", categorie: 'GROUP' }, async (dest, zk, commandeOptions)
 
   const { repondre, verifGroupe, verifAdmin, superUser, arg } = commandeOptions;
 
-  if (!verifGroupe) { repondre("order reserved for group only"); return };
+  if (!verifGroupe) { repondre("Commande réservée uniquement aux groupes"); return };
   if (superUser || verifAdmin) {
 
-    if (!arg[0]) { repondre('Instructions:\n\nType group open or close'); return; }
+    if (!arg[0]) { repondre('Instructions:\n\nTapez group open ou close'); return; }
     const option = arg.join(' ')
     switch (option) {
       case "open":
         await zk.groupSettingUpdate(dest, 'not_announcement')
-        repondre('group open')
+        repondre('Groupe ouvert')
         break;
       case "close":
         await zk.groupSettingUpdate(dest, 'announcement');
-        repondre('Group close successfully');
+        repondre('Groupe fermé avec succès');
         break;
-      default: repondre("Please don't invent an option")
+      default: repondre("Veuillez ne pas inventer d'option")
     }
 
-    
+
   } else {
-    repondre("order reserved for the administratorr");
+    repondre("Commande réservée à l'administrateur");
     return;
   }
- 
+
 
 });
 
 zokou({ nomCom: "bye", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
 
   const { repondre, verifGroupe, superUser } = commandeOptions;
-  if (!verifGroupe) { repondre("order reserved for group only"); return };
+  if (!verifGroupe) { repondre("Commande réservée uniquement aux groupes"); return };
   if (!superUser) {
-    repondre("command reserved for the bot owner");
+    repondre("Commande réservée au propriétaire du bot");
     return;
   }
-  await repondre('sayonnara') ;
-   
+  await repondre('Sayonara') ;
+
   zk.groupLeave(dest)
 });
 
@@ -533,18 +527,18 @@ zokou({ nomCom: "gnom", categorie: 'GROUP' }, async (dest, zk, commandeOptions) 
   const { arg, repondre, verifAdmin } = commandeOptions;
 
   if (!verifAdmin) {
-    repondre("order reserved for administrators of the group");
+    repondre("Commande réservée aux administrateurs du groupe");
     return;
   };
   if (!arg[0]) {
-    repondre("Please enter the group name");
+    repondre("Veuillez entrer le nom du groupe");
     return;
   };
    const nom = arg.join(' ')
   await zk.groupUpdateSubject(dest, nom);
-    repondre(`group name refresh: *${nom}*`)
+    repondre(`Nom du groupe actualisé : *${nom}*`)
 
- 
+
 }) ;
 
 zokou({ nomCom: "gdesc", categorie: 'GROUP' }, async (dest, zk, commandeOptions) => {
@@ -552,18 +546,18 @@ zokou({ nomCom: "gdesc", categorie: 'GROUP' }, async (dest, zk, commandeOptions)
   const { arg, repondre, verifAdmin } = commandeOptions;
 
   if (!verifAdmin) {
-    repondre("order reserved for administrators of the group");
+    repondre("Commande réservée aux administrateurs du groupe");
     return;
   };
   if (!arg[0]) {
-    repondre("Please enter the group description");
+    repondre("Veuillez entrer la description du groupe");
     return;
   };
    const nom = arg.join(' ')
   await zk.groupUpdateDescription(dest, nom);
-    repondre(`group description update: *${nom}*`)
+    repondre(`Description du groupe mise à jour : *${nom}*`)
 
- 
+
 }) ;
 
 
@@ -572,7 +566,7 @@ zokou({ nomCom: "gpp", categorie: 'GROUP' }, async (dest, zk, commandeOptions) =
   const { repondre, msgRepondu, verifAdmin } = commandeOptions;
 
   if (!verifAdmin) {
-    repondre("order reserved for administrators of the group");
+    repondre("Commande réservée aux administrateurs du groupe");
     return;
   }; 
   if (msgRepondu.imageMessage) {
@@ -592,15 +586,15 @@ zokou({ nomCom: "gpp", categorie: 'GROUP' }, async (dest, zk, commandeOptions) =
           } else {
 
             await zk.updateProfilePicture(dest, { url: filepath }) ;
-          
-            zk.sendMessage(dest,{text:"Group pfp changed"})
+
+            zk.sendMessage(dest,{text:"Photo de profil du groupe modifiée"})
              fs.unlinkSync(pp)
           }
 
       } ) ; 
-        
+
   } else {
-    repondre('Please mention an image')
+    repondre('Veuillez mentionner une image')
   }
 
 });
@@ -610,7 +604,7 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
 
   const {repondre,msgRepondu,verifGroupe,arg ,verifAdmin , superUser}=commandeOptions;
 
-  if(!verifGroupe)  { repondre('This command is only allowed in groups.')} ;
+  if(!verifGroupe)  { repondre('Cette commande est uniquement autorisée dans les groupes.')} ;
   if (verifAdmin || superUser) { 
 
   let metadata = await zk.groupMetadata(dest) ;
@@ -629,7 +623,7 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
 
       if (msgRepondu.imageMessage) {
 
-        
+
 
      let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage) ;
      // console.log(msgRepondu) ;
@@ -638,9 +632,9 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
        image : { url : media } ,
        caption : msgRepondu.imageMessage.caption,
        mentions :  tag
-       
+
      }
-    
+
 
       } else if (msgRepondu.videoMessage) {
 
@@ -651,23 +645,23 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
           video : { url : media } ,
           caption : msgRepondu.videoMessage.caption,
           mentions :  tag
-          
+
         }
 
       } else if (msgRepondu.audioMessage) {
-    
+
         let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.audioMessage) ;
-       
+
         msg = {
-   
+
           audio : { url : media } ,
           mimetype:'audio/mp4',
           mentions :  tag
            }     
-        
+
       } else if (msgRepondu.stickerMessage) {
 
-    
+
         let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.stickerMessage)
 
         let stickerMess = new Sticker(media, {
@@ -679,7 +673,7 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
           background: "transparent",
         });
         const stickerBuffer2 = await stickerMess.toBuffer();
-       
+
         msg = { sticker: stickerBuffer2 , mentions : tag}
 
 
@@ -694,7 +688,7 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
 
     } else {
 
-        if(!arg || !arg[0]) { repondre('Enter the text to announce or mention the message to announce');
+        if(!arg || !arg[0]) { repondre('Entrez le texte à annoncer ou mentionnez le message à annoncer');
         ; return} ;
 
       zk.sendMessage(
@@ -707,7 +701,7 @@ zokou({nomCom:"tag",categorie:'GROUP',reaction:"🎙️"},async(dest,zk,commande
     }
 
 } else {
-  repondre('Command reserved for administrators.')
+  repondre('Commande réservée aux administrateurs.')
 }
 
 });
@@ -719,28 +713,28 @@ zokou({ nomCom: "apk", reaction: "📥", categorie: "MON-BOT" }, async (dest, zk
   try {
     const appName = arg.join(' ');
     if (!appName) {
-      return repondre("*Enter the name of the application to search for*");
+      return repondre("*Entrez le nom de l'application à rechercher*");
     }
 
     const searchResults = await search(appName);
 
     if (searchResults.length === 0) {
-      return repondre("*can't find application, please enter another name*");
+      return repondre("*Impossible de trouver l'application, veuillez entrer un autre nom*");
     }
 
     const appData = await download(searchResults[0].id);
     const fileSize = parseInt(appData.size);
 
     if (fileSize > 300) {
-      return repondre("The file exceeds 300 MB, unable to download.");
+      return repondre("Le fichier dépasse 300 MB, impossible de télécharger.");
     }
 
     const downloadLink = appData.dllink;
     const captionText =
-      "『 *Zokou-Md App* 』\n\n*Name :* " + appData.name +
-      "\n*Id :* " + appData["package"] +
-      "\n*Last Update :* " + appData.lastup +
-      "\n*Size :* " + appData.size +
+      "『 *Zokou-Md App* 』\n\n*Nom :* " + appData.name +
+      "\n*ID :* " + appData["package"] +
+      "\n*Dernière mise à jour :* " + appData.lastup +
+      "\n*Taille :* " + appData.size +
       "\n";
 
     const apkFileName = (appData?.["name"] || "Downloader") + ".apk";
@@ -769,12 +763,9 @@ zokou({ nomCom: "apk", reaction: "📥", categorie: "MON-BOT" }, async (dest, zk
     fs.unlinkSync(filePath);
   } catch (error) {
     console.error('Erreur lors du traitement de la commande apk:', error);
-    repondre("*Error during apk command processing*");
+    repondre("*Erreur lors du traitement de la commande apk*");
   }
 });
-
-
-
 
 
 /*******************************  automute && autoummute ***************************/
@@ -789,28 +780,28 @@ zokou({
 
       const {arg , repondre , verifAdmin } = commandeOptions ;
 
-      if (!verifAdmin) { repondre('You are not an administrator of the group') ; return}
+      if (!verifAdmin) { repondre('Vous n\'êtes pas administrateur du groupe') ; return}
 
       group_cron = await cron.getCronById(dest) ;
-      
-     
+
+
 
       if (!arg || arg.length == 0) {
 
         let state ;
         if (group_cron == null || group_cron.mute_at == null) {
-  
-            state =  "No time set for automatic mute"
+
+            state =  "Aucune heure définie pour le mute automatique"
         } else {
-  
-          state =  `The group will be muted at ${(group_cron.mute_at).split(':')[0]} ${(group_cron.mute_at).split(':')[1]}`
+
+          state =  `Le groupe sera muté à ${(group_cron.mute_at).split(':')[0]}H${(group_cron.mute_at).split(':')[1]}`
         }
-  
-        let msg = `* *State:* ${state}
-        * *Instructions:* To activate automatic mute, add the minute and hour after the command separated by ':'
-        Example automute 9:30
-        * To delete the automatic mute, use the command *automute del*`
-        
+
+        let msg = `* *État:* ${state}
+        * *Instructions:* Pour activer le mute automatique, ajoutez la minute et l'heure après la commande séparées par ':'
+        Exemple : automute 9:30
+        * Pour supprimer le mute automatique, utilisez la commande *automute del*`
+
 
           repondre(msg) ;
           return ;
@@ -822,12 +813,12 @@ zokou({
 
           if (group_cron == null) {
 
-              repondre('No cronometrage is active') ;
+              repondre('Aucun minutage n\'est actif') ;
           } else {
 
               await cron.delCron(dest) ;
 
-              repondre("The automatic mute has been removed; restart to apply changes") 
+              repondre("Le mute automatique a été supprimé ; redémarrez pour appliquer les changements") 
               .then(() => {
 
                 exec("pm2 restart all");
@@ -839,14 +830,14 @@ zokou({
 
           await cron.addCron(dest,"mute_at",texte) ;
 
-          repondre(`Setting up automatic mute for ${texte} ; restart to apply changes`) 
+          repondre(`Configuration du mute automatique pour ${texte} ; redémarrez pour appliquer les changements`) 
           .then(() => {
 
             exec("pm2 restart all");
           }) ;
 
         } else {
-            repondre('Please enter a valid time with hour and minute separated by :') ;
+            repondre('Veuillez entrer une heure valide avec heure et minute séparées par :') ;
         }
 
 
@@ -861,28 +852,28 @@ zokou({
 
     const {arg , repondre , verifAdmin } = commandeOptions ;
 
-    if (!verifAdmin) { repondre('You are not an administrator of the group') ; return}
+    if (!verifAdmin) { repondre('Vous n\'êtes pas administrateur du groupe') ; return}
 
     group_cron = await cron.getCronById(dest) ;
-    
-   
+
+
 
     if (!arg || arg.length == 0) {
 
       let state ;
       if (group_cron == null || group_cron.unmute_at == null) {
 
-          state = "No time set for autounmute" ;
+          state = "Aucune heure définie pour le démutage automatique" ;
 
       } else {
 
-        state = `The group will be un-muted at ${(group_cron.unmute_at).split(':')[0]}H ${(group_cron.unmute_at).split(':')[1]}`
+        state = `Le groupe sera démuté à ${(group_cron.unmute_at).split(':')[0]}H${(group_cron.unmute_at).split(':')[1]}`
       }
 
-      let msg = `* *State:* ${state}
-      * *Instructions:* To activate autounmute, add the minute and hour after the command separated by ':'
-      Example autounmute 7:30
-      * To delete autounmute, use the command *autounmute del*`
+      let msg = `* *État:* ${state}
+      * *Instructions:* Pour activer le démutage automatique, ajoutez la minute et l'heure après la commande séparées par ':'
+      Exemple : autounmute 7:30
+      * Pour supprimer le démutage automatique, utilisez la commande *autounmute del*`
 
         repondre(msg) ;
         return ;
@@ -895,40 +886,39 @@ zokou({
 
         if (group_cron == null) {
 
-            repondre('No cronometrage has been activated') ;
+            repondre('Aucun minutage n\'a été activé') ;
         } else {
 
             await cron.delCron(dest) ;
 
-            repondre("The autounmute has been removed; restart to apply the changes")
+            repondre("Le démutage automatique a été supprimé ; redémarrez pour appliquer les changements")
             .then(() => {
 
               exec("pm2 restart all");
             }) ;
 
-            
+
 
         }
       } else if (texte.includes(':')) {
 
-       
+
 
         await cron.addCron(dest,"unmute_at",texte) ;
 
-        repondre(`Setting up autounmute for ${texte}; restart to apply the changes`)
+        repondre(`Configuration du démutage automatique pour ${texte} ; redémarrez pour appliquer les changements`)
         .then(() => {
 
           exec("pm2 restart all");
         }) ;
 
       } else {
-          repondre('Please enter a valid time with hour and minute separated by :') ;
+          repondre('Veuillez entrer une heure valide avec heure et minute séparées par :') ;
       }
 
 
     }
 });
-
 
 
 zokou({
@@ -940,9 +930,9 @@ zokou({
 
   if (verifAdmin || superUser) {
 
-    if(!verifZokouAdmin){ repondre('You need administrative rights to perform this command') ; return ;}
+    if(!verifZokouAdmin){ repondre('Vous avez besoin des droits administrateur pour exécuter cette commande') ; return ;}
 
-    if (!arg || arg.length == 0) { repondre('Please enter the country code whose members will be removed') ; return ;}
+    if (!arg || arg.length == 0) { repondre('Veuillez entrer le code pays dont les membres seront retirés') ; return ;}
 
       let metadata = await zk.groupMetadata(dest) ;
 
@@ -957,7 +947,7 @@ zokou({
       }
 
   } else {
-    repondre('Sorry, you are not an administrator of the group')
+    repondre('Désolé, vous n\'êtes pas administrateur du groupe')
   }
 
 
@@ -968,32 +958,32 @@ zokou({
       nomCom : 'nsfw',
       categorie : 'GROUP'
 }, async (dest,zk,commandeOptions) => {
-  
+
     const {arg , repondre , verifAdmin } = commandeOptions ;
 
-  if(!verifAdmin) { repondre('Sorry, you cannot enable NSFW content without being an administrator of the group') ; return}
+  if(!verifAdmin) { repondre('Désolé, vous ne pouvez pas activer le contenu NSFW sans être administrateur du groupe') ; return}
 
       let hbd = require('../bdd/hentai') ;
 
     let isHentaiGroupe = await hbd.checkFromHentaiList(dest) ;
 
   if (arg[0] == 'on') {
-    
-       if(isHentaiGroupe) {repondre('NSFW content is already active for this group') ; return} ;
+
+       if(isHentaiGroupe) {repondre('Le contenu NSFW est déjà actif pour ce groupe') ; return} ;
 
       await hbd.addToHentaiList(dest) ;
 
-      repondre('NSFW content is now active for this group') ;
-       
+      repondre('Le contenu NSFW est maintenant actif pour ce groupe') ;
+
   } else if (arg[0] == 'off') {
 
-     if(!isHentaiGroupe) {repondre('NSFW content is already disabled for this group') ; return} ;
+     if(!isHentaiGroupe) {repondre('Le contenu NSFW est déjà désactivé pour ce groupe') ; return} ;
 
       await hbd.removeFromHentaiList(dest) ;
 
-      repondre('NSFW content is now disabled for this group') ;
+      repondre('Le contenu NSFW est maintenant désactivé pour ce groupe') ;
   } else {
 
-      repondre('You must enter "on" or "off"') ;
+      repondre('Vous devez entrer "on" ou "off"') ;
     }
 } ) ;
