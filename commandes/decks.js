@@ -73,7 +73,7 @@ zokou(
         .join('\n');
 
       await zk.sendMessage(dest, {
-        text: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\nUtilise : *.deck nom*`
+        text: `📦 *Decks disponibles :*\n${nomsDisponibles}\n\nUtilise : *-deck nom*`
       }, { quoted: ms });
       return;
     }
@@ -131,14 +131,14 @@ zokou(
     const session = await getSessionFromDB(zk, ms, dest);
     if (!session || !session.deck) {
       await zk.sendMessage(dest, {
-        text: `❌ Aucun deck actif. Utilise *.deck nom*`
+        text: `❌ Aucun deck actif. Utilise *-deck nom*`
       }, { quoted: ms });
       return;
     }
 
     if (!arg[0] || isNaN(arg[0])) {
       await zk.sendMessage(dest, {
-        text: `❌ Spécifie un ID. Ex: *.pioche 3*`
+        text: `❌ Spécifie un ID. Ex: *-pioche 3*\n*Pioche en commençant par la première carte du deck*.`
       }, { quoted: ms });
       return;
     }
@@ -148,7 +148,7 @@ zokou(
 
     if (carteIndex === -1) {
       await zk.sendMessage(dest, {
-        text: `❌ ID invalide. Utilise *.mondeck*`
+        text: `❌ ID invalide. Utilise *-mondeck*`
       }, { quoted: ms });
       return;
     }
@@ -225,7 +225,7 @@ zokou(
     }
 
     await zk.sendMessage(dest, {
-      text: `🃏 Deck mélangé ! ${session.deck.length} cartes restantes.`
+      text: `🃏 Deck mélangé ! ${session.deck.length} cartes restantes.\n\n*⚠️ Si vous venez de mélanger votre deck volontairement sans effet d'une carte c'est une fraude.\n❌ *Deck Manipulation – Cheating :* Un joueur n’est autorisé à mélanger son Deck que lorsque un effet de carte lui demande d’y toucher. Mélanger à n’importe quel autre moment est considéré comme une manipulation illégale du Deck.`
     }, { quoted: ms });
   }
 );
@@ -398,7 +398,7 @@ zokou(
           document: readFileSync(fileName),
           mimetype: 'text/html',
           filename: 'yugioh_cartes.html',
-          caption: `*🃏 CATALOGUE YU-GI-OH!*\n• ${sortedCartes.length} cartes\n• Utilise *.carte nom*`
+          caption: `*🃏 CATALOGUE YU-GI-OH!*\n• ${sortedCartes.length} cartes\n• Utilise *-carte nom*`
         }, { quoted: ms });
       } catch (error) {
         console.error('Erreur:', error);
@@ -425,7 +425,7 @@ zokou(
 
       await zk.sendMessage(dest, {
         image: { url: deck_cards[nomTrouve] },
-        caption: `*${typeCarte} ${nomTrouve}*\nType: Monstre/Effet\nATK/DEF: 2500/2000`
+        caption: `*${typeCarte} ${nomTrouve}*\nType: Inconnu\nATK/DEF: Inconnu`
       }, { quoted: ms });
     } else {
       const suggestions = Object.keys(deck_cards).filter(nom =>
