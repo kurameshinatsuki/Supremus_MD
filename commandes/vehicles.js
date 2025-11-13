@@ -118,7 +118,7 @@ async function envoyerListeVehicules(dest, zk, ms) {
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">🏁 SPEED RUSH</h1>
+            <h1 class="title">🏁 SPEED RUSH 🏁</h1>
             <p>Catalogue Véhicules</p>
         </div>
     `;
@@ -178,7 +178,7 @@ async function envoyerListeVehicules(dest, zk, ms) {
 
     html += `
             <div class="footer">
-                <p>Speed Rush - Utilise !vehicles [nom]</p>
+                <p>Speed Rush - Utilise -vehicles [nom]</p>
             </div>
         </div>
     </body>
@@ -192,7 +192,7 @@ async function envoyerListeVehicules(dest, zk, ms) {
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'speedrush_vehicles.html',
-            caption: `*SPEED RUSH*\n${totalVehicules} véhicules\nUtilise !vehicles nom`
+            caption: `*SPEED RUSH*\n${totalVehicules} véhicules\nUtilise -vehicles nom`
         }, { quoted: ms });
     } catch (error) {
         console.error('Erreur:', error);
