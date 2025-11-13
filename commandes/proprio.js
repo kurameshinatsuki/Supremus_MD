@@ -1,14 +1,7 @@
-const {zokou}=require("../framework/zokou")
+const {zokou}=require("../framework/zokou")
 
 
-
-
-
-
-
-zokou({nomCom:"restart",categorie:"MON-BOT",reaction:"🆗"},async(dest,z,com)=>{
-
-
+zokou({nomCom:"restart",categorie:"MON-BOT",reaction:"🆗"},async(dest,z,com)=>{
   
 const{repondre,ms,dev,superUser}=com;
 
@@ -22,10 +15,6 @@ const{repondre,ms,dev,superUser}=com;
     repondre("*✨redémarrage...*");
 
   exec("pm2 restart all");
-  
-
-  
-
-
+  
 
 })
