@@ -94,8 +94,8 @@ const alea = (ext) => {
     }
 
     sticker = new Sticker(buffer, {
-      pack:"Supremus-Md", // pack stick
-      author:  nomAuteurMessage, // name of the author of the stick
+      pack:"Supremus-Md", // pack de stickers
+      author:  nomAuteurMessage, // nom de l'auteur du sticker
       type:
         arg.includes("-r") || arg.includes("-c")
           ? StickerTypes.CROPPED
@@ -103,7 +103,7 @@ const alea = (ext) => {
       quality: 40,
     });
   } else {
-    repondre("Please mention an image or video!");
+    repondre("Veuillez mentionner une image ou une vidéo !");
     return;
   }
 
@@ -124,13 +124,13 @@ try{
 
 
 
-  
+
 });
 
 zokou({nomCom:"scrop",categorie: "MON-BOT", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
-  if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
+  if(!msgRepondu) { repondre( 'Assurez-vous de mentionner le média' ) ; return } ;
   if(!(arg[0])) {
        pack = nomAuteurMessage
   } else {
@@ -144,14 +144,14 @@ mediamsg = msgRepondu.videoMessage
   else if (msgRepondu.stickerMessage) {
     mediamsg = msgRepondu.stickerMessage ;
   } else {
-    repondre('Uh media please'); return
+    repondre('Veuillez mentionner un média'); return
   } ;
 
   var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
 
      let stickerMess = new Sticker(stick, {
             pack: pack,
-            
+
             type: StickerTypes.CROPPED,
             categories: ["🤩", "🎉"],
             id: "12345",
@@ -166,7 +166,7 @@ mediamsg = msgRepondu.videoMessage
 zokou({nomCom:"take",categorie: "MON-BOT", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
-  if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
+  if(!msgRepondu) { repondre( 'Assurez-vous de mentionner le média' ) ; return } ;
   if(!(arg[0])) {
        pack = nomAuteurMessage
   } else {
@@ -180,14 +180,14 @@ mediamsg = msgRepondu.videoMessage
   else if (msgRepondu.stickerMessage) {
     mediamsg = msgRepondu.stickerMessage ;
   } else {
-    repondre('Uh a media please'); return
+    repondre('Veuillez mentionner un média'); return
   } ;
 
   var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
 
      let stickerMess = new Sticker(stick, {
             pack: pack,
-            
+
             type: StickerTypes.FULL,
             categories: ["🤩", "🎉"],
             id: "12345",
@@ -205,19 +205,19 @@ zokou({ nomCom: "write", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, as
   const { ms, msgRepondu, arg, repondre, nomAuteurMessage } = commandeOptions;
 
   if (!msgRepondu) {
-    repondre('Please mention an image');
+    repondre('Veuillez mentionner une image');
     return;
   }
 
   if (!msgRepondu.imageMessage) {
-    repondre('The command only works with images');
+    repondre('La commande fonctionne uniquement avec des images');
     return;
   } ;
   text = arg.join(' ') ;
-  
-  if(!text || text === null) {repondre('Make sure to insert text') ; return } ;
- 
-  
+
+  if(!text || text === null) {repondre('Assurez-vous d\'insérer du texte') ; return } ;
+
+
   const mediamsg = msgRepondu.imageMessage;
   const image = await zk.downloadAndSaveMediaMessage(mediamsg);
 
@@ -268,8 +268,8 @@ zokou({ nomCom: "write", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, as
     );
 
   } catch (error) {
-    console.error('Error uploading to Imgur :', error);
-    repondre('An error occurred while creating the meme.');
+    console.error('Erreur lors du téléchargement sur Imgur :', error);
+    repondre('Une erreur est survenue lors de la création du meme.');
   }
 });
 
@@ -278,27 +278,27 @@ zokou({ nomCom: "write", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, as
 zokou({nomCom:"photo",categorie: "MON-BOT", reaction: "👨🏿‍💻"},async(dest,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
-  if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
- 
+  if(!msgRepondu) { repondre( 'Assurez-vous de mentionner le média' ) ; return } ;
+
    if (!msgRepondu.stickerMessage) {
-      repondre('Um mention a non-animated sticker'); return
+      repondre('Veuillez mentionner un sticker non animé'); return
   } ;
 
  let mediaMess = await zk.downloadAndSaveMediaMessage(msgRepondu.stickerMessage);
 
   const alea = (ext) => {
   return `${Math.floor(Math.random() * 10000)}${ext}`;};
-  
+
   let ran = await alea(".png");
 
-  
+
         exec(`ffmpeg -i ${mediaMess} ${ran}`, (err) => {
           fs.unlinkSync(mediaMess);
           if (err) {
             zk.sendMessage(
               dest,
               {
-                text: 'A non-animated sticker please',
+                text: 'Veuillez utiliser un sticker non animé',
               },
               { quoted: ms }
             );
@@ -318,61 +318,30 @@ zokou({ nomCom: "trt", categorie: "MON-BOT", reaction: "👨🏿‍💻" }, asyn
 
   const { msgRepondu, repondre , arg } = commandeOptions;
 
-  
+
    if(msgRepondu) {
      try {
-      
-     
 
-       if(!arg || !arg[0]) { repondre('(eg : trt en)') ; return }
-   
+
+
+       if(!arg || !arg[0]) { repondre('(exemple : trt en)') ; return }
+
 
          let texttraduit = await traduire(msgRepondu.conversation , {to : arg[0]}) ;
 
          repondre(texttraduit)
 
         } catch (error) {
-          
-          repondre('Mention a texte Message') ;
-      
+
+          repondre('Veuillez mentionner un message texte') ;
+
         }
 
    } else {
-     
-     repondre('Mention a texte Message')
+
+     repondre('Veuillez mentionner un message texte')
    }
 
 
 
 }) ;
-
-
-/*zokou({ nomCom: "url", categorie: "Conversion", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
-  const { msgRepondu, repondre } = commandeOptions;
-
-  if (!msgRepondu) {
-      repondre('mention a image or video');
-      return;
-  }
-
-  let mediaPath;
-
-  if (msgRepondu.videoMessage) {
-      mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
-  } else if (msgRepondu.imageMessage) {
-      mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
-  } else {
-      repondre('mention a image or video');
-      return;
-  }
-
-  try {
-      const telegraphUrl = await uploadToTelegraph(mediaPath);
-      fs.unlinkSync(mediaPath);  // Supprime le fichier après utilisation
-
-      repondre(telegraphUrl);
-  } catch (error) {
-      console.error('Erreur lors de la création du lien Telegraph :', error);
-      repondre('Opps error');
-  }
-});*/
