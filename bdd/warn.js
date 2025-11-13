@@ -1,13 +1,10 @@
 // Importez dotenv et chargez les variables d'environnement depuis le fichier .env
-require("dotenv").config();
-
-const { Pool } = require("pg");
-
-// Utilisez le module 'set' pour obtenir la valeur de DATABASE_URL depuis vos configurations
+require("dotenv").config();
+const { Pool } = require("pg");
 const s = require("../set");
 
-// Récupérez l'URL de la base de données de la variable s.DATABASE_URL
-var dbUrl=s.DATABASE_URL?s.DATABASE_URL:"postgres://db_7xp9_user:6hwmTN7rGPNsjlBEHyX49CXwrG7cDeYi@dpg-cj7ldu5jeehc73b2p7g0-a.oregon-postgres.render.com/db_7xp9"
+// Configuration de la base de données
+const dbUrl = s.DATABASE_URL;
 const proConfig = {
   connectionString: dbUrl,
   ssl: {
