@@ -77,7 +77,7 @@ const deck_cards = {
   'Kunai avec Chaîne': 'https://i.ibb.co/tTHm7DrY/RA03-204q.jpg',
   'Axe Raider': 'https://i.ibb.co/4RR2CzX1/SBAD-9.jpg',
   'Polymérisation': 'https://i.ibb.co/nq9nLXX5/RA03-51-Bc.jpg',
-  'Dragon Noir aux Yeux Bleus': 'https://i.ibb.co/sv2SrvjR/Dragon-Noiraux-Yeux-Rouges-RA04-FR-QCSE-1-E.webp',
+  'Dragon Noir aux Yeux Rouges': 'https://i.ibb.co/sv2SrvjR/Dragon-Noiraux-Yeux-Rouges-RA04-FR-QCSE-1-E.webp',
   'Dragon Noir Météore': 'https://i.ibb.co/DfWyj6Sm/LDS1-13.jpg',
   'Magicien du Temps' : 'https://i.ibb.co/sdWThJtZ/image.jpg',
   'Bébé Dragon' : 'https://i.ibb.co/vxX9Gxr3/image.jpg',
