@@ -8,9 +8,9 @@ db.initializeDatabase().then(() => {
   console.error('❌ Erreur initialisation base de données:', error);
 });
 
-// =============================================================================
+//================================================
 // CONFIGURATION DES ARÈNES ET CIRCUITS
-// =============================================================================
+// ===============================================
 
 const arenesABM = [
     { nom: 'Infinity Fortress', image: 'https://i.ibb.co/1gGcfDr/Image-2025-03-21-14-41-20-14.jpg' },
@@ -37,13 +37,13 @@ const circuitsSpeedRush = [
   { nom: 'Sanctuaire Perdu', image: 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg' }
 ];
 
-const imageYugiDuel = 'https://i.ibb.co/rKxJ2g7r/image.jpg';
+const imageYugiDuel = 'https://i.ibb.co/GQSypPmC/Image-2025-11-08-13-07-08-1.jpg';
 
 let lastArenaIndex = -1;
 
-// =============================================================================
+// ===============================================
 // FONCTIONS UTILITAIRES
-// =============================================================================
+// ===============================================
 
 function tirerArABM() {
     let index;
@@ -82,9 +82,9 @@ function trouverCircuitParNom(nom) {
     return circuitsSpeedRush.find(c => c.nom.toLowerCase().includes(nom.toLowerCase()));
 }
 
-// =============================================================================
+// ===============================================
 // FONCTIONS DE GÉNÉRATION DE FICHES
-// =============================================================================
+// ===============================================
 
 function generateFicheDuelABM(duel) {
     let equipe1Text = '';
@@ -241,9 +241,9 @@ function generateFicheDuelYugi(duel) {
 ▓▓▓▓[ CHARGEMENT... ]▓▓▓▓\n▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔`;
 }
 
-// =============================================================================
-// COMMANDES ABM (ANIME BATTLE MULTIVERS) - AVEC CHOIX D'ARÈNE
-// =============================================================================
+// ===============================================
+// COMMANDES ABM (ANIME BATTLE MULTIVERS)
+// ===============================================
 
 zokou(
     { nomCom: 'abm_rule', categorie: 'ABM' },
@@ -333,15 +333,15 @@ zokou(
         // Aide enrichie
         if (!input) return repondre(
             '🆚 *ABM ULTIMATE HELP* 🆚\n\n' +
-            '➤ *MàJ Perso:* `-duel_abm [Joueur] [stat]±[valeur] ...`\n' +
-            '   *Ex:* `-duel_abm Gojo vie-20 energie+30`\n\n' +
-            '➤ *MàJ Multi:* `-duel_abm [Joueur1] [stat]±[valeur]; [Joueur2] ...`\n' +
-            '   *Ex:* `-duel_abm Gojo heart+15; Sukuna vie-10`\n\n' +
-            '➤ *Changer Arène:* `-duel_abm arene:NomArène [duelKey]`\n' +
-            '➤ *Réinitialiser:* `-duel_abm reset [Joueur1] [Joueur2]...`\n' +
-            '➤ *Tout Réinitialiser:* `-duel_abm resetall`\n' +
-            '➤ *Supprimer:* `-duel_abm delete [duelKey]`\n' +
-            '➤ *Liste:* `-duel_abm list`\n\n' +
+            '➤ *MàJ Perso:* -duel_abm [Joueur] [stat]±[valeur] ...\n' +
+            '   *Ex:* -duel_abm Gojo vie-20 energie+30\n\n' +
+            '➤ *MàJ Multi:* -duel_abm [Joueur1] [stat]±[valeur]; [Joueur2] ...\n' +
+            '   *Ex:* -duel_abm Gojo heart+15; Sukuna vie-10\n\n' +
+            '➤ *Changer Arène:* -duel_abm arene:NomArène [duelKey]\n' +
+            '➤ *Réinitialiser:* -duel_abm reset [Joueur1] [Joueur2]...\n' +
+            '➤ *Tout Réinitialiser:* -duel_abm resetall\n' +
+            '➤ *Supprimer:* -duel_abm delete [duelKey]\n' +
+            '➤ *Liste:* -duel_abm list\n\n' +
             '📊 *Stats disponibles:* vie, energie, heart\n' +
             '*Exemple complet:*\n' +
             '-duel_abm Gojo vie-10,energie+20; Sukuna heart+15'
@@ -520,9 +520,9 @@ zokou(
     }
 );
 
-// =============================================================================
-// COMMANDES SPEED RUSH - AVEC CHOIX DE CIRCUIT
-// =============================================================================
+// ===============================================
+// COMMANDES SPEED RUSH
+// ===============================================
 
 zokou(
   { nomCom: 'sr_rule', categorie: 'SPEED-RUSH' },
@@ -646,15 +646,15 @@ zokou(
     // Aide
     if (!input) return repondre(
       '🏁 *SPEED-RUSH HELP* 🏁\n\n' +
-      '➤ *MàJ Perso:* `-sr [Pilote] [stat]±[valeur] ...`\n' +
-      '   *Ex:* `-sr Pilote1 voiture-20 essence+15`\n\n' +
-      '➤ *MàJ Multi:* `-sr [Pilote1] [stat]±[valeur]; [Pilote2] ...`\n' +
-      '   *Ex:* `-sr Pilote1 turbo+10; Pilote2 essence-5`\n\n' +
-      '➤ *Changer Circuit:* `-sr circuit:NomCircuit [courseKey]`\n' +
-      '➤ *Réinitialiser:* `-sr reset [Pilote1] [Pilote2]...`\n' +
-      '➤ *Tout Réinitialiser:* `-sr resetall`\n' +
-      '➤ *Supprimer:* `-sr delete [courseKey]`\n' +
-      '➤ *Liste:* `-sr list`\n\n' +
+      '➤ *MàJ Perso:* -sr [Pilote] [stat]±[valeur] ...\n' +
+      '   *Ex:* -sr Pilote1 voiture-20 essence+15\n\n' +
+      '➤ *MàJ Multi:* -sr [Pilote1] [stat]±[valeur]; [Pilote2] ...\n' +
+      '   *Ex:* -sr Pilote1 turbo+10; Pilote2 essence-5\n\n' +
+      '➤ *Changer Circuit:* -sr circuit:NomCircuit [courseKey]\n' +
+      '➤ *Réinitialiser:* -sr reset [Pilote1] [Pilote2]...\n' +
+      '➤ *Tout Réinitialiser:* -sr resetall\n' +
+      '➤ *Supprimer:* -sr delete [courseKey]\n' +
+      '➤ *Liste:* -sr list\n\n' +
       '📊 *Stats disponibles:* voiture, essence, turbo'
     );
 
@@ -912,9 +912,9 @@ zokou(
   }
 );
 
-// =============================================================================
+// ================================================
 // COMMANDES YU-GI-OH - AVEC GESTION MULTI-CARTES
-// =============================================================================
+// ================================================
 
 zokou(
     { nomCom: 'yugirule', categorie: 'YU-GI-OH' },
@@ -1007,15 +1007,15 @@ zokou(
       return repondre(
         '🎴 *YU-GI-OH DUEL MANAGER* 🎴\n\n' +
         '➤ *MàJ Zones Multiples:* \n' +
-        '  `-duel_yugi [joueur] zone_monstre±carte1,carte2,carte3`\n' +
-        '  `-duel_yugi Yugi zone_monstre+Axe_Raider,Magicien_Sombre`\n\n' +
-        '➤ *MàJ Standard:* `-duel_yugi [joueur] [modif1] [modif2] ...`\n' +
-        '  *Ex:* `-duel_yugi Yugi lp-500 main+2`\n\n' +
-        '➤ *MàJ Multi-Joueurs:* `-duel_yugi [joueur1] [modifs]; [joueur2] [modifs]`\n' +
-        '➤ *Réinitialiser:* `-duel_yugi reset [joueur]`\n' +
-        '➤ *Tout réinitialiser:* `-duel_yugi resetall`\n' +
-        '➤ *Supprimer:* `-duel_yugi delete [clé_duel]`\n' +
-        '➤ *Liste:* `-duel_yugi list`\n\n' +
+        '  -duel_yugi [joueur] zone_monstre±carte1,carte2,carte3\n' +
+        '  -duel_yugi Yugi zone_monstre+Axe_Raider,Magicien_Sombre\n\n' +
+        '➤ *MàJ Standard:* -duel_yugi [joueur] [modif1] [modif2] ...\n' +
+        '  *Ex:* -duel_yugi Yugi lp-500 main+2\n\n' +
+        '➤ *MàJ Multi-Joueurs:* -duel_yugi [joueur1] [modifs]; [joueur2] [modifs]\n' +
+        '➤ *Réinitialiser:* -duel_yugi reset [joueur]\n' +
+        '➤ *Tout réinitialiser:* -duel_yugi resetall\n' +
+        '➤ *Supprimer:* -duel_yugi delete [clé_duel]\n' +
+        '➤ *Liste:* -duel_yugi list\n\n' +
         '📌 *Modifs disponibles:* lp, cm, main, extra, cimetiere, terrain, zone_monstre, zone_magie_piege'
       );
     }
@@ -1266,9 +1266,9 @@ zokou(
   }
 );
 
-// =============================================================================
+// ====================================================
 // COMMANDES DE GESTION DE LA BASE DE DONNÉES
-// =============================================================================
+// ====================================================
 
 zokou(
   { nomCom: 'games_stats', categorie: 'Games' },
