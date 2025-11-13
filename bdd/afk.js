@@ -1,9 +1,6 @@
 // Importez dotenv et chargez les variables d'environnement depuis le fichier .env
 require("dotenv").config();
-
 const { Pool } = require("pg");
-
-// Utilisez le module 'set' pour obtenir la valeur de DATABASE_URL depuis vos configurations
 const s = require("../set");
 
 // Configuration de la base de données
