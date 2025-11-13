@@ -4,16 +4,16 @@ const conf = require("../set");
 
 zokou({ nomCom: "mods", categorie: "MON-BOT", reaction: "😇" }, async (dest, zk, commandeOptions) => {
     const { ms , mybotpic } = commandeOptions;
-    
+
   const thsudo = await isSudoTableNotEmpty()
 
   if (thsudo) {
-     let msg = `*My Super-User*\n
-     *Owner Number\n* :
+     let msg = `*Mes Super-Utilisateurs*\n
+     *Numéro du Propriétaire* :
 - 🌟 @${conf.NUMERO_OWNER}
 
------- *other sudos* -----\n`
-     
+------ *Autres super-utilisateurs* -----\n`
+
  let sudos = await getAllSudoNumbers()
 
    for ( const sudo of sudos) {
@@ -36,11 +36,11 @@ zokou({ nomCom: "mods", categorie: "MON-BOT", reaction: "😇" }, async (dest, z
       )
   } else {
     const vcard =
-        'BEGIN:VCARD\n' + // metadata of the contact card
+        'BEGIN:VCARD\n' + // métadonnées de la carte de contact
         'VERSION:3.0\n' +
-        'FN:' + conf.OWNER_NAME + '\n' + // full name
-        'ORG:undefined;\n' + // the organization of the contact
-        'TEL;type=CELL;type=VOICE;waid=' + conf.NUMERO_OWNER + ':+' + conf.NUMERO_OWNER + '\n' + // WhatsApp ID + phone number
+        'FN:' + conf.OWNER_NAME + '\n' + // nom complet
+        'ORG:undefined;\n' + // organisation du contact
+        'TEL;type=CELL;type=VOICE;waid=' + conf.NUMERO_OWNER + ':+' + conf.NUMERO_OWNER + '\n' + // ID WhatsApp + numéro de téléphone
         'END:VCARD';
     zk.sendMessage(dest, {
         contacts: {
@@ -60,7 +60,7 @@ zokou({ nomCom: "dev", categorie: "MON-BOT", reaction: "👥" }, async (dest, zk
       // Ajoute d'autres développeurs ici avec leur nom et numéro
     ];
 
-    let message = "Salut, je suis *SP-ZK-MD* tu peux m'appeler *mini-kurama* ! je te présente mes développeurs :\n\n";
+    let message = "Salut, je suis *SP-ZK-MD* tu peux m'appeler *mini-kurama* ! Je te présente mes développeurs :\n\n";
     for (const dev of devs) {
       message += `----------------\n• ${dev.nom} : https://wa.me/${dev.numero}\n`;
     }
@@ -70,8 +70,8 @@ zokou({ nomCom: "dev", categorie: "MON-BOT", reaction: "👥" }, async (dest, zk
         zk.sendMessage(dest, { video: { url: lien }, caption:message }, { quoted: ms });
     }
     catch (e) {
-        console.log("🥵🥵 Menu erreur " + e);
-        repondre("🥵🥵 Menu erreur " + e);
+        console.log("🥵🥵 Erreur de menu " + e);
+        repondre("🥵🥵 Erreur de menu " + e);
     }
 } 
 // Vérification pour .jpeg ou .png
@@ -80,21 +80,21 @@ else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
         zk.sendMessage(dest, { image: { url: lien }, caption:message }, { quoted: ms });
     }
     catch (e) {
-        console.log("🥵🥵 Menu erreur " + e);
-        repondre("🥵🥵 Menu erreur " + e);
+        console.log("🥵🥵 Erreur de menu " + e);
+        repondre("🥵🥵 Erreur de menu " + e);
     }
 } 
 else {
     repondre(lien)
-    repondre("link error");
-    
+    repondre("Erreur de lien");
+
 }
 });
 
 zokou({ nomCom: "support", categorie: "MON-BOT" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, auteurMessage, } = commandeOptions; 
- 
-  repondre("Veuillez regardé en pm/ib.")
+
+  repondre("Veuillez regarder dans vos messages privés (MP/IB).")
   await zk.sendMessage(auteurMessage,{text : `https://whatsapp.com/channel/0029Vaiyt653WHTR2jHEHe2e`},{quoted :ms})
 
-})
+});
