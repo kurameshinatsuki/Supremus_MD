@@ -180,7 +180,7 @@ async function envoyerListeSkinsHTML(dest, zk, ms) {
 
     html += `
             <div class="footer">
-                <p>Origamy World - Utilise !skins [nom]</p>
+                <p>Origamy World — Utilise -skins [nom]</p>
             </div>
         </div>
     </body>
@@ -194,7 +194,7 @@ async function envoyerListeSkinsHTML(dest, zk, ms) {
             document: readFileSync(filename),
             mimetype: 'text/html',
             filename: 'skins_origamy.html',
-            caption: `*SKINS ORIGAMY*\n${totalSkins} skins disponibles\nUtilise !skins nom`
+            caption: `*SKINS ORIGAMY*\n${totalSkins} skins disponibles\nUtilise -skins nom`
         }, { quoted: ms });
     } catch (error) {
         console.error('Erreur:', error);
