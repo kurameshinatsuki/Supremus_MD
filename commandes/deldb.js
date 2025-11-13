@@ -49,38 +49,3 @@ zokou({
     await repondre("❌ Erreur lors du nettoyage: " + error.message);
   }
 });
-
-zokou({
-    nomCom: "getsession",
-    categorie: "MON-BOT",
-    reaction: "💾"
-}, async (dest, zk, commandeOptions) => {
-    const { repondre, superUser } = commandeOptions;
-    
-    if (!superUser) return repondre("❌ Owner uniquement");
-
-    try {
-        const fs = require('fs-extra');
-        const path = require('path');
-        const authDir = path.join(__dirname, '/auth');
-        
-        if (!fs.existsSync(authDir)) {
-            return repondre("❌ Dossier auth introuvable");
-        }
-
-    // Lire directement le fichier creds.json pour la session
-        const credsPath = path.join(authDir, 'creds.json');
-        if (fs.existsSync(credsPath)) {
-            const rawCreds = await fs.readFile(credsPath, 'utf8');
-            const sessionBase64 = Buffer.from(rawCreds).toString('base64');
-            
-            await repondre(`💾 SESSION BASE64 (${sessionBase64.length} caractères):\n\`\`\`${sessionBase64}\`\`\``);
-        } else {
-            await repondre("❌ Fichier creds.json introuvable");
-        }
-
-    } catch (error) {
-        console.error(error);
-        repondre("❌ Erreur: " + error.message);
-    }
-});
