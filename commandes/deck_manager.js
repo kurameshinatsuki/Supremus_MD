@@ -224,7 +224,7 @@ ishizu: {
 
       // Pièges (4)
       "Kunai avec Chaîne",
-      "Tempête d'Etakua",
+      "Tempête d'Etaqua",
       "Tornade Violente",
       "Tornade Violente"
     ],
