@@ -1,5 +1,3 @@
-// 📁 commande/deck_cards.js
-
 const deck_cards = {
   // ISHIZU
   'Zolga le Prophète': 'https://i.ibb.co/1fpQ5m3F/KICO-12.jpg',
@@ -31,7 +29,6 @@ const deck_cards = {
   'Héritier des Protecteurs du Tombeau': 'https://i.ibb.co/SwX9VdQf/LCYW-192.jpg',
   'Commandant des Protecteurs du Tombeau': 'https://i.ibb.co/1Yshk9QX/LCYW-191.jpg',
   'Agido': 'https://i.ibb.co/ymn1VNXF/DR1-242.jpg',
-
 
   // PEGASUS
   'Défense Toon': 'https://i.ibb.co/JjYT02ck/LDS1-70.jpg',
@@ -79,8 +76,8 @@ const deck_cards = {
   'Polymérisation': 'https://i.ibb.co/nq9nLXX5/RA03-51-Bc.jpg',
   'Dragon Noir aux Yeux Rouges': 'https://i.ibb.co/sv2SrvjR/Dragon-Noiraux-Yeux-Rouges-RA04-FR-QCSE-1-E.webp',
   'Dragon Noir Météore': 'https://i.ibb.co/DfWyj6Sm/LDS1-13.jpg',
-  'Magicien du Temps' : 'https://i.ibb.co/sdWThJtZ/image.jpg',
-  'Bébé Dragon' : 'https://i.ibb.co/vxX9Gxr3/image.jpg',
+  'Magicien du Temps': 'https://i.ibb.co/sdWThJtZ/image.jpg',
+  'Bébé Dragon': 'https://i.ibb.co/vxX9Gxr3/image.jpg',
 
   // MAI
   'Tornade Violente': 'https://i.ibb.co/60dyry5D/47766694.jpg',
@@ -102,8 +99,51 @@ const deck_cards = {
   'Sphère Kuriboh': 'https://i.ibb.co/MyQ5skbv/SBC1-114.jpg',
   'Épée Amazonesse': 'https://i.ibb.co/wFx6DWzB/SGX3-D02-S.jpg',
   'Chevalier du Roi': 'https://i.ibb.co/4RfKXrCv/64788463.jpg',
-  'Chevalier de le Reine': 'https://i.ibb.co/nNGKpYKF/STAS-45.jpg',
+  'Chevalier de la Reine': 'https://i.ibb.co/nNGKpYKF/STAS-45.jpg',
   'Chevalier du Valet': 'https://i.ibb.co/5XQ69YF4/90876561.jpg',
+
+  // CHAD
+  'Terre des Ojama': 'https://i.ibb.co/yF1DpJ3x/SGX1-201.jpg',
+  'Ojama Bleu': 'https://i.ibb.co/JwC9VQGj/rgbt-fr097.jpg',
+  'Ojama Jaune': 'https://i.ibb.co/nsbyGYTN/STAS-50.jpg',
+  'Ojama Noir': 'https://i.ibb.co/nq3452Qg/SGX1-50.jpg',
+  'Ojama Vert': 'https://i.ibb.co/XZnwNqkw/STAS-6.jpg',
+  'Ojamagic': 'https://i.ibb.co/CpKn00jT/SGX1-61.jpg',
+  'Ouragan Ojama Delta': 'https://i.ibb.co/wZnSChLt/SGX1-60.jpg',
+  'Village Ojama': 'https://i.ibb.co/Gf5RNyjV/SGX1-194.jpg',
+  'Sceau Maudit de la Magie Interdite': 'https://i.ibb.co/DjvL7kC/RA03-76c.jpg',
+  'Trappe Vanne': 'https://i.ibb.co/rR0gvLNy/sbtk-fr046.jpg',
+  'Ojama Roi': 'https://i.ibb.co/v6cbNPpC/SGX1-68s.jpg',
+  'Chevalier Ojama': 'https://i.ibb.co/cSFRd7jW/SGX1-70.jpg',
+  'Le Livre de la Lune': 'https://i.ibb.co/FLdGCdY6/RA02-50c.jpg',
+  'Cyclone Cosmique': 'https://i.ibb.co/Df5b7fFL/RA02-61c.jpg',
+
+  // JADEN
+  'Héros élémentaire Sparkman': 'https://i.ibb.co/FbfHDgN5/tlm-fr004.jpg',
+  'Héros élémentaire Clayman': 'https://i.ibb.co/Z6mVPY1Z/tlm-fr003.jpg',
+  'Héroïne élémentaire Burstinatrix': 'https://i.ibb.co/Gvx1hgSy/tlm-fr002.jpg',
+  'Héros élémentaire Avian': 'https://i.ibb.co/5x8VPqj0/tlm-fr001.jpg',
+  'Héros élémentaire Bladedge': 'https://i.ibb.co/PGQDtwyF/een-fr007.jpg',
+  'Héros élémentaire Necroshade': 'https://i.ibb.co/N23FKbjZ/ysdj-fr000.jpg',
+  'Héros élémentaire Wildheart': 'https://i.ibb.co/XZ3rFh6w/een-fr008.jpg',
+  'Déesse au troisième œil': 'https://i.ibb.co/60th0WQP/db2-fr097.jpg',
+  'Héros élémentaire Bubbleman': 'https://i.ibb.co/Zp4C3dPQ/crv-fr014.jpg',
+  'Wroughtweiler': 'https://i.ibb.co/fYpnvT27/crv-fr012.jpg',
+  'Kuriboh ailé': 'https://i.ibb.co/6JmVpc4j/tlm-fr005.jpg',
+  'Gratte-ciel': 'https://i.ibb.co/9mv8Jbcc/crv-fr048.jpg',
+  'Récupération par Fusion': 'https://i.ibb.co/35gB7XPy/crv-fr038.jpg',
+  'Sage de Fusion': 'https://i.ibb.co/fj6Jh69/db2-fr109.jpg',
+  'R - Justice Juste': 'https://i.ibb.co/xt6N2n2D/eoj-fr040.jpg',
+  'Renforcement de l\'Armée': 'https://i.ibb.co/tpRfgBDR/db2-fr147.jpg',
+  'Annuler l\'attaque': 'https://i.ibb.co/zHrVW4d6/ysdj-fr039.jpg',
+  'Un Héros émerge': 'https://i.ibb.co/DfnCpq18/ioc-fr104.jpg',
+  'Signal Héros': 'https://i.ibb.co/TBLVjk21/tlm-fr049.jpg',
+  'Héros Élémentaire Plasma Vice': 'https://i.ibb.co/gLbPKttp/ct04-fr006.jpg',
+  'Héros élémentaire Géant du Tonnerre': 'https://i.ibb.co/gb2WhVzN/tlm-fr036.jpg',
+  'Héros élémentaire Flame Wingman': 'https://i.ibb.co/SDX90CbB/tlm-fr035.jpg',
+  'Héros Élémentaire Rampart Blaster': 'https://i.ibb.co/WNhWLjyy/een-fr033.jpg',
+  'Héros élémentaire Darkbright': 'https://i.ibb.co/fzScb3t6/taev-fr042.jpg',
+  'Union des héros - Fusion': 'https://i.ibb.co/V110HwG/SGX2-S01.jpg'
 };
 
 module.exports = {
