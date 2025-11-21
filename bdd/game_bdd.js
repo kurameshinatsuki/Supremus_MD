@@ -21,17 +21,16 @@ pool.on('error', (err) => {
 // Fonction pour initialiser la base de données
 async function initializeDatabase() {
   try {
-    // Vérifier la connexion
     await pool.query('SELECT NOW()');
     console.log('✅ Connecté à PostgreSQL avec succès');
 
-    // Créer les tables si elles n'existent pas
     await createTables();
-    await createDecksTables(); // Ajout des tables pour les decks
+    await createDecksTables();
+    await createGameStatsTables();
     console.log('✅ Tables initialisées avec succès');
 
   } catch (error) {
-    console.error('❌ Erreur lors de l\'initialisation de la base de données:', error);
+    console.error('❌ Erreur initialisation DB:', error);
     throw error;
   }
 }
@@ -127,15 +126,15 @@ async function createTables() {
 }
 
 // =============================================================================
-// FONCTIONS POUR LES DECKS YU-GI-OH (AMÉLIORÉES)
+// FONCTIONS POUR LES DECKS YU-GI-OH
 // =============================================================================
 
 /**
- * Table pour les sessions de decks Yu-Gi-Oh avec état de partie complet
+ * Table pour les sessions de decks Yu-Gi-Oh
  */
 async function createDecksTables() {
   const createDecksTableQuery = `
-    -- Table pour les sessions de decks actives avec état de partie
+    -- Table pour les sessions de decks actives
     CREATE TABLE IF NOT EXISTS yugioh_deck_sessions (
       id SERIAL PRIMARY KEY,
       user_id VARCHAR(255) NOT NULL,
@@ -143,48 +142,15 @@ async function createDecksTables() {
       deck_name VARCHAR(255) NOT NULL,
       deck_data JSONB NOT NULL,
       pioches JSONB DEFAULT '[]',
-      game_state JSONB DEFAULT '{
-        "lp": 4000,
-        "hand": [],
-        "field": {
-          "monster": [null, null, null],
-          "spell": [null, null, null],
-          "field": null
-        },
-        "graveyard": [],
-        "banished": [],
-        "extra": [],
-        "main": [],
-        "competence": "",
-        "nom": ""
-      }',
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(user_id, group_id)
-    );
-
-    -- Table pour l'historique des parties Yu-Gi-Oh
-    CREATE TABLE IF NOT EXISTS yugioh_game_history (
-      id SERIAL PRIMARY KEY,
-      user_id VARCHAR(255) NOT NULL,
-      group_id VARCHAR(255) NOT NULL,
-      deck_name VARCHAR(255) NOT NULL,
-      result VARCHAR(50) NOT NULL,
-      lp_final INTEGER NOT NULL,
-      turns_played INTEGER DEFAULT 0,
-      cards_played INTEGER DEFAULT 0,
-      duration INTERVAL,
-      game_data JSONB NOT NULL,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Index pour améliorer les performances
     CREATE INDEX IF NOT EXISTS idx_deck_sessions_user_group ON yugioh_deck_sessions(user_id, group_id);
     CREATE INDEX IF NOT EXISTS idx_deck_sessions_group ON yugioh_deck_sessions(group_id);
     CREATE INDEX IF NOT EXISTS idx_deck_sessions_updated ON yugioh_deck_sessions(updated_at);
-    CREATE INDEX IF NOT EXISTS idx_game_history_user ON yugioh_game_history(user_id);
-    CREATE INDEX IF NOT EXISTS idx_game_history_group ON yugioh_game_history(group_id);
-    CREATE INDEX IF NOT EXISTS idx_game_history_date ON yugioh_game_history(created_at);
 
     -- Déclencheur pour updated_at
     DROP TRIGGER IF EXISTS update_deck_sessions_updated_at ON yugioh_deck_sessions;
@@ -198,46 +164,27 @@ async function createDecksTables() {
 }
 
 /**
- * Sauvegarder ou mettre à jour une session de deck avec état de partie
+ * Sauvegarder ou mettre à jour une session de deck
  */
-async function saveDeckSession(userId, groupId, deckName, deckData, pioches = [], gameState = null) {
+async function saveDeckSession(userId, groupId, deckName, deckData, pioches = []) {
   try {
     const query = `
-      INSERT INTO yugioh_deck_sessions (user_id, group_id, deck_name, deck_data, pioches, game_state) 
-      VALUES ($1, $2, $3, $4, $5, $6) 
+      INSERT INTO yugioh_deck_sessions (user_id, group_id, deck_name, deck_data, pioches) 
+      VALUES ($1, $2, $3, $4, $5) 
       ON CONFLICT (user_id, group_id) DO UPDATE SET 
         deck_name = $3,
         deck_data = $4,
         pioches = $5,
-        game_state = $6,
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
     `;
     
-    // État de jeu par défaut si non fourni
-    const defaultGameState = {
-      lp: 4000,
-      hand: [],
-      field: {
-        monster: [null, null, null],
-        spell: [null, null, null],
-        field: null
-      },
-      graveyard: [],
-      banished: [],
-      extra: [],
-      main: deckData || [],
-      competence: "",
-      nom: deckName
-    };
-
     const values = [
       userId,
       groupId,
       deckName,
       JSON.stringify(deckData),
-      JSON.stringify(pioches),
-      JSON.stringify(gameState || defaultGameState)
+      JSON.stringify(pioches)
     ];
 
     const result = await pool.query(query, values);
@@ -249,7 +196,7 @@ async function saveDeckSession(userId, groupId, deckName, deckData, pioches = []
 }
 
 /**
- * Récupérer une session de deck avec état de partie
+ * Récupérer une session de deck
  */
 async function getDeckSession(userId, groupId) {
   try {
@@ -257,196 +204,9 @@ async function getDeckSession(userId, groupId) {
       'SELECT * FROM yugioh_deck_sessions WHERE user_id = $1 AND group_id = $2',
       [userId, groupId]
     );
-    
-    if (!result.rows[0]) return null;
-    
-    const session = result.rows[0];
-    
-    // Assurer la rétrocompatibilité avec les anciennes sessions
-    return {
-      id: session.id,
-      user_id: session.user_id,
-      group_id: session.group_id,
-      deck_name: session.deck_name,
-      deck_data: session.deck_data,
-      pioches: session.pioches || [],
-      game_state: session.game_state || {
-        lp: 4000,
-        hand: [],
-        field: {
-          monster: [null, null, null],
-          spell: [null, null, null],
-          field: null
-        },
-        graveyard: [],
-        banished: [],
-        extra: [],
-        main: session.deck_data || [],
-        competence: "",
-        nom: session.deck_name
-      },
-      created_at: session.created_at,
-      updated_at: session.updated_at
-    };
-  } catch (error) {
-    console.error('Erreur getDeckSession:', error);
-    throw error;
-  }
-}
-
-/**
- * Mettre à jour uniquement l'état de jeu
- */
-async function updateGameState(userId, groupId, gameState) {
-  try {
-    const query = `
-      UPDATE yugioh_deck_sessions 
-      SET game_state = $1, updated_at = CURRENT_TIMESTAMP
-      WHERE user_id = $2 AND group_id = $3
-      RETURNING *
-    `;
-
-    const values = [
-      JSON.stringify(gameState),
-      userId,
-      groupId
-    ];
-
-    const result = await pool.query(query, values);
     return result.rows[0] || null;
   } catch (error) {
-    console.error('Erreur updateGameState:', error);
-    throw error;
-  }
-}
-
-/**
- * Sauvegarder une partie dans l'historique Yu-Gi-Oh
- */
-async function saveYugiohGameHistory(userId, groupId, deckName, result, lpFinal, gameData, turnsPlayed = 0, cardsPlayed = 0, duration = null) {
-  try {
-    const query = `
-      INSERT INTO yugioh_game_history (user_id, group_id, deck_name, result, lp_final, turns_played, cards_played, duration, game_data)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING *
-    `;
-
-    const values = [
-      userId,
-      groupId,
-      deckName,
-      result,
-      lpFinal,
-      turnsPlayed,
-      cardsPlayed,
-      duration,
-      JSON.stringify(gameData)
-    ];
-
-    const result = await pool.query(query, values);
-    return result.rows[0];
-  } catch (error) {
-    console.error('Erreur saveYugiohGameHistory:', error);
-    throw error;
-  }
-}
-
-/**
- * Récupérer l'historique des parties d'un utilisateur
- */
-async function getUserGameHistory(userId, limit = 10) {
-  try {
-    const result = await pool.query(
-      `SELECT deck_name, result, lp_final, turns_played, cards_played, duration, created_at 
-       FROM yugioh_game_history 
-       WHERE user_id = $1 
-       ORDER BY created_at DESC 
-       LIMIT $2`,
-      [userId, limit]
-    );
-    return result.rows;
-  } catch (error) {
-    console.error('Erreur getUserGameHistory:', error);
-    throw error;
-  }
-}
-
-/**
- * Récupérer les statistiques d'un utilisateur
- */
-async function getUserStats(userId) {
-  try {
-    const statsQuery = `
-      SELECT 
-        COUNT(*) as total_games,
-        COUNT(CASE WHEN result = 'Victoire' THEN 1 END) as victories,
-        COUNT(CASE WHEN result = 'Défaite' THEN 1 END) as defeats,
-        AVG(lp_final) as avg_lp_final,
-        AVG(turns_played) as avg_turns,
-        AVG(cards_played) as avg_cards_played,
-        MAX(created_at) as last_game
-      FROM yugioh_game_history 
-      WHERE user_id = $1
-    `;
-
-    const result = await pool.query(statsQuery, [userId]);
-    
-    if (!result.rows[0]) {
-      return {
-        total_games: 0,
-        victories: 0,
-        defeats: 0,
-        win_rate: 0,
-        avg_lp_final: 0,
-        avg_turns: 0,
-        avg_cards_played: 0,
-        last_game: null
-      };
-    }
-
-    const stats = result.rows[0];
-    const winRate = stats.total_games > 0 ? Math.round((stats.victories / stats.total_games) * 100) : 0;
-
-    return {
-      total_games: parseInt(stats.total_games) || 0,
-      victories: parseInt(stats.victories) || 0,
-      defeats: parseInt(stats.defeats) || 0,
-      win_rate: winRate,
-      avg_lp_final: Math.round(stats.avg_lp_final) || 0,
-      avg_turns: Math.round(stats.avg_turns) || 0,
-      avg_cards_played: Math.round(stats.avg_cards_played) || 0,
-      last_game: stats.last_game
-    };
-  } catch (error) {
-    console.error('Erreur getUserStats:', error);
-    throw error;
-  }
-}
-
-/**
- * Récupérer le classement des joueurs dans un groupe
- */
-async function getGroupRanking(groupId, limit = 10) {
-  try {
-    const rankingQuery = `
-      SELECT 
-        user_id,
-        COUNT(*) as total_games,
-        COUNT(CASE WHEN result = 'Victoire' THEN 1 END) as victories,
-        ROUND((COUNT(CASE WHEN result = 'Victoire' THEN 1 END) * 100.0 / COUNT(*)), 2) as win_rate,
-        AVG(lp_final) as avg_lp
-      FROM yugioh_game_history 
-      WHERE group_id = $1
-      GROUP BY user_id
-      HAVING COUNT(*) >= 1
-      ORDER BY win_rate DESC, victories DESC, total_games DESC
-      LIMIT $2
-    `;
-
-    const result = await pool.query(rankingQuery, [groupId, limit]);
-    return result.rows;
-  } catch (error) {
-    console.error('Erreur getGroupRanking:', error);
+    console.error('Erreur getDeckSession:', error);
     throw error;
   }
 }
@@ -497,7 +257,7 @@ async function cleanOldDeckSessions(hoursOld = 24) {
 async function getGroupDeckSessions(groupId) {
   try {
     const result = await pool.query(
-      'SELECT user_id, deck_name, game_state->>\'lp\' as lp, updated_at FROM yugioh_deck_sessions WHERE group_id = $1 ORDER BY updated_at DESC',
+      'SELECT user_id, deck_name, updated_at FROM yugioh_deck_sessions WHERE group_id = $1 ORDER BY updated_at DESC',
       [groupId]
     );
     return result.rows;
@@ -793,9 +553,9 @@ async function resetAllCoursesSpeedRush() {
   }
 }
 
-// =============================================================================
+// ==============================================
 // FONCTIONS POUR YU-GI-OH - CORRIGÉES
-// =============================================================================
+// ==============================================
 
 /**
  * Récupérer un duel Yu-Gi-Oh par sa clé
@@ -896,9 +656,9 @@ async function resetAllDuelsYugi() {
   }
 }
 
-// =============================================================================
+// ====================================================
 // FONCTIONS GÉNÉRALES ET UTILITAIRES
-// =============================================================================
+// ====================================================
 
 /**
  * Nettoyer les anciennes données (maintenance)
@@ -913,8 +673,7 @@ async function cleanOldData(daysOld = 30) {
       pool.query('DELETE FROM courses_speed_rush WHERE created_at < $1', [cutoffDate]),
       pool.query('DELETE FROM duels_yugi WHERE created_at < $1', [cutoffDate]),
       pool.query('DELETE FROM historique_parties WHERE created_at < $1', [cutoffDate]),
-      pool.query('DELETE FROM yugioh_deck_sessions WHERE created_at < $1', [cutoffDate]),
-      pool.query('DELETE FROM yugioh_game_history WHERE created_at < $1', [cutoffDate])
+      pool.query('DELETE FROM yugioh_deck_sessions WHERE created_at < $1', [cutoffDate])
     ]);
 
     const totalDeleted = results.reduce((sum, result) => sum + result.rowCount, 0);
@@ -927,8 +686,7 @@ async function cleanOldData(daysOld = 30) {
         courses_speed_rush: results[1].rowCount,
         duels_yugi: results[2].rowCount,
         historique: results[3].rowCount,
-        deck_sessions: results[4].rowCount,
-        game_history: results[5].rowCount
+        deck_sessions: results[4].rowCount
       }
     };
   } catch (error) {
@@ -949,12 +707,10 @@ async function getDatabaseStats() {
         (SELECT COUNT(*) FROM duels_yugi) as total_duels_yugi,
         (SELECT COUNT(*) FROM historique_parties) as total_historique,
         (SELECT COUNT(*) FROM yugioh_deck_sessions) as total_deck_sessions,
-        (SELECT COUNT(*) FROM yugioh_game_history) as total_game_history,
         (SELECT MAX(created_at) FROM duels_abm) as dernier_duel_abm,
         (SELECT MAX(created_at) FROM courses_speed_rush) as derniere_course_sr,
         (SELECT MAX(created_at) FROM duels_yugi) as dernier_duel_yugi,
-        (SELECT MAX(updated_at) FROM yugioh_deck_sessions) as derniere_session_deck,
-        (SELECT MAX(created_at) FROM yugioh_game_history) as derniere_partie_historique
+        (SELECT MAX(updated_at) FROM yugioh_deck_sessions) as derniere_session_deck
     `;
 
     const result = await pool.query(statsQuery);
@@ -1011,8 +767,343 @@ async function testConnection() {
 }
 
 // =============================================================================
-// EXPORT DES FONCTIONS
+// FONCTIONS POUR LES STATISTIQUES DE JEU YU-GI-OH
 // =============================================================================
+
+/**
+ * Table pour les statistiques de jeu Yu-Gi-Oh
+ */
+async function createGameStatsTables() {
+  const createStatsTableQuery = `
+    -- Table pour les statistiques de jeu en temps réel
+    CREATE TABLE IF NOT EXISTS yugioh_game_stats (
+      id SERIAL PRIMARY KEY,
+      user_id VARCHAR(255) NOT NULL,
+      group_id VARCHAR(255) NOT NULL,
+      deck_name VARCHAR(255) NOT NULL,
+      
+      -- Statistiques principales
+      life_points INTEGER DEFAULT 4000,
+      cards_in_hand INTEGER DEFAULT 0,
+      cards_in_deck INTEGER DEFAULT 0,
+      cards_in_extra INTEGER DEFAULT 0,
+      
+      -- Zones de jeu
+      cemetery JSONB DEFAULT '[]',
+      field_spell JSONB DEFAULT '[]',
+      monster_zones JSONB DEFAULT '[]',
+      spell_trap_zones JSONB DEFAULT '[]',
+      banished JSONB DEFAULT '[]',
+      
+      -- État du jeu
+      turn_number INTEGER DEFAULT 1,
+      is_first_turn BOOLEAN DEFAULT true,
+      game_state VARCHAR(50) DEFAULT 'waiting',
+      
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(user_id, group_id)
+    );
+
+    -- Index pour améliorer les performances
+    CREATE INDEX IF NOT EXISTS idx_game_stats_user_group ON yugioh_game_stats(user_id, group_id);
+    CREATE INDEX IF NOT EXISTS idx_game_stats_group ON yugioh_game_stats(group_id);
+
+    -- Déclencheur pour updated_at
+    DROP TRIGGER IF EXISTS update_game_stats_updated_at ON yugioh_game_stats;
+    CREATE TRIGGER update_game_stats_updated_at
+        BEFORE UPDATE ON yugioh_game_stats
+        FOR EACH ROW
+        EXECUTE FUNCTION update_updated_at_column();
+  `;
+
+  await pool.query(createStatsTableQuery);
+}
+
+/**
+ * Initialiser les statistiques de jeu
+ */
+async function initGameStats(userId, groupId, deckName, initialDeckSize) {
+  try {
+    const query = `
+      INSERT INTO yugioh_game_stats 
+        (user_id, group_id, deck_name, life_points, cards_in_hand, cards_in_deck, cards_in_extra, is_first_turn) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+      ON CONFLICT (user_id, group_id) DO UPDATE SET 
+        deck_name = $3,
+        life_points = $4,
+        cards_in_hand = $5,
+        cards_in_deck = $6,
+        cards_in_extra = $7,
+        is_first_turn = $8,
+        turn_number = 1,
+        cemetery = '[]',
+        field_spell = '[]',
+        monster_zones = '[]',
+        spell_trap_zones = '[]',
+        banished = '[]',
+        game_state = 'active',
+        updated_at = CURRENT_TIMESTAMP
+      RETURNING *
+    `;
+    
+    const values = [
+      userId,
+      groupId,
+      deckName,
+      4000, // LP initiales
+      0,    // Cartes en main
+      initialDeckSize,
+      0,    // Cartes extra
+      true  // Premier tour
+    ];
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur initGameStats:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupérer les statistiques de jeu
+ */
+async function getGameStats(userId, groupId) {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM yugioh_game_stats WHERE user_id = $1 AND group_id = $2`,
+      [userId, groupId]
+    );
+    return result.rows[0] || null;
+  } catch (error) {
+    console.error('Erreur getGameStats:', error);
+    throw error;
+  }
+}
+
+/**
+ * Mettre à jour les points de vie
+ */
+async function updateLifePoints(userId, groupId, newLifePoints) {
+  try {
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET life_points = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+      [newLifePoints, userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur updateLifePoints:', error);
+    throw error;
+  }
+}
+
+/**
+ * Ajouter une carte au cimetière
+ */
+async function addToCemetery(userId, groupId, card) {
+  try {
+    const stats = await getGameStats(userId, groupId);
+    if (!stats) return null;
+
+    const cemetery = stats.cemetery || [];
+    cemetery.push({
+      ...card,
+      timestamp: new Date().toISOString()
+    });
+
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET cemetery = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+      [JSON.stringify(cemetery), userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur addToCemetery:', error);
+    throw error;
+  }
+}
+
+/**
+ * Placer une carte dans les zones monstres
+ */
+async function placeInMonsterZone(userId, groupId, card, position) {
+  try {
+    const stats = await getGameStats(userId, groupId);
+    if (!stats) return null;
+
+    const monsterZones = stats.monster_zones || [];
+    
+    // Vérifier si la position est disponible (max 5 monstres)
+    if (monsterZones.length >= 5) {
+      throw new Error('Zone monstre pleine (max 5 monstres)');
+    }
+
+    monsterZones.push({
+      ...card,
+      position: position || 'attack',
+      zone: monsterZones.length,
+      timestamp: new Date().toISOString()
+    });
+
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET monster_zones = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+      [JSON.stringify(monsterZones), userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur placeInMonsterZone:', error);
+    throw error;
+  }
+}
+
+/**
+ * Placer une carte en magie/piège
+ */
+async function placeInSpellTrapZone(userId, groupId, card, isSet = false) {
+  try {
+    const stats = await getGameStats(userId, groupId);
+    if (!stats) return null;
+
+    const spellTrapZones = stats.spell_trap_zones || [];
+    
+    if (spellTrapZones.length >= 5) {
+      throw new Error('Zone magie/piège pleine (max 5 cartes)');
+    }
+
+    spellTrapZones.push({
+      ...card,
+      isSet: isSet,
+      zone: spellTrapZones.length,
+      timestamp: new Date().toISOString()
+    });
+
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET spell_trap_zones = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+      [JSON.stringify(spellTrapZones), userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur placeInSpellTrapZone:', error);
+    throw error;
+  }
+}
+
+/**
+ * Activer une magie de terrain
+ */
+async function activateFieldSpell(userId, groupId, card) {
+  try {
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET field_spell = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+      [JSON.stringify([{...card, timestamp: new Date().toISOString()}]), userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur activateFieldSpell:', error);
+    throw error;
+  }
+}
+
+/**
+ * Bannir une carte
+ */
+async function banishCard(userId, groupId, card) {
+  try {
+    const stats = await getGameStats(userId, groupId);
+    if (!stats) return null;
+
+    const banished = stats.banished || [];
+    banished.push({
+      ...card,
+      timestamp: new Date().toISOString()
+    });
+
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET banished = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+      [JSON.stringify(banished), userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur banishCard:', error);
+    throw error;
+  }
+}
+
+/**
+ * Piocher des cartes
+ */
+async function drawCards(userId, groupId, count = 1) {
+  try {
+    const stats = await getGameStats(userId, groupId);
+    if (!stats) return null;
+
+    const newHandCount = stats.cards_in_hand + count;
+    const newDeckCount = stats.cards_in_deck - count;
+
+    if (newDeckCount < 0) {
+      throw new Error('Plus de cartes dans le deck !');
+    }
+
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET cards_in_hand = $1, cards_in_deck = $2, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $3 AND group_id = $4 RETURNING *`,
+      [newHandCount, newDeckCount, userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur drawCards:', error);
+    throw error;
+  }
+}
+
+/**
+ * Passer au tour suivant
+ */
+async function nextTurn(userId, groupId) {
+  try {
+    const stats = await getGameStats(userId, groupId);
+    if (!stats) return null;
+
+    const newTurnNumber = stats.turn_number + 1;
+    const isFirstTurn = false;
+
+    const result = await pool.query(
+      `UPDATE yugioh_game_stats SET turn_number = $1, is_first_turn = $2, updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $3 AND group_id = $4 RETURNING *`,
+      [newTurnNumber, isFirstTurn, userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur nextTurn:', error);
+    throw error;
+  }
+}
+
+/**
+ * Réinitialiser les statistiques de jeu
+ */
+async function resetGameStats(userId, groupId) {
+  try {
+    const result = await pool.query(
+      `DELETE FROM yugioh_game_stats WHERE user_id = $1 AND group_id = $2 RETURNING *`,
+      [userId, groupId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur resetGameStats:', error);
+    throw error;
+  }
+}
+
+// ==================================================
+// EXPORT DES FONCTIONS
+// ===================================================
 
 module.exports = {
   // Pool de connexion
@@ -1043,17 +1134,27 @@ module.exports = {
   getAllDuelsYugi,
   resetAllDuelsYugi,
 
-  // Nouvelles fonctions pour les decks et statistiques
+  // Nouvelles fonctions pour les decks
   saveDeckSession,
   getDeckSession,
   deleteDeckSession,
   cleanOldDeckSessions,
   getGroupDeckSessions,
-  updateGameState,
-  saveYugiohGameHistory,
-  getUserGameHistory,
-  getUserStats,
-  getGroupRanking,
+
+  // Nouvelles fonctions pour les statistiques de jeu
+  createGameStatsTables,
+  initGameStats,
+  getGameStats,
+  updateLifePoints,
+  addToCemetery,
+  placeInMonsterZone,
+  placeInSpellTrapZone,
+  activateFieldSpell,
+  banishCard,
+  drawCards,
+  nextTurn,
+  resetGameStats
+};
 
   // Fonctions générales
   cleanOldData,
