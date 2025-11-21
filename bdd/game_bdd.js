@@ -127,15 +127,15 @@ async function createTables() {
 }
 
 // =============================================================================
-// FONCTIONS POUR LES DECKS YU-GI-OH
+// FONCTIONS POUR LES DECKS YU-GI-OH (AMÉLIORÉES)
 // =============================================================================
 
 /**
- * Table pour les sessions de decks Yu-Gi-Oh
+ * Table pour les sessions de decks Yu-Gi-Oh avec état de partie complet
  */
 async function createDecksTables() {
   const createDecksTableQuery = `
-    -- Table pour les sessions de decks actives
+    -- Table pour les sessions de decks actives avec état de partie
     CREATE TABLE IF NOT EXISTS yugioh_deck_sessions (
       id SERIAL PRIMARY KEY,
       user_id VARCHAR(255) NOT NULL,
@@ -143,15 +143,48 @@ async function createDecksTables() {
       deck_name VARCHAR(255) NOT NULL,
       deck_data JSONB NOT NULL,
       pioches JSONB DEFAULT '[]',
+      game_state JSONB DEFAULT '{
+        "lp": 4000,
+        "hand": [],
+        "field": {
+          "monster": [null, null, null],
+          "spell": [null, null, null],
+          "field": null
+        },
+        "graveyard": [],
+        "banished": [],
+        "extra": [],
+        "main": [],
+        "competence": "",
+        "nom": ""
+      }',
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(user_id, group_id)
+    );
+
+    -- Table pour l'historique des parties Yu-Gi-Oh
+    CREATE TABLE IF NOT EXISTS yugioh_game_history (
+      id SERIAL PRIMARY KEY,
+      user_id VARCHAR(255) NOT NULL,
+      group_id VARCHAR(255) NOT NULL,
+      deck_name VARCHAR(255) NOT NULL,
+      result VARCHAR(50) NOT NULL,
+      lp_final INTEGER NOT NULL,
+      turns_played INTEGER DEFAULT 0,
+      cards_played INTEGER DEFAULT 0,
+      duration INTERVAL,
+      game_data JSONB NOT NULL,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Index pour améliorer les performances
     CREATE INDEX IF NOT EXISTS idx_deck_sessions_user_group ON yugioh_deck_sessions(user_id, group_id);
     CREATE INDEX IF NOT EXISTS idx_deck_sessions_group ON yugioh_deck_sessions(group_id);
     CREATE INDEX IF NOT EXISTS idx_deck_sessions_updated ON yugioh_deck_sessions(updated_at);
+    CREATE INDEX IF NOT EXISTS idx_game_history_user ON yugioh_game_history(user_id);
+    CREATE INDEX IF NOT EXISTS idx_game_history_group ON yugioh_game_history(group_id);
+    CREATE INDEX IF NOT EXISTS idx_game_history_date ON yugioh_game_history(created_at);
 
     -- Déclencheur pour updated_at
     DROP TRIGGER IF EXISTS update_deck_sessions_updated_at ON yugioh_deck_sessions;
@@ -165,27 +198,46 @@ async function createDecksTables() {
 }
 
 /**
- * Sauvegarder ou mettre à jour une session de deck
+ * Sauvegarder ou mettre à jour une session de deck avec état de partie
  */
-async function saveDeckSession(userId, groupId, deckName, deckData, pioches = []) {
+async function saveDeckSession(userId, groupId, deckName, deckData, pioches = [], gameState = null) {
   try {
     const query = `
-      INSERT INTO yugioh_deck_sessions (user_id, group_id, deck_name, deck_data, pioches) 
-      VALUES ($1, $2, $3, $4, $5) 
+      INSERT INTO yugioh_deck_sessions (user_id, group_id, deck_name, deck_data, pioches, game_state) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
       ON CONFLICT (user_id, group_id) DO UPDATE SET 
         deck_name = $3,
         deck_data = $4,
         pioches = $5,
+        game_state = $6,
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
     `;
     
+    // État de jeu par défaut si non fourni
+    const defaultGameState = {
+      lp: 4000,
+      hand: [],
+      field: {
+        monster: [null, null, null],
+        spell: [null, null, null],
+        field: null
+      },
+      graveyard: [],
+      banished: [],
+      extra: [],
+      main: deckData || [],
+      competence: "",
+      nom: deckName
+    };
+
     const values = [
       userId,
       groupId,
       deckName,
       JSON.stringify(deckData),
-      JSON.stringify(pioches)
+      JSON.stringify(pioches),
+      JSON.stringify(gameState || defaultGameState)
     ];
 
     const result = await pool.query(query, values);
@@ -197,7 +249,7 @@ async function saveDeckSession(userId, groupId, deckName, deckData, pioches = []
 }
 
 /**
- * Récupérer une session de deck
+ * Récupérer une session de deck avec état de partie
  */
 async function getDeckSession(userId, groupId) {
   try {
@@ -205,9 +257,196 @@ async function getDeckSession(userId, groupId) {
       'SELECT * FROM yugioh_deck_sessions WHERE user_id = $1 AND group_id = $2',
       [userId, groupId]
     );
-    return result.rows[0] || null;
+    
+    if (!result.rows[0]) return null;
+    
+    const session = result.rows[0];
+    
+    // Assurer la rétrocompatibilité avec les anciennes sessions
+    return {
+      id: session.id,
+      user_id: session.user_id,
+      group_id: session.group_id,
+      deck_name: session.deck_name,
+      deck_data: session.deck_data,
+      pioches: session.pioches || [],
+      game_state: session.game_state || {
+        lp: 4000,
+        hand: [],
+        field: {
+          monster: [null, null, null],
+          spell: [null, null, null],
+          field: null
+        },
+        graveyard: [],
+        banished: [],
+        extra: [],
+        main: session.deck_data || [],
+        competence: "",
+        nom: session.deck_name
+      },
+      created_at: session.created_at,
+      updated_at: session.updated_at
+    };
   } catch (error) {
     console.error('Erreur getDeckSession:', error);
+    throw error;
+  }
+}
+
+/**
+ * Mettre à jour uniquement l'état de jeu
+ */
+async function updateGameState(userId, groupId, gameState) {
+  try {
+    const query = `
+      UPDATE yugioh_deck_sessions 
+      SET game_state = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE user_id = $2 AND group_id = $3
+      RETURNING *
+    `;
+
+    const values = [
+      JSON.stringify(gameState),
+      userId,
+      groupId
+    ];
+
+    const result = await pool.query(query, values);
+    return result.rows[0] || null;
+  } catch (error) {
+    console.error('Erreur updateGameState:', error);
+    throw error;
+  }
+}
+
+/**
+ * Sauvegarder une partie dans l'historique Yu-Gi-Oh
+ */
+async function saveYugiohGameHistory(userId, groupId, deckName, result, lpFinal, gameData, turnsPlayed = 0, cardsPlayed = 0, duration = null) {
+  try {
+    const query = `
+      INSERT INTO yugioh_game_history (user_id, group_id, deck_name, result, lp_final, turns_played, cards_played, duration, game_data)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *
+    `;
+
+    const values = [
+      userId,
+      groupId,
+      deckName,
+      result,
+      lpFinal,
+      turnsPlayed,
+      cardsPlayed,
+      duration,
+      JSON.stringify(gameData)
+    ];
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Erreur saveYugiohGameHistory:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupérer l'historique des parties d'un utilisateur
+ */
+async function getUserGameHistory(userId, limit = 10) {
+  try {
+    const result = await pool.query(
+      `SELECT deck_name, result, lp_final, turns_played, cards_played, duration, created_at 
+       FROM yugioh_game_history 
+       WHERE user_id = $1 
+       ORDER BY created_at DESC 
+       LIMIT $2`,
+      [userId, limit]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error('Erreur getUserGameHistory:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupérer les statistiques d'un utilisateur
+ */
+async function getUserStats(userId) {
+  try {
+    const statsQuery = `
+      SELECT 
+        COUNT(*) as total_games,
+        COUNT(CASE WHEN result = 'Victoire' THEN 1 END) as victories,
+        COUNT(CASE WHEN result = 'Défaite' THEN 1 END) as defeats,
+        AVG(lp_final) as avg_lp_final,
+        AVG(turns_played) as avg_turns,
+        AVG(cards_played) as avg_cards_played,
+        MAX(created_at) as last_game
+      FROM yugioh_game_history 
+      WHERE user_id = $1
+    `;
+
+    const result = await pool.query(statsQuery, [userId]);
+    
+    if (!result.rows[0]) {
+      return {
+        total_games: 0,
+        victories: 0,
+        defeats: 0,
+        win_rate: 0,
+        avg_lp_final: 0,
+        avg_turns: 0,
+        avg_cards_played: 0,
+        last_game: null
+      };
+    }
+
+    const stats = result.rows[0];
+    const winRate = stats.total_games > 0 ? Math.round((stats.victories / stats.total_games) * 100) : 0;
+
+    return {
+      total_games: parseInt(stats.total_games) || 0,
+      victories: parseInt(stats.victories) || 0,
+      defeats: parseInt(stats.defeats) || 0,
+      win_rate: winRate,
+      avg_lp_final: Math.round(stats.avg_lp_final) || 0,
+      avg_turns: Math.round(stats.avg_turns) || 0,
+      avg_cards_played: Math.round(stats.avg_cards_played) || 0,
+      last_game: stats.last_game
+    };
+  } catch (error) {
+    console.error('Erreur getUserStats:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupérer le classement des joueurs dans un groupe
+ */
+async function getGroupRanking(groupId, limit = 10) {
+  try {
+    const rankingQuery = `
+      SELECT 
+        user_id,
+        COUNT(*) as total_games,
+        COUNT(CASE WHEN result = 'Victoire' THEN 1 END) as victories,
+        ROUND((COUNT(CASE WHEN result = 'Victoire' THEN 1 END) * 100.0 / COUNT(*)), 2) as win_rate,
+        AVG(lp_final) as avg_lp
+      FROM yugioh_game_history 
+      WHERE group_id = $1
+      GROUP BY user_id
+      HAVING COUNT(*) >= 1
+      ORDER BY win_rate DESC, victories DESC, total_games DESC
+      LIMIT $2
+    `;
+
+    const result = await pool.query(rankingQuery, [groupId, limit]);
+    return result.rows;
+  } catch (error) {
+    console.error('Erreur getGroupRanking:', error);
     throw error;
   }
 }
@@ -258,7 +497,7 @@ async function cleanOldDeckSessions(hoursOld = 24) {
 async function getGroupDeckSessions(groupId) {
   try {
     const result = await pool.query(
-      'SELECT user_id, deck_name, updated_at FROM yugioh_deck_sessions WHERE group_id = $1 ORDER BY updated_at DESC',
+      'SELECT user_id, deck_name, game_state->>\'lp\' as lp, updated_at FROM yugioh_deck_sessions WHERE group_id = $1 ORDER BY updated_at DESC',
       [groupId]
     );
     return result.rows;
@@ -674,7 +913,8 @@ async function cleanOldData(daysOld = 30) {
       pool.query('DELETE FROM courses_speed_rush WHERE created_at < $1', [cutoffDate]),
       pool.query('DELETE FROM duels_yugi WHERE created_at < $1', [cutoffDate]),
       pool.query('DELETE FROM historique_parties WHERE created_at < $1', [cutoffDate]),
-      pool.query('DELETE FROM yugioh_deck_sessions WHERE created_at < $1', [cutoffDate])
+      pool.query('DELETE FROM yugioh_deck_sessions WHERE created_at < $1', [cutoffDate]),
+      pool.query('DELETE FROM yugioh_game_history WHERE created_at < $1', [cutoffDate])
     ]);
 
     const totalDeleted = results.reduce((sum, result) => sum + result.rowCount, 0);
@@ -687,7 +927,8 @@ async function cleanOldData(daysOld = 30) {
         courses_speed_rush: results[1].rowCount,
         duels_yugi: results[2].rowCount,
         historique: results[3].rowCount,
-        deck_sessions: results[4].rowCount
+        deck_sessions: results[4].rowCount,
+        game_history: results[5].rowCount
       }
     };
   } catch (error) {
@@ -708,10 +949,12 @@ async function getDatabaseStats() {
         (SELECT COUNT(*) FROM duels_yugi) as total_duels_yugi,
         (SELECT COUNT(*) FROM historique_parties) as total_historique,
         (SELECT COUNT(*) FROM yugioh_deck_sessions) as total_deck_sessions,
+        (SELECT COUNT(*) FROM yugioh_game_history) as total_game_history,
         (SELECT MAX(created_at) FROM duels_abm) as dernier_duel_abm,
         (SELECT MAX(created_at) FROM courses_speed_rush) as derniere_course_sr,
         (SELECT MAX(created_at) FROM duels_yugi) as dernier_duel_yugi,
-        (SELECT MAX(updated_at) FROM yugioh_deck_sessions) as derniere_session_deck
+        (SELECT MAX(updated_at) FROM yugioh_deck_sessions) as derniere_session_deck,
+        (SELECT MAX(created_at) FROM yugioh_game_history) as derniere_partie_historique
     `;
 
     const result = await pool.query(statsQuery);
@@ -800,12 +1043,17 @@ module.exports = {
   getAllDuelsYugi,
   resetAllDuelsYugi,
 
-  // Nouvelles fonctions pour les decks
+  // Nouvelles fonctions pour les decks et statistiques
   saveDeckSession,
   getDeckSession,
   deleteDeckSession,
   cleanOldDeckSessions,
   getGroupDeckSessions,
+  updateGameState,
+  saveYugiohGameHistory,
+  getUserGameHistory,
+  getUserStats,
+  getGroupRanking,
 
   // Fonctions générales
   cleanOldData,
