@@ -561,8 +561,8 @@ zokou(
 
 zokou(
     {
-        nomCom: 'pave_story',
-        categorie: 'ORIGAMY'
+        nomCom: 'duel',
+        categorie: 'YU-GI-OH'
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, arg, ms } = commandeOptions;
