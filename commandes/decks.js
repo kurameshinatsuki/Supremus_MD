@@ -24,7 +24,7 @@ function getGroupId(dest) {
 async function saveSessionToDB(zk, ms, dest, sessionData) {
   const userId = getUserId(zk, ms);
   const groupId = getGroupId(dest);
-  
+
   try {
     await db.saveDeckSession(
       userId, 
@@ -44,7 +44,7 @@ async function saveSessionToDB(zk, ms, dest, sessionData) {
 async function getSessionFromDB(zk, ms, dest) {
   const userId = getUserId(zk, ms);
   const groupId = getGroupId(dest);
-  
+
   try {
     const session = await db.getDeckSession(userId, groupId);
     if (session) {
@@ -59,6 +59,64 @@ async function getSessionFromDB(zk, ms, dest) {
     console.error('Erreur récupération session DB:', error);
     return null;
   }
+}
+
+// Fonction utilitaire pour afficher les statistiques
+async function displayGameStats(zk, dest, ms, gameStats, deckSession) {
+  const monsterZones = gameStats.monster_zones || [];
+  const spellTrapZones = gameStats.spell_trap_zones || [];
+  const cemetery = gameStats.cemetery || [];
+  const banished = gameStats.banished || [];
+  const fieldSpell = gameStats.field_spell || [];
+
+  let message = `🎮 *STATISTIQUES DE JEU* 🎮\n\n`;
+
+  // Points de vie et compteurs
+  message += `❤️ *Points de Vie:* ${gameStats.life_points}\n`;
+  message += `🃏 *Main:* ${gameStats.cards_in_hand} cartes\n`;
+  message += `📚 *Deck:* ${gameStats.cards_in_deck} cartes\n`;
+  if (gameStats.cards_in_extra > 0) {
+    message += `🌟 *Extra:* ${gameStats.cards_in_extra} cartes\n`;
+  }
+  message += `🔄 *Tour:* ${gameStats.turn_number}\n\n`;
+
+  // Terrain de jeu
+  message += `🏟️ *TERRAIN*\n`;
+
+  // Magie de terrain
+  if (fieldSpell.length > 0) {
+    message += `✨ *Terrain:* ${fieldSpell[0].name}\n`;
+  } else {
+    message += `✨ *Terrain:* Aucune\n`;
+  }
+
+  // Zones monstres
+  message += `\n🐉 *ZONES MONSTRES (${monsterZones.length}/5)*\n`;
+  if (monsterZones.length > 0) {
+    monsterZones.forEach((monster, index) => {
+      const position = monster.position === 'attack' ? '⚔️' : '🛡️';
+      message += `${position} Zone ${index + 1}: ${monster.name}\n`;
+    });
+  } else {
+    message += `• Aucun monstre\n`;
+  }
+
+  // Zones magie/piège
+  message += `\n🎴 *MAGIE/PIÈGE (${spellTrapZones.length}/5)*\n`;
+  if (spellTrapZones.length > 0) {
+    spellTrapZones.forEach((card, index) => {
+      const state = card.isSet ? '❓' : '✨';
+      message += `${state} Zone ${index + 1}: ${card.name}\n`;
+    });
+  } else {
+    message += `• Aucune carte\n`;
+  }
+
+  // Cimetière et bannis
+  message += `\n⚰️ *Cimetière:* ${cemetery.length} cartes\n`;
+  message += `🌀 *Bannis:* ${banished.length} cartes`;
+
+  await zk.sendMessage(dest, { text: message }, { quoted: ms });
 }
 
 // Commande : .deck <nom>
@@ -89,7 +147,7 @@ zokou(
     }
 
     const { image, competence, main, extra } = deckData;
-    
+
     const deckAvecIds = main.map((name, index) => ({
       id: index + 1,
       name
@@ -111,6 +169,15 @@ zokou(
       return;
     }
 
+    // Initialiser les statistiques de jeu
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    try {
+      await db.initGameStats(userId, groupId, nomDeck, deckMelange.length);
+    } catch (error) {
+      console.error('Erreur initialisation stats:', error);
+    }
+
     const contenu = `🧠 *Compétence :* ${competence}\n\n🃏 *Deck (${deckMelange.length}) :*\n` +
       deckMelange.map(c => `[${c.id}] ${c.name}`).join('\n') +
       (extra?.length ? `\n\n🧩 *Extra :*\n${extra.join('\n')}` : '');
@@ -122,9 +189,9 @@ zokou(
   }
 );
 
-// Commande : .pioche <id>
-/*zokou(
-  { nomCom: 'pioche', categorie: 'YU-GI-OH' },
+// Commande : .piochecarte <id> - Piocher une carte spécifique (ancienne commande pioche)
+zokou(
+  { nomCom: 'piochecarte', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
@@ -138,7 +205,7 @@ zokou(
 
     if (!arg[0] || isNaN(arg[0])) {
       await zk.sendMessage(dest, {
-        text: `❌ Spécifie un ID. Ex: *-pioche 3*\n*Pioche en commençant par la première carte du deck*.`
+        text: `❌ Spécifie un ID. Ex: *-piochecarte 3*\n*Pioche en commençant par la première carte du deck*.`
       }, { quoted: ms });
       return;
     }
@@ -168,7 +235,7 @@ zokou(
       text: `🃏 Pioche : *${cartePiochée.name}* (ID: ${cartePiochée.id})\n🗂️ Restantes : ${session.deck.length}`
     }, { quoted: ms });
   }
-);*/
+);
 
 // Commande : .mondeck
 zokou(
@@ -183,7 +250,7 @@ zokou(
       }, { quoted: ms });
       return;
     }
-    
+
     const cartesRestantes = session.deck
       .map(c => `[${c.id}] ${c.name}`)
       .join('\n') || 'Aucune';
@@ -225,7 +292,7 @@ zokou(
     }
 
     await zk.sendMessage(dest, {
-      text: `🃏 Deck mélangé ! ${session.deck.length} cartes restantes.\n\n*⚠️ Si vous venez de mélanger votre deck volontairement sans effet d'une carte c'est une fraude.\n❌ *Deck Manipulation – Cheating :* Un joueur n’est autorisé à mélanger son Deck que lorsque un effet de carte lui demande d’y toucher. Mélanger à n’importe quel autre moment est considéré comme une manipulation illégale du Deck.`
+      text: `🃏 Deck mélangé ! ${session.deck.length} cartes restantes.\n\n*⚠️ Si vous venez de mélanger votre deck volontairement sans effet d'une carte c'est une fraude.\n❌ *Deck Manipulation – Cheating :* Un joueur n'est autorisé à mélanger son Deck que lorsque un effet de carte lui demande d'y toucher. Mélanger à n'importe quel autre moment est considéré comme une manipulation illégale du Deck.`
     }, { quoted: ms });
   }
 );
@@ -273,6 +340,16 @@ zokou(
       return;
     }
 
+    // Réinitialiser aussi les statistiques
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    try {
+      await db.resetGameStats(userId, groupId);
+      await db.initGameStats(userId, groupId, nomDeck, deckRemelange.length);
+    } catch (error) {
+      console.error('Erreur réinitialisation stats:', error);
+    }
+
     await zk.sendMessage(dest, {
       text: `✅ Deck réinitialisé ! ${deckRemelange.length} cartes.`
     }, { quoted: ms });
@@ -287,7 +364,7 @@ zokou(
 
     if (!arg || arg.length === 0) {
       const sortedCartes = Object.keys(deck_cards).sort((a, b) => a.localeCompare(b));
-      
+
       const html = `
 <!DOCTYPE html>
 <html lang="fr">
@@ -434,11 +511,11 @@ zokou(
       ).slice(0, 5);
 
       let message = `❌ Carte "${arg.join(" ")}" introuvable.\n`;
-      
+
       if (suggestions.length > 0) {
         message += `Suggestions:\n${suggestions.map((sugg, index) => `${index + 1}. ${sugg}`).join('\n')}`;
       }
-      
+
       await zk.sendMessage(dest, { text: message }, { quoted: ms });
     }
   }
@@ -452,12 +529,14 @@ zokou(
 
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
-    
+
     try {
       const deleted = await db.deleteDeckSession(userId, groupId);
+      await db.resetGameStats(userId, groupId);
+      
       if (deleted) {
         await zk.sendMessage(dest, {
-          text: `✅ Session supprimée.`
+          text: `✅ Session deck et stats supprimées.`
         }, { quoted: ms });
       } else {
         await zk.sendMessage(dest, {
@@ -479,7 +558,7 @@ zokou(
     const { ms } = commandeOptions;
 
     const groupId = getGroupId(dest);
-    
+
     try {
       const sessions = await db.getGroupDeckSessions(groupId);
       if (sessions.length === 0) {
@@ -502,6 +581,10 @@ zokou(
     }
   }
 );
+
+// =============================================================================
+// COMMANDES DE GESTION DES STATISTIQUES DE JEU
+// =============================================================================
 
 // Commande : .mystats - Afficher les statistiques de jeu
 zokou(
@@ -541,64 +624,6 @@ zokou(
   }
 );
 
-// Fonction utilitaire pour afficher les statistiques
-async function displayGameStats(zk, dest, ms, gameStats, deckSession) {
-  const monsterZones = gameStats.monster_zones || [];
-  const spellTrapZones = gameStats.spell_trap_zones || [];
-  const cemetery = gameStats.cemetery || [];
-  const banished = gameStats.banished || [];
-  const fieldSpell = gameStats.field_spell || [];
-
-  let message = `🎮 *STATISTIQUES DE JEU* 🎮\n\n`;
-
-  // Points de vie et compteurs
-  message += `❤️ *Points de Vie:* ${gameStats.life_points}\n`;
-  message += `🃏 *Main:* ${gameStats.cards_in_hand} cartes\n`;
-  message += `📚 *Deck:* ${gameStats.cards_in_deck} cartes\n`;
-  if (gameStats.cards_in_extra > 0) {
-    message += `🌟 *Extra:* ${gameStats.cards_in_extra} cartes\n`;
-  }
-  message += `🔄 *Tour:* ${gameStats.turn_number}\n\n`;
-
-  // Terrain de jeu
-  message += `🏟️ *TERRAIN*\n`;
-  
-  // Magie de terrain
-  if (fieldSpell.length > 0) {
-    message += `✨ *Terrain:* ${fieldSpell[0].name}\n`;
-  } else {
-    message += `✨ *Terrain:* Aucune\n`;
-  }
-
-  // Zones monstres
-  message += `\n🐉 *ZONES MONSTRES (${monsterZones.length}/5)*\n`;
-  if (monsterZones.length > 0) {
-    monsterZones.forEach((monster, index) => {
-      const position = monster.position === 'attack' ? '⚔️' : '🛡️';
-      message += `${position} Zone ${index + 1}: ${monster.name}\n`;
-    });
-  } else {
-    message += `• Aucun monstre\n`;
-  }
-
-  // Zones magie/piège
-  message += `\n🎴 *MAGIE/PIÈGE (${spellTrapZones.length}/5)*\n`;
-  if (spellTrapZones.length > 0) {
-    spellTrapZones.forEach((card, index) => {
-      const state = card.isSet ? '❓' : '✨';
-      message += `${state} Zone ${index + 1}: ${card.name}\n`;
-    });
-  } else {
-    message += `• Aucune carte\n`;
-  }
-
-  // Cimetière et bannis
-  message += `\n⚰️ *Cimetière:* ${cemetery.length} cartes\n`;
-  message += `🌀 *Bannis:* ${banished.length} cartes`;
-
-  await zk.sendMessage(dest, { text: message }, { quoted: ms });
-}
-
 // Commande : .lp <montant> - Modifier les points de vie
 zokou(
   { nomCom: 'lp', categorie: 'YU-GI-OH' },
@@ -608,7 +633,7 @@ zokou(
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
 
-    if (!arg[0] || isNaN(arg[0])) {
+    if (!arg[0] || isNaN(parseInt(arg[0].replace('+', '').replace('-', '')))) {
       await zk.sendMessage(dest, {
         text: `❌ Usage: *-lp <montant>*\nEx: *-lp 3500* pour définir à 3500 LP\n*-lp -500* pour perdre 500 LP\n*-lp +1000* pour gagner 1000 LP`
       }, { quoted: ms });
@@ -875,7 +900,7 @@ zokou(
   }
 );
 
-// Commande : .pioche <nombre> - Piocher des cartes
+// Commande : .pioche <nombre> - Piocher des cartes (nouvelle version)
 zokou(
   { nomCom: 'pioche', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
@@ -959,7 +984,7 @@ zokou(
 
     try {
       await db.resetGameStats(userId, groupId);
-      
+
       await zk.sendMessage(dest, {
         text: `🔄 Partie réinitialisée !\nToutes les statistiques ont été remises à zéro.`
       }, { quoted: ms });
@@ -969,6 +994,50 @@ zokou(
         text: `❌ Erreur réinitialisation.`
       }, { quoted: ms });
     }
+  }
+);
+
+// Commande : .aideyugi - Afficher l'aide complète
+zokou(
+  { nomCom: 'aideyugi', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    const message = `🎮 *AIDE YU-GI-OH! - COMMANDES DISPONIBLES* 🎮
+
+📦 *GESTION DECK*
+• *-deck <nom>* - Choisir un deck
+• *-mondeck* - Voir son deck actuel  
+• *-piochecarte <id>* - Piocher une carte spécifique
+• *-melanger* - Mélanger le deck
+• *-resetdeck* - Réinitialiser le deck
+• *-cleanmydeck* - Supprimer sa session
+
+❤️ *STATISTIQUES DE JEU*
+• *-mystats* - Afficher toutes les stats
+• *-lp <montant>* - Modifier les points de vie
+• *-pioche [nombre]* - Piocher des cartes
+• *-tour* - Passer au tour suivant
+• *-resetgame* - Réinitialiser la partie
+
+🎴 *GESTION TERRAIN*
+• *-pose <id> <type> [position]* - Poser une carte
+• *-terrain <id>* - Activer magie de terrain
+• *-cimetiere <id>* - Envoyer au cimetière
+• *-banish <id>* - Bannir une carte
+
+🔍 *RECHERCHE*
+• *-carte [nom]* - Voir info carte
+• *-groupdecks* - Voir decks du groupe
+
+*Exemple de début de partie:*
+1. *-deck harpie* (choisir deck)
+2. *-mystats* (vérifier stats)
+3. *-pioche 5* (pioche initiale)
+4. *-pose 3 monster attack* (poser monstre)
+5. *-tour* (passer tour)`;
+
+    await zk.sendMessage(dest, { text: message }, { quoted: ms });
   }
 );
 
