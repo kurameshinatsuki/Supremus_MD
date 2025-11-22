@@ -558,3 +558,37 @@ zokou(
         }
     }
 );
+
+zokou(
+    {
+        nomCom: 'pave_story',
+        categorie: 'ORIGAMY'
+    },
+    async (dest, zk, commandeOptions) => {
+        const { repondre, arg, ms } = commandeOptions;
+
+        if (!arg || arg.length === 0)  {
+            // const lien = '';
+            const msg = `┌─ 💠 *[Player Name]* 💠
+
+💬 
+
+🔄 *DRAW PHASE*
+> .
+
+⚔️ *MAIN PHASE 1*
+> .
+
+💥 *BATTLE PHASE*
+> .
+
+🛡️ *MAIN PHASE 2*
+> .
+
+⏹️ *END PHASE*
+└─ Tour terminé.`;
+           // zk.sendMessage(dest, { image: { url: lien }, caption: msg }, { quoted: ms });
+   repondre(msg);
+        }
+    }
+);
