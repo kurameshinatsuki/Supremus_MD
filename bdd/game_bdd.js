@@ -127,9 +127,9 @@ async function createTables() {
   await pool.query(createTablesQuery);
 }
 
-// =============================================================================
+// ======================================================
 // FONCTIONS POUR LES DECKS YU-GI-OH
-// =============================================================================
+// ======================================================
 
 /**
  * Table pour les sessions de decks Yu-Gi-Oh
@@ -175,7 +175,7 @@ async function createGameStateTables() {
       id SERIAL PRIMARY KEY,
       user_id VARCHAR(255) NOT NULL,
       group_id VARCHAR(255) NOT NULL,
-      life_points INTEGER DEFAULT 8000,
+      life_points INTEGER DEFAULT 4000,
       main_deck_count INTEGER DEFAULT 0,
       extra_deck_count INTEGER DEFAULT 0,
       hand_cards JSONB DEFAULT '[]',
@@ -219,7 +219,7 @@ async function saveDeckSession(userId, groupId, deckName, deckData, pioches = []
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
     `;
-    
+
     const values = [
       userId,
       groupId,
@@ -268,9 +268,9 @@ async function deleteDeckSession(userId, groupId) {
   }
 }
 
-// =============================================================================
+// ======================================================
 // FONCTIONS POUR L'ÉTAT DE JEU YU-GI-OH
-// =============================================================================
+// ======================================================
 
 /**
  * Initialiser ou récupérer l'état de jeu
@@ -281,7 +281,7 @@ async function getGameState(userId, groupId) {
       'SELECT * FROM yugioh_game_states WHERE user_id = $1 AND group_id = $2',
       [userId, groupId]
     );
-    
+
     if (result.rows[0]) {
       // Parser les données JSON
       const gameState = result.rows[0];
@@ -313,13 +313,13 @@ async function initGameState(userId, groupId) {
     const query = `
       INSERT INTO yugioh_game_states 
         (user_id, group_id, life_points, main_deck_count, extra_deck_count, hand_cards, extra_deck, cemetery, field_spell, monster_zones, spell_trap_zones) 
-      VALUES ($1, $2, 8000, 0, 0, '[]', '[]', '[]', 'null', '[]', '[]') 
+      VALUES ($1, $2, 4000, 0, 0, '[]', '[]', '[]', 'null', '[]', '[]') 
       RETURNING *
     `;
-    
+
     const result = await pool.query(query, [userId, groupId]);
     const gameState = result.rows[0];
-    
+
     return {
       ...gameState,
       hand_cards: [],
@@ -391,7 +391,7 @@ async function addToCemetery(userId, groupId, card) {
     const currentState = await getGameState(userId, groupId);
     const cemetery = currentState.cemetery || [];
     cemetery.push(card);
-    
+
     const result = await pool.query(
       'UPDATE yugioh_game_states SET cemetery = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2 AND group_id = $3 RETURNING *',
       [JSON.stringify(cemetery), userId, groupId]
@@ -459,7 +459,7 @@ async function resetGameState(userId, groupId) {
   try {
     const result = await pool.query(
       `UPDATE yugioh_game_states SET 
-        life_points = 8000,
+        life_points = 4000,
         main_deck_count = 0,
         extra_deck_count = 0,
         hand_cards = '[]',
@@ -503,9 +503,9 @@ async function cleanOldGameStates(hoursOld = 24) {
   }
 }
 
-// =============================================================================
+// ======================================================
 // FONCTIONS POUR ABM (ANIME BATTLE MULTIVERS)
-// =============================================================================
+// ======================================================
 
 /**
  * Récupérer un duel ABM par sa clé
@@ -516,11 +516,11 @@ async function getDuelABM(duelKey) {
       'SELECT * FROM duels_abm WHERE duel_key = $1',
       [duelKey]
     );
-    
+
     if (!result.rows[0]) return null;
-    
+
     const duel = result.rows[0];
-    
+
     return {
       duel_key: duel.duel_key,
       equipe1: duel.equipe1,
@@ -561,7 +561,7 @@ async function saveDuelABM(duelKey, data) {
 
     let areneNom = 'Arène par défaut';
     let areneImage = 'https://i.ibb.co/XxzW23W7/Image-2025-03-21-14-41-20-0.jpg';
-    
+
     if (data.arene && data.arene.nom) {
       areneNom = data.arene.nom;
       areneImage = data.arene.image || areneImage;
@@ -611,7 +611,7 @@ async function getAllDuelsABM() {
     const result = await pool.query(
       'SELECT duel_key, equipe1, equipe2, arene_nom, arene_image, stats_custom, created_at FROM duels_abm ORDER BY created_at DESC'
     );
-    
+
     return result.rows.map(row => ({
       duel_key: row.duel_key,
       equipe1: row.equipe1,
@@ -640,9 +640,9 @@ async function resetAllDuelsABM() {
   }
 }
 
-// =============================================================================
+// ======================================================
 // FONCTIONS POUR SPEED RUSH
-// =============================================================================
+// ======================================================
 
 /**
  * Récupérer une course Speed Rush par sa clé
@@ -653,11 +653,11 @@ async function getCourseSpeedRush(courseKey) {
       'SELECT * FROM courses_speed_rush WHERE course_key = $1',
       [courseKey]
     );
-    
+
     if (!result.rows[0]) return null;
-    
+
     const course = result.rows[0];
-    
+
     return {
       course_key: course.course_key,
       pilotes: course.pilotes,
@@ -702,7 +702,7 @@ async function saveCourseSpeedRush(courseKey, data) {
 
     let circuitNom = 'Circuit par défaut';
     let circuitImage = 'https://i.ibb.co/k6cMHkPz/Whats-App-Image-2025-06-17-at-19-20-21-2.jpg';
-    
+
     if (data.circuit && data.circuit.nom) {
       circuitNom = data.circuit.nom;
       circuitImage = data.circuit.image || circuitImage;
@@ -754,7 +754,7 @@ async function getAllCoursesSpeedRush() {
     const result = await pool.query(
       'SELECT course_key, pilotes, circuit_nom, circuit_image, created_at FROM courses_speed_rush ORDER BY created_at DESC'
     );
-    
+
     return result.rows.map(row => ({
       course_key: row.course_key,
       pilotes: row.pilotes,
@@ -781,9 +781,9 @@ async function resetAllCoursesSpeedRush() {
   }
 }
 
-// =============================================================================
+// =======================================================
 // FONCTIONS POUR YU-GI-OH DUELS
-// =============================================================================
+// =======================================================
 
 /**
  * Récupérer un duel Yu-Gi-Oh par sa clé
@@ -883,9 +883,9 @@ async function resetAllDuelsYugi() {
   }
 }
 
-// =============================================================================
+// ======================================================
 // FONCTIONS GÉNÉRALES ET UTILITAIRES
-// =============================================================================
+// ======================================================
 
 /**
  * Nettoyer les anciennes données (maintenance)
@@ -1037,9 +1037,9 @@ async function getGroupDeckSessions(groupId) {
   }
 }
 
-// =============================================================================
+// =======================================================
 // EXPORT DES FONCTIONS
-// =============================================================================
+// =======================================================
 
 module.exports = {
   // Pool de connexion
