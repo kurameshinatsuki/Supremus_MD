@@ -24,7 +24,7 @@ function getGroupId(dest) {
 async function saveSessionToDB(zk, ms, dest, sessionData) {
   const userId = getUserId(zk, ms);
   const groupId = getGroupId(dest);
-  
+
   try {
     await db.saveDeckSession(
       userId, 
@@ -44,7 +44,7 @@ async function saveSessionToDB(zk, ms, dest, sessionData) {
 async function getSessionFromDB(zk, ms, dest) {
   const userId = getUserId(zk, ms);
   const groupId = getGroupId(dest);
-  
+
   try {
     const session = await db.getDeckSession(userId, groupId);
     if (session) {
@@ -63,7 +63,7 @@ async function getSessionFromDB(zk, ms, dest) {
 
 // Fonction pour formater l'affichage des statistiques de jeu
 function formatGameState(gameState, deckName) {
-  const lp = gameState.life_points || 8000;
+  const lp = gameState.life_points || 4000;
   const mainDeck = gameState.main_deck_count || 0;
   const extraDeck = gameState.extra_deck_count || 0;
   const handCards = gameState.hand_cards || [];
@@ -73,7 +73,7 @@ function formatGameState(gameState, deckName) {
   const spellTrapZones = gameState.spell_trap_zones || [];
 
   let message = `🎮 *STATISTIQUES DE JEU - ${deckName.toUpperCase()}*\n\n`;
-  
+
   // Points de vie et decks
   message += `❤️ *Points de Vie:* ${lp}\n`;
   message += `📦 *Deck Principal:* ${mainDeck} cartes\n`;
@@ -102,7 +102,7 @@ function formatGameState(gameState, deckName) {
   message += `\n`;
 
   // Zones monstres
-  message += `🐉 *Zones Monstres (${monsterZones.length}/5):*\n`;
+  message += `👹 *Zones Monstres (${monsterZones.length}/3):*\n`;
   if (monsterZones.length > 0) {
     monsterZones.forEach((monster, index) => {
       message += `  ${index + 1}. ${monster.name || monster}\n`;
@@ -113,7 +113,7 @@ function formatGameState(gameState, deckName) {
   message += `\n`;
 
   // Zones magie/piège
-  message += `✨ *Zones Magie/Piège (${spellTrapZones.length}/5):*\n`;
+  message += `✨ *Zones Magie/Piège (${spellTrapZones.length}/3):*\n`;
   if (spellTrapZones.length > 0) {
     spellTrapZones.forEach((card, index) => {
       message += `  ${index + 1}. ${card.name || card}\n`;
@@ -153,7 +153,7 @@ zokou(
     }
 
     const { image, competence, main, extra } = deckData;
-    
+
     const deckAvecIds = main.map((name, index) => ({
       id: index + 1,
       name
@@ -195,7 +195,7 @@ zokou(
     // Afficher les statistiques initiales
     const gameState = await db.getGameState(userId, groupId);
     const statsMessage = formatGameState(gameState, nomDeck);
-    
+
     await zk.sendMessage(dest, {
       text: statsMessage
     }, { quoted: ms });
@@ -250,7 +250,7 @@ zokou(
     const gameState = await db.getGameState(userId, groupId);
     const handCards = gameState.hand_cards || [];
     handCards.push(cartePiochée);
-    
+
     await db.updateMainDeck(userId, groupId, session.deck.length, handCards);
 
     await zk.sendMessage(dest, {
@@ -272,7 +272,7 @@ zokou(
       }, { quoted: ms });
       return;
     }
-    
+
     const cartesRestantes = session.deck
       .map(c => `[${c.id}] ${c.name}`)
       .join('\n') || 'Aucune';
@@ -328,7 +328,7 @@ zokou(
 
     if (!arg[0] || isNaN(arg[0])) {
       await zk.sendMessage(dest, {
-        text: `❌ Spécifie des points de vie. Ex: *-lp 8000*`
+        text: `❌ Spécifie des points de vie. Ex: *-lp 4000*`
       }, { quoted: ms });
       return;
     }
@@ -397,9 +397,9 @@ zokou(
     switch (zone) {
       case 'monstre':
         const monsterZones = gameState.monster_zones || [];
-        if (monsterZones.length >= 5) {
+        if (monsterZones.length >= 3) {
           await zk.sendMessage(dest, {
-            text: `❌ Zone monstre pleine (max 5)`
+            text: `❌ Zone monstre pleine (max 3)`
           }, { quoted: ms });
           return;
         }
@@ -410,9 +410,9 @@ zokou(
 
       case 'magie':
         const spellTrapZones = gameState.spell_trap_zones || [];
-        if (spellTrapZones.length >= 5) {
+        if (spellTrapZones.length >= 3) {
           await zk.sendMessage(dest, {
-            text: `❌ Zone magie/piège pleine (max 5)`
+            text: `❌ Zone magie/piège pleine (max 3)`
           }, { quoted: ms });
           return;
         }
@@ -553,11 +553,11 @@ zokou(
 
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
-    
+
     await db.resetGameState(userId, groupId);
 
     await zk.sendMessage(dest, {
-      text: `🔄 État de jeu réinitialisé !\n❤️ Points de vie : 8000\n🎴 Main et terrain vidés`
+      text: `🔄 État de jeu réinitialisé !\n❤️ Points de vie : 4000\n🎴 Main et terrain vidés`
     }, { quoted: ms });
   }
 );
@@ -647,7 +647,6 @@ zokou(
   }
 );
 
-// [Les autres commandes existantes (carte, cleanmydeck, groupdecks) restent inchangées...]
 
 // Commande : .carte
 zokou(
@@ -657,7 +656,7 @@ zokou(
 
     if (!arg || arg.length === 0) {
       const sortedCartes = Object.keys(deck_cards).sort((a, b) => a.localeCompare(b));
-      
+
       const html = `
 <!DOCTYPE html>
 <html lang="fr">
@@ -804,11 +803,11 @@ zokou(
       ).slice(0, 5);
 
       let message = `❌ Carte "${arg.join(" ")}" introuvable.\n`;
-      
+
       if (suggestions.length > 0) {
         message += `Suggestions:\n${suggestions.map((sugg, index) => `${index + 1}. ${sugg}`).join('\n')}`;
       }
-      
+
       await zk.sendMessage(dest, { text: message }, { quoted: ms });
     }
   }
@@ -822,12 +821,12 @@ zokou(
 
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
-    
+
     try {
       const deletedDeck = await db.deleteDeckSession(userId, groupId);
       // Nettoyer aussi l'état de jeu
       await db.resetGameState(userId, groupId);
-      
+
       if (deletedDeck) {
         await zk.sendMessage(dest, {
           text: `✅ Session et état de jeu supprimés.`
@@ -852,7 +851,7 @@ zokou(
     const { ms } = commandeOptions;
 
     const groupId = getGroupId(dest);
-    
+
     try {
       const sessions = await db.getGroupDeckSessions(groupId);
       if (sessions.length === 0) {
@@ -878,7 +877,7 @@ zokou(
 
 // Aide des commandes Yu-Gi-Oh
 zokou(
-  { nomCom: 'aideyugi', categorie: 'YU-GI-OH' },
+  { nomCom: 'aideyugioh', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
 
