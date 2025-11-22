@@ -24,7 +24,7 @@ function getGroupId(dest) {
 async function saveSessionToDB(zk, ms, dest, sessionData) {
   const userId = getUserId(zk, ms);
   const groupId = getGroupId(dest);
-
+  
   try {
     await db.saveDeckSession(
       userId, 
@@ -44,7 +44,7 @@ async function saveSessionToDB(zk, ms, dest, sessionData) {
 async function getSessionFromDB(zk, ms, dest) {
   const userId = getUserId(zk, ms);
   const groupId = getGroupId(dest);
-
+  
   try {
     const session = await db.getDeckSession(userId, groupId);
     if (session) {
@@ -61,62 +61,68 @@ async function getSessionFromDB(zk, ms, dest) {
   }
 }
 
-// Fonction utilitaire pour afficher les statistiques
-async function displayGameStats(zk, dest, ms, gameStats, deckSession) {
-  const monsterZones = gameStats.monster_zones || [];
-  const spellTrapZones = gameStats.spell_trap_zones || [];
-  const cemetery = gameStats.cemetery || [];
-  const banished = gameStats.banished || [];
-  const fieldSpell = gameStats.field_spell || [];
+// Fonction pour formater l'affichage des statistiques de jeu
+function formatGameState(gameState, deckName) {
+  const lp = gameState.life_points || 8000;
+  const mainDeck = gameState.main_deck_count || 0;
+  const extraDeck = gameState.extra_deck_count || 0;
+  const handCards = gameState.hand_cards || [];
+  const cemetery = gameState.cemetery || [];
+  const fieldSpell = gameState.field_spell && gameState.field_spell !== 'null' ? JSON.parse(gameState.field_spell) : null;
+  const monsterZones = gameState.monster_zones || [];
+  const spellTrapZones = gameState.spell_trap_zones || [];
 
-  let message = `🎮 *STATISTIQUES DE JEU* 🎮\n\n`;
+  let message = `🎮 *STATISTIQUES DE JEU - ${deckName.toUpperCase()}*\n\n`;
+  
+  // Points de vie et decks
+  message += `❤️ *Points de Vie:* ${lp}\n`;
+  message += `📦 *Deck Principal:* ${mainDeck} cartes\n`;
+  message += `🧩 *Extra Deck:* ${extraDeck} cartes\n`;
+  message += `🃏 *Main:* ${handCards.length} cartes\n\n`;
 
-  // Points de vie et compteurs
-  message += `❤️ *Points de Vie:* ${gameStats.life_points}\n`;
-  message += `🃏 *Main:* ${gameStats.cards_in_hand} cartes\n`;
-  message += `📚 *Deck:* ${gameStats.cards_in_deck} cartes\n`;
-  if (gameStats.cards_in_extra > 0) {
-    message += `🌟 *Extra:* ${gameStats.cards_in_extra} cartes\n`;
-  }
-  message += `🔄 *Tour:* ${gameStats.turn_number}\n\n`;
-
-  // Terrain de jeu
-  message += `🏟️ *TERRAIN*\n`;
-
-  // Magie de terrain
-  if (fieldSpell.length > 0) {
-    message += `✨ *Terrain:* ${fieldSpell[0].name}\n`;
+  // Cimetière
+  message += `⚰️ *Cimetière (${cemetery.length}):*\n`;
+  if (cemetery.length > 0) {
+    cemetery.slice(0, 5).forEach((card, index) => {
+      message += `  ${index + 1}. ${card.name || card}\n`;
+    });
+    if (cemetery.length > 5) message += `  ... et ${cemetery.length - 5} autres\n`;
   } else {
-    message += `✨ *Terrain:* Aucune\n`;
+    message += `  Vide\n`;
   }
+  message += `\n`;
+
+  // Terrain
+  message += `🏟️ *Terrain:*\n`;
+  if (fieldSpell) {
+    message += `  🪄 ${fieldSpell.name || fieldSpell}\n`;
+  } else {
+    message += `  Aucune magie de terrain\n`;
+  }
+  message += `\n`;
 
   // Zones monstres
-  message += `\n🐉 *ZONES MONSTRES (${monsterZones.length}/5)*\n`;
+  message += `🐉 *Zones Monstres (${monsterZones.length}/5):*\n`;
   if (monsterZones.length > 0) {
     monsterZones.forEach((monster, index) => {
-      const position = monster.position === 'attack' ? '⚔️' : '🛡️';
-      message += `${position} Zone ${index + 1}: ${monster.name}\n`;
+      message += `  ${index + 1}. ${monster.name || monster}\n`;
     });
   } else {
-    message += `• Aucun monstre\n`;
+    message += `  Vides\n`;
   }
+  message += `\n`;
 
   // Zones magie/piège
-  message += `\n🎴 *MAGIE/PIÈGE (${spellTrapZones.length}/5)*\n`;
+  message += `✨ *Zones Magie/Piège (${spellTrapZones.length}/5):*\n`;
   if (spellTrapZones.length > 0) {
     spellTrapZones.forEach((card, index) => {
-      const state = card.isSet ? '❓' : '✨';
-      message += `${state} Zone ${index + 1}: ${card.name}\n`;
+      message += `  ${index + 1}. ${card.name || card}\n`;
     });
   } else {
-    message += `• Aucune carte\n`;
+    message += `  Vides\n`;
   }
 
-  // Cimetière et bannis
-  message += `\n⚰️ *Cimetière:* ${cemetery.length} cartes\n`;
-  message += `🌀 *Bannis:* ${banished.length} cartes`;
-
-  await zk.sendMessage(dest, { text: message }, { quoted: ms });
+  return message;
 }
 
 // Commande : .deck <nom>
@@ -147,7 +153,7 @@ zokou(
     }
 
     const { image, competence, main, extra } = deckData;
-
+    
     const deckAvecIds = main.map((name, index) => ({
       id: index + 1,
       name
@@ -169,13 +175,12 @@ zokou(
       return;
     }
 
-    // Initialiser les statistiques de jeu
+    // Initialiser l'état de jeu
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
-    try {
-      await db.initGameStats(userId, groupId, nomDeck, deckMelange.length);
-    } catch (error) {
-      console.error('Erreur initialisation stats:', error);
+    await db.updateMainDeck(userId, groupId, deckMelange.length, []);
+    if (extra && extra.length > 0) {
+      await db.updateExtraDeck(userId, groupId, extra.length, extra.map((name, index) => ({ id: index + 1, name })));
     }
 
     const contenu = `🧠 *Compétence :* ${competence}\n\n🃏 *Deck (${deckMelange.length}) :*\n` +
@@ -186,12 +191,20 @@ zokou(
       image: { url: image },
       caption: contenu
     }, { quoted: ms });
+
+    // Afficher les statistiques initiales
+    const gameState = await db.getGameState(userId, groupId);
+    const statsMessage = formatGameState(gameState, nomDeck);
+    
+    await zk.sendMessage(dest, {
+      text: statsMessage
+    }, { quoted: ms });
   }
 );
 
-// Commande : .piochecarte <id> - Piocher une carte spécifique (ancienne commande pioche)
+// Commande : .pioche <id>
 zokou(
-  { nomCom: 'piochecarte', categorie: 'YU-GI-OH' },
+  { nomCom: 'pioche', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { arg, ms } = commandeOptions;
 
@@ -205,7 +218,7 @@ zokou(
 
     if (!arg[0] || isNaN(arg[0])) {
       await zk.sendMessage(dest, {
-        text: `❌ Spécifie un ID. Ex: *-piochecarte 3*\n*Pioche en commençant par la première carte du deck*.`
+        text: `❌ Spécifie un ID. Ex: *-pioche 3*\n*Pioche en commençant par la première carte du deck*.`
       }, { quoted: ms });
       return;
     }
@@ -231,6 +244,15 @@ zokou(
       return;
     }
 
+    // Mettre à jour l'état de jeu
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    const gameState = await db.getGameState(userId, groupId);
+    const handCards = gameState.hand_cards || [];
+    handCards.push(cartePiochée);
+    
+    await db.updateMainDeck(userId, groupId, session.deck.length, handCards);
+
     await zk.sendMessage(dest, {
       text: `🃏 Pioche : *${cartePiochée.name}* (ID: ${cartePiochée.id})\n🗂️ Restantes : ${session.deck.length}`
     }, { quoted: ms });
@@ -250,7 +272,7 @@ zokou(
       }, { quoted: ms });
       return;
     }
-
+    
     const cartesRestantes = session.deck
       .map(c => `[${c.id}] ${c.name}`)
       .join('\n') || 'Aucune';
@@ -264,6 +286,279 @@ zokou(
       `🎴 *PIOCHEES (${session.pioches.length}):*\n${cartesPiochées}`;
 
     await zk.sendMessage(dest, { text: message }, { quoted: ms });
+  }
+);
+
+// Commande : .stats
+zokou(
+  { nomCom: 'stats', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif. Utilise *-deck nom*`
+      }, { quoted: ms });
+      return;
+    }
+
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    const gameState = await db.getGameState(userId, groupId);
+
+    const statsMessage = formatGameState(gameState, session.nom);
+    await zk.sendMessage(dest, { text: statsMessage }, { quoted: ms });
+  }
+);
+
+// Commande : .lp <points>
+zokou(
+  { nomCom: 'lp', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { arg, ms } = commandeOptions;
+
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif. Utilise *-deck nom*`
+      }, { quoted: ms });
+      return;
+    }
+
+    if (!arg[0] || isNaN(arg[0])) {
+      await zk.sendMessage(dest, {
+        text: `❌ Spécifie des points de vie. Ex: *-lp 8000*`
+      }, { quoted: ms });
+      return;
+    }
+
+    const lifePoints = parseInt(arg[0], 10);
+    if (lifePoints < 0) {
+      await zk.sendMessage(dest, {
+        text: `❌ Les points de vie ne peuvent pas être négatifs.`
+      }, { quoted: ms });
+      return;
+    }
+
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    await db.updateLifePoints(userId, groupId, lifePoints);
+
+    await zk.sendMessage(dest, {
+      text: `❤️ Points de vie mis à jour : *${lifePoints}*`
+    }, { quoted: ms });
+  }
+);
+
+// Commande : .poser <id> <zone>
+zokou(
+  { nomCom: 'poser', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { arg, ms } = commandeOptions;
+
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif. Utilise *-deck nom*`
+      }, { quoted: ms });
+      return;
+    }
+
+    if (!arg[0] || isNaN(arg[0]) || !arg[1]) {
+      await zk.sendMessage(dest, {
+        text: `❌ Utilisation: *-poser <id> <zone>*\nZones: monstre, magie, terrain, extra`
+      }, { quoted: ms });
+      return;
+    }
+
+    const cardId = parseInt(arg[0], 10);
+    const zone = arg[1].toLowerCase();
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+
+    // Trouver la carte dans la main
+    const gameState = await db.getGameState(userId, groupId);
+    const handCards = gameState.hand_cards || [];
+    const cardIndex = handCards.findIndex(c => c.id === cardId);
+
+    if (cardIndex === -1) {
+      await zk.sendMessage(dest, {
+        text: `❌ Carte ID ${cardId} introuvable dans votre main.`
+      }, { quoted: ms });
+      return;
+    }
+
+    const card = handCards[cardIndex];
+    handCards.splice(cardIndex, 1);
+
+    let message = `🎴 Carte posée : *${card.name}*\n`;
+
+    switch (zone) {
+      case 'monstre':
+        const monsterZones = gameState.monster_zones || [];
+        if (monsterZones.length >= 5) {
+          await zk.sendMessage(dest, {
+            text: `❌ Zone monstre pleine (max 5)`
+          }, { quoted: ms });
+          return;
+        }
+        monsterZones.push(card);
+        await db.updateMonsterZones(userId, groupId, monsterZones);
+        message += `📍 Position: Zone monstre ${monsterZones.length}`;
+        break;
+
+      case 'magie':
+        const spellTrapZones = gameState.spell_trap_zones || [];
+        if (spellTrapZones.length >= 5) {
+          await zk.sendMessage(dest, {
+            text: `❌ Zone magie/piège pleine (max 5)`
+          }, { quoted: ms });
+          return;
+        }
+        spellTrapZones.push(card);
+        await db.updateSpellTrapZones(userId, groupId, spellTrapZones);
+        message += `📍 Position: Zone magie/piège ${spellTrapZones.length}`;
+        break;
+
+      case 'terrain':
+        await db.updateFieldSpell(userId, groupId, card);
+        message += `📍 Position: Zone terrain`;
+        break;
+
+      case 'extra':
+        const extraDeck = gameState.extra_deck || [];
+        extraDeck.push(card);
+        await db.updateExtraDeck(userId, groupId, extraDeck.length, extraDeck);
+        message += `📍 Position: Extra deck`;
+        break;
+
+      default:
+        await zk.sendMessage(dest, {
+          text: `❌ Zone invalide. Zones: monstre, magie, terrain, extra`
+        }, { quoted: ms });
+        return;
+    }
+
+    // Mettre à jour la main
+    await db.updateMainDeck(userId, groupId, session.deck.length, handCards);
+
+    await zk.sendMessage(dest, { text: message }, { quoted: ms });
+  }
+);
+
+// Commande : .cimetiere <id>
+zokou(
+  { nomCom: 'cimetiere', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { arg, ms } = commandeOptions;
+
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif. Utilise *-deck nom*`
+      }, { quoted: ms });
+      return;
+    }
+
+    if (!arg[0] || isNaN(arg[0])) {
+      await zk.sendMessage(dest, {
+        text: `❌ Spécifie un ID de carte. Ex: *-cimetiere 3*`
+      }, { quoted: ms });
+      return;
+    }
+
+    const cardId = parseInt(arg[0], 10);
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    const gameState = await db.getGameState(userId, groupId);
+
+    // Chercher la carte dans différentes zones
+    let card = null;
+    let zone = '';
+
+    // Chercher dans la main
+    const handCards = gameState.hand_cards || [];
+    const handIndex = handCards.findIndex(c => c.id === cardId);
+    if (handIndex !== -1) {
+      card = handCards[handIndex];
+      handCards.splice(handIndex, 1);
+      zone = 'main';
+      await db.updateMainDeck(userId, groupId, session.deck.length, handCards);
+    }
+
+    // Chercher dans les zones monstre
+    if (!card) {
+      const monsterZones = gameState.monster_zones || [];
+      const monsterIndex = monsterZones.findIndex(c => c.id === cardId);
+      if (monsterIndex !== -1) {
+        card = monsterZones[monsterIndex];
+        monsterZones.splice(monsterIndex, 1);
+        zone = 'zone monstre';
+        await db.updateMonsterZones(userId, groupId, monsterZones);
+      }
+    }
+
+    // Chercher dans les zones magie/piège
+    if (!card) {
+      const spellTrapZones = gameState.spell_trap_zones || [];
+      const spellIndex = spellTrapZones.findIndex(c => c.id === cardId);
+      if (spellIndex !== -1) {
+        card = spellTrapZones[spellIndex];
+        spellTrapZones.splice(spellIndex, 1);
+        zone = 'zone magie/piège';
+        await db.updateSpellTrapZones(userId, groupId, spellTrapZones);
+      }
+    }
+
+    // Chercher dans le terrain
+    if (!card) {
+      const fieldSpell = gameState.field_spell && gameState.field_spell !== 'null' ? JSON.parse(gameState.field_spell) : null;
+      if (fieldSpell && fieldSpell.id === cardId) {
+        card = fieldSpell;
+        zone = 'terrain';
+        await db.updateFieldSpell(userId, groupId, null);
+      }
+    }
+
+    if (!card) {
+      await zk.sendMessage(dest, {
+        text: `❌ Carte ID ${cardId} introuvable sur le terrain ou dans la main.`
+      }, { quoted: ms });
+      return;
+    }
+
+    // Ajouter au cimetière
+    await db.addToCemetery(userId, groupId, card);
+
+    await zk.sendMessage(dest, {
+      text: `⚰️ Carte envoyée au cimetière : *${card.name}*\n📌 Provenance : ${zone}`
+    }, { quoted: ms });
+  }
+);
+
+// Commande : .resetjeu
+zokou(
+  { nomCom: 'resetjeu', categorie: 'YU-GI-OH' },
+  async (dest, zk, commandeOptions) => {
+    const { ms } = commandeOptions;
+
+    const session = await getSessionFromDB(zk, ms, dest);
+    if (!session) {
+      await zk.sendMessage(dest, {
+        text: `❌ Aucun deck actif.`
+      }, { quoted: ms });
+      return;
+    }
+
+    const userId = getUserId(zk, ms);
+    const groupId = getGroupId(dest);
+    
+    await db.resetGameState(userId, groupId);
+
+    await zk.sendMessage(dest, {
+      text: `🔄 État de jeu réinitialisé !\n❤️ Points de vie : 8000\n🎴 Main et terrain vidés`
+    }, { quoted: ms });
   }
 );
 
@@ -340,21 +635,19 @@ zokou(
       return;
     }
 
-    // Réinitialiser aussi les statistiques
+    // Réinitialiser l'état de jeu aussi
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
-    try {
-      await db.resetGameStats(userId, groupId);
-      await db.initGameStats(userId, groupId, nomDeck, deckRemelange.length);
-    } catch (error) {
-      console.error('Erreur réinitialisation stats:', error);
-    }
+    await db.resetGameState(userId, groupId);
+    await db.updateMainDeck(userId, groupId, deckRemelange.length, []);
 
     await zk.sendMessage(dest, {
-      text: `✅ Deck réinitialisé ! ${deckRemelange.length} cartes.`
+      text: `✅ Deck réinitialisé ! ${deckRemelange.length} cartes.\n🔄 État de jeu réinitialisé.`
     }, { quoted: ms });
   }
 );
+
+// [Les autres commandes existantes (carte, cleanmydeck, groupdecks) restent inchangées...]
 
 // Commande : .carte
 zokou(
@@ -364,7 +657,7 @@ zokou(
 
     if (!arg || arg.length === 0) {
       const sortedCartes = Object.keys(deck_cards).sort((a, b) => a.localeCompare(b));
-
+      
       const html = `
 <!DOCTYPE html>
 <html lang="fr">
@@ -511,11 +804,11 @@ zokou(
       ).slice(0, 5);
 
       let message = `❌ Carte "${arg.join(" ")}" introuvable.\n`;
-
+      
       if (suggestions.length > 0) {
         message += `Suggestions:\n${suggestions.map((sugg, index) => `${index + 1}. ${sugg}`).join('\n')}`;
       }
-
+      
       await zk.sendMessage(dest, { text: message }, { quoted: ms });
     }
   }
@@ -529,14 +822,15 @@ zokou(
 
     const userId = getUserId(zk, ms);
     const groupId = getGroupId(dest);
-
+    
     try {
-      const deleted = await db.deleteDeckSession(userId, groupId);
-      await db.resetGameStats(userId, groupId);
+      const deletedDeck = await db.deleteDeckSession(userId, groupId);
+      // Nettoyer aussi l'état de jeu
+      await db.resetGameState(userId, groupId);
       
-      if (deleted) {
+      if (deletedDeck) {
         await zk.sendMessage(dest, {
-          text: `✅ Session deck et stats supprimées.`
+          text: `✅ Session et état de jeu supprimés.`
         }, { quoted: ms });
       } else {
         await zk.sendMessage(dest, {
@@ -558,7 +852,7 @@ zokou(
     const { ms } = commandeOptions;
 
     const groupId = getGroupId(dest);
-
+    
     try {
       const sessions = await db.getGroupDeckSessions(groupId);
       if (sessions.length === 0) {
@@ -582,466 +876,48 @@ zokou(
   }
 );
 
-// =============================================================================
-// COMMANDES DE GESTION DES STATISTIQUES DE JEU
-// =============================================================================
-
-// Commande : .mystats - Afficher les statistiques de jeu
-zokou(
-  { nomCom: 'mystats', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    try {
-      const gameStats = await db.getGameStats(userId, groupId);
-      const deckSession = await db.getDeckSession(userId, groupId);
-
-      if (!gameStats && !deckSession) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucune partie en cours. Utilise *-deck nom* pour commencer.`
-        }, { quoted: ms });
-        return;
-      }
-
-      if (!gameStats && deckSession) {
-        // Initialiser les stats si le deck existe mais pas les stats
-        await db.initGameStats(userId, groupId, deckSession.deck_name, deckSession.deck.length);
-        const newStats = await db.getGameStats(userId, groupId);
-        await displayGameStats(zk, dest, ms, newStats, deckSession);
-        return;
-      }
-
-      await displayGameStats(zk, dest, ms, gameStats, deckSession);
-    } catch (error) {
-      console.error('Erreur mystats:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur affichage stats.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .lp <montant> - Modifier les points de vie
-zokou(
-  { nomCom: 'lp', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    if (!arg[0] || isNaN(parseInt(arg[0].replace('+', '').replace('-', '')))) {
-      await zk.sendMessage(dest, {
-        text: `❌ Usage: *-lp <montant>*\nEx: *-lp 3500* pour définir à 3500 LP\n*-lp -500* pour perdre 500 LP\n*-lp +1000* pour gagner 1000 LP`
-      }, { quoted: ms });
-      return;
-    }
-
-    try {
-      const gameStats = await db.getGameStats(userId, groupId);
-      if (!gameStats) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucune partie en cours. Utilise *-deck nom* d'abord.`
-        }, { quoted: ms });
-        return;
-      }
-
-      let newLP = gameStats.life_points;
-      const input = arg[0];
-
-      if (input.startsWith('+')) {
-        newLP += parseInt(input.slice(1));
-      } else if (input.startsWith('-')) {
-        newLP -= parseInt(input.slice(1));
-      } else {
-        newLP = parseInt(input);
-      }
-
-      // Empêcher les LP négatives
-      if (newLP < 0) newLP = 0;
-
-      await db.updateLifePoints(userId, groupId, newLP);
-
-      await zk.sendMessage(dest, {
-        text: `❤️ Points de Vie: *${gameStats.life_points}* → *${newLP}* ${newLP === 0 ? '💀 (DÉFAITE)' : ''}`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur lp:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur modification LP.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .pose <id> <type> [position] - Poser une carte
-zokou(
-  { nomCom: 'pose', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    if (!arg[0] || !arg[1]) {
-      await zk.sendMessage(dest, {
-        text: `❌ Usage: *-pose <id> <type> [position]*\n\nTypes: *monster*, *spell*, *trap*\nPour monster: *attack* ou *defense*\nPour spell/trap: *set* pour poser face cachée\n\nEx:\n*-pose 5 monster attack*\n*-pose 3 spell set*`
-      }, { quoted: ms });
-      return;
-    }
-
-    const cardId = parseInt(arg[0]);
-    const cardType = arg[1].toLowerCase();
-    const position = arg[2] || 'attack';
-
-    try {
-      const deckSession = await db.getDeckSession(userId, groupId);
-      if (!deckSession) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucun deck actif.`
-        }, { quoted: ms });
-        return;
-      }
-
-      const card = deckSession.deck.find(c => c.id === cardId) || 
-                   deckSession.pioches.find(c => c.id === cardId);
-
-      if (!card) {
-        await zk.sendMessage(dest, {
-          text: `❌ Carte ID ${cardId} introuvable.`
-        }, { quoted: ms });
-        return;
-      }
-
-      let result;
-      switch (cardType) {
-        case 'monster':
-          result = await db.placeInMonsterZone(userId, groupId, card, position);
-          break;
-        case 'spell':
-        case 'trap':
-          const isSet = position === 'set';
-          result = await db.placeInSpellTrapZone(userId, groupId, card, isSet);
-          break;
-        default:
-          await zk.sendMessage(dest, {
-            text: `❌ Type invalide. Utilise: monster, spell, trap`
-          }, { quoted: ms });
-          return;
-      }
-
-      if (result) {
-        await zk.sendMessage(dest, {
-          text: `✅ Carte posée: *${card.name}*\nType: ${cardType}\nPosition: ${position}`
-        }, { quoted: ms });
-      }
-    } catch (error) {
-      console.error('Erreur pose:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur: ${error.message}`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .terrain <id> - Activer une magie de terrain
-zokou(
-  { nomCom: 'terrain', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    if (!arg[0]) {
-      await zk.sendMessage(dest, {
-        text: `❌ Usage: *-terrain <id>*\nEx: *-terrain 7*`
-      }, { quoted: ms });
-      return;
-    }
-
-    const cardId = parseInt(arg[0]);
-
-    try {
-      const deckSession = await db.getDeckSession(userId, groupId);
-      if (!deckSession) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucun deck actif.`
-        }, { quoted: ms });
-        return;
-      }
-
-      const card = deckSession.deck.find(c => c.id === cardId) || 
-                   deckSession.pioches.find(c => c.id === cardId);
-
-      if (!card) {
-        await zk.sendMessage(dest, {
-          text: `❌ Carte ID ${cardId} introuvable.`
-        }, { quoted: ms });
-        return;
-      }
-
-      await db.activateFieldSpell(userId, groupId, card);
-
-      await zk.sendMessage(dest, {
-        text: `🏟️ Magie de terrain activée: *${card.name}*`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur terrain:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur activation terrain.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .cimetiere <id> - Envoyer une carte au cimetière
-zokou(
-  { nomCom: 'cimetiere', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    if (!arg[0]) {
-      await zk.sendMessage(dest, {
-        text: `❌ Usage: *-cimetiere <id>*\nEx: *-cimetiere 12*`
-      }, { quoted: ms });
-      return;
-    }
-
-    const cardId = parseInt(arg[0]);
-
-    try {
-      const deckSession = await db.getDeckSession(userId, groupId);
-      if (!deckSession) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucun deck actif.`
-        }, { quoted: ms });
-        return;
-      }
-
-      const card = deckSession.deck.find(c => c.id === cardId) || 
-                   deckSession.pioches.find(c => c.id === cardId);
-
-      if (!card) {
-        await zk.sendMessage(dest, {
-          text: `❌ Carte ID ${cardId} introuvable.`
-        }, { quoted: ms });
-        return;
-      }
-
-      await db.addToCemetery(userId, groupId, card);
-
-      await zk.sendMessage(dest, {
-        text: `⚰️ Carte envoyée au cimetière: *${card.name}*`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur cimetiere:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur envoi cimetière.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .banish <id> - Bannir une carte
-zokou(
-  { nomCom: 'banish', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    if (!arg[0]) {
-      await zk.sendMessage(dest, {
-        text: `❌ Usage: *-banish <id>*\nEx: *-banish 8*`
-      }, { quoted: ms });
-      return;
-    }
-
-    const cardId = parseInt(arg[0]);
-
-    try {
-      const deckSession = await db.getDeckSession(userId, groupId);
-      if (!deckSession) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucun deck actif.`
-        }, { quoted: ms });
-        return;
-      }
-
-      const card = deckSession.deck.find(c => c.id === cardId) || 
-                   deckSession.pioches.find(c => c.id === cardId);
-
-      if (!card) {
-        await zk.sendMessage(dest, {
-          text: `❌ Carte ID ${cardId} introuvable.`
-        }, { quoted: ms });
-        return;
-      }
-
-      await db.banishCard(userId, groupId, card);
-
-      await zk.sendMessage(dest, {
-        text: `🌀 Carte bannie: *${card.name}*`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur banish:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur bannissement.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .pioche <nombre> - Piocher des cartes (nouvelle version)
-zokou(
-  { nomCom: 'pioche', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { arg, ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    const count = arg[0] ? parseInt(arg[0]) : 1;
-
-    if (isNaN(count) || count < 1) {
-      await zk.sendMessage(dest, {
-        text: `❌ Usage: *-pioche [nombre]*\nEx: *-pioche* pour 1 carte\n*-pioche 2* pour 2 cartes`
-      }, { quoted: ms });
-      return;
-    }
-
-    try {
-      const gameStats = await db.getGameStats(userId, groupId);
-      if (!gameStats) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucune partie en cours.`
-        }, { quoted: ms });
-        return;
-      }
-
-      const result = await db.drawCards(userId, groupId, count);
-
-      await zk.sendMessage(dest, {
-        text: `🃏 Pioche de ${count} carte(s) !\n📚 Deck: ${gameStats.cards_in_deck} → ${result.cards_in_deck}\n🎴 Main: ${gameStats.cards_in_hand} → ${result.cards_in_hand}`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur pioche:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur pioche: ${error.message}`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .tour - Passer au tour suivant
-zokou(
-  { nomCom: 'tour', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    try {
-      const gameStats = await db.getGameStats(userId, groupId);
-      if (!gameStats) {
-        await zk.sendMessage(dest, {
-          text: `❌ Aucune partie en cours.`
-        }, { quoted: ms });
-        return;
-      }
-
-      const result = await db.nextTurn(userId, groupId);
-
-      await zk.sendMessage(dest, {
-        text: `🔄 Tour ${gameStats.turn_number} → Tour ${result.turn_number}\n📢 C'est votre tour !`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur tour:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur changement de tour.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .resetgame - Réinitialiser la partie
-zokou(
-  { nomCom: 'resetgame', categorie: 'YU-GI-OH' },
-  async (dest, zk, commandeOptions) => {
-    const { ms } = commandeOptions;
-
-    const userId = getUserId(zk, ms);
-    const groupId = getGroupId(dest);
-
-    try {
-      await db.resetGameStats(userId, groupId);
-
-      await zk.sendMessage(dest, {
-        text: `🔄 Partie réinitialisée !\nToutes les statistiques ont été remises à zéro.`
-      }, { quoted: ms });
-    } catch (error) {
-      console.error('Erreur resetgame:', error);
-      await zk.sendMessage(dest, {
-        text: `❌ Erreur réinitialisation.`
-      }, { quoted: ms });
-    }
-  }
-);
-
-// Commande : .aideyugi - Afficher l'aide complète
+// Aide des commandes Yu-Gi-Oh
 zokou(
   { nomCom: 'aideyugi', categorie: 'YU-GI-OH' },
   async (dest, zk, commandeOptions) => {
     const { ms } = commandeOptions;
 
-    const message = `🎮 *AIDE YU-GI-OH! - COMMANDES DISPONIBLES* 🎮
+    const helpMessage = `🎮 *AIDE YU-GI-OH! SPEED DUEL*\n
+📦 *Gestion des Decks:*
+• -deck <nom> - Choisir un deck
+• -mondeck - Voir mon deck actuel
+• -pioche <id> - Piocher une carte
+• -melanger - Mélanger le deck
+• -resetdeck - Réinitialiser le deck
 
-📦 *GESTION DECK*
-• *-deck <nom>* - Choisir un deck
-• *-mondeck* - Voir son deck actuel  
-• *-piochecarte <id>* - Piocher une carte spécifique
-• *-melanger* - Mélanger le deck
-• *-resetdeck* - Réinitialiser le deck
-• *-cleanmydeck* - Supprimer sa session
+❤️ *Gestion du Jeu:*
+• -stats - Voir mes statistiques
+• -lp <points> - Modifier les points de vie
+• -poser <id> <zone> - Poser une carte
+• -cimetiere <id> - Envoyer au cimetière
+• -resetjeu - Réinitialiser l'état de jeu
 
-❤️ *STATISTIQUES DE JEU*
-• *-mystats* - Afficher toutes les stats
-• *-lp <montant>* - Modifier les points de vie
-• *-pioche [nombre]* - Piocher des cartes
-• *-tour* - Passer au tour suivant
-• *-resetgame* - Réinitialiser la partie
+🔍 *Recherche:*
+• -carte - Liste des cartes
+• -carte <nom> - Détails d'une carte
 
-🎴 *GESTION TERRAIN*
-• *-pose <id> <type> [position]* - Poser une carte
-• *-terrain <id>* - Activer magie de terrain
-• *-cimetiere <id>* - Envoyer au cimetière
-• *-banish <id>* - Bannir une carte
+🧹 *Utilitaire:*
+• -cleanmydeck - Supprimer ma session
+• -groupdecks - Voir les decks du groupe
 
-🔍 *RECHERCHE*
-• *-carte [nom]* - Voir info carte
-• *-groupdecks* - Voir decks du groupe
+📝 *Zones pour -poser:*
+• monstre - Zone monstre (max 5)
+• magie - Zone magie/piège (max 5)
+• terrain - Magie de terrain
+• extra - Extra deck`;
 
-*Exemple de début de partie:*
-1. *-deck harpie* (choisir deck)
-2. *-mystats* (vérifier stats)
-3. *-pioche 5* (pioche initiale)
-4. *-pose 3 monster attack* (poser monstre)
-5. *-tour* (passer tour)`;
-
-    await zk.sendMessage(dest, { text: message }, { quoted: ms });
+    await zk.sendMessage(dest, { text: helpMessage }, { quoted: ms });
   }
 );
 
 module.exports = { 
   getSessionFromDB,
-  saveSessionToDB
+  saveSessionToDB,
+  getUserId,
+  getGroupId
 };
